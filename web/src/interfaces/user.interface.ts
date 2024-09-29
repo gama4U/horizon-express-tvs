@@ -3,6 +3,7 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
+  userType: UserType;
   password?: string;
   avatar?: string;
   createdAt: Date;
@@ -12,4 +13,14 @@ export interface IUser {
 export enum UserType {
   ADMIN = 'ADMIN',
   EMPLOYEE = 'EMPLOYEE'
+}
+
+export interface IUserSession {
+  token: string;
+  user: IUser
+}
+
+export interface IUserCredential {
+  email: string;
+  password: string
 }
