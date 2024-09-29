@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  ADMIN
+  EMPLOYEE
+}
+
+model User {
+  id          String        @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String        @unique
+  password    String
+  avatar      String?
+  userType    UserType
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  transaction Transaction[]
+}
+
+model SalesAgreement {
+  id                   String    @id @default(cuid())
+  salesAgreementNumber String
+  suppliersPoNumber    String
+  document             String[]
+  createdAt            DateTime? @default(now())
+  updatedAt            DateTime? @updatedAt
+}
+
+model Transaction {
+  id                   String          @id @default(cuid())
+  userId               String
+  lead                 User            @relation(fields: [userId], references: [id])
+  travelVoucher        Travel?
+  accommodationVoucher Accommodation?
+  tourVoucher          Tour?
+  transportVoucher     Transportation?
+  createdAt            DateTime?       @default(now())
+  updatedAt            DateTime?       @updatedAt
+}
+
+enum TravelType {
+  AIRLINES
+  SHIPPING
+}
+
+model Travel {
+  id            String       @id @default(cuid())
+  transactionId String?      @unique
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  type          TravelType
+  airline       Airlines?
+  shipping      Shipping?
+  createdAt     DateTime?    @default(now())
+  updatedAt     DateTime?    @updatedAt
+}
+
+model Airlines {
+  id          String    @id @default(cuid())
+  name        String
+  code        String
+  etd         DateTime
+  eta         DateTime
+  origin      String
+  travelId    String?   @unique
+  travel      Travel?   @relation(fields: [travelId], references: [id])
+  destination String
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+}
+
+model Shipping {
+  id           String   @id @default(cuid())
+  name         String
+  voyageNumber String
+  dateOfTravel DateTime
+  origin       String
+  destination  String
+  travelId     String?  @unique
+  travel       Travel?  @relation(fields: [travelId], references: [id])
+}
+
+enum AccommodationType {
+  HOTEL
+  RESORT
+  AIRBNB
+  OTHERS
+}
+
+model Accommodation {
+  id                      String            @id @default(cuid())
+  transactionId           String?           @unique
+  transaction             Transaction?      @relation(fields: [transactionId], references: [id])
+  type                    AccommodationType
+  name                    String
+  checkinDate             DateTime
+  checkoutDate            DateTime
+  hotelConfirmationNumber String
+  remarks                 String?
+  createdAt               DateTime?         @default(now())
+  updatedAt               DateTime?         @updatedAt
+}
+
+model Tour {
+  id                  String       @id @default(cuid())
+  transactionId       String?      @unique
+  transaction         Transaction? @relation(fields: [transactionId], references: [id])
+  itinerary           Itinerary[]
+  remarks             String?
+  driverName         String
+  driverContact      String
+  createdAt           DateTime?    @default(now())
+  updatedAt           DateTime?    @updatedAt
+}
+
+model Itinerary {
+  id          String         @id @default(cuid())
+  tourId      String
+  tour        Tour           @relation(fields: [tourId], references: [id])
+  transportId String
+  transport   Transportation @relation(fields: [transportId], references: [id])
+
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+enum TransportServiceType {
+  PUDO
+  WHOLE_DAY
+  HALF_DAY
+  MULTIPLE
+}
+
+enum VehicleType {
+  VAN
+  SUV
+  COASTER
+  SEDAN
+  BUS
+}
+
+model Transportation {
+  id                 String               @id @default(cuid())
+  transactionId      String?              @unique
+  transaction        Transaction?         @relation(fields: [transactionId], references: [id])
+  serviceType        TransportServiceType
+  driverName         String
+  driverContact      String
+  remarks            String?
+  vehicleType        VehicleType
+  vehiclePlateNumber String
+  itinerary          Itinerary[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
