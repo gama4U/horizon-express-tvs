@@ -117,7 +117,6 @@ export default function SignIn() {
                     <span>Loading...</span>
                   </>
                 ) : 'Sign in'}
-                Sign in
               </Button>
             </form>
           </Form>

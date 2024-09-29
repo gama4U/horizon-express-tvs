@@ -1,7 +1,7 @@
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen flex-1 p-4">
+    <div>
       <h1>Dashboard</h1>
     </div>
   )
