@@ -3,3 +3,9 @@ export interface ICreateSalesAgreement {
   suppliersPoNumber: string;
   documents: string[];
 }
+
+export interface IFindSalesAgreements {
+  skip?: number;
+  take?: number;
+  search?: string;
+}
