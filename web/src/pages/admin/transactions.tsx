@@ -7,13 +7,13 @@ import { createTransaction } from "../../api/mutations/transaction.mutation";
 
 export default function Transactions() {
   const navigate = useNavigate();
-  
-  const {mutate: createTransactionMutate, isPending: creatingTransaction} = useMutation({
-    mutationFn: async() => await createTransaction(),
+
+  const { mutate: createTransactionMutate, isPending: creatingTransaction } = useMutation({
+    mutationFn: async () => await createTransaction(),
     onError: (error) => {
-      toast.error(error.message, { 
+      toast.error(error.message, {
         className: 'text-destructive',
-        position: 'top-center', 
+        position: 'top-center',
       })
     },
     onSuccess: (data) => {
@@ -25,18 +25,18 @@ export default function Transactions() {
     <div>
       <div className="flex justify-between">
         <h1>Transactions</h1>
-        <Button 
+        <Button
           onClick={() => createTransactionMutate()}
           className="gap-1"
         >
           {creatingTransaction ? (
             <>
-              <Loader2 size={18} className="animate-spin"/>
+              <Loader2 size={18} className="animate-spin" />
               <span>Creating...</span>
             </>
           ) : (
             <>
-              <Plus size={18}/>
+              <Plus size={18} />
               <span>Create</span>
             </>
           )}

@@ -12,14 +12,14 @@ import { useNavigate } from "react-router-dom";
 const SideBar = React.memo(() => {
 	SideBar.displayName = 'SideBar';
 
-	const {logout} = useAuth();
-	
+	const { logout } = useAuth();
+
 	const navigate = useNavigate();
 	const [isOpen, setIsOpen] = useState(false);
 	const containerControls = useAnimationControls();
 	const handleOpenClose = () => setIsOpen(!isOpen);
 
-  const pathname = location.pathname;
+	const pathname = location.pathname;
 
 	useEffect(() => {
 		const handleResize = () => setIsOpen(window.innerWidth > 768);
@@ -43,7 +43,7 @@ const SideBar = React.memo(() => {
 			variants={Constants.ContainerVariants}
 			animate={containerControls}
 			initial="open"
-			className={`bg-[#FFFFFF99] z-50  p-3 h-screen rounded-xl  justify-between flex flex-col`}>
+			className={`bg-[#FFFFFF] z-50  p-3 h-screen rounded-xl  justify-between flex flex-col`}>
 			<div>
 				<div className={`flex flex-col ${isOpen ? "items-end" : "items-center"}`}>
 					<Button variant="ghost" size="icon" onClick={handleOpenClose}>
@@ -54,7 +54,7 @@ const SideBar = React.memo(() => {
 						)}
 					</Button>
 				</div>
-				<div className="justify-center flex my-5">
+				<div className="justify-center flex mb-5">
 					<img
 						src={logo}
 						alt="company-logo"
