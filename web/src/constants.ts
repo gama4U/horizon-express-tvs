@@ -8,6 +8,9 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Dashboard", icon: "Dashboard", link: "/admin" },
   { label: "Transactions", icon: "Transactions", link: "/admin/transactions" },
   { label: "Users", icon: "Users", link: "/admin/users" },
+  { label: "Memorandum", icon: "Memorandum", link: "/admin/memorandum" },
+  { label: "Sales Agreement", icon: "Purchase", link: "/admin/sales-agreement" },
+  { label: "Purchase Request", icon: "Sales", link: "/admin/purchase-request" },
 ]
 
 const ContainerVariants = {

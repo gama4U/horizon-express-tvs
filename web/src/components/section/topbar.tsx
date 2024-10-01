@@ -19,6 +19,12 @@ const TopBar = ({ RightSideComponent }: TopBarProps) => {
 				return "Transactions";
 			case "/admin/users":
 				return "Users";
+			case "/admin/memorandum":
+				return "Memorandum";
+			case "/admin/sales-agreement":
+				return "Sales Agreement";
+			case "/admin/purchase-request":
+				return "Purchase Request";
 			default:
 				return "";
 		}
@@ -31,6 +37,12 @@ const TopBar = ({ RightSideComponent }: TopBarProps) => {
 				return "View and Create Transaction Vouchers here";
 			case "/admin/users":
 				return "Manage your system users here";
+			case "/admin/memorandum":
+				return "Manage memorandum records here";
+			case "/admin/sales-agreement":
+				return "Manage sales agreement records here";
+			case "/admin/purchase-request":
+				return "Manage purchase requests records here";
 			default:
 				return "";
 		}

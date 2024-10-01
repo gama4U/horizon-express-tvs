@@ -7,6 +7,9 @@ import Transactions from "../pages/admin/transactions";
 import TransactionDetails from "../pages/admin/transaction-details";
 import ManageTransaction from "../pages/admin/manage-trasactions";
 import Users from "../pages/admin/users";
+import Memorandum from "../pages/admin/memorandum";
+import PurchaseRequest from "../pages/admin/purchase-request";
+import SalesAgreement from "../pages/admin/sales-agreement";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +43,18 @@ const router = createBrowserRouter([
       {
         path: 'users',
         element: <Users />
+      },
+      {
+        path: 'purchase-request',
+        element: <PurchaseRequest />
+      },
+      {
+        path: 'memorandum',
+        element: <Memorandum />
+      },
+      {
+        path: 'sales-agreement',
+        element: <SalesAgreement />
       },
     ]
   },

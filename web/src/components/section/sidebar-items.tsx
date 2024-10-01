@@ -4,6 +4,9 @@ import {
 	Users,
 	SquareMenu,
 	SquarePower,
+	StickyNote,
+	NotepadText,
+	Clipboard,
 } from "lucide-react"
 import { Button } from "../ui/button"
 
@@ -29,6 +32,13 @@ export const SidebarIcons = ({ icon, isSelected, role }: SidebarIconsType) => {
 			return <SquareMenu size={size} className={className} color={color} />;
 		case "Users":
 			return <Users size={size} className={className} color={color} />;
+		case "Memorandum":
+			return <StickyNote size={size} className={className} color={color} />;
+		case "Purchase":
+			return <NotepadText size={size} className={className} color={color} />;
+		case "Sales":
+			return <Clipboard size={size} className={className} color={color} />;
+
 		default:
 			return <FileQuestion className="mr-2" size={size} />;
 	}
