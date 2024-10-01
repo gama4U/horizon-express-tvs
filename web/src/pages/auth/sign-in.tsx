@@ -16,6 +16,7 @@ import logo from "../../assets/logo.png";
 import backgroundImage from "../../assets/cover-photo.jpg";
 import Loader from "../../components/animated/Loader";
 import AnimatedDiv from "../../components/animated/Div";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -25,8 +26,9 @@ const formSchema = z.object({
 });
 
 export default function SignIn() {
-  const {login} = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,27 +37,31 @@ export default function SignIn() {
     }
   });
 
-  const {mutate: signInMutate, isPending: signingUp} = useMutation({
+  const { mutate: signInMutate, isPending: signingUp } = useMutation({
     mutationFn: async (data: IUserCredential) => await signIn(data),
     onError: (error) => {
-      toast.error(error.message, { 
+      toast.error(error.message, {
         className: 'text-destructive',
-        position: 'top-center', 
-      })
+        position: 'top-center',
+      });
     },
     onSuccess: (data) => {
       login(data.token, data.user);
-      switch (data.user.userType) {
-        case UserType.ADMIN:
-          navigate('/admin');
-          break;
-        default:
-          navigate('/');
-      }
-      toast.success("Signed in successfully", {
-        className: 'text-primary',
-        position: 'top-center', 
-      });
+      setLoading(true);
+
+      setTimeout(() => {
+        switch (data.user.userType) {
+          case UserType.ADMIN:
+            navigate('/admin');
+            break;
+          default:
+            navigate('/');
+        }
+        toast.success("Signed in successfully", {
+          className: 'text-primary',
+          position: 'top-center',
+        });
+      }, 1500);
     }
   });
 
@@ -65,7 +71,7 @@ export default function SignIn() {
 
   return (
     <div className="relative h-screen w-full flex items-center justify-center">
-      <Loader isLoading={signingUp} />
+      <Loader isLoading={loading} />
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -75,12 +81,12 @@ export default function SignIn() {
       />
       <div className="absolute inset-0 bg-black opacity-15" />
 
-      <AnimatedDiv animationType="FadeInFromDown" duration={1}>
-        <div className="relative p-12 rounded-3xl shadow-lg bg-[#FFFFFF99] z-10 flex flex-col items-center space-y-8">
-          <img 
-            src={logo} 
+      <AnimatedDiv animationType="CardSpin" duration={0.5}>
+        <div className="relative p-12 rounded-3xl shadow-lg bg-[#FFFFFF99] z-10 flex flex-col items-center space-y-6">
+          <img
+            src={logo}
             alt="company-logo"
-            className="object-contain w-[220px] h-[220px]"
+            className="object-contain w-[220px] h-[140px]"
           />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex flex-col w-[300px]">
@@ -113,7 +119,7 @@ export default function SignIn() {
               <Button>
                 {signingUp ? (
                   <>
-                    <Loader2 size={18} className="animate-spin"/>
+                    <Loader2 size={18} className="animate-spin" />
                     <span>Loading...</span>
                   </>
                 ) : 'Sign in'}

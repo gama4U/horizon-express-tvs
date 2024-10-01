@@ -1,5 +1,5 @@
 import Lottie from "lottie-react";
-import authLoader from "../../assets/loaders/auth-loader.json";
+import authLoader from "../../assets/loaders/auth.json";
 
 interface LoaderProps {
 	isLoading: boolean
@@ -20,7 +20,7 @@ const Loader = ({ isLoading, type, label }: LoaderProps) => {
 		font-medium text-[50px] 
 		sm:text-[78px]'} `}>
 			<div className="flex flex-col items-center">
-				<Lottie animationData={authLoader} loop={true} />
+				<Lottie animationData={authLoader} loop={true} className="w-[320px] h-[320px]" />
 				<p className="text-white font-semibold text-[14px]">{label}</p>
 			</div>
 		</div>

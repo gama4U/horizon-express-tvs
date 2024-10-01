@@ -69,20 +69,24 @@ const AnimatedDiv = ({
 				return { hidden: { opacity, y: 100 }, visible: { opacity: 1, y: 0, transition: { duration, delay } } };
 			case 'SlideInFromLeft':
 				return {
-					hidden: { opacity, x: slideEntrancePoint },
-					visible: {
-						opacity: 1,
-						x: 0,
-						transition: { duration, delay }
-					}
+					hidden: { x: slideEntrancePoint },
+					visible: { x: 0, transition: { duration, delay } }
 				};
 			case 'SlideInFromRight':
-				return { hidden: { opacity, x: 100 }, visible: { opacity: 1, x: 0, transition: { duration, delay } } };
+				return {
+					hidden: { x: 100 },
+					visible: { x: 0, transition: { duration, delay } }
+				};
 			case 'SlideInFromUp':
-				return { hidden: { opacity, y: slideEntrancePoint }, visible: { opacity: 1, y: 0, transition: { duration, delay } } };
+				return {
+					hidden: { y: -100 },
+					visible: { y: 0, transition: { duration, delay } }
+				};
 			case 'SlideInFromDown':
-				return { hidden: { opacity, y: 100 }, visible: { opacity: 1, y: 0, transition: { duration, delay } } };
-			case 'FadeIn':
+				return {
+					hidden: { y: 100 },
+					visible: { y: 0, transition: { duration, delay } }
+				}; case 'FadeIn':
 				return { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration, delay } } };
 			case 'FadeOut':
 				return { hidden: { opacity: 1 }, visible: { opacity: 0, transition: { duration, delay } } };
