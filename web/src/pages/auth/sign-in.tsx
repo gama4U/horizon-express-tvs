@@ -116,7 +116,7 @@ export default function SignIn() {
                   </FormItem>
                 )}
               />
-              <Button>
+              <Button className="gap-1">
                 {signingUp ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
