@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { useUploadProgress } from "../../hooks/useUploadProgress";
 import { Progress } from "../ui/progress";
 import { IUploadFile } from "../../interfaces/upload.interface";
-import { uploadFile } from "../../api/mutations/upload.mutation";
+import { deleteFile, uploadFile } from "../../api/mutations/upload.mutation";
+import { extractFileNameFormUrl } from "../../utils/file.utils";
 
 interface Props {
   values: string[];
@@ -24,7 +25,8 @@ export default function UploadDocumentsInput({values, onValuesChange}: Props) {
     },
     onError: (error) => {
       toast.error(error.message, { 
-        position: 'top-center', 
+        className: 'text-destructive',
+        position: 'top-center',
       });
     },
     onSettled() {
@@ -32,21 +34,19 @@ export default function UploadDocumentsInput({values, onValuesChange}: Props) {
     },
   });
 
-  // const {mutate: deleteMutate, isPending: deleting} = useMutation({
-  //   mutationFn: async(filename: string) => await uploadFile(filename),
-  //   onSuccess: (data) => {
-  //     onValuesChange([...values, data.url])
-  //   },
-  //   onError: (error) => {
-  //     toast.error(error.message, { 
-  //       position: 'top-center', 
-  //     });
-  //   },
-  //   onSettled() {
-  //     resetProgress()
-  //   },
-  // });
-
+  const {mutate: deleteMutate, isPending: deleting} = useMutation({
+    mutationFn: async(filename: string) => await deleteFile(filename),
+    onSuccess: (data) => {
+      const newValues = values.filter(item => extractFileNameFormUrl(item) !== data.filename);
+      onValuesChange(newValues)
+    },
+    onError: (error) => {
+      toast.error(error.message, { 
+        className: 'text-destructive',
+        position: 'top-center',
+      });
+    },
+  });
 
   const handleSelectFile = () => {
     if (inputRef.current) {
@@ -69,18 +69,31 @@ export default function UploadDocumentsInput({values, onValuesChange}: Props) {
     });
   }
 
+  const handleDeleteFile = (url: string) => {
+    const fileName = extractFileNameFormUrl(url);
+    deleteMutate(fileName)
+  }
+
   return (
     <div className="flex flex-col gap-2">
       {values.map(item => (
         <div className="flex items-center gap-2 p-2 bg-white border">
           <File size={18} className="text-secondary"/>
           <div className="flex-1">
-            <span className="text-[12px]">{item}</span>
+            <span className="text-[12px]">
+              {extractFileNameFormUrl(item)}
+            </span>
           </div>
-          <X 
-            size={16} 
-            className="text-muted-foreground hover:text-destructive cursor-pointer"
-          />
+          <button
+            type="button"
+            disabled={deleting}
+            onClick={() => handleDeleteFile(item)}
+          >
+            <X 
+              size={16} 
+              className="text-muted-foreground hover:text-destructive cursor-pointer"
+            />
+          </button>
         </div>
       ))}
       {uploading && (
@@ -99,6 +112,7 @@ export default function UploadDocumentsInput({values, onValuesChange}: Props) {
         type="button"
         className="border border-dashed px-4 py-2 w-full flex items-center gap-2 bg-slate-100 hover:bg-slate-200 rounded-sm"
         onClick={handleSelectFile}
+        disabled={uploading}
       >
         <Upload size={14}/>
         <span className="text-[12px] font-[]">Upload file</span>

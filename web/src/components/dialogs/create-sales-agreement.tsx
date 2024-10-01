@@ -12,13 +12,12 @@ import { createSalesAgreement } from "../../api/mutations/sales-agreement.mutati
 import { useState } from "react";
 import { toast } from "sonner";
 import UploadDocumentsInput from "../inputs/upload-documents";
-import { useUploadProgress } from "../../hooks/useUploadProgress";
 
 const formSchema = z.object({
   salesAgreementNumber: z.string().min(1, {
     message: 'Sales agreement number is required'
   }),
-  supplierPoNumber: z.string().min(1, {
+  suppliersPoNumber: z.string().min(1, {
     message: 'Supplier PO number is required'
   }),
   documents: z.array(z.string()).refine(value => value.length > 0, {
@@ -34,19 +33,20 @@ export default function CreateSalesAgreementDialog() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       salesAgreementNumber: '',
-      supplierPoNumber: '',
-      documents: ['Sales Agreement .png', 'Sales Agreement .png']
+      suppliersPoNumber: '',
+      documents: []
     }
   });
 
-  const {mutate: addExamQuestionMutate, isPending} = useMutation({
+  const {mutate: createMutate, isPending} = useMutation({
     mutationFn: async (data: ICreateSalesAgreement) => await createSalesAgreement(data),
     onSuccess: () => {
       queryClient.refetchQueries({queryKey: ['exam']})
       form.reset();
       setOpen(false);
-      toast.success("Exam part created successfully", { 
+      toast.success("Sales agreement created successfully", { 
         position: 'top-center', 
+        className: 'text-primary'
       });
     },
     onError: (error) => {
@@ -57,7 +57,9 @@ export default function CreateSalesAgreementDialog() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('Sales agreement', values)
+    createMutate({
+      ...values
+    })
   }
 
   return (
@@ -91,7 +93,7 @@ export default function CreateSalesAgreementDialog() {
               />
               <FormField
                 control={form.control}
-                name="supplierPoNumber"
+                name="suppliersPoNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Supplier PO number</FormLabel>

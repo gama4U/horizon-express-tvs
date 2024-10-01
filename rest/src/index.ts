@@ -9,6 +9,7 @@ import mainRouter from "./middlewares/main-router.middleware";
 import authRouter from "./routers/auth.router";
 import userRouter from "./routers/user.router";
 import uploadRouter from "./routers/upload.router";
+import salesAgreementRouter from "./routers/sales-agreement.router";
 
 declare module 'express' {
   interface Request {
@@ -26,10 +27,11 @@ app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
 app.use('/auth', authRouter);
-app.use('/api', mainRouter);
+app.use('/api/v1', mainRouter);
 
 mainRouter.use('/users', userRouter);
 mainRouter.use('/uploads', uploadRouter);
+mainRouter.use('/sales-agreements', salesAgreementRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)

@@ -9,6 +9,6 @@ export interface ISalesAgreement {
 
 export interface ICreateSalesAgreement {
   salesAgreementNumber: string;
-  supplierPoNumber: string;
+  suppliersPoNumber: string;
   documents: string[];
 }
