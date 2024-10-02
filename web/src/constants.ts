@@ -32,12 +32,20 @@ const ContainerVariants = {
   },
 }
 
+
 const VersionNumber: String = '0.1.0'
+const NoTopbarPaths = [
+  "/admin/transactions"
+]
+
 
 const Constants = {
   VersionNumber,
   AdminSidebarItems,
   ContainerVariants,
+  NoTopbarPaths
 }
+
+
 
 export default Constants

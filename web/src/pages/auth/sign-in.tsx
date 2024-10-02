@@ -116,11 +116,10 @@ export default function SignIn() {
                   </FormItem>
                 )}
               />
-              <Button>
+              <Button className="flex items-center" disabled={signingUp}>
                 {signingUp ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
-                    <span>Loading...</span>
                   </>
                 ) : 'Sign in'}
               </Button>

@@ -7,48 +7,97 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserType {
-  ADMIN
-  EMPLOYEE
-}
-
 model User {
-  id          String        @id @default(cuid())
-  firstName   String
-  lastName    String
-  email       String        @unique
-  password    String
-  avatar      String?
-  userType    UserType
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  transaction Transaction[]
-}
-
-model SalesAgreement {
-  id                   String    @id @default(cuid())
-  salesAgreementNumber String
-  suppliersPoNumber    String
-  document             String[]
-  createdAt            DateTime? @default(now())
-  updatedAt            DateTime? @updatedAt
+  id                    String                 @id @default(cuid())
+  firstName             String
+  lastName              String
+  email                 String                 @unique
+  password              String
+  avatar                String?
+  userType              UserType
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  transactions          Transaction[]
+  salesAgreements       SalesAgreement[]
+  purchaseRequestOrders PurchaseRequestOrder[]
 }
 
 model Transaction {
-  id                   String          @id @default(cuid())
+  id                   String                @id @default(cuid())
   userId               String
-  lead                 User            @relation(fields: [userId], references: [id])
+  lead                 User                  @relation(fields: [userId], references: [id])
   travelVoucher        Travel?
   accommodationVoucher Accommodation?
   tourVoucher          Tour?
   transportVoucher     Transportation?
-  createdAt            DateTime?       @default(now())
-  updatedAt            DateTime?       @updatedAt
+  salesAgreement       SalesAgreement?
+  purchaseOrder        PurchaseRequestOrder?
+  createdAt            DateTime?             @default(now())
+  updatedAt            DateTime?             @updatedAt
 }
 
-enum TravelType {
-  AIRLINES
-  SHIPPING
+model SalesAgreement {
+  id                 String                @id @default(cuid())
+  transactionId      String                @unique
+  transaction        Transaction           @relation(fields: [transactionId], references: [id])
+  purchaseOrder      PurchaseRequestOrder?
+  typeOfClient       ClientType
+  clientName         String?
+  preparedBy         String?
+  approvedBy         String?
+  SalesAgreementItem SalesAgreementItem[]
+
+  creatorId String
+  creator   User      @relation(fields: [creatorId], references: [id])
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model SalesAgreementItem {
+  id               String         @id @default(cuid())
+  particulars      String?
+  quantity         Int?
+  unitPrice        Float?
+  total            Float?
+  salesAgreementId String
+  salesAgreement   SalesAgreement @relation(fields: [salesAgreementId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model PurchaseRequestOrder {
+  id                String                     @id @default(cuid())
+  suppliersName     String?
+  expenses          String?
+  other             String?
+  transactionId     String                     @unique
+  transaction       Transaction                @relation(fields: [transactionId], references: [id])
+  purchaseOrderItem PurchaseRequestOrderItem[]
+  type              PurchaseRequestOrderType?
+  paymentType       PaymentType?
+  creatorId         String?
+  creator           User?                      @relation(fields: [creatorId], references: [id])
+  nos               String?
+
+  salesAgreementNumber String         @unique
+  salesAgreement       SalesAgreement @relation(fields: [salesAgreementNumber], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model PurchaseRequestOrderItem {
+  id                     String               @id @default(cuid())
+  purchaseRequestOrderId String
+  purchaseRequestOrder   PurchaseRequestOrder @relation(fields: [purchaseRequestOrderId], references: [id])
+  particulars            String?
+  quantity               Int?
+  unitPrice              Float?
+  total                  Float?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Travel {
@@ -87,13 +136,6 @@ model Shipping {
   travel       Travel?  @relation(fields: [travelId], references: [id])
 }
 
-enum AccommodationType {
-  HOTEL
-  RESORT
-  AIRBNB
-  OTHERS
-}
-
 model Accommodation {
   id                      String            @id @default(cuid())
   transactionId           String?           @unique
@@ -109,15 +151,15 @@ model Accommodation {
 }
 
 model Tour {
-  id                  String       @id @default(cuid())
-  transactionId       String?      @unique
-  transaction         Transaction? @relation(fields: [transactionId], references: [id])
-  itinerary           Itinerary[]
-  remarks             String?
-  driverName         String
-  driverContact      String
-  createdAt           DateTime?    @default(now())
-  updatedAt           DateTime?    @updatedAt
+  id            String       @id @default(cuid())
+  transactionId String?      @unique
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  itinerary     Itinerary[]
+  remarks       String?
+  driverName    String
+  driverContact String
+  createdAt     DateTime?    @default(now())
+  updatedAt     DateTime?    @updatedAt
 }
 
 model Itinerary {
@@ -136,6 +178,45 @@ model Itinerary {
   updatedAt DateTime? @updatedAt
 }
 
+model Transportation {
+  id                 String               @id @default(cuid())
+  transactionId      String?              @unique
+  transaction        Transaction?         @relation(fields: [transactionId], references: [id])
+  serviceType        TransportServiceType
+  driverName         String
+  driverContact      String
+  remarks            String?
+  vehicleType        VehicleType
+  vehiclePlateNumber String
+  itinerary          Itinerary[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
+
+enum UserType {
+  ADMIN
+  EMPLOYEE
+}
+
+enum ClientType {
+  WALK_IN
+  CORPORATE
+  GOVERNMENT
+}
+
+enum PurchaseRequestOrderType {
+  TICKET
+  LOCAL_PACKAGE
+  INTERNATIONAL_PACKAGE
+  HOTEL
+  VISA
+}
+
+enum PaymentType {
+  CASH
+  CHECK
+}
+
 enum TransportServiceType {
   PUDO
   WHOLE_DAY
@@ -151,17 +232,14 @@ enum VehicleType {
   BUS
 }
 
-model Transportation {
-  id                 String               @id @default(cuid())
-  transactionId      String?              @unique
-  transaction        Transaction?         @relation(fields: [transactionId], references: [id])
-  serviceType        TransportServiceType
-  driverName         String
-  driverContact      String
-  remarks            String?
-  vehicleType        VehicleType
-  vehiclePlateNumber String
-  itinerary          Itinerary[]
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
+enum TravelType {
+  AIRLINES
+  SHIPPING
+}
+
+enum AccommodationType {
+  HOTEL
+  RESORT
+  AIRBNB
+  OTHERS
 }
