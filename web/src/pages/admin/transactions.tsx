@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createTransaction } from "../../api/mutations/transaction.mutation";
+import TopBar from "../../components/section/topbar";
 
 export default function Transactions() {
   const navigate = useNavigate();
@@ -17,22 +18,31 @@ export default function Transactions() {
       })
     },
     onSuccess: (data) => {
-      navigate(`/admin/transactions/${data.id}/manage`);
+      navigate(`/admin/transactions/${data.id}/`);
     }
   });
 
   return (
-    <div>
-      <div className="flex justify-between">
+    <div className="space-y-2">
+      <TopBar
+        LeftSideHeader={
+          <p className="text-sm">
+            Transactions
+          </p>
+        }
+        LeftSideSubHeader={
+          <p className="text-primary text-xs">Manage your Transactions here.</p>
+        }
+      />
+      <div className="flex justify-between bg-white rounded-xl p-4 h-screen">
         <h1>Transactions</h1>
         <Button
           onClick={() => createTransactionMutate()}
-          className="gap-1"
+          className="gap-1 flex items-center"
         >
           {creatingTransaction ? (
             <>
               <Loader2 size={18} className="animate-spin" />
-              <span>Creating...</span>
             </>
           ) : (
             <>

@@ -10,15 +10,15 @@ import { toast } from "sonner";
 import { addAccommodation } from "../../api/mutations/accommodation.mutation";
 import { Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogPortal, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { DatePicker } from "../common/date-picker";
 import { Textarea } from "../ui/textarea";
 
 const accommodationTypesMap: Record<AccommodationType, string> = {
   [AccommodationType.HOTEL]: 'Hotel',
-  [AccommodationType.AIRBNB]: 'AIRBNB', 
-  [AccommodationType.RESORT]: 'Resort', 
-  [AccommodationType.OTHERS]: 'Others', 
+  [AccommodationType.AIRBNB]: 'AIRBNB',
+  [AccommodationType.RESORT]: 'Resort',
+  [AccommodationType.OTHERS]: 'Others',
 }
 
 const formSchema = z.object({
@@ -43,7 +43,7 @@ interface Props {
   transactionId: string;
 }
 
-export default function AddAccommodationForm({transactionId}: Props) {
+export default function AddAccommodationForm({ transactionId }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,18 +53,18 @@ export default function AddAccommodationForm({transactionId}: Props) {
     }
   });
 
-  const {mutate: addAccommodationMutate, isPending: signingUp} = useMutation({
+  const { mutate: addAccommodationMutate, isPending: signingUp } = useMutation({
     mutationFn: async (data: IAddAccommodation) => await addAccommodation(data),
     onError: (error) => {
-      toast.error(error.message, { 
+      toast.error(error.message, {
         className: 'text-destructive',
-        position: 'top-center', 
+        position: 'top-center',
       })
     },
     onSuccess: () => {
       toast.success("Accommodation added successfully", {
         className: 'text-primary',
-        position: 'top-center', 
+        position: 'top-center',
       });
     }
   });
@@ -79,8 +79,8 @@ export default function AddAccommodationForm({transactionId}: Props) {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button 
-          size={'sm'} 
+        <Button
+          size={'sm'}
           className="gap-1 w-[80px]"
         >
           Add
@@ -119,8 +119,8 @@ export default function AddAccommodationForm({transactionId}: Props) {
                     </FormControl>
                     <SelectContent>
                       {Object.entries(accommodationTypesMap).map(([key, value], index) => (
-                        <SelectItem 
-                          value={key} 
+                        <SelectItem
+                          value={key}
                           key={index}
                           className="text-[12px]"
                         >
@@ -187,7 +187,7 @@ export default function AddAccommodationForm({transactionId}: Props) {
                 <FormItem>
                   <FormLabel className="text-[12px]">Remarks (optional)</FormLabel>
                   <FormControl>
-                    <Textarea {...field} placeholder="Write remarks..." className="bg-slate-100 text-[12px]"/>
+                    <Textarea {...field} placeholder="Write remarks..." className="bg-slate-100 text-[12px]" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -195,9 +195,9 @@ export default function AddAccommodationForm({transactionId}: Props) {
             />
             <div className="flex justify-end gap-2 pt-4">
               <DialogClose>
-                <Button 
-                  size={'sm'} 
-                  variant={'outline'} 
+                <Button
+                  size={'sm'}
+                  variant={'outline'}
                   className="w-[80px]"
                   type="button"
                 >
@@ -207,7 +207,7 @@ export default function AddAccommodationForm({transactionId}: Props) {
               <Button size={'sm'} className="w-[80px]">
                 {signingUp ? (
                   <>
-                    <Loader2 size={18} className="animate-spin"/>
+                    <Loader2 size={18} className="animate-spin" />
                     <span>Saving...</span>
                   </>
                 ) : 'Save'}
@@ -218,6 +218,6 @@ export default function AddAccommodationForm({transactionId}: Props) {
       </DialogContent>
     </Dialog>
 
-    
+
   )
 }
