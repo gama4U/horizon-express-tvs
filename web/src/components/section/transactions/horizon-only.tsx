@@ -23,6 +23,14 @@ export default function HorizonOnlyForms({ horizonFields, transactionId }: Props
     })
   });
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: ""
+    }
+  });
+
   const [transactionData, setTransactionData] = useRecoilState(transactionAtom)
 
   const { data: employees } = useQuery({
