@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         element: <TransactionDetails />
       },
       {
-        path: 'transactions/:id/manage',
+        path: 'transactions/:id/',
         element: <ManageTransaction />
       },
       {

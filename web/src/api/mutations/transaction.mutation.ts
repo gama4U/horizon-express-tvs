@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
-import { IUserCredential, IUserSession } from "../../interfaces/user.interface";
 import api from "../../utils/api.util";
+import { ICreatedTransaction } from "../../interfaces/transaction.interface";
 
-export async function signIn(data: IUserCredential): Promise<IUserSession> {
+export async function createTransaction(): Promise<ICreatedTransaction> {
   try {
-    const response = await api.post('/auth/sign-in', data);
+    const response = await api.post('/api/v1/transactions');
     return response.data;
   } catch(error) {
     let message;
@@ -14,3 +14,4 @@ export async function signIn(data: IUserCredential): Promise<IUserSession> {
     throw new Error(message || 'Something went wrong');
   }
 }
+  

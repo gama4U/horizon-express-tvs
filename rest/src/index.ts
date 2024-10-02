@@ -10,6 +10,7 @@ import authRouter from "./routers/auth.router";
 import userRouter from "./routers/user.router";
 import uploadRouter from "./routers/upload.router";
 import salesAgreementRouter from "./routers/sales-agreement.router";
+import transactionRouter from "./routers/transaction.router";
 
 declare module 'express' {
   interface Request {
@@ -32,6 +33,7 @@ app.use('/api/v1', mainRouter);
 mainRouter.use('/users', userRouter);
 mainRouter.use('/uploads', uploadRouter);
 mainRouter.use('/sales-agreements', salesAgreementRouter);
+mainRouter.use('/transactions', transactionRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)
