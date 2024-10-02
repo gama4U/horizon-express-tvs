@@ -1,3 +1,4 @@
+
 export interface IAccommodation {
   id: string;
   transactionId: string;
@@ -11,6 +12,7 @@ export interface IAccommodation {
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 export enum AccommodationType {
   HOTEL = 'HOTEL',

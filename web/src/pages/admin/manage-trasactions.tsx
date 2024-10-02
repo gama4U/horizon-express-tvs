@@ -1,10 +1,17 @@
 import { useParams } from "react-router-dom";
 import Accommodation from "../../components/section/accommodation";
+import logo from '../../assets/logo.png';
 import TopBar from "../../components/section/topbar";
 import { Accordion, AccordionContent, AccordionTrigger, AccordionItem } from "../../components/ui/accordion";
+import HorizonOnlyForms from "../../components/section/transactions/horizon-only";
+import { useRecoilValue } from "recoil";
+import { transactionAtom } from "../../utils/atoms";
+import { Separator } from "../../components/ui/separator";
 
 export default function ManageTransaction() {
   const { id } = useParams()
+  const transactionData = useRecoilValue(transactionAtom)
+
   return (
     <div className="space-y-2">
       <TopBar
@@ -24,6 +31,7 @@ export default function ManageTransaction() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Horizon Express Users Only</AccordionTrigger>
               <AccordionContent>
+                <HorizonOnlyForms />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
@@ -52,8 +60,14 @@ export default function ManageTransaction() {
 
           </Accordion>
         </div>
-        <div className="flex flex-col w-[50%] bg-white ">
-          <p>sd</p>
+        <div className="flex flex-col w-[50%] bg-white p-5 items-center">
+          <p className="italic text-xs text-stone-400 self-start">Print Preview</p>
+          <img src={logo} width={200} height={200} />
+          <div className="flex items-start flex-col justify-start w-full mt-4">
+            <p className="text-xs text-stone-800">Transaction Voucher #: <span className="font-semibold">{transactionData.transactionNumber}</span></p>
+            <p className="text-xs text-stone-800">Lead: <span className="font-semibold">{transactionData.leadFirstName}{" "}{transactionData.leadLastName}</span></p>
+          </div>
+          <Separator className="my-2" />
         </div>
 
       </div>

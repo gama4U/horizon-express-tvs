@@ -9,25 +9,25 @@ const userRouter = express.Router();
 
 const saltRounds = 15;
 
-userRouter.post('/', validate(createUserSchema), async(req: Request, res: Response) => {
+userRouter.post('/', validate(createUserSchema), async (req: Request, res: Response) => {
   try {
     const { password, ...data } = req.body;
     const foundUser = await getUserByEmail(data.email);
-    if(foundUser) return res.status(400).json({
+    if (foundUser) return res.status(400).json({
       message: 'Account already exists'
     });
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const created = await createUser({...data, password: hashedPassword});
-    if(!created) throw new Error('Failed to create user');
+    const created = await createUser({ ...data, password: hashedPassword });
+    if (!created) throw new Error('Failed to create user');
     res.status(200).json({
       message: 'User created successfully'
     });
-  } catch(error) {
+  } catch (error) {
     res.status(500).json(error);
   }
 });
 
-userRouter.get('/', validate(getUsersSchema), async(req: Request, res: Response) => {
+userRouter.get('/', validate(getUsersSchema), async (req: Request, res: Response) => {
   try {
     const query = {
       skip: Number(req.query.skip),
@@ -36,59 +36,72 @@ userRouter.get('/', validate(getUsersSchema), async(req: Request, res: Response)
       role: req.query.role
     } as IGetUsers;
     const users = await getUsers(query);
-    if(!users) throw new Error('Failed to get users');
+    if (!users) throw new Error('Failed to get users');
     res.status(200).json(users);
-  } catch(error) {
+  } catch (error) {
     console.log(error)
     res.status(500).json(error);
   }
 });
 
-userRouter.put('/:id', validate(updateUserSchema), async(req: Request, res: Response) => {
+userRouter.put('/:id', validate(updateUserSchema), async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { password, ...data } = req.body;
     const hashedPassword = password && ({
       password: await bcrypt.hash(password, saltRounds)
     })
-    const updated = await updateUser({ 
-      id, 
-      ...data, 
+    const updated = await updateUser({
+      id,
+      ...data,
       ...hashedPassword,
     });
-    if(!updated) throw new Error('Failed to update user');
+    if (!updated) throw new Error('Failed to update user');
     res.status(200).json({
       message: 'User updated successfully'
     });
-  } catch(error) {
+  } catch (error) {
     res.status(500).json(error);
   }
 });
 
-userRouter.delete('/:id', validate(deleteUserSchema), async(req: Request, res: Response) => {
-  try { 
+userRouter.delete('/:id', validate(deleteUserSchema), async (req: Request, res: Response) => {
+  try {
     const { id } = req.params;
     const deleted = await deleteUser(id);
-    if(!deleted) throw new Error('Failed to delete user');
+    if (!deleted) throw new Error('Failed to delete user');
     res.status(200).json({
       message: 'User deleted successfully'
     });
-  } catch(error) {
+  } catch (error) {
     res.status(500).json(error);
   }
 });
 
-userRouter.get('/:id', async(req: Request, res: Response) => {
+userRouter.get('/:id', async (req: Request, res: Response) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const user = await getUserById(id);
-    if(!user) {
+    if (!user) {
       throw new Error('Failed to get user')
     }
     res.status(200).json(user);
-  } catch(error) {
+  } catch (error) {
     res.status(500).json(error);
   }
 });
+
+userRouter.get('/', async (req: Request, res: Response) => {
+  console.log('here')
+  try {
+    const users = await getUsers({});
+    if (!users) {
+      throw new Error('Failed to get users')
+    }
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+})
 
 export default userRouter;

@@ -5,8 +5,12 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createTransaction } from "../../api/mutations/transaction.mutation";
 import TopBar from "../../components/section/topbar";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { transactionAtom } from "../../utils/atoms";
 
 export default function Transactions() {
+
+  const [transactionData, setTransactionData] = useRecoilState(transactionAtom)
   const navigate = useNavigate();
 
   const { mutate: createTransactionMutate, isPending: creatingTransaction } = useMutation({
@@ -18,6 +22,10 @@ export default function Transactions() {
       })
     },
     onSuccess: (data) => {
+      setTransactionData({
+        ...transactionData,
+        transactionNumber: data.id
+      })
       navigate(`/admin/transactions/${data.id}/`);
     }
   });
