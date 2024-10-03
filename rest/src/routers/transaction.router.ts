@@ -6,8 +6,9 @@ const transactionRouter = express.Router();
 transactionRouter.post('/', async(req: Request, res: Response) => {
   try {
     const userId = String(req.user?.id);
+    const {salesAgreementId} = req.body;
     
-    const created = await createTransaction(userId);
+    const created = await createTransaction({leadId: userId, salesAgreementId});
     if (!created) {
       throw new Error('Failed to create transaction');
     }

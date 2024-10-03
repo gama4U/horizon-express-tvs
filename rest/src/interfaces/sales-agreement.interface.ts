@@ -1,7 +1,12 @@
+import { ClientType } from "@prisma/client";
+
 export interface ICreateSalesAgreement {
-  salesAgreementNumber: string;
-  suppliersPoNumber: string;
-  documents: string[];
+  creatorId: string;
+  typeOfClient: ClientType;
+  clientName: string;
+  preparedBy: string;
+  approvedBy: string;
+  serialNumber: string;
 }
 
 export interface IFindSalesAgreements {
