@@ -7,22 +7,27 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ICreateSalesAgreement } from "../../interfaces/sales-agreement.interface";
+import { ICreateSalesAgreement, TypeOfClient } from "../../interfaces/sales-agreement.interface";
 import { createSalesAgreement } from "../../api/mutations/sales-agreement.mutation";
 import { useState } from "react";
 import { toast } from "sonner";
-import UploadDocumentsInput from "../inputs/upload-documents";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import Constants from "../../constants";
 
 const formSchema = z.object({
-  salesAgreementNumber: z.string().min(1, {
-    message: 'Sales agreement number is required'
+  clientName: z.string().min(1, {
+    message: 'Client name is required'
   }),
-  suppliersPoNumber: z.string().min(1, {
-    message: 'Supplier PO number is required'
+  serialNumber: z.string().min(1, {
+    message: 'Serial number is required'
   }),
-  documents: z.array(z.string()).refine(value => value.length > 0, {
-    message: 'At least one document is required'
-  })
+  typeOfClient: z.enum([
+    TypeOfClient.WALK_IN,
+    TypeOfClient.CORPORATE,
+    TypeOfClient.GOVERNMENT,
+  ]),
+  preparedBy: z.string().optional(),
+  approvedBy: z.string().optional()
 })
 
 export default function CreateSalesAgreementDialog() {
@@ -32,16 +37,16 @@ export default function CreateSalesAgreementDialog() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      salesAgreementNumber: '',
-      suppliersPoNumber: '',
-      documents: []
+      typeOfClient: TypeOfClient.WALK_IN,
+      serialNumber: '',
+      clientName: ''
     }
   });
 
   const {mutate: createMutate, isPending} = useMutation({
     mutationFn: async (data: ICreateSalesAgreement) => await createSalesAgreement(data),
     onSuccess: () => {
-      queryClient.refetchQueries({queryKey: ['exam']})
+      queryClient.refetchQueries({queryKey: ['sales-agreements']})
       form.reset();
       setOpen(false);
       toast.success("Sales agreement created successfully", { 
@@ -65,8 +70,8 @@ export default function CreateSalesAgreementDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className="gap-1">
-          <Plus size={22}/>
+        <Button size={'sm'} className="gap-1">
+          <Plus size={16}/>
           <span>Create</span>
         </Button>
       </DialogTrigger>
@@ -80,12 +85,12 @@ export default function CreateSalesAgreementDialog() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
               <FormField
                 control={form.control}
-                name="salesAgreementNumber"
+                name="clientName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sales agreement number</FormLabel>
+                    <FormLabel>Name:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Sales agreement number"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Client name"/>
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
@@ -93,12 +98,12 @@ export default function CreateSalesAgreementDialog() {
               />
               <FormField
                 control={form.control}
-                name="suppliersPoNumber"
+                name="serialNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Supplier PO number</FormLabel>
+                    <FormLabel>Ser. No.:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Supplier PO number"/>
+                      <CommonInput inputProps={{ ...field }}  placeholder="Serial number"/>
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
@@ -106,15 +111,53 @@ export default function CreateSalesAgreementDialog() {
               />
               <FormField
                 control={form.control}
-                name="documents"
+                name="typeOfClient"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Documents</FormLabel>
+                    <FormLabel>Type:</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select a verified email to display" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(Constants.ClientTypesMap).map(([value, label], index) => (
+                          <SelectItem
+                            key={index}
+                            value={value}
+                            className="text-[12px]"
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[10px]"/>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="preparedBy"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prepared by:</FormLabel>
                     <FormControl>
-                      <UploadDocumentsInput 
-                        values={field.value}
-                        onValuesChange={field.onChange}
-                      />
+                      <CommonInput inputProps={{ ...field }}  placeholder="Prepared by (optional)"/>
+                    </FormControl>
+                    <FormMessage className="text-[10px]"/>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="approvedBy"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Approved by:</FormLabel>
+                    <FormControl>
+                      <CommonInput inputProps={{ ...field }}  placeholder="Approved by (optional)"/>
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>

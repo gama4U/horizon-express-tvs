@@ -1,16 +1,21 @@
+import { ClientType } from "@prisma/client";
 import { z } from "zod";
 
 export const createSalesAgreementSchema = z.object({
   body: z.object({
-    salesAgreementNumber: z.string().min(1, {
-      message: 'Sales agreement number is required'
+    clientName: z.string().min(1, {
+      message: 'Client name is required'
     }),
-    suppliersPoNumber: z.string().min(1, {
-      message: 'Supplier PO number is required'
+    serialNumber: z.string().min(1, {
+      message: 'Serial number is required'
     }),
-    documents: z.array(z.string()).refine(value => value.length > 0, {
-      message: 'At least one document is required'
-    })
+    typeOfClient: z.enum([
+      ClientType.WALK_IN,
+      ClientType.CORPORATE,
+      ClientType.GOVERNMENT,
+    ]),
+    preparedBy: z.string().optional(),
+    approvedBy: z.string().optional()
   })
 });
 

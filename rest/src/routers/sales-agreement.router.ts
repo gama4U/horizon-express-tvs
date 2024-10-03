@@ -7,7 +7,9 @@ const salesAgreementRouter = express.Router();
 
 salesAgreementRouter.post('/', validate(createSalesAgreementSchema), async(req: Request, res: Response) => {
   try {
-    const created = await createSalesAgreement(req.body);
+    const userId = req.user?.id;
+
+    const created = await createSalesAgreement({creatorId: userId, ...req.body});
     if (!created) {
       throw new Error('Failed to create sales agreement')
     }

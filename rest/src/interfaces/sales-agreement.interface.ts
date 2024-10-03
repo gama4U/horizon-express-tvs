@@ -4,8 +4,8 @@ export interface ICreateSalesAgreement {
   creatorId: string;
   typeOfClient: ClientType;
   clientName: string;
-  preparedBy: string;
-  approvedBy: string;
+  preparedBy?: string;
+  approvedBy?: string;
   serialNumber: string;
 }
 
