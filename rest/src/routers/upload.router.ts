@@ -47,7 +47,7 @@ uploadRouter.delete('/:filename', async(req: Request, res: Response) => {
     await deleteUploadedFile(filePath);
     res.status(200).json({
       message: 'File deleted successfully',
-      fileName: filename
+      filename: filename
     })
   } catch (error) {
     res.status(500).json(error);

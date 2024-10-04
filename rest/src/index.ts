@@ -9,6 +9,7 @@ import mainRouter from "./middlewares/main-router.middleware";
 import authRouter from "./routers/auth.router";
 import userRouter from "./routers/user.router";
 import uploadRouter from "./routers/upload.router";
+import salesAgreementRouter from "./routers/sales-agreement.router";
 import transactionRouter from "./routers/transaction.router";
 import travelVoucherRouter from "./routers/travel.router";
 import accommodationVoucherRouter from "./routers/accommodation.router";
@@ -39,6 +40,7 @@ mainRouter.use('/travel-vouchers', travelVoucherRouter);
 mainRouter.use('/accommodation-vouchers', accommodationVoucherRouter);
 mainRouter.use('/tours-vouchers', tourVoucherRouter);
 mainRouter.use('/transport-vouchers', transportVoucherRouter);
+mainRouter.use('/sales-agreements', salesAgreementRouter);
 mainRouter.use('/transactions', transactionRouter);
 
 app.listen(port, () => {
