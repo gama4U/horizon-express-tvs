@@ -41,13 +41,13 @@ model SalesAgreement {
 model Transaction {
   id                   String                @id @default(cuid())
   leadId               String
-  salesAgreementId     String                @unique
+  salesAgreementId     String?                @unique
   travelVoucher        Travel?
   accommodationVoucher Accommodation?
   tourVoucher          Tour?
   transportVoucher     Transportation?
   purchaseOrder        PurchaseRequestOrder?
-  salesAgreement       SalesAgreement        @relation(fields: [salesAgreementId], references: [id])
+  salesAgreement       SalesAgreement?        @relation(fields: [salesAgreementId], references: [id])
   lead                 User                  @relation(fields: [leadId], references: [id])
   createdAt            DateTime?             @default(now())
   updatedAt            DateTime?             @updatedAt

@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { createSalesAgreementSchema, getSalesAgreementsSchema } from '../schemas/sales-agreement.schema';
 import { validate } from '../middlewares/validate.middleware';
-import { createSalesAgreement, findSalesAgreements } from '../services/sales-agreement.service';
+import { createSalesAgreement, findSalesAgreementById, findSalesAgreements } from '../services/sales-agreement.service';
 import { ClientType } from '@prisma/client';
 
 const salesAgreementRouter = express.Router();
@@ -52,5 +52,23 @@ salesAgreementRouter.get('/', validate(getSalesAgreementsSchema), async(req: Req
     })
   }
 });
+
+salesAgreementRouter.get('/:id', async(req: Request, res: Response) => {
+  try {
+    const salesAgreementId = req.params.id;
+    
+    const salesAgreement = await findSalesAgreementById(salesAgreementId);
+    if (!salesAgreement) {
+      return res.status(404).json({message: 'Sales agreement not found'});
+    }
+
+    return res.status(200).json(salesAgreement);
+  
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error'
+    })
+  }
+})
 
 export default salesAgreementRouter;

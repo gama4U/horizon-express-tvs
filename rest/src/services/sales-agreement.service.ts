@@ -66,3 +66,33 @@ export async function findSalesAgreements({skip, take, search, typeOfClient}: IF
 
   return {salesAgreements, total};
 }
+
+export async function findSalesAgreementById(id: string) {
+  return await prisma.salesAgreement.findUnique({
+    where: {id},
+    include: {
+      creator: {
+        select: {
+          id: true,
+          avatar: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          userType: true,
+        }
+      },
+      purchaseOrder: true,
+      transaction: true,
+      salesAgreementItems: {
+        orderBy: {
+          createdAt: 'desc'
+        }
+      },
+      _count: {
+        select: {
+          salesAgreementItems: true
+        }
+      }
+    }
+  });
+}
