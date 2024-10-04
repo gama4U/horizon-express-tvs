@@ -11,6 +11,10 @@ import userRouter from "./routers/user.router";
 import uploadRouter from "./routers/upload.router";
 import salesAgreementRouter from "./routers/sales-agreement.router";
 import transactionRouter from "./routers/transaction.router";
+import travelVoucherRouter from "./routers/travel.router";
+import accommodationVoucherRouter from "./routers/accommodation.router";
+import tourVoucherRouter from "./routers/tours.router";
+import transportVoucherRouter from "./routers/transport.router";
 
 declare module 'express' {
   interface Request {
@@ -32,6 +36,10 @@ app.use('/api/v1', mainRouter);
 
 mainRouter.use('/users', userRouter);
 mainRouter.use('/uploads', uploadRouter);
+mainRouter.use('/travel-vouchers', travelVoucherRouter);
+mainRouter.use('/accommodation-vouchers', accommodationVoucherRouter);
+mainRouter.use('/tours-vouchers', tourVoucherRouter);
+mainRouter.use('/transport-vouchers', transportVoucherRouter);
 mainRouter.use('/sales-agreements', salesAgreementRouter);
 mainRouter.use('/transactions', transactionRouter);
 

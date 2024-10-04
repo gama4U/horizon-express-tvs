@@ -39,7 +39,6 @@ userRouter.get('/', validate(getUsersSchema), async (req: Request, res: Response
     if (!users) throw new Error('Failed to get users');
     res.status(200).json(users);
   } catch (error) {
-    console.log(error)
     res.status(500).json(error);
   }
 });
@@ -92,7 +91,6 @@ userRouter.get('/:id', async (req: Request, res: Response) => {
 });
 
 userRouter.get('/', async (req: Request, res: Response) => {
-  console.log('here')
   try {
     const users = await getUsers({});
     if (!users) {

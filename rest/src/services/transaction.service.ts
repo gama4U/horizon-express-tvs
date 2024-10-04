@@ -4,11 +4,11 @@ interface ICreateTransaction {
   leadId: string;
   salesAgreementId: string;
 }
-export async function createTransaction({leadId, salesAgreementId}: ICreateTransaction) {
+export async function createTransaction({ leadId, salesAgreementId }: ICreateTransaction) {
   return await prisma.transaction.create({
     data: {
       leadId,
       salesAgreementId
-    } 
+    }
   })
 }
