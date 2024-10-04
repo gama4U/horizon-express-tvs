@@ -15,9 +15,9 @@ const Layout: React.FC = () => {
 	}
 
 	return (
-		<div className="flex overflow-hidden gap-x-2 bg-green-100 p-2">
+		<div className="h-screen flex overflow-auto gap-x-2 bg-green-100 p-2">
 			<SideBar />
-			<div className="w-full overflow-auto h-screen rounded-xl  z-50">
+			<div className="w-full rounded-xl  z-50">
 				<Outlet />
 			</div>
 		</div>

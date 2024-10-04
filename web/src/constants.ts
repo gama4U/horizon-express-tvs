@@ -1,3 +1,5 @@
+import { TypeOfClient } from "./interfaces/sales-agreement.interface";
+
 export type SidebarItemsType = {
   label: string;
   icon: string;
@@ -32,20 +34,23 @@ const ContainerVariants = {
   },
 }
 
-
 const VersionNumber: String = '0.1.0'
 const NoTopbarPaths = [
   "/admin/transactions"
 ]
 
+const ClientTypesMap: Record<TypeOfClient, string> = {
+  WALK_IN: 'Walk in',
+  CORPORATE: 'Corporate',
+  GOVERNMENT: 'Government',
+}
 
 const Constants = {
   VersionNumber,
   AdminSidebarItems,
   ContainerVariants,
-  NoTopbarPaths
+  NoTopbarPaths,
+  ClientTypesMap
 }
-
-
 
 export default Constants

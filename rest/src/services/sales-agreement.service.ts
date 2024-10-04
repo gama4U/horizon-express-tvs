@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
 import { ICreateSalesAgreement, IFindSalesAgreements } from "../interfaces/sales-agreement.interface";
 
@@ -6,21 +7,37 @@ export async function createSalesAgreement(data: ICreateSalesAgreement) {
 }
 
 export async function findSalesAgreements({skip, take, search}: IFindSalesAgreements) {
-  console.log(">>", search)
-  let searchFilter = {};
+  let searchFilter: Prisma.SalesAgreementWhereInput = {};
 
   if (search) {
     searchFilter = {
       OR: [
-        { salesAgreementNumber: { contains: search, mode: "insensitive" } },
-        { suppliersPoNumber: { contains: search, mode: "insensitive" } },
+        { clientName: { contains: search, mode: "insensitive" } },
+        { serialNumber: { contains: search, mode: "insensitive" } },
       ],
     }
   }
 
   const findSalesAgreements =  prisma.salesAgreement.findMany({
     where: {
-      ...searchFilter
+      ...searchFilter,
+    },
+    include: {
+      creator: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          avatar: true,
+          userType: true
+        }
+      },
+      _count: {
+        select:  {
+          salesAgreementItems: true
+        }
+      }
     },
     skip:skip ?? 0,
     take: take ?? 10

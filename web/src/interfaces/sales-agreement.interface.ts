@@ -1,22 +1,42 @@
+import { IUser } from "./user.interface";
+
 export interface ISalesAgreement {
   id: string;
-  salesAgreementNumber: string;
-  supplierPoNumber: string;
-  documents: string[];
+  creatorId: string;
+  clientName: string;
+  typeOfClient: TypeOfClient;
+  preparedBy: string;
+  approvedBy: string;
+  serialNumber: string;
+  salesAgreementItems: any[];
+  purchaseOrder: any;
+  transaction: any;
+  creator: IUser;
   createdAt: Date;
   updatedAt: Date;
 }
 
+export enum TypeOfClient {
+  WALK_IN = 'WALK_IN',
+  CORPORATE = 'CORPORATE',
+  GOVERNMENT = 'GOVERNMENT'
+}
+
 export interface ICreateSalesAgreement {
-  salesAgreementNumber: string;
-  suppliersPoNumber: string;
-  documents: string[];
+  clientName: string;
+  serialNumber: string;
+  typeOfClient: TypeOfClient;
+  preparedBy?: string;
+  approvedBy?: string;
+}
 
-  id: String
-  salesAgreementNumber: String
-  suppliersPoNumber: String
-  document: String[]
-  createdAt: Date
-  updatedAt: Date
+export interface IFetchSalesAgreements {
+  skip?: number;
+  take?: number;
+  search?: string; 
+}
 
+export interface IFetchSalesAgreementsData {
+  salesAgreements: ISalesAgreement[];
+  total: number;
 }
