@@ -9,7 +9,8 @@ import ManageTransaction from "../pages/admin/manage-trasactions";
 import Users from "../pages/admin/users";
 import Memorandum from "../pages/admin/memorandum";
 import PurchaseRequest from "../pages/admin/purchase-request";
-import SalesAgreement from "../pages/admin/sales-agreement";
+import SalesAgreements from "../pages/admin/sales-agreement";
+import SalesAgreementDetails from "../pages/admin/sales-agreement/details";
 
 const router = createBrowserRouter([
   {
@@ -53,8 +54,12 @@ const router = createBrowserRouter([
         element: <Memorandum />
       },
       {
-        path: 'sales-agreement',
-        element: <SalesAgreement />
+        path: 'sales-agreements',
+        element: <SalesAgreements />
+      },
+      {
+        path: 'sales-agreements/:id',
+        element: <SalesAgreementDetails />
       },
     ]
   },

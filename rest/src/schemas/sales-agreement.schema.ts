@@ -28,5 +28,10 @@ export const getSalesAgreementsSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
+    typeOfClient: z.enum([
+      ClientType.WALK_IN,
+      ClientType.CORPORATE,
+      ClientType.GOVERNMENT,
+    ]).optional(),
   })
 });

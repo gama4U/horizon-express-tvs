@@ -6,11 +6,11 @@ export async function createSalesAgreement(data: ICreateSalesAgreement) {
   return prisma.salesAgreement.create({data});
 }
 
-export async function findSalesAgreements({skip, take, search}: IFindSalesAgreements) {
-  let searchFilter: Prisma.SalesAgreementWhereInput = {};
+export async function findSalesAgreements({skip, take, search, typeOfClient}: IFindSalesAgreements) {
+  let whereInput: Prisma.SalesAgreementWhereInput = {};
 
   if (search) {
-    searchFilter = {
+    whereInput = {
       OR: [
         { clientName: { contains: search, mode: "insensitive" } },
         { serialNumber: { contains: search, mode: "insensitive" } },
@@ -18,9 +18,16 @@ export async function findSalesAgreements({skip, take, search}: IFindSalesAgreem
     }
   }
 
+  if (typeOfClient) {
+    whereInput = {
+      ...whereInput,
+      typeOfClient,
+    }
+  }
+
   const findSalesAgreements =  prisma.salesAgreement.findMany({
     where: {
-      ...searchFilter,
+      ...whereInput,
     },
     include: {
       creator: {
@@ -40,16 +47,22 @@ export async function findSalesAgreements({skip, take, search}: IFindSalesAgreem
       }
     },
     skip:skip ?? 0,
-    take: take ?? 10
+    take: take ?? 10,
+    orderBy: {
+      createdAt: 'desc'
+    }
   });
 
   const countSalesAgreements = prisma.salesAgreement.count({
     where: {
-      ...searchFilter
+      ...whereInput
     },
   });
 
-  const [salesAgreements, total] =  await prisma.$transaction([findSalesAgreements, countSalesAgreements]);
+  const [salesAgreements, total] =  await prisma.$transaction([
+    findSalesAgreements, 
+    countSalesAgreements
+  ]);
 
   return {salesAgreements, total};
 }

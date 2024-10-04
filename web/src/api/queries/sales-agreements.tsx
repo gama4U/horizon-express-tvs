@@ -2,9 +2,14 @@ import { AxiosError } from "axios";
 import api from "../../utils/api.util";
 import { IFetchSalesAgreements, IFetchSalesAgreementsData } from "../../interfaces/sales-agreement.interface";
 
-export async function fetchSalesAgreements(params: IFetchSalesAgreements): Promise<IFetchSalesAgreementsData> {
+export async function fetchSalesAgreements({typeOfClient, ...params}: IFetchSalesAgreements): Promise<IFetchSalesAgreementsData> {
   try {
-    const response = await api.get('/api/v1/sales-agreements', {params});
+    const response = await api.get('/api/v1/sales-agreements', {
+      params: {
+        ...params,
+        ...(typeOfClient !== 'ALL' && {typeOfClient})
+      }
+    });
     return response.data;
   } catch(error) {
     let message;

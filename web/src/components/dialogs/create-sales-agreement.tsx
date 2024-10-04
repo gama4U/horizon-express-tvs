@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import CommonInput from "../common/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import Constants from "../../constants";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   clientName: z.string().min(1, {
@@ -31,7 +32,7 @@ const formSchema = z.object({
 })
 
 export default function CreateSalesAgreementDialog() {
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,14 +46,14 @@ export default function CreateSalesAgreementDialog() {
 
   const {mutate: createMutate, isPending} = useMutation({
     mutationFn: async (data: ICreateSalesAgreement) => await createSalesAgreement(data),
-    onSuccess: () => {
-      queryClient.refetchQueries({queryKey: ['sales-agreements']})
+    onSuccess: (data) => {
       form.reset();
       setOpen(false);
-      toast.success("Sales agreement created successfully", { 
+      toast.success(data.message, { 
         position: 'top-center', 
         className: 'text-primary'
       });
+      navigate(`/admin/sales-agreements/${data.id}`)
     },
     onError: (error) => {
       toast.error(error.message, { 

@@ -6,20 +6,19 @@ import {
   VisibilityState, 
   flexRender, 
   getCoreRowModel, 
-  useReactTable 
+  useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
-import { Input } from "../../ui/input";
 import { DataTablePagination } from "../../common/table-pagination";
-import CreateSalesAgreementDialog from "../../dialogs/create-sales-agreement";
+import { Loader2 } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   total: number;
-  onSearchChange: (value: string) => void;
+  loading: boolean;
   onPaginationChange: OnChangeFn<PaginationState>;
   pagination?: PaginationState;
 }
@@ -28,7 +27,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   total,
-  onSearchChange,
+  loading,
   onPaginationChange,
   pagination
 }: DataTableProps<TData, TValue>) {
@@ -56,17 +55,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="flex-1 overflow-auto space-y-4">
-      <div className="flex gap-2 justify-between">
-        <div className="flex flex-1 gap-2 items-center p-[1px]">
-          <Input
-            placeholder="Search by client name or serial no."
-            className="max-w-[500px]" 
-            onChange={(event) => onSearchChange(event.target.value)}
-          />
-        </div>
-        <CreateSalesAgreementDialog/>
-      </div>
+    <>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -74,7 +63,7 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-[12px]">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -95,7 +84,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-[12px]">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -110,7 +99,10 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {loading 
+                    ? <Loader2 size={20} className="animate-spin m-auto"/> 
+                    : 'No results.'
+                  }
                 </TableCell>
               </TableRow>
             )}
@@ -118,8 +110,8 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <DataTablePagination table={table} />
+        <DataTablePagination table={table}/>
       </div>
-    </div>
+    </>
   )
 }

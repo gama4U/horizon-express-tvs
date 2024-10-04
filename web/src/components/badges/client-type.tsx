@@ -15,7 +15,7 @@ const badgeStyleMap: Record<TypeOfClient, string> = {
 export default function ClientTypeBadge({value}: Props) {
   return (
     <Badge
-      className={`text-slate-700 ${badgeStyleMap[value]} cursor-default`}
+      className={`text-slate-700 ${badgeStyleMap[value]} cursor-default text-[10px] min-w-[125px] justify-center`}
     >
       {Constants.ClientTypesMap[value]}
     </Badge>

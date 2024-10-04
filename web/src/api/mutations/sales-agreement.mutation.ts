@@ -1,8 +1,8 @@
 import { AxiosError } from "axios";
-import { ICreateSalesAgreement } from "../../interfaces/sales-agreement.interface";
+import { ICreateSalesAgreement, ISalesAgreement } from "../../interfaces/sales-agreement.interface";
 import api from "../../utils/api.util";
 
-export async function createSalesAgreement(data: ICreateSalesAgreement) {
+export async function createSalesAgreement(data: ICreateSalesAgreement): Promise<ISalesAgreement & { message: string}> {
   try {
     const response = await api.post('/api/v1/sales-agreements', data);
     return response.data;

@@ -3,7 +3,8 @@ import { Checkbox } from "../../ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import ClientTypeBadge from "../../badges/client-type";
-import { ArrowRight, Eye, File, ListCollapse, NotepadText, Pen, Pencil, SquareKanban, Trash2 } from "lucide-react";
+import { NotepadText, Pencil, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Columns: ColumnDef<ISalesAgreement>[] = [
   {
@@ -98,7 +99,12 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-center gap-4">
-          <NotepadText size={16} className="cursor-pointer hover:text-primary"/>
+          <Link to={`/admin/sales-agreements/${row.original.id}`}>
+            <NotepadText 
+              size={16}
+              className="cursor-pointer hover:text-primary"
+            />
+          </Link>
           <Pencil size={16} className="cursor-pointer hover:text-primary"/>
           <Trash2 size={16} className="cursor-pointer hover:text-destructive"/>
         </div>

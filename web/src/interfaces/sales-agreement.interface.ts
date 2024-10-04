@@ -33,10 +33,13 @@ export interface ICreateSalesAgreement {
 export interface IFetchSalesAgreements {
   skip?: number;
   take?: number;
-  search?: string; 
+  search?: string;
+  typeOfClient?: ClientTypeFilter;
 }
 
 export interface IFetchSalesAgreementsData {
   salesAgreements: ISalesAgreement[];
   total: number;
 }
+
+export type ClientTypeFilter = TypeOfClient | 'ALL';
