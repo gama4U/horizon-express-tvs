@@ -79,7 +79,7 @@ const AnimatedDiv = ({
 				};
 			case 'SlideInFromUp':
 				return {
-					hidden: { y: -100 },
+					hidden: { y: slideEntrancePoint },
 					visible: { y: 0, transition: { duration, delay } }
 				};
 			case 'SlideInFromDown':

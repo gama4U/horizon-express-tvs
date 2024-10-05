@@ -12,3 +12,27 @@ export async function createTransaction({ leadId, salesAgreementId }: ICreateTra
     }
   })
 }
+
+interface IFetchTransaction {
+  id: string;
+}
+
+export async function fetchTransaction({ id }: IFetchTransaction) {
+  return await prisma.transaction.findUnique({
+    where: {
+      id
+    },
+    include: {
+      lead: true,
+      tourVoucher: true,
+      travelVoucher: {
+        include: {
+          airline: true,
+          shipping: true
+        }
+      },
+      accommodationVoucher: true,
+      transportVoucher: true
+    }
+  })
+}

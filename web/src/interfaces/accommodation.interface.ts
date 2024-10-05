@@ -1,5 +1,5 @@
 
-export interface IAccommodation {
+export interface IAccommodationVoucher {
   id: string;
   transactionId: string;
   transaction?: any;

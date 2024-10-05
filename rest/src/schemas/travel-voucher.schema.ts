@@ -14,7 +14,7 @@ export const createTravelVoucherSchema = z.object({
         name: z.string(),
         origin: z.string()
       }).optional(),
-      airlines: z.object({
+      airline: z.object({
         name: z.string(),
         code: z.string(),
         origin: z.string(),
@@ -24,4 +24,28 @@ export const createTravelVoucherSchema = z.object({
       }).optional()
     })
 });
+export const updateTravelVoucherSchema = z.object({
+  body:
+    z.object({
+      id: z.string(),
+      type: z.enum([TravelType.AIRLINES, TravelType.SHIPPING]),
+      shipping: z.object({
+        id: z.string(),
+        voyageNumber: z.string(),
+        dateOfTravel: z.string(),
+        name: z.string(),
+        origin: z.string()
+      }).optional(),
+      airline: z.object({
+        id: z.string(),
+        name: z.string(),
+        code: z.string(),
+        origin: z.string(),
+        destination: z.string(),
+        etd: z.string(),
+        eta: z.string(),
+      }).optional()
+    })
+});
+
 

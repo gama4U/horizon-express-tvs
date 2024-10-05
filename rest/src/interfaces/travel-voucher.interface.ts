@@ -21,9 +21,12 @@ export interface ITravelVoucher {
 export interface ICreateTravelVoucher {
   transactionId: string;       // Optional because it might be nullable
   type: TravelType;             // Assuming TravelType is an enum or a string
-  // airline?: IAirlines;          // Optional, assuming a voucher may not always be for airlines
-  // shipping?: Shipping;          // Optional, in case it's for shipping
 }
+export interface IUpdateTravelVoucher {
+  id: string;
+  type: TravelType;
+}
+
 
 
 export interface IAirlines {
@@ -48,6 +51,16 @@ export interface ICreateAirlines {
   travelId: string;  // Optional because it's nullable in the schema
   destination: string;
 }
+export interface IUpdateAirlines {
+  id: string;
+  name: string;
+  code: string;
+  etd: Date;
+  eta: Date;
+  origin: string;
+  destination: string;
+}
+
 export interface Shipping {
   id: string;
   name: string;
@@ -64,5 +77,13 @@ export interface ICreateShipping {
   origin: string;
   destination: string;
   travelId: string;
+}
+export interface IUpdateShipping {
+  id: string;
+  name: string;
+  voyageNumber: string;
+  dateOfTravel: Date;
+  origin: string;
+  destination: string;
 }
 
