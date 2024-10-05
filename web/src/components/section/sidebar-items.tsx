@@ -19,7 +19,7 @@ type LogoutButtonType = {
 	handleLogout: () => void
 }
 
-export const SidebarIcons = ({ icon, isSelected, role }: SidebarIconsType) => {
+export const SidebarIcons = ({ icon, isSelected }: SidebarIconsType) => {
 
 	const color = isSelected ? '#FFFFFF' : `#000000`;
 	const size = 22;

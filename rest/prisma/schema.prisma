@@ -22,130 +22,127 @@ model User {
   purchaseRequestOrders PurchaseRequestOrder[]
 }
 
+model SalesAgreement {
+  id                  String                @id @default(cuid())
+  creatorId           String
+  typeOfClient        ClientType
+  clientName          String?
+  preparedBy          String?
+  approvedBy          String?
+  serialNumber        String
+  salesAgreementItems SalesAgreementItem[]
+  purchaseOrder       PurchaseRequestOrder?
+  transaction         Transaction?
+  creator             User                  @relation(fields: [creatorId], references: [id])
+  createdAt           DateTime?             @default(now())
+  updatedAt           DateTime?             @updatedAt
+}
+
 model Transaction {
   id                   String                @id @default(cuid())
-  userId               String
-  lead                 User                  @relation(fields: [userId], references: [id])
+  leadId               String
+  salesAgreementId     String?                @unique
   travelVoucher        Travel?
   accommodationVoucher Accommodation?
   tourVoucher          Tour?
   transportVoucher     Transportation?
-  salesAgreement       SalesAgreement?
   purchaseOrder        PurchaseRequestOrder?
+  salesAgreement       SalesAgreement?        @relation(fields: [salesAgreementId], references: [id])
+  lead                 User                  @relation(fields: [leadId], references: [id])
   createdAt            DateTime?             @default(now())
   updatedAt            DateTime?             @updatedAt
 }
 
-model SalesAgreement {
-  id                 String                @id @default(cuid())
-  transactionId      String                @unique
-  transaction        Transaction           @relation(fields: [transactionId], references: [id])
-  purchaseOrder      PurchaseRequestOrder?
-  typeOfClient       ClientType
-  clientName         String?
-  preparedBy         String?
-  approvedBy         String?
-  SalesAgreementItem SalesAgreementItem[]
-
-  creatorId String
-  creator   User      @relation(fields: [creatorId], references: [id])
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-}
-
 model SalesAgreementItem {
   id               String         @id @default(cuid())
+  salesAgreementId String
   particulars      String?
   quantity         Int?
   unitPrice        Float?
   total            Float?
-  salesAgreementId String
   salesAgreement   SalesAgreement @relation(fields: [salesAgreementId], references: [id])
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  createdAt        DateTime?      @default(now())
+  updatedAt        DateTime?      @updatedAt
 }
 
 model PurchaseRequestOrder {
-  id                String                     @id @default(cuid())
-  suppliersName     String?
-  expenses          String?
-  other             String?
-  transactionId     String                     @unique
-  transaction       Transaction                @relation(fields: [transactionId], references: [id])
-  purchaseOrderItem PurchaseRequestOrderItem[]
-  type              PurchaseRequestOrderType?
-  paymentType       PaymentType?
-  creatorId         String?
-  creator           User?                      @relation(fields: [creatorId], references: [id])
-  nos               String?
-
-  salesAgreementNumber String         @unique
-  salesAgreement       SalesAgreement @relation(fields: [salesAgreementNumber], references: [id])
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  id                 String                     @id @default(cuid())
+  transactionId      String                     @unique
+  creatorId          String?
+  serialNumber       String
+  salesAgreementId   String                     @unique
+  suppliersName      String?
+  expenses           String?
+  other              String?
+  nos                String?
+  type               PurchaseRequestOrderType?
+  paymentType        PaymentType?
+  purchaseOrderItems PurchaseRequestOrderItem[]
+  transaction        Transaction                @relation(fields: [transactionId], references: [id])
+  creator            User?                      @relation(fields: [creatorId], references: [id])
+  salesAgreement     SalesAgreement             @relation(fields: [salesAgreementId], references: [id])
+  createdAt          DateTime?                  @default(now())
+  updatedAt          DateTime?                  @updatedAt
 }
 
 model PurchaseRequestOrderItem {
   id                     String               @id @default(cuid())
   purchaseRequestOrderId String
-  purchaseRequestOrder   PurchaseRequestOrder @relation(fields: [purchaseRequestOrderId], references: [id])
   particulars            String?
   quantity               Int?
   unitPrice              Float?
   total                  Float?
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  purchaseRequestOrder   PurchaseRequestOrder @relation(fields: [purchaseRequestOrderId], references: [id])
+  createdAt              DateTime?            @default(now())
+  updatedAt              DateTime?            @updatedAt
 }
 
 model Travel {
   id            String       @id @default(cuid())
   transactionId String?      @unique
-  transaction   Transaction? @relation(fields: [transactionId], references: [id])
   type          TravelType
   airline       Airlines?
   shipping      Shipping?
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
   createdAt     DateTime?    @default(now())
   updatedAt     DateTime?    @updatedAt
 }
 
 model Airlines {
   id          String    @id @default(cuid())
+  travelId    String?   @unique
   name        String
   code        String
   etd         DateTime
   eta         DateTime
   origin      String
-  travelId    String?   @unique
-  travel      Travel?   @relation(fields: [travelId], references: [id])
   destination String
+  travel      Travel?   @relation(fields: [travelId], references: [id])
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 }
 
 model Shipping {
   id           String   @id @default(cuid())
+  travelId     String?  @unique
   name         String
   voyageNumber String
   dateOfTravel DateTime
   origin       String
   destination  String
-  travelId     String?  @unique
   travel       Travel?  @relation(fields: [travelId], references: [id])
 }
 
 model Accommodation {
   id                      String            @id @default(cuid())
   transactionId           String?           @unique
-  transaction             Transaction?      @relation(fields: [transactionId], references: [id])
   type                    AccommodationType
   name                    String
   checkinDate             DateTime
   checkoutDate            DateTime
   hotelConfirmationNumber String
   remarks                 String?
+  transaction             Transaction?      @relation(fields: [transactionId], references: [id])
   createdAt               DateTime?         @default(now())
   updatedAt               DateTime?         @updatedAt
 }
@@ -153,11 +150,11 @@ model Accommodation {
 model Tour {
   id            String       @id @default(cuid())
   transactionId String?      @unique
-  transaction   Transaction? @relation(fields: [transactionId], references: [id])
-  itinerary     Itinerary[]
   remarks       String?
   driverName    String
   driverContact String
+  itineraries   Itinerary[]
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
   createdAt     DateTime?    @default(now())
   updatedAt     DateTime?    @updatedAt
 }
@@ -165,30 +162,28 @@ model Tour {
 model Itinerary {
   id          String         @id @default(cuid())
   tourId      String
-  tour        Tour           @relation(fields: [tourId], references: [id])
   transportId String
-  transport   Transportation @relation(fields: [transportId], references: [id])
-
   title       String
   description String
   startDate   DateTime
   endDate     DateTime
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  transport   Transportation @relation(fields: [transportId], references: [id])
+  tour        Tour           @relation(fields: [tourId], references: [id])
+  createdAt   DateTime?      @default(now())
+  updatedAt   DateTime?      @updatedAt
 }
 
 model Transportation {
   id                 String               @id @default(cuid())
   transactionId      String?              @unique
-  transaction        Transaction?         @relation(fields: [transactionId], references: [id])
-  serviceType        TransportServiceType
   driverName         String
   driverContact      String
   remarks            String?
-  vehicleType        VehicleType
   vehiclePlateNumber String
-  itinerary          Itinerary[]
+  serviceType        TransportServiceType
+  vehicleType        VehicleType
+  itineraries        Itinerary[]
+  transaction        Transaction?         @relation(fields: [transactionId], references: [id])
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 }

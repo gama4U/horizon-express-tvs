@@ -1,9 +1,14 @@
 import prisma from "../../prisma/db";
 
-export async function createTransaction(userId: string) {
+interface ICreateTransaction {
+  leadId: string;
+  salesAgreementId: string;
+}
+export async function createTransaction({ leadId, salesAgreementId }: ICreateTransaction) {
   return await prisma.transaction.create({
     data: {
-      userId
-    } 
+      leadId,
+      salesAgreementId
+    }
   })
 }
