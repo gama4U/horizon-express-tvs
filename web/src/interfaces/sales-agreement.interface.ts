@@ -8,7 +8,7 @@ export interface ISalesAgreement {
   preparedBy: string;
   approvedBy: string;
   serialNumber: string;
-  salesAgreementItems: any[];
+  salesAgreementItems: ISalesAgreementItem[];
   purchaseOrder: any;
   transaction: any;
   creator: IUser;
@@ -43,3 +43,15 @@ export interface IFetchSalesAgreementsData {
 }
 
 export type ClientTypeFilter = TypeOfClient | 'ALL';
+
+export interface ISalesAgreementItem {
+  id: string;
+  salesAgreementId: string;
+  particulars: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
+  salesAgreement?: ISalesAgreement;
+  createdAt: Date;
+  updatedAt: Date;
+}

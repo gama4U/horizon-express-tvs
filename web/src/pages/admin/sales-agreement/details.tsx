@@ -2,10 +2,12 @@ import { useParams } from "react-router-dom"
 import TopBar from "../../../components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSalesAgreement } from "../../../api/queries/sales-agreements";
-import { Loader2, Pencil, Plus } from "lucide-react";
-import ClientTypeBadge from "../../../components/badges/client-type";
+import { Loader2, Pencil } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Separator } from "../../../components/ui/separator";
+import PrintPreview from "../../../components/section/sales-agreement/print-preview";
+import SalesAgreementInfo from "../../../components/section/sales-agreement/info";
+import SalesAgreementItems from "../../../components/section/sales-agreement/items";
 
 export default function SalesAgreementDetails() {
   const {id} = useParams();
@@ -45,70 +47,12 @@ export default function SalesAgreementDetails() {
                 </Button>
               </div>
               <Separator className="my-2 bg-slate-200"/>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col gap-1">
-                  <span className="text-muted-foreground text-[10px]">
-                    Creator
-                  </span>
-                  <h3 className="text-[12px]">
-                    {`${data.creator.firstName} ${data.creator.lastName}`}
-                  </h3>
-                </div>
-                <div>
-                  <span className="text-muted-foreground text-[10px]">
-                    Ser. no.
-                  </span>
-                  <h3 className="text-[12px]">
-                    {data.serialNumber}
-                  </h3>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-muted-foreground text-[10px]">
-                    Type of client
-                  </span>
-                  <ClientTypeBadge
-                    value={data.typeOfClient} 
-                  />
-                </div>
-                <div>
-                  <span className="text-muted-foreground text-[10px]">
-                    Client name
-                  </span>
-                  <h3 className="text-[12px]">
-                    {data.clientName}
-                  </h3>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-muted-foreground text-[10px]">
-                    Prepared by
-                  </span>
-                  <h3 className="text-[12px]">
-                    {data.preparedBy}
-                  </h3>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-muted-foreground text-[10px]">
-                    Approved by
-                  </span>
-                  <h3 className="text-[12px]">
-                    {data.approvedBy}
-                  </h3>
-                </div>
-              </div>
-              <div className="border border-slate-200 p-2 rounded-lg mt-4">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-[12px]">
-                    Sales agreement items
-                  </h1>
-                  <Button size={'icon'} variant={'ghost'} className="text-primary">
-                    <Plus size={18}/>
-                  </Button>
-                </div>
-              </div>
+              <SalesAgreementInfo data={data} />
+              <SalesAgreementItems 
+                data={data.salesAgreementItems}
+              />
             </section>
-            <section className="w-full bg-white rounded-lg p-2">
-              adsfasf
-            </section>
+            <PrintPreview data={data}/>
           </>
         ) : (
           <div className="h-[300px] bg-white w-full text-[12px] text-muted-foreground flex items-center justify-center">
