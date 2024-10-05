@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createTransaction } from "../../api/mutations/transaction.mutation";
 import TopBar from "../../components/section/topbar";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { transactionAtom } from "../../utils/atoms";
 
 export default function Transactions() {

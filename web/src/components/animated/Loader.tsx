@@ -7,7 +7,7 @@ interface LoaderProps {
 	label?: string
 }
 
-const Loader = ({ isLoading, type, label }: LoaderProps) => {
+const Loader = ({ isLoading, label }: LoaderProps) => {
 
 	if (!isLoading) {
 		return null

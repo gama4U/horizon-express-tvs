@@ -6,30 +6,33 @@ import { getAllUsers } from "../../../api/queries/user.query";
 import { Input } from "../../ui/input";
 import { useRecoilState } from "recoil";
 import { transactionAtom } from "../../../utils/atoms";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+// import { z } from "zod";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { useForm } from "react-hook-form";
 
 interface Props {
   horizonFields?: IHorizonOnlyFields;
   transactionId?: string;
 }
-export default function HorizonOnlyForms({ horizonFields, transactionId }: Props) {
+export default function HorizonOnlyForms({ 
+  // horizonFields, 
+  // transactionId 
+}: Props) {
 
-  const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string().trim().min(1, {
-      message: "Password is required."
-    })
-  });
+  // const formSchema = z.object({
+  //   email: z.string().email(),
+  //   password: z.string().trim().min(1, {
+  //     message: "Password is required."
+  //   })
+  // });
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: ""
-    }
-  });
+  // const form = useForm<z.infer<typeof formSchema>>({
+  //   resolver: zodResolver(formSchema),
+  //   defaultValues: {
+  //     email: "",
+  //     password: ""
+  //   }
+  // });
 
   const [transactionData, setTransactionData] = useRecoilState(transactionAtom)
 
