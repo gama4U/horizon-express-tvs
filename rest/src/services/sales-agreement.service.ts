@@ -1,9 +1,18 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
-import { ICreateSalesAgreement, IFindSalesAgreements } from "../interfaces/sales-agreement.interface";
+import { ICreateSalesAgreement, IFindSalesAgreements, IUpdateSalesAgreement } from "../interfaces/sales-agreement.interface";
 
 export async function createSalesAgreement(data: ICreateSalesAgreement) {
   return prisma.salesAgreement.create({data});
+}
+
+export async function updateSalesAgreement({id, ...data}: IUpdateSalesAgreement) {
+  return prisma.salesAgreement.update({
+    where: {
+      id
+    },
+    data
+  })
 }
 
 export async function findSalesAgreements({skip, take, search, typeOfClient}: IFindSalesAgreements) {
@@ -93,6 +102,14 @@ export async function findSalesAgreementById(id: string) {
           salesAgreementItems: true
         }
       }
+    }
+  });
+}
+
+export async function deleteSalesAgreementById(id: string) {
+  return await prisma.salesAgreement.delete({
+    where: {
+      id
     }
   });
 }

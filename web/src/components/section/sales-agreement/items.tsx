@@ -1,15 +1,15 @@
-import { ISalesAgreementItem } from '../../../interfaces/sales-agreement.interface'
 import { Columns } from '../../tables/sales-agreement-items/clumns'
 import { DataTable } from '../../tables/sales-agreement-items/data-table'
-import { Button } from '../../ui/button'
-import { Plus } from 'lucide-react'
 import { Separator } from '../../ui/separator'
+import AddSalesAgreementItemDialog from '../../dialogs/sales-agreement/add-item'
+import { ISalesAgreementItem } from '../../../interfaces/sales-agreement-item.interface'
 
 interface Props {
-  data: ISalesAgreementItem[]
+  data: ISalesAgreementItem[],
+  salesAgreementId: string;
 }
 
-export default function SalesAgreementItems({data}: Props) {
+export default function SalesAgreementItems({data, salesAgreementId}: Props) {
 
   return (
     <div className="border border-slate-200 rounded-lg mt-4">
@@ -17,9 +17,9 @@ export default function SalesAgreementItems({data}: Props) {
         <h1 className='text-[12px] font-semibold'>
           Items
         </h1>
-        <Button size={'icon'} variant={'ghost'} className="text-primary">
-          <Plus size={18}/>
-        </Button>
+        <AddSalesAgreementItemDialog 
+          salesAgreementId={salesAgreementId}
+        />
       </div>
       <Separator />
       <DataTable 

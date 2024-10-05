@@ -1,5 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ISalesAgreementItem } from "../../../interfaces/sales-agreement.interface";
+import { Trash2 } from "lucide-react";
+import EditSalesAgreementItemDialog from "../../dialogs/sales-agreement/edit-item";
+import { ISalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
+import DeleteSalesAgreementItem from "../../alert/sales-agreement/delete-item";
 
 export const Columns: ColumnDef<ISalesAgreementItem>[] = [
   {
@@ -16,7 +19,7 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     header: "Qty.",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.quantity}
+        {row.original.quantity.toLocaleString()}
       </span>
     )
   },
@@ -25,7 +28,7 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     header: "Unit price",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.unitPrice}
+        {row.original.unitPrice.toLocaleString()}
       </span>
     )
   },
@@ -34,8 +37,20 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     header: "Total",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.total}
+        {row.original.total.toLocaleString()}
       </span>
     )
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center gap-4">
+          <EditSalesAgreementItemDialog data={row.original} />
+          <DeleteSalesAgreementItem salesAgreementItemId={row.original.id}/>
+        </div>
+      )
+    },
   },
 ];

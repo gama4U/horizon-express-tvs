@@ -1,19 +1,18 @@
-import { Loader2, NotepadText, Plus } from "lucide-react";
-import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import CommonInput from "../common/input";
-import { useMutation } from "@tanstack/react-query";
+import { FilePenLine, Loader2, Pencil} from "lucide-react";
+import { Button } from "../../ui/button";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
+import CommonInput from "../../common/input";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ICreateSalesAgreement, TypeOfClient } from "../../interfaces/sales-agreement.interface";
-import { createSalesAgreement } from "../../api/mutations/sales-agreement.mutation";
-import { useState } from "react";
+import { ISalesAgreement, IUpdateSalesAgreement, TypeOfClient } from "../../../interfaces/sales-agreement.interface";
+import { updateSalesAgreement } from "../../../api/mutations/sales-agreement.mutation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import Constants from "../../constants";
-import { useNavigate } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
+import Constants from "../../../constants";
 
 const formSchema = z.object({
   clientName: z.string().min(1, {
@@ -31,8 +30,12 @@ const formSchema = z.object({
   approvedBy: z.string().optional()
 })
 
-export default function CreateSalesAgreementDialog() {
-  const navigate = useNavigate();
+interface Props {
+  data: ISalesAgreement;
+}
+
+export default function EditSalesAgreementDialog({data}: Props) {
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,26 +47,43 @@ export default function CreateSalesAgreementDialog() {
     }
   });
 
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        ...data,
+        preparedBy: data.preparedBy || '',
+        approvedBy: data.approvedBy || ''
+      })
+    }
+  }, [data]);
+  
   const {mutate: createMutate, isPending} = useMutation({
-    mutationFn: async (data: ICreateSalesAgreement) => await createSalesAgreement(data),
+    mutationFn: async (data: IUpdateSalesAgreement) => await updateSalesAgreement(data),
     onSuccess: (data) => {
+      if (location.pathname === '/admin/sales-agreements') {
+        queryClient.refetchQueries({queryKey: ['sales-agreements']})
+      } else {
+        console.log('fired')
+        queryClient.refetchQueries({queryKey: ['sales-agreement-details']})
+      }
       form.reset();
       setOpen(false);
       toast.success(data.message, { 
         position: 'top-center', 
         className: 'text-primary'
       });
-      navigate(`/admin/sales-agreements/${data.id}`)
     },
     onError: (error) => {
       toast.error(error.message, { 
-        position: 'top-center', 
+        position: 'top-center',
+        className: 'text-destructive'
       })
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createMutate({
+      salesAgreementId: data.id,
       ...values
     })
   }
@@ -71,16 +91,15 @@ export default function CreateSalesAgreementDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button size={'sm'} className="gap-1">
-          <Plus size={16}/>
-          <span>Create</span>
+        <Button size={'icon'} variant={'ghost'} className="hover:text-primary">
+          <Pencil size={16}/>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <NotepadText size={24} className="text-secondary"/>
-            Create Sales Agreement
+            <FilePenLine  size={24} className="text-secondary"/>
+            Edit sales agreement
           </DialogTitle>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -183,7 +202,7 @@ export default function CreateSalesAgreementDialog() {
                   {isPending && 
                     <Loader2 size={20} className="animate-spin"/>
                   }
-                  <span>Create</span>
+                  <span>Save</span>
                 </Button>
               </div>
             </form>

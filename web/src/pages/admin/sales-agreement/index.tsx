@@ -6,7 +6,7 @@ import usePagination from "../../../hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import { fetchSalesAgreements } from "../../../api/queries/sales-agreements";
-import CreateSalesAgreementDialog from "../../../components/dialogs/create-sales-agreement";
+import CreateSalesAgreementDialog from "../../../components/dialogs/sales-agreement/create";
 import { ClientTypeFilter } from "../../../interfaces/sales-agreement.interface";
 import CommonInput from "../../../components/common/input";
 import ClientTypeFilterSelect from "../../../components/select/sales-agreement/client-type-filter";

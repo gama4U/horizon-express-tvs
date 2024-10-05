@@ -2,12 +2,12 @@ import { useParams } from "react-router-dom"
 import TopBar from "../../../components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSalesAgreement } from "../../../api/queries/sales-agreements";
-import { Loader2, Pencil } from "lucide-react";
-import { Button } from "../../../components/ui/button";
+import { Loader2 } from "lucide-react";
 import { Separator } from "../../../components/ui/separator";
 import PrintPreview from "../../../components/section/sales-agreement/print-preview";
 import SalesAgreementInfo from "../../../components/section/sales-agreement/info";
 import SalesAgreementItems from "../../../components/section/sales-agreement/items";
+import EditSalesAgreementDialog from "../../../components/dialogs/sales-agreement/edit";
 
 export default function SalesAgreementDetails() {
   const {id} = useParams();
@@ -42,14 +42,13 @@ export default function SalesAgreementDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <Button size={'icon'} variant={'ghost'} className="text-primary">
-                  <Pencil size={16}/>
-                </Button>
+                <EditSalesAgreementDialog data={data}/>
               </div>
               <Separator className="my-2 bg-slate-200"/>
               <SalesAgreementInfo data={data} />
               <SalesAgreementItems 
                 data={data.salesAgreementItems}
+                salesAgreementId={data.id}
               />
             </section>
             <PrintPreview data={data}/>

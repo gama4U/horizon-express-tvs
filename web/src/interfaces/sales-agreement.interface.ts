@@ -1,3 +1,4 @@
+import { ISalesAgreementItem } from "./sales-agreement-item.interface";
 import { IUser } from "./user.interface";
 
 export interface ISalesAgreement {
@@ -30,6 +31,15 @@ export interface ICreateSalesAgreement {
   approvedBy?: string;
 }
 
+export interface IUpdateSalesAgreement {
+  salesAgreementId: string;
+  clientName: string;
+  serialNumber: string;
+  typeOfClient: TypeOfClient;
+  preparedBy?: string;
+  approvedBy?: string;
+}
+
 export interface IFetchSalesAgreements {
   skip?: number;
   take?: number;
@@ -43,15 +53,3 @@ export interface IFetchSalesAgreementsData {
 }
 
 export type ClientTypeFilter = TypeOfClient | 'ALL';
-
-export interface ISalesAgreementItem {
-  id: string;
-  salesAgreementId: string;
-  particulars: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
-  salesAgreement?: ISalesAgreement;
-  createdAt: Date;
-  updatedAt: Date;
-}

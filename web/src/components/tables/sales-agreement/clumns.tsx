@@ -5,6 +5,8 @@ import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import ClientTypeBadge from "../../badges/client-type";
 import { NotepadText, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import EditSalesAgreementDialog from "../../dialogs/sales-agreement/edit";
+import DeleteSalesAgreement from "../../alert/sales-agreement/delete";
 
 export const Columns: ColumnDef<ISalesAgreement>[] = [
   {
@@ -105,8 +107,12 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
               className="cursor-pointer hover:text-primary"
             />
           </Link>
-          <Pencil size={16} className="cursor-pointer hover:text-primary"/>
-          <Trash2 size={16} className="cursor-pointer hover:text-destructive"/>
+          <EditSalesAgreementDialog 
+            data={row.original}
+          />
+          <DeleteSalesAgreement 
+            salesAgreementId={row.original.id}
+          />
         </div>
       )
     },
