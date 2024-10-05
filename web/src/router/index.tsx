@@ -5,7 +5,7 @@ import Landing from "../pages";
 import SignIn from "../pages/auth/sign-in";
 import Transactions from "../pages/admin/transactions";
 import TransactionDetails from "../pages/admin/transaction-details";
-import ManageTransaction from "../pages/admin/manage-trasactions";
+import ManageTransaction from "../pages/admin/manage-transaction";
 import Users from "../pages/admin/users";
 import Memorandum from "../pages/admin/memorandum";
 import PurchaseRequest from "../pages/admin/purchase-request";
