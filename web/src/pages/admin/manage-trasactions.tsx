@@ -7,6 +7,7 @@ import HorizonOnlyForms from "../../components/section/transactions/horizon-only
 import { useRecoilValue } from "recoil";
 import { transactionAtom } from "../../utils/atoms";
 import { Separator } from "../../components/ui/separator";
+import TravelItineraryForms from "../../components/section/transactions/travel";
 
 export default function ManageTransaction() {
   const { id } = useParams()
@@ -25,7 +26,7 @@ export default function ManageTransaction() {
           <p className="text-primary text-xs">Add/Manage this transaction voucher</p>
         }
       />
-      <div className="flex justify-between h-screen flex-row gap-x-2">
+      <div className="flex justify-between h-full flex-row gap-x-2">
         <div className="flex flex-col w-[50%] bg-white p-4">
           <Accordion type="multiple" className="w-full" >
             <AccordionItem value="item-1">
@@ -37,6 +38,7 @@ export default function ManageTransaction() {
             <AccordionItem value="item-2">
               <AccordionTrigger>Travel Itinerary</AccordionTrigger>
               <AccordionContent>
+                <TravelItineraryForms />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
@@ -65,9 +67,11 @@ export default function ManageTransaction() {
           <img src={logo} width={200} height={200} />
           <div className="flex items-start flex-col justify-start w-full mt-4">
             <p className="text-xs text-stone-800">Transaction Voucher #: <span className="font-semibold">{transactionData.transactionNumber}</span></p>
-            <p className="text-xs text-stone-800">Lead: <span className="font-semibold">{transactionData.leadFirstName}{" "}{transactionData.leadLastName}</span></p>
+            <p className="text-xs text-stone-800">Lead: <span className="font-semibold">{transactionData.horizonOnly.leadFirstName}{" "}{transactionData.horizonOnly.leadLastName}</span></p>
           </div>
           <Separator className="my-2" />
+
+
         </div>
 
       </div>

@@ -1,15 +1,33 @@
 import { atom } from "recoil";
 
-
-
 export const transactionAtom = atom({
   key: 'textState',
   default: {
-    leadFirstName: "",
-    leadLastName: "",
     transactionNumber: "",
-    salesAgreementNumber: " ",
-    suppliersInvolveNumber: " ",
+    horizonOnly: {
+      leadFirstName: "",
+      leadLastName: "",
+      salesAgreementNumber: " ",
+      suppliersInvolveNumber: " ",
+    },
+    travelItinerary: {
+      travelType: "",
+      airline: {
+        name: "",
+        code: "",
+        etd: "",
+        eta: "",
+        origin: "",
+        destination: ""
+      },
+      shipping: {
+        name: "",
+        voyageNumber: "",
+        dateOfTravel: "",
+        origin: "",
+        destination: ""
+      },
+    }
   },
 }
 );
