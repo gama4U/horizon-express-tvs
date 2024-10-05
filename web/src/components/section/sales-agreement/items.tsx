@@ -12,21 +12,23 @@ interface Props {
 export default function SalesAgreementItems({data, salesAgreementId}: Props) {
 
   return (
-    <div className="border border-slate-200 rounded-lg mt-4">
-      <div className="flex items-center justify-between py-1 px-2">
-        <h1 className='text-[12px] font-semibold'>
-          Items
-        </h1>
-        <AddSalesAgreementItemDialog 
-          salesAgreementId={salesAgreementId}
+    <div className='p-4'>
+      <div className="border border-slate-200 rounded-lg">
+        <div className="flex items-center justify-between py-1 px-2">
+          <h1 className='text-[12px] font-semibold'>
+            Items
+          </h1>
+          <AddSalesAgreementItemDialog 
+            salesAgreementId={salesAgreementId}
+          />
+        </div>
+        <Separator />
+        <DataTable 
+          columns={Columns}
+          data={data}
+          loading={false}
         />
       </div>
-      <Separator />
-      <DataTable 
-        columns={Columns}
-        data={data}
-        loading={false}
-      />
     </div>
   )
 }

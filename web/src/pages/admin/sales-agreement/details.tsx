@@ -37,14 +37,14 @@ export default function SalesAgreementDetails() {
       <div className="w-full flex gap-x-2 rounded-lg">
         {data ? (
           <>
-            <section className="w-full bg-white rounded-lg p-4">
-              <div className="flex justify-between items-center">
+            <section className="w-full bg-white rounded-lg">
+              <div className="h-[50px] flex px-4 justify-between items-center">
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
                 <EditSalesAgreementDialog data={data}/>
               </div>
-              <Separator className="my-2 bg-slate-200"/>
+              <Separator className="bg-slate-200"/>
               <SalesAgreementInfo data={data} />
               <SalesAgreementItems 
                 data={data.salesAgreementItems}

@@ -7,7 +7,7 @@ interface Props {
 
 export default function SalesAgreementInfo({data}: Props) {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-4 p-4">
       <div className="flex flex-col gap-1">
         <span className="text-muted-foreground text-[10px]">
           Creator

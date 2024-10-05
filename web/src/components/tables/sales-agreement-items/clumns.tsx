@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Trash2 } from "lucide-react";
 import EditSalesAgreementItemDialog from "../../dialogs/sales-agreement/edit-item";
 import { ISalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
 import DeleteSalesAgreementItem from "../../alert/sales-agreement/delete-item";
@@ -43,10 +42,10 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
   },
   {
     id: "actions",
-    enableHiding: false,
+    header: "Actions",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center gap-4">
           <EditSalesAgreementItemDialog data={row.original} />
           <DeleteSalesAgreementItem salesAgreementItemId={row.original.id}/>
         </div>
