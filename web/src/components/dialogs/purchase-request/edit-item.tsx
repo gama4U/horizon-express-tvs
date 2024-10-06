@@ -1,4 +1,4 @@
-import { FilePenLine, Loader2, Pencil} from "lucide-react";
+import { FilePenLine, Loader2, Pencil } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
@@ -7,67 +7,73 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ISalesAgreement, IUpdateSalesAgreement, TypeOfClient } from "../../../interfaces/sales-agreement.interface";
-import { updateSalesAgreement } from "../../../api/mutations/sales-agreement.mutation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
-import Constants from "../../../constants";
+import { IPurchaseRequestOrderItem, IUpdatePurchaseRequestItem } from "@/interfaces/purchase-request-item.interface";
+import { updatePurchaseRequestItem } from "@/api/mutations/purchase-request-item.mutation";
 
 const formSchema = z.object({
-  clientName: z.string().min(1, {
-    message: 'Client name is required'
+  particulars: z.string().min(1, {
+    message: 'Particulars is required'
   }),
-  serialNumber: z.string().min(1, {
-    message: 'Serial number is required'
+  quantity: z.string().refine(value => {
+    const numberValue = Number(value);
+    return !isNaN(numberValue) && numberValue > 0;
+  }, {
+    message: 'Invalid quantity'
   }),
-  typeOfClient: z.enum([
-    TypeOfClient.WALK_IN,
-    TypeOfClient.CORPORATE,
-    TypeOfClient.GOVERNMENT,
-  ]),
-  preparedBy: z.string().optional(),
-  approvedBy: z.string().optional()
-})
+  unitPrice: z.string().refine(value => {
+    const numberValue = Number(value);
+    return !isNaN(numberValue) && numberValue > 0;
+  }, {
+    message: 'Invalid unit price'
+  }),
+  total: z.number().refine(value => value > 0, {
+    message: 'Invalid total'
+  }),
+});
 
 interface Props {
-  data: ISalesAgreement;
+  data: IPurchaseRequestOrderItem;
 }
 
-export default function EditSalesAgreementDialog({data}: Props) {
+export default function EditPurchaseRequestItemDialog({data}: Props) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      typeOfClient: TypeOfClient.WALK_IN,
-      serialNumber: '',
-      clientName: ''
+      particulars: '',
     }
   });
+
+  const quantity = form.watch('quantity');
+  const unitPrice = form.watch('unitPrice');
+
+  useEffect(() => {
+    const total = (Number(quantity) * Number(unitPrice));
+    form.setValue('total', total);
+  }, [quantity, unitPrice])
 
   useEffect(() => {
     if (data) {
       form.reset({
-        ...data,
-        preparedBy: data.preparedBy || '',
-        approvedBy: data.approvedBy || ''
+        particulars: data.particulars,
+        quantity: String(data.quantity),
+        unitPrice: String(data.unitPrice),
+        total: data.total,
       })
     }
   }, [data]);
-  
-  const {mutate: createMutate, isPending} = useMutation({
-    mutationFn: async (data: IUpdateSalesAgreement) => await updateSalesAgreement(data),
+
+  const {mutate: updateMutate, isPending} = useMutation({
+    mutationFn: async (data: IUpdatePurchaseRequestItem) => await updatePurchaseRequestItem(data),
     onSuccess: (data) => {
-      if (location.pathname === '/admin/sales-agreements') {
-        queryClient.refetchQueries({queryKey: ['sales-agreements']})
-      } else {
-        queryClient.refetchQueries({queryKey: ['sales-agreement-details']})
-      }
+      queryClient.refetchQueries({queryKey: ['purchase-request-details']})
       form.reset();
       setOpen(false);
-      toast.success(data.message, { 
+      toast.success(data?.message, { 
         position: 'top-center', 
         className: 'text-primary'
       });
@@ -81,35 +87,38 @@ export default function EditSalesAgreementDialog({data}: Props) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createMutate({
-      salesAgreementId: data.id,
-      ...values
+    updateMutate({
+      id: data.id,
+      particulars: values.particulars,
+      quantity: Number(values.quantity),
+      unitPrice: Number(values.unitPrice),
+      total: Number(values.total)
     })
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button size={'icon'} variant={'ghost'} className="hover:text-primary">
-          <Pencil size={16}/>
-        </Button>
+        <Pencil size={16} className="cursor-pointer hover:text-primary"/>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FilePenLine  size={24} className="text-secondary"/>
-            Edit sales agreement
+            <span>
+              Edit purchase request item
+            </span>
           </DialogTitle>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
               <FormField
                 control={form.control}
-                name="clientName"
+                name="particulars"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name:</FormLabel>
+                    <FormLabel>Particulars:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Client name"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Particulars"/>
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
@@ -117,12 +126,12 @@ export default function EditSalesAgreementDialog({data}: Props) {
               />
               <FormField
                 control={form.control}
-                name="serialNumber"
+                name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ser. No.:</FormLabel>
+                    <FormLabel>Quantity:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Serial number"/>
+                      <CommonInput inputProps={{ ...field }} type="number" placeholder="Quantity"/>
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
@@ -130,40 +139,12 @@ export default function EditSalesAgreementDialog({data}: Props) {
               />
               <FormField
                 control={form.control}
-                name="typeOfClient"
+                name="unitPrice"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type:</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                          <SelectValue placeholder="Select a verified email to display" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(Constants.ClientTypesMap).map(([value, label], index) => (
-                          <SelectItem
-                            key={index}
-                            value={value}
-                            className="text-[12px]"
-                          >
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-[10px]"/>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="preparedBy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prepared by:</FormLabel>
+                    <FormLabel>Unit price:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Prepared by (optional)"/>
+                      <CommonInput inputProps={{ ...field }} type="number" placeholder="Unit price"/>
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
@@ -171,12 +152,12 @@ export default function EditSalesAgreementDialog({data}: Props) {
               />
               <FormField
                 control={form.control}
-                name="approvedBy"
+                name="total"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Approved by:</FormLabel>
+                    <FormLabel>Total:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Approved by (optional)"/>
+                      <CommonInput inputProps={{ ...field, readOnly: true }} type="number" placeholder="Total"/>
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>

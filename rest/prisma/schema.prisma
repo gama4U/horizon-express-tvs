@@ -41,13 +41,14 @@ model SalesAgreement {
 model Transaction {
   id                   String                @id @default(cuid())
   leadId               String
-  salesAgreementId     String?                @unique
+  salesAgreementId     String?               @unique
+  purchaseOrderId      String?               @unique
   travelVoucher        Travel?
-  accommodationVoucher Accommodation?
-  tourVoucher          Tour?
+  accommodationVoucher Accommodation[]
+  tourVoucher          Tour[]
   transportVoucher     Transportation?
-  purchaseOrder        PurchaseRequestOrder?
-  salesAgreement       SalesAgreement?        @relation(fields: [salesAgreementId], references: [id])
+  purchaseOrder        PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
+  salesAgreement       SalesAgreement?       @relation(fields: [salesAgreementId], references: [id])
   lead                 User                  @relation(fields: [leadId], references: [id])
   createdAt            DateTime?             @default(now())
   updatedAt            DateTime?             @updatedAt
@@ -67,20 +68,19 @@ model SalesAgreementItem {
 
 model PurchaseRequestOrder {
   id                 String                     @id @default(cuid())
-  transactionId      String                     @unique
   creatorId          String?
   serialNumber       String
-  salesAgreementId   String                     @unique
+  salesAgreementId   String?                     @unique
   suppliersName      String?
-  expenses           String?
+  expenses           String?  
   other              String?
   nos                String?
   type               PurchaseRequestOrderType?
   paymentType        PaymentType?
   purchaseOrderItems PurchaseRequestOrderItem[]
-  transaction        Transaction                @relation(fields: [transactionId], references: [id])
+  transaction        Transaction?
   creator            User?                      @relation(fields: [creatorId], references: [id])
-  salesAgreement     SalesAgreement             @relation(fields: [salesAgreementId], references: [id])
+  salesAgreement     SalesAgreement?             @relation(fields: [salesAgreementId], references: [id])
   createdAt          DateTime?                  @default(now())
   updatedAt          DateTime?                  @updatedAt
 }
@@ -135,7 +135,7 @@ model Shipping {
 
 model Accommodation {
   id                      String            @id @default(cuid())
-  transactionId           String?           @unique
+  transactionId           String
   type                    AccommodationType
   name                    String
   checkinDate             DateTime
@@ -149,8 +149,10 @@ model Accommodation {
 
 model Tour {
   id            String       @id @default(cuid())
-  transactionId String?      @unique
+  transactionId String
   remarks       String?
+  tourGuide     String
+  tourContact   String
   driverName    String
   driverContact String
   itineraries   Itinerary[]
@@ -160,17 +162,17 @@ model Tour {
 }
 
 model Itinerary {
-  id          String         @id @default(cuid())
-  tourId      String
-  transportId String
+  id          String          @id @default(cuid())
+  tourId      String?
+  transportId String?
   title       String
   description String
   startDate   DateTime
   endDate     DateTime
-  transport   Transportation @relation(fields: [transportId], references: [id])
-  tour        Tour           @relation(fields: [tourId], references: [id])
-  createdAt   DateTime?      @default(now())
-  updatedAt   DateTime?      @updatedAt
+  transport   Transportation? @relation(fields: [transportId], references: [id])
+  tour        Tour?           @relation(fields: [tourId], references: [id])
+  createdAt   DateTime?       @default(now())
+  updatedAt   DateTime?       @updatedAt
 }
 
 model Transportation {

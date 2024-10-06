@@ -120,7 +120,7 @@ export default function CreateSalesAgreementDialog() {
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                          <SelectValue placeholder="Select a verified email to display" />
+                          <SelectValue placeholder="Select a client type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
