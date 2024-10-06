@@ -41,7 +41,7 @@ const formSchema = z.object({
 	vehicleType: z.enum([VehicleType.BUS, VehicleType.SUV, VehicleType.VAN, VehicleType.SEDAN, VehicleType.COASTER])
 });
 
-export function AddTransportVoucherDialog({ transactionId, openDialog, setOpenDialog }: AddTransportVoucherProps) {
+export default function AddTransportVoucherDialog({ transactionId, openDialog, setOpenDialog }: AddTransportVoucherProps) {
 
 	const queryClient = useQueryClient()
 	const form = useForm<z.infer<typeof formSchema>>({

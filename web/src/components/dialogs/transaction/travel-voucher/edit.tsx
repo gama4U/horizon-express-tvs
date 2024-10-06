@@ -170,7 +170,7 @@ export default function EditTravelVoucherDialog({ travelVoucher, openDialog, set
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
                     <FormControl>
                       <SelectTrigger className="text-xs">
                         <SelectValue placeholder="Select travel type" className="text-xs" />

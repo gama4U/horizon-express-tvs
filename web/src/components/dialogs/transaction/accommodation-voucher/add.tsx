@@ -47,7 +47,7 @@ const formSchema = z.object({
 	remarks: z.string().optional(),
 });
 
-export function AddAccommodationVoucherDialog({ transactionId, openDialog, setOpenDialog }: AddAccommodationVoucherProps) {
+export default function AddAccommodationVoucherDialog({ transactionId, openDialog, setOpenDialog }: AddAccommodationVoucherProps) {
 
 	const queryClient = useQueryClient()
 	const form = useForm<z.infer<typeof formSchema>>({

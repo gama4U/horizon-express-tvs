@@ -21,7 +21,7 @@ export default function AccommodationVoucher({ accommodationVoucher }: IAccommod
   }
 
   return (
-    <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-4 bg-white rounded-lg">
+    <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-0 mt-2 bg-white rounded-lg">
       {accommodationVoucher.map((voucher, index) => (
         <div key={index} className="border-2 border-dotted p-4 mb-2">
           <div className="flex flex-row justify-between">
