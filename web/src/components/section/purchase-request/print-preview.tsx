@@ -1,13 +1,25 @@
 import { Printer } from 'lucide-react'
-import Constants from '../../../constants'
-import { ISalesAgreement } from '../../../interfaces/sales-agreement.interface'
 import { Button } from '../../ui/button'
 import { Separator } from '../../ui/separator'
 import { useRef } from 'react'
 import {useReactToPrint} from 'react-to-print';
+import { IPurchaseRequestOrder, PaymentType, PurchaseRequestOrderType } from '@/interfaces/purchase-request.interface'
 
 interface Props {
-  data: ISalesAgreement
+  data: IPurchaseRequestOrder
+}
+
+const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
+  HOTEL: 'Hotel',
+  INTERNATIONAL_PACKAGE: 'International Package',
+  LOCAL_PACKAGE: 'Local Package',
+  TICKET: 'Ticket',
+  VISA: 'Visa',
+}
+
+const paymentTypeLabelMap: Record<PaymentType, string> = {
+  CASH: 'Cash',
+  CHECK: 'Check',
 }
 
 export default function PrintPreview({data}: Props) {
@@ -42,10 +54,10 @@ export default function PrintPreview({data}: Props) {
           <div className='flex items-center gap-4'>
             <div className='w-full flex items-end gap-1 text-[12px]'>
               <span className='leading-[16px] font-semibold'>
-                Client name: 
+                Supplier's name: 
               </span>
               <div className='flex-1 border-b leading-[16px]'>
-                <span>{data.clientName}</span>
+                <span>{data.suppliersName}</span>
               </div>
             </div>
 
@@ -62,22 +74,46 @@ export default function PrintPreview({data}: Props) {
           <div className='flex items-center gap-4'>
             <div className='flex w-full items-end gap-1 text-[12px]'>
               <span className='leading-[16px] font-semibold'>
-                Type of client: 
+                Type:
               </span>
               <div className='flex-1 border-b leading-[16px]'>
                 <span>
-                  {Constants.ClientTypesMap[data.typeOfClient]}
+                  {typeLabelMap[data.type]}
                 </span>
               </div>
             </div>
 
             <div className='flex w-[200px] items-end gap-1 text-[12px]'>
               <span className='leading-[16px] font-semibold'>
-                P.O. Number: 
+                S.A. Number: 
               </span>
               <div className='flex-1 border-b leading-[16px]'>
                 <span>
-                  {data.purchaseOrder?.serialNumber ?? '' }
+                  {data.salesAgreement?.serialNumber ?? '' }
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className='flex items-center gap-4'>
+            <div className='flex w-full items-end gap-1 text-[12px]'>
+              <span className='leading-[16px] font-semibold'>
+                Expenses:
+              </span>
+              <div className='flex-1 border-b leading-[16px]'>
+                <span>
+                  {data.expenses}
+                </span>
+              </div>
+            </div>
+
+            <div className='flex w-full items-end gap-1 text-[12px]'>
+              <span className='leading-[16px] font-semibold'>
+                Others: 
+              </span>
+              <div className='flex-1 border-b leading-[16px]'>
+                <span>
+                  {data.other ?? '' }
                 </span>
               </div>
             </div>
@@ -86,7 +122,7 @@ export default function PrintPreview({data}: Props) {
 
         <div className='flex justify-center mb-2'>
           <h1 className='text-muted-foreground text-[18px] font-semibold'>
-            Sales Agreement
+            Purchase Request
           </h1>
         </div>
 
@@ -100,9 +136,9 @@ export default function PrintPreview({data}: Props) {
             </tr>
           </thead>
           <tbody>
-            {(data.salesAgreementItems.length > 0) ? (
+            {(data.purchaseOrderItems.length > 0) ? (
               <>
-                {data.salesAgreementItems.map((item, index) => (
+                {data.purchaseOrderItems.map((item, index) => (
                   <tr key={index}>
                     <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
                     <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
@@ -121,27 +157,27 @@ export default function PrintPreview({data}: Props) {
             )}
           </tbody>
         </table>
-        <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-4'>
-          <div className='w-full text-center max-w-[250px] text-[12px]'>
+        <div className='flex items-center gap-4 text-muted-foreground'>
+          <div className='flex w-full items-end gap-1 text-[12px]'>
+            <span className='leading-[16px] font-semibold'>
+              Payment type:
+            </span>
             <div className='flex-1 border-b leading-[16px]'>
-              <span className='text-[12px] font-semibold'>
-                {data.preparedBy }
+              <span>
+                {paymentTypeLabelMap[data.paymentType]}
               </span>
             </div>
-            <span className='leading-[16px]'>
-              Prepared by 
-            </span>
           </div>
 
-          <div className='w-full text-center max-w-[250px] text-[12px]'>
+          <div className='flex w-full items-end gap-1 text-[12px]'>
+            <span className='leading-[16px] font-semibold'>
+              Nos:
+            </span>
             <div className='flex-1 border-b leading-[16px]'>
-              <span className='text-[12px] font-semibold'>
-                {data.preparedBy}
+              <span>
+                {data.nos }
               </span>
             </div>
-            <span className='leading-[16px]'>
-              Approved & Reviewed by
-            </span>
           </div>
         </div>
       </div>

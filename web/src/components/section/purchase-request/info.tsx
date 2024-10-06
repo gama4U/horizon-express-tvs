@@ -43,7 +43,7 @@ export default function PurchaseRequestInfo({data}: Props) {
       </div>
       <div className="flex flex-col gap-1">
         <span className="text-muted-foreground text-[10px]">
-          Type
+          Payment type
         </span>
         <PaymentTypeBadge
           value={data.paymentType} 

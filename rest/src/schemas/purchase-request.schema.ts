@@ -1,4 +1,4 @@
-import { ClientType, PaymentType, PurchaseRequestOrderType } from "@prisma/client";
+import { PaymentType, PurchaseRequestOrderType } from "@prisma/client";
 import { z } from "zod";
 
 export const createPurchaseRequestSchema = z.object({

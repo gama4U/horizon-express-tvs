@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import TopBar from "../../../components/section/topbar";
-import { Columns } from "../../../components/tables/sales-agreement/clumns";
+import { Columns } from "../../../components/tables/sales-agreement/columns";
 import { DataTable } from "../../../components/tables/sales-agreement/data-table";
 import usePagination from "../../../hooks/usePagination";
 import { useState } from "react";
@@ -10,6 +10,7 @@ import { ClientTypeFilter } from "../../../interfaces/sales-agreement.interface"
 import CommonInput from "../../../components/common/input";
 import ClientTypeFilterSelect from "../../../components/select/sales-agreement/client-type-filter";
 import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
+import Loader from "@/components/animated/Loader";
 
 export default function SalesAgreements() {
   const {skip, take, pagination, onPaginationChange} = usePagination();
@@ -19,7 +20,14 @@ export default function SalesAgreements() {
 
   const {data, isLoading} = useQuery({
     queryKey: ['sales-agreements', pagination, debouncedSearch, clientTypeFilter],
-    queryFn: async() => await fetchSalesAgreements({skip, take, search})
+    queryFn: async() => await fetchSalesAgreements({
+      skip, 
+      take, 
+      search, 
+      ...(clientTypeFilter && {
+        typeOfClient: clientTypeFilter
+      })
+    })
   });
 
   return (
@@ -52,11 +60,11 @@ export default function SalesAgreements() {
           </div>
           <CreateSalesAgreementDialog/>
         </div>
+        <Loader isLoading={isLoading} />
         <DataTable 
           columns={Columns}
           data={data?.salesAgreements ?? []}
           total={data?.total ?? 0}
-          loading={isLoading}
           onPaginationChange={onPaginationChange}
           pagination={pagination}
         />

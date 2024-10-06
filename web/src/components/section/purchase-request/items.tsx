@@ -1,16 +1,15 @@
-import { Columns } from '../../tables/sales-agreement-items/clumns'
-import { DataTable } from '../../tables/sales-agreement-items/data-table'
 import { Separator } from '../../ui/separator'
-import AddSalesAgreementItemDialog from '../../dialogs/sales-agreement/add-item'
-import { ISalesAgreementItem } from '../../../interfaces/sales-agreement-item.interface'
+import { DataTable } from '@/components/tables/purchase-request-items/data-table';
+import { IPurchaseRequestOrderItem } from '@/interfaces/purchase-request-item.interface';
+import { Columns } from '@/components/tables/purchase-request-items/columns';
+import AddPurchaseRequestItemDialog from '@/components/dialogs/purchase-request/add-item';
 
 interface Props {
-  data: ISalesAgreementItem[],
-  salesAgreementId: string;
+  data: IPurchaseRequestOrderItem[],
+  purchaseRequestId: string;
 }
 
-export default function SalesAgreementItems({data, salesAgreementId}: Props) {
-
+export default function PurchaseRequestItems({data, purchaseRequestId}: Props) {
   return (
     <div className='p-4'>
       <div className="border border-slate-200 rounded-lg">
@@ -18,15 +17,14 @@ export default function SalesAgreementItems({data, salesAgreementId}: Props) {
           <h1 className='text-[12px] font-semibold'>
             Items
           </h1>
-          <AddSalesAgreementItemDialog 
-            salesAgreementId={salesAgreementId}
+          <AddPurchaseRequestItemDialog 
+            purchaseRequestId={purchaseRequestId}
           />
         </div>
         <Separator />
         <DataTable 
           columns={Columns}
           data={data}
-          loading={false}
         />
       </div>
     </div>

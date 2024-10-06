@@ -1,4 +1,4 @@
-import { Columns } from '../../tables/sales-agreement-items/clumns'
+import { Columns } from '../../tables/sales-agreement-items/columns'
 import { DataTable } from '../../tables/sales-agreement-items/data-table'
 import { Separator } from '../../ui/separator'
 import AddSalesAgreementItemDialog from '../../dialogs/sales-agreement/add-item'
@@ -26,7 +26,6 @@ export default function SalesAgreementItems({data, salesAgreementId}: Props) {
         <DataTable 
           columns={Columns}
           data={data}
-          loading={false}
         />
       </div>
     </div>

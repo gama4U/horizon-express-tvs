@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom"
 import TopBar from "../../../components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { Separator } from "../../../components/ui/separator";
 import PrintPreview from "../../../components/section/sales-agreement/print-preview";
 import SalesAgreementInfo from "../../../components/section/sales-agreement/info";
 import SalesAgreementItems from "../../../components/section/sales-agreement/items";
 import EditSalesAgreementDialog from "../../../components/dialogs/sales-agreement/edit";
 import { fetchSalesAgreement } from "@/api/queries/sales-agreements.queries";
+import Loader from "@/components/animated/Loader";
 
 export default function SalesAgreementDetails() {
   const {id} = useParams();
@@ -35,6 +35,8 @@ export default function SalesAgreementDetails() {
         }
       />
       <div className="w-full flex gap-x-2 rounded-lg">
+        <Loader isLoading={isLoading} />
+
         {data ? (
           <>
             <section className="w-full bg-white rounded-lg">
@@ -54,17 +56,7 @@ export default function SalesAgreementDetails() {
             <PrintPreview data={data}/>
           </>
         ) : (
-          <div className="h-[300px] bg-white w-full text-[12px] text-muted-foreground flex items-center justify-center">
-            {isLoading
-              ? (
-                <div className="flex gap-2">
-                  <Loader2 size={18} className="animate-spin"/>
-                  <span>Loading</span>
-                </div>
-              )
-              : 'No data found'
-            }
-          </div>
+          <div className="h-[90vh] bg-white w-full rounded-lg" />
         )}
       </div>
     </div>

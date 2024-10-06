@@ -100,6 +100,7 @@ export default function EditPurchaseRequestDialog({data}: Props) {
     if (data) {
       form.reset({
         ...data,
+        other: data.other|| ''
       })
     }
   }, [data]);

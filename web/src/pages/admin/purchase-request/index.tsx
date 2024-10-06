@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import TopBar from "../../../components/section/topbar";
-import { DataTable } from "../../../components/tables/sales-agreement/data-table";
 import usePagination from "../../../hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import CommonInput from "../../../components/common/input";
-import { Columns } from "@/components/tables/purchase-request/clumns";
 import { fetchPurchaseRequestOrders } from "@/api/queries/purchase-request.queries";
 import PaymentTypeFilterSelect from "@/components/select/purchase-request/payment-type-filter";
 import { PaymentType, PurchaseRequestOrderType } from "@/interfaces/purchase-request.interface";
 import PurchaseRequestTypeFilter from "@/components/select/purchase-request/type-filter";
 import CreatePurchaseRequestDialog from "@/components/dialogs/purchase-request/create";
-
+import { DataTable } from "@/components/tables/purchase-request/data-table";
+import Loader from "@/components/animated/Loader";
+import { Columns } from "@/components/tables/purchase-request/columns";
 
 export default function PurchaseRequests() {
   const {skip, take, pagination, onPaginationChange} = usePagination();
@@ -69,11 +69,11 @@ export default function PurchaseRequests() {
           </div>
           <CreatePurchaseRequestDialog />
         </div>
+        <Loader isLoading={isLoading}/>
         <DataTable 
           columns={Columns}
           data={data?.purchaseRequests ?? []}
           total={data?.total ?? 0}
-          loading={isLoading}
           onPaginationChange={onPaginationChange}
           pagination={pagination}
         />

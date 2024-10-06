@@ -12,13 +12,11 @@ import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import { DataTablePagination } from "../../common/table-pagination";
-import { Loader2 } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   total: number;
-  loading: boolean;
   onPaginationChange: OnChangeFn<PaginationState>;
   pagination?: PaginationState;
 }
@@ -27,7 +25,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   total,
-  loading,
   onPaginationChange,
   pagination
 }: DataTableProps<TData, TValue>) {
@@ -99,10 +96,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {loading 
-                    ? <Loader2 size={20} className="animate-spin m-auto"/> 
-                    : 'No results.'
-                  }
+                  No results.
                 </TableCell>
               </TableRow>
             )}
