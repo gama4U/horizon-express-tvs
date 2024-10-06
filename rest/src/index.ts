@@ -17,6 +17,7 @@ import tourVoucherRouter from "./routers/tours.router";
 import transportVoucherRouter from "./routers/transport.router";
 import tourItineraryRouter from "./routers/tour-itinerary.router";
 import transportItineraryRouter from "./routers/transport-itinerary.router";
+import salesAgreementItemRouter from "./routers/sales-agreement-items.router";
 
 declare module 'express' {
   interface Request {
@@ -46,6 +47,7 @@ mainRouter.use('/sales-agreements', salesAgreementRouter);
 mainRouter.use('/transactions', transactionRouter);
 mainRouter.use('/tour-itineraries', tourItineraryRouter);
 mainRouter.use('/transport-itineraries', transportItineraryRouter);
+mainRouter.use('/sales-agreement-items', salesAgreementItemRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)
