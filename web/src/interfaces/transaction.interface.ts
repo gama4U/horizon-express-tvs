@@ -17,15 +17,13 @@ export interface IHorizonOnlyFields {
   salesAgreement: ISalesAgreement
 }
 
-
 export interface ITransaction {
   id: string;
   lead: IUser;
-  travelVoucher?: ITravelVoucher
+  travelVoucher?: ITravelVoucher[]
   accommodationVoucher?: IAccommodationVoucher[]
   tourVoucher?: ITourVoucher[]
-  transportVoucher?: ITransportVoucher
-
+  transportVoucher?: ITransportVoucher[]
 }
 
 export interface IFetchTransaction {

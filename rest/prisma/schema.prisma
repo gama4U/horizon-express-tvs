@@ -43,10 +43,10 @@ model Transaction {
   leadId               String
   salesAgreementId     String?               @unique
   purchaseOrderId      String?               @unique
-  travelVoucher        Travel?
+  travelVoucher        Travel[]
   accommodationVoucher Accommodation[]
   tourVoucher          Tour[]
-  transportVoucher     Transportation?
+  transportVoucher     Transportation[]
   purchaseOrder        PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
   salesAgreement       SalesAgreement?       @relation(fields: [salesAgreementId], references: [id])
   lead                 User                  @relation(fields: [leadId], references: [id])
@@ -68,10 +68,9 @@ model SalesAgreementItem {
 
 model PurchaseRequestOrder {
   id                 String                     @id @default(cuid())
-  transactionId      String                     @unique
   creatorId          String?
   serialNumber       String
-  salesAgreementId   String                     @unique
+  salesAgreementId   String?                    @unique
   suppliersName      String?
   expenses           String?
   other              String?
@@ -81,7 +80,7 @@ model PurchaseRequestOrder {
   purchaseOrderItems PurchaseRequestOrderItem[]
   transaction        Transaction?
   creator            User?                      @relation(fields: [creatorId], references: [id])
-  salesAgreement     SalesAgreement             @relation(fields: [salesAgreementId], references: [id])
+  salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
   createdAt          DateTime?                  @default(now())
   updatedAt          DateTime?                  @updatedAt
 }
@@ -100,7 +99,7 @@ model PurchaseRequestOrderItem {
 
 model Travel {
   id            String       @id @default(cuid())
-  transactionId String?      @unique
+  transactionId String
   type          TravelType
   airline       Airlines?
   shipping      Shipping?
@@ -178,7 +177,7 @@ model Itinerary {
 
 model Transportation {
   id                 String               @id @default(cuid())
-  transactionId      String?              @unique
+  transactionId      String
   driverName         String
   driverContact      String
   remarks            String?

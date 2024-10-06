@@ -1,75 +1,114 @@
-import { ITravelVoucher } from "../../../interfaces/travel.interface";
+import { ITravelVoucher, TravelVoucherType } from "../../../interfaces/travel.interface";
 import { format } from 'date-fns';
+import { Button } from "../../ui/button";
+import { useState } from "react";
+import { Pencil } from "lucide-react";
+import { Separator } from "../../ui/separator";
+import EditTravelVoucherDialog from "../../dialogs/transaction/travel-voucher/edit";
 
 interface TravelVoucherProps {
-  travelVoucher: ITravelVoucher;
+  travelVoucher: ITravelVoucher[];
 }
 
 export default function TravelVoucher({ travelVoucher }: TravelVoucherProps) {
 
+  const [travel, setTravel] = useState<ITravelVoucher>()
+  const [openEditDialog, setOpenEditDialog] = useState(false)
+
+  function handleEditTravelVoucher(selectedTravel: ITravelVoucher) {
+    setOpenEditDialog(true)
+    setTravel(selectedTravel)
+  }
   return (
     <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-4 bg-white rounded-lg">
+      {travelVoucher.map((voucher, index) => (
+        <div key={index} className="border-2 border-dotted p-4 mb-2">
+          <div className="flex flex-row justify-between">
+            <p className="text-sm font-semibold">Travel #{index + 1}</p>
+            <Button variant="link" className="text-xs gap-x-2" onClick={() => handleEditTravelVoucher(voucher)}>
+              Update
+              <Pencil size={12} />
+            </Button>
+          </div>
 
-      <div className="border-2 border-dotted p-4">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-          <p className="text-sm md:text-xs">Travel Type:</p>
-          <p className="text-sm md:text-xsfont-medium">{travelVoucher.type}</p>
+          {voucher.type === TravelVoucherType.AIRLINES &&
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Travel Type:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.type}</p>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Airline Name:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.airline?.name ?? "N/A"}</p>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Airline Code:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.airline?.code ?? "N/A"}</p>
+              </div>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Origin:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.airline?.origin ?? "N/A"}</p>
+              </div>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Destination:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.airline?.destination ?? "N/A"}</p>
+              </div>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">ETD:</p>
+                <p className="text-sm md:text-xs font-medium">{format(new Date(voucher.airline?.etd ?? new Date()), "MMMM d, yyyy")}
+                </p>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">ETA:</p>
+                <p className="text-sm md:text-xs font-medium">
+                  {format(new Date(voucher.airline?.etd ?? new Date()), "MMMM d, yyyy")}
+                </p>
+              </div>
+            </div>
+          }
+          {voucher.type === TravelVoucherType.SHIPPING &&
+            <div className="space-y-4">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Travel Type:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.type}</p>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Shipping Name:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.shipping?.name ?? "N/A"}</p>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Voyage Number:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.shipping?.voyageNumber ?? "N/A"}</p>
+              </div>
+
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Origin:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.shipping?.origin ?? "N/A"}</p>
+              </div>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Destination:</p>
+                <p className="text-sm md:text-xs font-medium">{voucher.shipping?.destination ?? "N/A"}</p>
+              </div>
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
+                <p className="text-sm md:text-xs">Date of Travel</p>
+                <p className="text-sm md:text-xs font-medium">
+                  {format(new Date(voucher.shipping?.dateOfTravel ?? new Date()), "MMMM d, yyyy")}
+                </p>
+              </div>
+            </div>
+          }
+          {index < travelVoucher.length - 1 && <Separator className="my-4" />}
         </div>
-
-        {travelVoucher?.airline && (
-          <div className="flex flex-col gap-y-4">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Airline Name:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.airline.name ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Airline Code:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.airline.code ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Origin:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.airline.origin ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Destination:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.airline.destination ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">ETD:</p>
-              <p className="text-sm md:text-xs font-medium">{format(new Date(travelVoucher.airline.etd), 'MMMM d, yyyy')}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">ETA:</p>
-              <p className="text-sm md:text-xs font-medium">{format(new Date(travelVoucher.airline.eta), 'MMMM d, yyyy')}</p>
-            </div>
-          </div>
-        )}
-
-        {travelVoucher?.shipping && (
-          <div className="flex flex-col gap-y-4">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Shipping Name:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.shipping.name ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Voyage Number:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.shipping.voyageNumber ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Origin:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.shipping.origin ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">Destination:</p>
-              <p className="text-sm md:text-xs font-medium">{travelVoucher.shipping.destination ?? "N/A"}</p>
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-2 gap-x-4">
-              <p className="text-sm md:text-xs">ETD:</p>
-              <p className="text-sm md:text-xs font-medium">{format(new Date(travelVoucher.shipping.dateOfTravel), 'MMMM d, yyyy')}</p>
-            </div>
-          </div>
-        )}
-      </div>
+      ))}
+      {travel &&
+        <EditTravelVoucherDialog travelVoucher={travel} setOpenDialog={setOpenEditDialog} openDialog={openEditDialog} />
+      }
     </div>
+
   );
 }

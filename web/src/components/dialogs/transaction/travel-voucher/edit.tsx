@@ -25,10 +25,9 @@ import { toast } from "sonner"
 import { useEffect } from "react"
 
 interface UpdateTravelVoucherProps {
-  id: string
   openDialog: boolean
   setOpenDialog: (open: boolean) => void
-  travelVoucherData: ITravelVoucher
+  travelVoucher: ITravelVoucher
 }
 
 const formSchema = z.object({
@@ -50,7 +49,7 @@ const formSchema = z.object({
     destination: z.string().min(1, { message: "Destination code is required" }),
   }).optional(),
 })
-export default function EditTravelVoucherDialog({ id, openDialog, setOpenDialog, travelVoucherData }: UpdateTravelVoucherProps) {
+export default function EditTravelVoucherDialog({ travelVoucher, openDialog, setOpenDialog }: UpdateTravelVoucherProps) {
 
   const queryClient = useQueryClient()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -95,44 +94,44 @@ export default function EditTravelVoucherDialog({ id, openDialog, setOpenDialog,
 
 
   useEffect(() => {
-    if (travelVoucherData) {
+    if (travelVoucher) {
       form.reset({
-        type: travelVoucherData.type,
-        airline: travelVoucherData.airline
+        type: travelVoucher.type,
+        airline: travelVoucher.airline
           ? {
-            name: travelVoucherData.airline.name,
-            code: travelVoucherData.airline.code,
-            origin: travelVoucherData.airline.origin,
-            destination: travelVoucherData.airline.destination,
-            etd: new Date(travelVoucherData.airline.etd),
-            eta: new Date(travelVoucherData.airline.eta),
+            name: travelVoucher.airline.name,
+            code: travelVoucher.airline.code,
+            origin: travelVoucher.airline.origin,
+            destination: travelVoucher.airline.destination,
+            etd: new Date(travelVoucher.airline.etd),
+            eta: new Date(travelVoucher.airline.eta),
           }
           : undefined,
-        shipping: travelVoucherData.shipping
+        shipping: travelVoucher.shipping
           ? {
-            name: travelVoucherData.shipping.name,
-            voyageNumber: travelVoucherData.shipping.voyageNumber,
-            origin: travelVoucherData.shipping.origin,
-            destination: travelVoucherData.shipping.destination,
-            dateOfTravel: new Date(travelVoucherData.shipping.dateOfTravel),
+            name: travelVoucher.shipping.name,
+            voyageNumber: travelVoucher.shipping.voyageNumber,
+            origin: travelVoucher.shipping.origin,
+            destination: travelVoucher.shipping.destination,
+            dateOfTravel: new Date(travelVoucher.shipping.dateOfTravel),
           }
           : undefined,
       });
     }
-  }, [form, travelVoucherData]);
+  }, [form, travelVoucher]);
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
 
     const updatePayload: any = {
-      id,
+      id: travelVoucher.id,
       type: values.type,
     };
 
     if (values.shipping) {
       updatePayload.shipping = {
         ...values.shipping,
-        id: String(travelVoucherData?.shipping?.id),
+        id: String(travelVoucher?.shipping?.id),
         dateOfTravel: new Date(values.shipping.dateOfTravel),
       };
     }
@@ -140,7 +139,7 @@ export default function EditTravelVoucherDialog({ id, openDialog, setOpenDialog,
     if (values.airline) {
       updatePayload.airline = {
         ...values.airline,
-        id: String(travelVoucherData?.airline?.id),
+        id: String(travelVoucher?.airline?.id),
         eta: new Date(values.airline.eta),
         etd: new Date(values.airline.etd),
       };
@@ -402,7 +401,7 @@ export default function EditTravelVoucherDialog({ id, openDialog, setOpenDialog,
                     render={({ field }) => (
                       <FormItem>
                         <div className="flex flex-row justify-between gap-x-2 items-center">
-                          <p className="text-xs w-1/3">ETD:</p>
+                          <p className="text-xs w-1/3">Date of Travel:</p>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl className="w-2/3">

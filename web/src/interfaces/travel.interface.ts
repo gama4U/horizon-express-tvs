@@ -30,8 +30,6 @@ export interface ITravelVoucher {
   type: TravelVoucherType
   airline?: IAirline
   shipping?: IShipping
-
   createdAt: Date;
   updatedAt: Date;
-
 }

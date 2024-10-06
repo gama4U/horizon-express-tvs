@@ -351,7 +351,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
                     render={({ field }) => (
                       <FormItem>
                         <div className="flex flex-row justify-between gap-x-2 items-center">
-                          <p className="text-xs w-1/3">ETD:</p>
+                          <p className="text-xs w-1/3">Date of Travel:</p>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl className="w-2/3">

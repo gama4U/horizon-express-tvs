@@ -6,7 +6,7 @@ import TravelVoucher from "../../components/section/transaction/travel-voucher";
 import AddTravelVoucherDialog from "../../components/dialogs/transaction/travel-voucher/add";
 import { useState } from "react";
 import { Button } from "../../components/ui/button";
-import { Hotel, MapPin, Pencil, PlaneTakeoff } from "lucide-react";
+import { Hotel, MapPin, PlaneTakeoff } from "lucide-react";
 import EditTravelVoucherDialog from "../../components/dialogs/transaction/travel-voucher/edit";
 import Loader from "../../components/animated/Loader";
 import { AddAccommodationVoucherDialog } from "../../components/dialogs/transaction/accommodation-voucher/add";
@@ -30,6 +30,7 @@ export default function ManageTransaction() {
     enabled: !!id,
   });
 
+  console.log('transaction data', transaction)
 
   return (
     <div className="h-screen w-full flex flex-col space-y-2">
@@ -48,26 +49,20 @@ export default function ManageTransaction() {
               <>
                 <div className="flex flex-row justify-between items-center">
                   <p className="text-xs font-medium">Travel Voucher</p>
-                  {!transaction?.travelVoucher ? (
-                    <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddTravelDialog(true)}>
-                      Add
-                      <PlaneTakeoff />
-                    </Button>
-                  ) : (
-                    <Button variant="outline" className="text-xs gap-x-2" onClick={() => setOpenEditTravelDialog(true)}>
-                      Update
-                      <Pencil />
-                    </Button>
-                  )}
+                  <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddTravelDialog(true)}>
+                    Add
+                    <PlaneTakeoff />
+                  </Button>
                 </div>
-                {transaction?.travelVoucher ? (
+                {transaction?.travelVoucher && transaction.travelVoucher.length > 0 ? (
                   <TravelVoucher travelVoucher={transaction?.travelVoucher} />
                 ) : (
                   <div className="flex justify-center p-5">
-                    <p className="text-gray-400 text-xs">Transaction does not include a travel voucher.</p>
+                    <p className="text-gray-400 text-xs">Transaction does not include any travel voucher.</p>
                   </div>
                 )}
               </>
+
               <>
                 <div className="flex flex-row justify-between items-center">
                   <p className="text-xs font-medium">Accommodation Voucher</p>

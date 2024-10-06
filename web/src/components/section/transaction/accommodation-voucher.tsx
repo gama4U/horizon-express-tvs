@@ -34,7 +34,7 @@ export default function AccommodationVoucher({ accommodationVoucher }: IAccommod
 
           <div className="space-y-4">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
-              <p className="text-sm md:text-xs">Travel Type:</p>
+              <p className="text-sm md:text-xs">Accommodation Type:</p>
               <p className="text-sm md:text-xs font-medium">{voucher.type}</p>
             </div>
 
