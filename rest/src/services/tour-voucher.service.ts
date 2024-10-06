@@ -20,7 +20,8 @@ export interface IUpdateTourVoucher {
 }
 
 export interface ICreateItinerary {
-  tourId: string
+  tourId?: string
+  transportId?: string
   title: string
   description: string
   startDate: Date
@@ -62,7 +63,10 @@ export async function updateTourVoucher({ id, ...data }: IUpdateTourVoucher) {
 
 export async function createItinerary(data: ICreateItinerary) {
   return await prisma.itinerary.create({
-    data
+    data: {
+      id: data.tourId ?? data.transportId,
+      ...data
+    }
   })
 }
 

@@ -6,19 +6,22 @@ import TravelVoucher from "../../components/section/transaction/travel-voucher";
 import AddTravelVoucherDialog from "../../components/dialogs/transaction/travel-voucher/add";
 import { useState } from "react";
 import { Button } from "../../components/ui/button";
-import { Hotel, MapPin, PlaneTakeoff } from "lucide-react";
+import { Car, Hotel, MapPin, PlaneTakeoff } from "lucide-react";
 import EditTravelVoucherDialog from "../../components/dialogs/transaction/travel-voucher/edit";
 import Loader from "../../components/animated/Loader";
 import { AddAccommodationVoucherDialog } from "../../components/dialogs/transaction/accommodation-voucher/add";
 import AccommodationVoucher from "../../components/section/transaction/accommodation-voucher";
 import TourVoucher from "../../components/section/transaction/tour-voucher";
 import { AddTourVoucherDialog } from "../../components/dialogs/transaction/tour-voucher/add";
+import { AddTransportVoucherDialog } from "../../components/dialogs/transaction/transport-voucher/add";
+import TransportVoucher from "../../components/section/transaction/transport-voucher";
 
 export default function ManageTransaction() {
   const { id } = useParams();
   const [openAddTravelDialog, setOpenAddTravelDialog] = useState(false);
   const [openAddAccommodationDialog, setOpenAddAccommodationDialog] = useState(false);
   const [openAddTourDialog, setOpenAddTourDialog] = useState(false);
+  const [openAddTransportDialog, setOpenAddTransportDialog] = useState(false);
   const [openEditTravelDialog, setOpenEditTravelDialog] = useState(false);
 
   const { data: transaction, isLoading } = useQuery({
@@ -29,8 +32,6 @@ export default function ManageTransaction() {
     },
     enabled: !!id,
   });
-
-  console.log('transaction data', transaction)
 
   return (
     <div className="h-screen w-full flex flex-col space-y-2">
@@ -95,7 +96,22 @@ export default function ManageTransaction() {
                   </div>
                 )}
               </>
-
+              <>
+                <div className="flex flex-row justify-between items-center">
+                  <p className="text-xs font-medium">Transport Voucher</p>
+                  <Button variant="outline" className="text-xs text-primary gap-x-2" onClick={() => setOpenAddTransportDialog(true)}>
+                    Add
+                    <Car />
+                  </Button>
+                </div>
+                {transaction?.transportVoucher && transaction.transportVoucher.length > 0 ? (
+                  <TransportVoucher transportVoucher={transaction.transportVoucher} />
+                ) : (
+                  <div className="flex justify-center p-5">
+                    <p className="text-gray-400 text-xs">Transaction does not include any transport voucher.</p>
+                  </div>
+                )}
+              </>
             </div>
             <div className="w-[50%]"></div>
           </>
@@ -107,15 +123,6 @@ export default function ManageTransaction() {
         openDialog={openAddTravelDialog}
         setOpenDialog={setOpenAddTravelDialog}
       />
-
-      {transaction?.travelVoucher && (
-        <EditTravelVoucherDialog
-          travelVoucherData={transaction?.travelVoucher}
-          id={String(transaction?.travelVoucher?.id)}
-          openDialog={openEditTravelDialog}
-          setOpenDialog={setOpenEditTravelDialog}
-        />
-      )}
       <AddAccommodationVoucherDialog
         transactionId={String(id)}
         openDialog={openAddAccommodationDialog}
@@ -126,8 +133,11 @@ export default function ManageTransaction() {
         openDialog={openAddTourDialog}
         setOpenDialog={setOpenAddTourDialog}
       />
-
-
+      <AddTransportVoucherDialog
+        transactionId={String(id)}
+        openDialog={openAddTransportDialog}
+        setOpenDialog={setOpenAddTransportDialog}
+      />
     </div>
   );
 }

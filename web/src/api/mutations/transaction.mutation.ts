@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import api from "../../utils/api.util";
 import { ICreatedTransaction } from "../../interfaces/transaction.interface";
 import { TravelVoucherType } from "../../interfaces/travel.interface";
+import { TransportServiceType, VehicleType } from "../../interfaces/transport.interface";
 
 export async function createTransaction(): Promise<ICreatedTransaction> {
   try {
@@ -164,6 +165,7 @@ export async function updateAccommodationVoucher(payload: IUpdateAccommodationVo
 
 export interface ICreateItinerary {
   tourId: string;
+  transportId: string;
   title: string;
   description: string;
   startDate: Date;
@@ -184,6 +186,50 @@ export interface IUpdateTourVoucher {
   driverName: string
   driverContact: string
   remarks?: string
+}
+export interface ICreateTransportVoucher {
+  transactionId: string
+  driverName: string
+  driverContact: string
+  remarks?: string
+  vehiclePlateNumber: string
+  serviceType: TransportServiceType
+  vehicleType: VehicleType
+}
+export interface IUpdateTransportVoucher {
+  id: string
+  driverName: string
+  driverContact: string
+  remarks?: string
+  vehiclePlateNumber: string
+  serviceType: TransportServiceType
+  vehicleType: VehicleType
+}
+
+export async function createTransportVoucher(payload: ICreateTransportVoucher) {
+  try {
+    const response = await api.post('/api/v1/transport-vouchers/', payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+
+export async function updateTransportVoucher(payload: IUpdateTransportVoucher) {
+  try {
+    const response = await api.put(`/api/v1/transport-vouchers/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
 }
 
 export async function updateTourVoucher(payload: IUpdateTourVoucher) {

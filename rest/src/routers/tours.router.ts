@@ -19,10 +19,10 @@ tourVoucherRouter.post('/', validate(createTourVoucherSchema), async (req: Reque
 tourVoucherRouter.put('/:id', validate(updateTourVoucherSchema), async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const tourVoucher = await updateTourVoucher({ id, ...req.body })
+    const updated = await updateTourVoucher({ id, ...req.body })
 
-    if (!tourVoucher) { throw new Error('Failed to create tour voucher') }
-    res.status(200).json({ message: "Successfully created tour voucher" })
+    if (!updated) { throw new Error('Failed to update tour voucher') }
+    res.status(200).json({ message: "Successfully updated tour voucher" })
   } catch (error) {
     console.log('error', error)
     res.status(500).json(error)

@@ -64,7 +64,7 @@ export default function TravelVoucher({ travelVoucher }: TravelVoucherProps) {
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">
                 <p className="text-sm md:text-xs">ETA:</p>
                 <p className="text-sm md:text-xs font-medium">
-                  {format(new Date(voucher.airline?.etd ?? new Date()), "MMMM d, yyyy")}
+                  {format(new Date(voucher.airline?.eta ?? new Date()), "MMMM d, yyyy")}
                 </p>
               </div>
             </div>

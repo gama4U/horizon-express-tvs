@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { format } from "date-fns"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useWatch } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { CalendarIcon, Loader2, PlaneTakeoff, Ship } from "lucide-react"
 import { Button } from "../../../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../ui/dialog"
@@ -22,6 +22,13 @@ import AnimatedDiv from "../../../animated/Div"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createTravelVoucher, ICreateTravelVoucher } from "../../../../api/mutations/transaction.mutation"
 import { toast } from "sonner"
+import { useEffect, useState } from "react"
+
+
+const travelTypesMap: Record<TravelVoucherType, string> = {
+  [TravelVoucherType.AIRLINES]: 'Airlines',
+  [TravelVoucherType.SHIPPING]: 'Shipping',
+}
 
 interface AddTravelVoucherProps {
   transactionId: string
@@ -56,6 +63,13 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
     defaultValues: {
     },
   })
+  const [selectedTravelType, setSelectedTravelType] = useState<TravelVoucherType | null>()
+
+  useEffect(() => {
+    if (form.watch('type')) {
+      setSelectedTravelType(form.getValues('type'))
+    }
+  }, [form.watch('type')])
   const { mutate: createTravelVoucherMutate, isPending: creatingTravelVoucher } = useMutation({
     mutationFn: async (data: ICreateTravelVoucher) => createTravelVoucher(data),
     onError: (error) => {
@@ -74,22 +88,6 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
       });
     }
   })
-
-  const selectedTravelType = useWatch({
-    control: form.control,
-    name: "type",
-  })
-
-  const travelTypes = [
-    {
-      label: 'Airlines',
-      value: TravelVoucherType.AIRLINES
-    },
-    {
-      label: 'Shipping',
-      value: TravelVoucherType.SHIPPING
-    },
-  ]
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createTravelVoucherMutate({
@@ -120,20 +118,27 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="text-xs">
-                        <SelectValue placeholder="Select travel type" className="text-xs" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {
-                        travelTypes.map((travelType, index) => (
-                          <SelectItem className="text-xs" key={index} value={travelType.value}>{travelType.label}</SelectItem>
-                        ))
-                      }
-                    </SelectContent>
-                  </Select>
+                  <FormItem>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="text-xs">
+                          <SelectValue placeholder="Select vehicle type" className="text-xs" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(travelTypesMap).map(([key, value], index) => (
+                          <SelectItem
+                            value={key}
+                            key={index}
+                            className="text-xs"
+                          >
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
                   <FormMessage />
                 </FormItem>
               )}
@@ -214,7 +219,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
                               <Button
                                 variant={"outline"}
                                 className={`w-full pl-3 text-left font-normal text-xs
-                        ${!field.value && "text-muted-foreground"}`}
+                                ${!field.value && "text-muted-foreground"}`}
                               >
                                 {field.value ? (
                                   format(field.value, "PPP")
@@ -388,17 +393,16 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
               </>
             }
             <div className="flex flex-row justify-end">
-              {selectedTravelType &&
-                <Button type="submit" className="text-xs" disabled={creatingTravelVoucher}>
-                  {
-                    creatingTravelVoucher ?
-                      <div className="flex flex-row items-center gap-x-">
-                        <p className="text-xs">Creating..</p>
-                        <Loader2 className="animate-spin" />
-                      </div> :
-                      <p className="text-xs">Create</p>
-                  }
-                </Button>}
+              <Button type="submit" className="text-xs" disabled={creatingTravelVoucher}>
+                {
+                  creatingTravelVoucher ?
+                    <div className="flex flex-row items-center gap-x-">
+                      <p className="text-xs">Creating..</p>
+                      <Loader2 className="animate-spin" />
+                    </div> :
+                    <p className="text-xs">Create</p>
+                }
+              </Button>
             </div>
           </form>
         </Form>

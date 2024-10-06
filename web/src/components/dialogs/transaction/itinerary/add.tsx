@@ -17,6 +17,7 @@ import { createItinerary, ICreateItinerary } from "../../../../api/mutations/tra
 
 interface AddItineraryProps {
 	tourId?: string
+	transportId?: string
 	openDialog: boolean
 	setOpenDialog: (open: boolean) => void
 }
@@ -28,7 +29,7 @@ const formSchema = z.object({
 	endDate: z.date()
 });
 
-export function AddItineraryDialog({ tourId, openDialog, setOpenDialog }: AddItineraryProps) {
+export function AddItineraryDialog({ tourId, openDialog, transportId, setOpenDialog }: AddItineraryProps) {
 
 	const queryClient = useQueryClient()
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -57,6 +58,7 @@ export function AddItineraryDialog({ tourId, openDialog, setOpenDialog }: AddIti
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		addItineraryMutate({
 			tourId: String(tourId),
+			transportId: String(transportId),
 			...values
 		})
 	}
