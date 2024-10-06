@@ -5,11 +5,11 @@ import { DataTable } from "../../../components/tables/sales-agreement/data-table
 import usePagination from "../../../hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
-import { fetchSalesAgreements } from "../../../api/queries/sales-agreements";
 import CreateSalesAgreementDialog from "../../../components/dialogs/sales-agreement/create";
 import { ClientTypeFilter } from "../../../interfaces/sales-agreement.interface";
 import CommonInput from "../../../components/common/input";
 import ClientTypeFilterSelect from "../../../components/select/sales-agreement/client-type-filter";
+import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
 
 export default function SalesAgreements() {
   const {skip, take, pagination, onPaginationChange} = usePagination();
@@ -19,7 +19,7 @@ export default function SalesAgreements() {
 
   const {data, isLoading} = useQuery({
     queryKey: ['sales-agreements', pagination, debouncedSearch, clientTypeFilter],
-    queryFn: async() => await fetchSalesAgreements({skip, take, search, typeOfClient: clientTypeFilter})
+    queryFn: async() => await fetchSalesAgreements({skip, take, search})
   });
 
   return (
@@ -27,7 +27,7 @@ export default function SalesAgreements() {
       <TopBar
         LeftSideHeader={
           <p className="text-sm">
-            Sales agreements
+            Sales Agreements
           </p>
         }
         LeftSideSubHeader={

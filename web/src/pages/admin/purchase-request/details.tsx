@@ -7,7 +7,7 @@ import PrintPreview from "../../../components/section/sales-agreement/print-prev
 import SalesAgreementInfo from "../../../components/section/sales-agreement/info";
 import SalesAgreementItems from "../../../components/section/sales-agreement/items";
 import EditSalesAgreementDialog from "../../../components/dialogs/sales-agreement/edit";
-import { fetchSalesAgreement } from "@/api/queries/sales-agreements.queries";
+import { fetchPurchaseRequestOrder } from "@/api/queries/purchase-request.queries";
 
 export default function SalesAgreementDetails() {
   const {id} = useParams();
@@ -16,7 +16,7 @@ export default function SalesAgreementDetails() {
     queryKey: ['sales-agreement-details', id],
     queryFn: async () => {
       if (!id) return;
-      return await fetchSalesAgreement(id)
+      return await fetchPurchaseRequestOrder(id)
     },
   });
 

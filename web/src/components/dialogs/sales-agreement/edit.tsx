@@ -63,7 +63,6 @@ export default function EditSalesAgreementDialog({data}: Props) {
       if (location.pathname === '/admin/sales-agreements') {
         queryClient.refetchQueries({queryKey: ['sales-agreements']})
       } else {
-        console.log('fired')
         queryClient.refetchQueries({queryKey: ['sales-agreement-details']})
       }
       form.reset();
