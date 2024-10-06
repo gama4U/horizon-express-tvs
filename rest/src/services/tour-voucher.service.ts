@@ -34,8 +34,6 @@ export interface IUpdateItinerary {
   endDate: Date
 }
 
-
-
 export async function createTourVoucher(data: ICreateTourVoucher) {
   return await prisma.tour.create({
     data: {
@@ -45,19 +43,11 @@ export async function createTourVoucher(data: ICreateTourVoucher) {
       driverName: data.driverName,
       driverContact: data.driverContact,
       remarks: data.remarks,
-      itineraries: {
-        create: data.itineraries.map(itinerary => ({
-          title: itinerary.title,
-          description: itinerary.description,
-          startDate: itinerary.startDate,
-          endDate: itinerary.endDate,
-        })),
-      },
     },
   });
 }
 
-export async function updateTourVoucher(id: string, data: IUpdateTourVoucher) {
+export async function updateTourVoucher({ id, ...data }: IUpdateTourVoucher) {
   return await prisma.tour.update({
     where: { id },
     data: {
@@ -66,24 +56,20 @@ export async function updateTourVoucher(id: string, data: IUpdateTourVoucher) {
       driverName: data.driverName,
       driverContact: data.driverContact,
       remarks: data.remarks,
-      itineraries: {
-        upsert: data.itineraries.map(itinerary => ({
-          where: { id: itinerary.id },
-          update: {
-            title: itinerary.title,
-            description: itinerary.description,
-            startDate: itinerary.startDate,
-            endDate: itinerary.endDate,
-          },
-          create: {
-            title: itinerary.title,
-            description: itinerary.description,
-            startDate: itinerary.startDate,
-            endDate: itinerary.endDate,
-          },
-        })),
-      },
     },
   });
+}
+
+export async function createItinerary(data: ICreateItinerary) {
+  return await prisma.itinerary.create({
+    data
+  })
+}
+
+export async function updateItinerary({ id, ...data }: IUpdateItinerary) {
+  return await prisma.itinerary.update({
+    where: { id },
+    data
+  })
 }
 

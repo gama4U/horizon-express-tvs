@@ -49,18 +49,17 @@ export default function ManageTransaction() {
                 <div className="flex flex-row justify-between items-center">
                   <p className="text-xs font-medium">Travel Voucher</p>
                   {!transaction?.travelVoucher ? (
-                    <Button className="text-xs gap-x-2" onClick={() => setOpenAddTravelDialog(true)}>
+                    <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddTravelDialog(true)}>
                       Add
                       <PlaneTakeoff />
                     </Button>
                   ) : (
-                    <Button className="text-xs gap-x-2" onClick={() => setOpenEditTravelDialog(true)}>
+                    <Button variant="outline" className="text-xs gap-x-2" onClick={() => setOpenEditTravelDialog(true)}>
                       Update
                       <Pencil />
                     </Button>
                   )}
                 </div>
-
                 {transaction?.travelVoucher ? (
                   <TravelVoucher travelVoucher={transaction?.travelVoucher} />
                 ) : (
@@ -72,7 +71,7 @@ export default function ManageTransaction() {
               <>
                 <div className="flex flex-row justify-between items-center">
                   <p className="text-xs font-medium">Accommodation Voucher</p>
-                  <Button className="text-xs gap-x-2" onClick={() => setOpenAddAccommodationDialog(true)}>
+                  <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddAccommodationDialog(true)}>
                     Add
                     <Hotel />
                   </Button>
@@ -88,7 +87,7 @@ export default function ManageTransaction() {
               <>
                 <div className="flex flex-row justify-between items-center">
                   <p className="text-xs font-medium">Tour Voucher</p>
-                  <Button className="text-xs gap-x-2" onClick={() => setOpenAddTourDialog(true)}>
+                  <Button variant="outline" className="text-xs text-primary gap-x-2" onClick={() => setOpenAddTourDialog(true)}>
                     Add
                     <MapPin />
                   </Button>

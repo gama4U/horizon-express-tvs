@@ -80,12 +80,6 @@ export async function createAccommodationVoucher(payload: ICreateAccommodationVo
   }
 }
 
-export interface ICreateItineraries {
-  title: string
-  description: string
-  startDate: Date;
-  endDate: Date;
-}
 export interface ICreateTourVoucher {
   transactionId: string
   tourGuide: string
@@ -93,7 +87,6 @@ export interface ICreateTourVoucher {
   driverName: string
   driverContact: string
   remarks?: string
-  itineraries?: ICreateItineraries[]
 }
 
 export async function createTourVoucher(payload: ICreateTourVoucher) {
@@ -159,6 +152,68 @@ export interface IUpdateAccommodationVoucher {
 export async function updateAccommodationVoucher(payload: IUpdateAccommodationVoucher) {
   try {
     const response = await api.put(`/api/v1/accommodation-vouchers/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+
+export interface ICreateItinerary {
+  tourId: string;
+  title: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+}
+
+export interface IUpdateItinerary {
+  id: string
+  title: string
+  description: string
+  startDate: Date;
+  endDate: Date;
+}
+export interface IUpdateTourVoucher {
+  id: string
+  tourGuide: string
+  tourContact: string
+  driverName: string
+  driverContact: string
+  remarks?: string
+}
+
+export async function updateTourVoucher(payload: IUpdateTourVoucher) {
+  try {
+    const response = await api.put(`/api/v1/tour-vouchers/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+
+export async function createItinerary(payload: ICreateItinerary) {
+  try {
+    const response = await api.post('/api/v1/itineraries/', payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+export async function updateItinerary(payload: IUpdateItinerary) {
+  try {
+    const response = await api.put(`/api/v1/itineraries/${payload.id}`, payload)
     return response.data
   } catch (error) {
     let message;
