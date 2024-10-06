@@ -18,6 +18,8 @@ import transportVoucherRouter from "./routers/transport.router";
 import tourItineraryRouter from "./routers/tour-itinerary.router";
 import transportItineraryRouter from "./routers/transport-itinerary.router";
 import salesAgreementItemRouter from "./routers/sales-agreement-items.router";
+import purchaseRequestRouter from "./routers/purchase-request.router";
+import purchaseRequestItemRouter from "./routers/purchase-request-items.router";
 
 declare module 'express' {
   interface Request {
@@ -48,6 +50,10 @@ mainRouter.use('/transactions', transactionRouter);
 mainRouter.use('/tour-itineraries', tourItineraryRouter);
 mainRouter.use('/transport-itineraries', transportItineraryRouter);
 mainRouter.use('/sales-agreement-items', salesAgreementItemRouter);
+mainRouter.use('/purchase-requests', purchaseRequestRouter);
+mainRouter.use('/purchase-request-items', purchaseRequestItemRouter);
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)

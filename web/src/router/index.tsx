@@ -6,10 +6,11 @@ import SignIn from "../pages/auth/sign-in";
 import ManageTransaction from "../pages/admin/transactions/details";
 import Users from "../pages/admin/users";
 import Memorandum from "../pages/admin/memorandum";
-import PurchaseRequest from "../pages/admin/purchase-request";
 import SalesAgreements from "../pages/admin/sales-agreement";
 import SalesAgreementDetails from "../pages/admin/sales-agreement/details";
 import Transactions from "../pages/admin/transactions";
+import PurchaseRequests from "@/pages/admin/purchase-request";
+import PurchaseRequestDetails from "@/pages/admin/purchase-request/details";
 
 const router = createBrowserRouter([
   {
@@ -41,8 +42,12 @@ const router = createBrowserRouter([
         element: <Users />
       },
       {
-        path: 'purchase-request',
-        element: <PurchaseRequest />
+        path: 'purchase-requests',
+        element: <PurchaseRequests />
+      },
+      {
+        path: 'purchase-requests/:id',
+        element: <PurchaseRequestDetails />
       },
       {
         path: 'memorandum',

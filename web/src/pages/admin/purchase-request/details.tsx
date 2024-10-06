@@ -2,21 +2,21 @@ import { useParams } from "react-router-dom"
 import TopBar from "../../../components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
 import { Separator } from "../../../components/ui/separator";
-import PrintPreview from "../../../components/section/sales-agreement/print-preview";
-import SalesAgreementInfo from "../../../components/section/sales-agreement/info";
-import SalesAgreementItems from "../../../components/section/sales-agreement/items";
-import EditSalesAgreementDialog from "../../../components/dialogs/sales-agreement/edit";
-import { fetchSalesAgreement } from "@/api/queries/sales-agreements.queries";
+import { fetchPurchaseRequestOrder } from "@/api/queries/purchase-request.queries";
+import PurchaseRequestInfo from "@/components/section/purchase-request/info";
 import Loader from "@/components/animated/Loader";
+import PrintPreview from "@/components/section/purchase-request/print-preview";
+import EditPurchaseRequestDialog from "@/components/dialogs/purchase-request/edit";
+import PurchaseRequestItems from "@/components/section/purchase-request/items";
 
-export default function SalesAgreementDetails() {
+export default function PurchaseRequestDetails() {
   const {id} = useParams();
 
   const {data, isLoading} = useQuery({
-    queryKey: ['sales-agreement-details', id],
+    queryKey: ['purchase-request-details', id],
     queryFn: async () => {
       if (!id) return;
-      return await fetchSalesAgreement(id)
+      return await fetchPurchaseRequestOrder(id)
     },
   });
 
@@ -25,18 +25,17 @@ export default function SalesAgreementDetails() {
       <TopBar
         LeftSideHeader={
           <p className="text-sm">
-            Sales agreement details
+            Purchase request order details
           </p>
         }
         LeftSideSubHeader={
           <p className="text-primary text-xs">
-            Manage sales agreement details here
+            Manage purchase request order details here
           </p>
         }
       />
       <div className="w-full flex gap-x-2 rounded-lg">
         <Loader isLoading={isLoading} />
-
         {data ? (
           <>
             <section className="w-full bg-white rounded-lg">
@@ -44,13 +43,13 @@ export default function SalesAgreementDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <EditSalesAgreementDialog data={data}/>
+                <EditPurchaseRequestDialog data={data}/>
               </div>
               <Separator className="bg-slate-200"/>
-              <SalesAgreementInfo data={data} />
-              <SalesAgreementItems 
-                data={data.salesAgreementItems}
-                salesAgreementId={data.id}
+              <PurchaseRequestInfo data={data} />
+              <PurchaseRequestItems 
+                data={data.purchaseOrderItems}
+                purchaseRequestId={data.id}
               />
             </section>
             <PrintPreview data={data}/>

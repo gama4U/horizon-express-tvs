@@ -11,8 +11,8 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Transactions", icon: "Transactions", link: "/admin/transactions" },
   { label: "Users", icon: "Users", link: "/admin/users" },
   { label: "Memorandum", icon: "Memorandum", link: "/admin/memorandum" },
-  { label: "Sales Agreement", icon: "Purchase", link: "/admin/sales-agreements" },
-  { label: "Purchase Request", icon: "Sales", link: "/admin/purchase-request" },
+  { label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
+  { label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
 ]
 
 const ContainerVariants = {
