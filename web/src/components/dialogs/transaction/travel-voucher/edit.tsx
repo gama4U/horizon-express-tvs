@@ -447,7 +447,7 @@ export default function EditTravelVoucherDialog({ id, openDialog, setOpenDialog,
                         <p className="text-xs">Creating..</p>
                         <Loader2 className="animate-spin" />
                       </div> :
-                      <p className="text-xs">Add</p>
+                      <p className="text-xs">Update</p>
                   }
                 </Button>}
             </div>

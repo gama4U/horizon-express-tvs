@@ -7,22 +7,25 @@ import AddTravelVoucherDialog from "../../components/dialogs/transaction/travel-
 import { Separator } from "../../components/ui/separator";
 import { useState } from "react";
 import { Button } from "../../components/ui/button";
-import { Pencil, PlaneTakeoff } from "lucide-react";
+import { Hotel, Pencil, PlaneTakeoff } from "lucide-react";
 import EditTravelVoucherDialog from "../../components/dialogs/transaction/travel-voucher/edit";
 import Loader from "../../components/animated/Loader";
+import { AddAccommodationVoucherDialog } from "../../components/dialogs/transaction/accommodation-voucher/add";
+import AccommodationVoucher from "../../components/section/transaction/accommodation-voucher";
 
 export default function ManageTransaction() {
   const { id } = useParams();
   const [openAddTravelDialog, setOpenAddTravelDialog] = useState(false);
+  const [openAddAccommodationDialog, setOpenAddAccommodationDialog] = useState(false);
   const [openEditTravelDialog, setOpenEditTravelDialog] = useState(false);
 
   const { data: transaction, isLoading } = useQuery({
-    queryKey: ["transaction", id], // Ensures the query is linked to the transaction id
+    queryKey: ["transaction", id],
     queryFn: async () => {
       if (!id) return null;
       return await fetchTransaction({ id });
     },
-    enabled: !!id, // Enable the query only if id is available
+    enabled: !!id,
   });
 
 
@@ -34,66 +37,56 @@ export default function ManageTransaction() {
         LeftSideSubHeader={<p className="text-primary text-xs">Transaction ID: {id}</p>}
       />
 
-      <div className="bg-white rounded-lg border-[1px] flex-1 p-4 flex-col">
+      <div className="bg-white  flex-1  flex-col">
         {isLoading ?
           <Loader isLoading label="Fetching transaction details" />
           :
-          <div className="flex flex-col space-y-2">
-            <>
-              <div className="flex flex-row justify-between items-center">
-                <p className="text-xs font-medium">Travel Voucher</p>
-                {!transaction?.travelVoucher ? (
-                  <Button className="text-xs gap-x-2" onClick={() => setOpenAddTravelDialog(true)}>
-                    Add
-                    <PlaneTakeoff />
-                  </Button>
-                ) : (
-                  <Button className="text-xs gap-x-2" onClick={() => setOpenEditTravelDialog(true)}>
-                    Update
-                    <Pencil />
-                  </Button>
-                )}
-              </div>
-              <Separator className="my-2" />
-
-              {transaction?.travelVoucher ? (
-                <TravelVoucher travelVoucher={transaction?.travelVoucher} />
-              ) : (
-                <div className="flex justify-center p-5">
-                  <p className="text-gray-400 text-xs">Transaction does not include a travel voucher.</p>
+          <>
+            <div className="flex flex-col space-y-2 w-[50%]  p-4">
+              <>
+                <div className="flex flex-row justify-between items-center">
+                  <p className="text-xs font-medium">Travel Voucher</p>
+                  {!transaction?.travelVoucher ? (
+                    <Button className="text-xs gap-x-2" onClick={() => setOpenAddTravelDialog(true)}>
+                      Add
+                      <PlaneTakeoff />
+                    </Button>
+                  ) : (
+                    <Button className="text-xs gap-x-2" onClick={() => setOpenEditTravelDialog(true)}>
+                      Update
+                      <Pencil />
+                    </Button>
+                  )}
                 </div>
-              )}
 
-            </>
-            <>
-              <div className="flex flex-row justify-between items-center">
-                <p className="text-xs font-medium">Accommodation Voucher</p>
-                {!transaction?.travelVoucher ? (
-                  <Button className="text-xs gap-x-2" onClick={() => setOpenAddTravelDialog(true)}>
-                    Add
-                    <PlaneTakeoff />
-                  </Button>
+                {transaction?.travelVoucher ? (
+                  <TravelVoucher travelVoucher={transaction?.travelVoucher} />
                 ) : (
-                  <Button className="text-xs gap-x-2" onClick={() => setOpenEditTravelDialog(true)}>
-                    Update
-                    <Pencil />
-                  </Button>
+                  <div className="flex justify-center p-5">
+                    <p className="text-gray-400 text-xs">Transaction does not include a travel voucher.</p>
+                  </div>
                 )}
-              </div>
-              <Separator className="my-2" />
 
-              {transaction?.travelVoucher ? (
-                <TravelVoucher travelVoucher={transaction?.travelVoucher} />
-              ) : (
-                <div className="flex justify-center p-5">
-                  <p className="text-gray-400 text-xs">Transaction does not include a travel voucher.</p>
+              </>
+              <>
+                <div className="flex flex-row justify-between items-center">
+                  <p className="text-xs font-medium">Accommodation Voucher</p>
+                  <Button className="text-xs gap-x-2" onClick={() => setOpenAddAccommodationDialog(true)}>
+                    Add
+                    <Hotel />
+                  </Button>
                 </div>
-              )}
-
-            </>
-
-          </div>
-
+                {transaction?.accommodationVoucher ? (
+                  <AccommodationVoucher accommodationVoucher={transaction?.accommodationVoucher} />
+                ) : (
+                  <div className="flex justify-center p-5">
+                    <p className="text-gray-400 text-xs">Transaction does not include an accommodation voucher.</p>
+                  </div>
+                )}
+              </>
+            </div>
+            <div className="w-[50%]"></div>
+          </>
         }
       </div>
 
@@ -111,6 +104,12 @@ export default function ManageTransaction() {
           setOpenDialog={setOpenEditTravelDialog}
         />
       )}
+      <AddAccommodationVoucherDialog
+        transactionId={String(id)}
+        openDialog={openAddAccommodationDialog}
+        setOpenDialog={setOpenAddAccommodationDialog}
+      />
+
     </div>
   );
 }

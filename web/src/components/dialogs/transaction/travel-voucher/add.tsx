@@ -395,7 +395,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
                         <p className="text-xs">Creating..</p>
                         <Loader2 className="animate-spin" />
                       </div> :
-                      <p className="text-xs">Add</p>
+                      <p className="text-xs">Create</p>
                   }
                 </Button>}
             </div>

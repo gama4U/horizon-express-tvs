@@ -44,7 +44,7 @@ model Transaction {
   salesAgreementId     String?               @unique
   purchaseOrderId      String?               @unique
   travelVoucher        Travel?
-  accommodationVoucher Accommodation?
+  accommodationVoucher Accommodation[]
   tourVoucher          Tour?
   transportVoucher     Transportation?
   purchaseOrder        PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
@@ -136,7 +136,7 @@ model Shipping {
 
 model Accommodation {
   id                      String            @id @default(cuid())
-  transactionId           String?           @unique
+  transactionId           String
   type                    AccommodationType
   name                    String
   checkinDate             DateTime

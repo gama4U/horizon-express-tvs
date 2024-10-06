@@ -2,7 +2,6 @@ import prisma from "../../prisma/db";
 import { ICreateAirlines, ICreateShipping, ICreateTravelVoucher, IUpdateAirlines, IUpdateShipping, IUpdateTravelVoucher } from "../interfaces/travel-voucher.interface";
 
 
-
 export async function createTravelVoucher(data: ICreateTravelVoucher) {
   return await prisma.travel.create({
     data: {

@@ -50,6 +50,35 @@ export async function createTravelVoucher(payload: ICreateTravelVoucher) {
     throw new Error(message || 'Something went wrong');
   }
 }
+export enum AccommodationType {
+  HOTEL = 'HOTEL',
+  RESORT = 'RESORT',
+  AIRBNB = 'AIRBNB',
+  OTHERS = 'OTHERS',
+}
+
+export interface ICreateAccommodationVoucher {
+  transactionId: string;
+  name: string;
+  type: AccommodationType;
+  checkinDate: Date;
+  checkoutDate: Date;
+  hotelConfirmationNumber: string;
+  remarks?: string;
+}
+
+export async function createAccommodationVoucher(payload: ICreateAccommodationVoucher) {
+  try {
+    const response = await api.post('/api/v1/accommodation-vouchers/', payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
 
 
 export interface IUpdateAirline {
@@ -89,4 +118,26 @@ export async function updateTravelVoucher(payload: IUpdateTravelVoucher) {
     throw new Error(message || 'Something went wrong');
   }
 }
+export interface IUpdateAccommodationVoucher {
+  id: string;
+  name: string;
+  type: AccommodationType;
+  checkinDate: Date;
+  checkoutDate: Date;
+  hotelConfirmationNumber: string;
+  remarks?: string;
+}
+export async function updateAccommodationVoucher(payload: IUpdateAccommodationVoucher) {
+  try {
+    const response = await api.put(`/api/v1/accommodation-vouchers/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+
 
