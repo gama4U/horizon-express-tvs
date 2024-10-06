@@ -1,3 +1,4 @@
+import { ISalesAgreementItem } from "./sales-agreement-item.interface";
 import { IUser } from "./user.interface";
 
 export interface ISalesAgreement {
@@ -8,7 +9,7 @@ export interface ISalesAgreement {
   preparedBy: string;
   approvedBy: string;
   serialNumber: string;
-  salesAgreementItems: any[];
+  salesAgreementItems: ISalesAgreementItem[];
   purchaseOrder: any;
   transaction: any;
   creator: IUser;
@@ -30,13 +31,25 @@ export interface ICreateSalesAgreement {
   approvedBy?: string;
 }
 
+export interface IUpdateSalesAgreement {
+  salesAgreementId: string;
+  clientName: string;
+  serialNumber: string;
+  typeOfClient: TypeOfClient;
+  preparedBy?: string;
+  approvedBy?: string;
+}
+
 export interface IFetchSalesAgreements {
   skip?: number;
   take?: number;
-  search?: string; 
+  search?: string;
+  typeOfClient?: ClientTypeFilter;
 }
 
 export interface IFetchSalesAgreementsData {
   salesAgreements: ISalesAgreement[];
   total: number;
 }
+
+export type ClientTypeFilter = TypeOfClient | 'ALL';

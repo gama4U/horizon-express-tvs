@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../providers/auth-provider";
 import SideBar from "./section/sidebar";
 
