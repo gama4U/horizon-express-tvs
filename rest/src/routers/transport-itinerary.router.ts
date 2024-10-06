@@ -1,11 +1,11 @@
 import express, { Request, Response } from 'express';
-import { updateItinerary, createItinerary } from '../services/tour-voucher.service';
+import { createTransportItinerary, updateTransportItinerary } from '../services/tour-voucher.service';
 
-const itineraryRouter = express.Router();
+const transportItineraryRouter = express.Router();
 
-itineraryRouter.post('/', async (req: Request, res: Response) => {
+transportItineraryRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const itinerary = await createItinerary(req.body)
+    const itinerary = await createTransportItinerary(req.body)
     if (!itinerary) { throw new Error('Failed to create itinerary') }
     res.status(200).json({ message: "Successfully created itinerary" })
   } catch (error) {
@@ -15,10 +15,10 @@ itineraryRouter.post('/', async (req: Request, res: Response) => {
 });
 
 
-itineraryRouter.put('/:id', async (req: Request, res: Response) => {
+transportItineraryRouter.put('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const itinerary = await updateItinerary({ id, ...req.body })
+    const itinerary = await updateTransportItinerary({ id, ...req.body })
     if (!itinerary) { throw new Error('Failed to update itinerary') }
     res.status(200).json({ message: "Successfully created itinerary" })
   } catch (error) {
@@ -27,4 +27,4 @@ itineraryRouter.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
-export default itineraryRouter;
+export default transportItineraryRouter;

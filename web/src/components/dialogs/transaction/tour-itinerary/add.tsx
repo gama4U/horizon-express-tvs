@@ -13,11 +13,10 @@ import { Separator } from "../../../ui/separator"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AnimatedDiv from "../../../animated/Div";
 import { toast } from "sonner";
-import { createItinerary, ICreateItinerary } from "../../../../api/mutations/transaction.mutation";
+import { createTourItinerary, ICreateTourItinerary } from "../../../../api/mutations/itinerary.mutation";
 
-interface AddItineraryProps {
+interface AddTourItineraryProps {
 	tourId?: string
-	transportId?: string
 	openDialog: boolean
 	setOpenDialog: (open: boolean) => void
 }
@@ -29,7 +28,7 @@ const formSchema = z.object({
 	endDate: z.date()
 });
 
-export function AddItineraryDialog({ tourId, openDialog, transportId, setOpenDialog }: AddItineraryProps) {
+export function AddTourItineraryDialog({ tourId, openDialog, setOpenDialog }: AddTourItineraryProps) {
 
 	const queryClient = useQueryClient()
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -37,7 +36,7 @@ export function AddItineraryDialog({ tourId, openDialog, transportId, setOpenDia
 	})
 
 	const { mutate: addItineraryMutate, isPending: addingItinerary } = useMutation({
-		mutationFn: async (data: ICreateItinerary) => await createItinerary(data),
+		mutationFn: async (data: ICreateTourItinerary) => await createTourItinerary(data),
 		onError: (error) => {
 			toast.error(error.message, {
 				className: 'text-destructive',
@@ -58,7 +57,6 @@ export function AddItineraryDialog({ tourId, openDialog, transportId, setOpenDia
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		addItineraryMutate({
 			tourId: String(tourId),
-			transportId: String(transportId),
 			...values
 		})
 	}

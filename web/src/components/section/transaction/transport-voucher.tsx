@@ -4,10 +4,10 @@ import { format } from "date-fns";
 import { Button } from "../../ui/button";
 import { Pencil } from "lucide-react";
 import { IItinerary } from "../../../interfaces/tour.interface";
-import { AddItineraryDialog } from "../../dialogs/transaction/itinerary/add";
-import { EditItineraryDialog } from "../../dialogs/transaction/itinerary/edit";
 import { ITransportVoucher } from "../../../interfaces/transport.interface";
 import { EditTransportVoucherDialog } from "../../dialogs/transaction/transport-voucher/edit";
+import { AddTransportItineraryDialog } from "../../dialogs/transaction/transport-itinerary/add";
+import { EditTransportItineraryDialog } from "../../dialogs/transaction/transport-itinerary/edit";
 
 interface ITransportVoucherProps {
   transportVoucher: ITransportVoucher[];
@@ -133,7 +133,7 @@ export default function TransportVoucher({ transportVoucher }: ITransportVoucher
       )}
 
       {selectedItinerary && (
-        <EditItineraryDialog
+        <EditTransportItineraryDialog
           itinerary={selectedItinerary}
           setOpenDialog={setOpenEditItineraryDialog}
           openDialog={openEditItineraryDialog}
@@ -141,7 +141,7 @@ export default function TransportVoucher({ transportVoucher }: ITransportVoucher
       )}
 
       {openAddItineraryDialog && (
-        <AddItineraryDialog
+        <AddTransportItineraryDialog
           setOpenDialog={setOpenAddItineraryDialog}
           openDialog={openAddItineraryDialog}
           transportId={transport?.id}

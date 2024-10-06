@@ -6,7 +6,7 @@ export interface ICreateTourVoucher {
   tourContact: string
   driverName: string
   driverContact: string
-  itineraries: ICreateItinerary[]
+  itineraries: ICreateTourItinerary[]
   remarks?: string
 }
 export interface IUpdateTourVoucher {
@@ -15,25 +15,10 @@ export interface IUpdateTourVoucher {
   tourContact: string
   driverName: string
   driverContact: string
-  itineraries: IUpdateItinerary[]
+  itineraries: IUpdateTourItinerary[]
   remarks?: string
 }
 
-export interface ICreateItinerary {
-  tourId?: string
-  transportId?: string
-  title: string
-  description: string
-  startDate: Date
-  endDate: Date
-}
-export interface IUpdateItinerary {
-  id: string
-  title: string
-  description: string
-  startDate: Date
-  endDate: Date
-}
 
 export async function createTourVoucher(data: ICreateTourVoucher) {
   return await prisma.tour.create({
@@ -60,18 +45,60 @@ export async function updateTourVoucher({ id, ...data }: IUpdateTourVoucher) {
     },
   });
 }
+export interface ICreateTourItinerary {
+  tourId: string
+  title: string
+  description: string
+  startDate: Date
+  endDate: Date
+}
+export interface IUpdateTourItinerary {
+  id: string
+  title: string
+  description: string
+  startDate: Date
+  endDate: Date
+}
 
-export async function createItinerary(data: ICreateItinerary) {
-  return await prisma.itinerary.create({
+export async function createTourItinerary(data: ICreateTourItinerary) {
+  return await prisma.tourItinerary.create({
     data: {
-      id: data.tourId ?? data.transportId,
-      ...data
+      ...data,
     }
   })
 }
 
-export async function updateItinerary({ id, ...data }: IUpdateItinerary) {
-  return await prisma.itinerary.update({
+export async function updateTourItinerary({ id, ...data }: IUpdateTourItinerary) {
+  return await prisma.tourItinerary.update({
+    where: { id },
+    data
+  })
+}
+
+export interface ICreateTransportItinerary {
+  transportId: string
+  title: string
+  description: string
+  startDate: Date
+  endDate: Date
+}
+export interface IUpdateTransportItinerary {
+  id: string
+  title: string
+  description: string
+  startDate: Date
+  endDate: Date
+}
+
+export async function createTransportItinerary(data: ICreateTransportItinerary) {
+  return await prisma.transportItinerary.create({
+    data: {
+      ...data,
+    }
+  })
+}
+export async function updateTransportItinerary({ id, ...data }: IUpdateTransportItinerary) {
+  return await prisma.transportItinerary.update({
     where: { id },
     data
   })

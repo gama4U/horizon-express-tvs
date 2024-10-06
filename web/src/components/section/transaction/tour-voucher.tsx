@@ -5,8 +5,8 @@ import { Button } from "../../ui/button";
 import { Pencil } from "lucide-react";
 import { ITourVoucher, IItinerary } from "../../../interfaces/tour.interface";
 import { EditTourVoucherDialog } from "../../dialogs/transaction/tour-voucher/edit";
-import { AddItineraryDialog } from "../../dialogs/transaction/itinerary/add";
-import { EditItineraryDialog } from "../../dialogs/transaction/itinerary/edit";
+import { AddTourItineraryDialog } from "../../dialogs/transaction/tour-itinerary/add";
+import { EditTourItineraryDialog } from "../../dialogs/transaction/tour-itinerary/edit";
 
 interface ITourVoucherProps {
   tourVoucher: ITourVoucher[];
@@ -127,7 +127,7 @@ export default function TourVoucher({ tourVoucher }: ITourVoucherProps) {
       )}
 
       {selectedItinerary && (
-        <EditItineraryDialog
+        <EditTourItineraryDialog
           itinerary={selectedItinerary}
           setOpenDialog={setOpenEditItineraryDialog}
           openDialog={openEditItineraryDialog}
@@ -135,7 +135,7 @@ export default function TourVoucher({ tourVoucher }: ITourVoucherProps) {
       )}
 
       {openAddItineraryDialog && (
-        <AddItineraryDialog
+        <AddTourItineraryDialog
           setOpenDialog={setOpenAddItineraryDialog}
           openDialog={openAddItineraryDialog}
           tourId={tour?.id}

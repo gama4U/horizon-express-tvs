@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 import CommonInput from "../../../common/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover"
@@ -14,11 +13,11 @@ import { Separator } from "../../../ui/separator"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AnimatedDiv from "../../../animated/Div";
 import { toast } from "sonner";
-import { IUpdateItinerary, updateItinerary } from "../../../../api/mutations/transaction.mutation";
+import { IUpdateTransportItinerary, updateTransportItinerary } from "../../../../api/mutations/itinerary.mutation";
 import { IItinerary } from "../../../../interfaces/tour.interface";
 import { useEffect } from "react";
 
-interface EditItineraryProps {
+interface EditTransportItineraryProps {
 	itinerary: IItinerary
 	openDialog: boolean
 	setOpenDialog: (open: boolean) => void
@@ -31,7 +30,7 @@ const formSchema = z.object({
 	endDate: z.date()
 });
 
-export function EditItineraryDialog({ itinerary, openDialog, setOpenDialog }: EditItineraryProps) {
+export function EditTransportItineraryDialog({ itinerary, openDialog, setOpenDialog }: EditTransportItineraryProps) {
 
 	const queryClient = useQueryClient()
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -39,7 +38,7 @@ export function EditItineraryDialog({ itinerary, openDialog, setOpenDialog }: Ed
 	})
 
 	const { mutate: updateItineraryMutate, isPending: updatingItinerary } = useMutation({
-		mutationFn: async (data: IUpdateItinerary) => await updateItinerary(data),
+		mutationFn: async (data: IUpdateTransportItinerary) => await updateTransportItinerary(data),
 		onError: (error) => {
 			toast.error(error.message, {
 				className: 'text-destructive',

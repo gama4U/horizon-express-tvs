@@ -36,7 +36,11 @@ export async function fetchTransaction({ id }: IFetchTransaction) {
         }
       },
       accommodationVoucher: true,
-      transportVoucher: true
+      transportVoucher: {
+        include: {
+          itineraries: true
+        }
+      }
     }
   })
 }

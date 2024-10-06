@@ -163,22 +163,7 @@ export async function updateAccommodationVoucher(payload: IUpdateAccommodationVo
   }
 }
 
-export interface ICreateItinerary {
-  tourId: string;
-  transportId: string;
-  title: string;
-  description: string;
-  startDate: Date;
-  endDate: Date;
-}
 
-export interface IUpdateItinerary {
-  id: string
-  title: string
-  description: string
-  startDate: Date;
-  endDate: Date;
-}
 export interface IUpdateTourVoucher {
   id: string
   tourGuide: string
@@ -235,31 +220,6 @@ export async function updateTransportVoucher(payload: IUpdateTransportVoucher) {
 export async function updateTourVoucher(payload: IUpdateTourVoucher) {
   try {
     const response = await api.put(`/api/v1/tour-vouchers/${payload.id}`, payload)
-    return response.data
-  } catch (error) {
-    let message;
-    if (error instanceof AxiosError) {
-      message = error.response?.data.message;
-    }
-    throw new Error(message || 'Something went wrong');
-  }
-}
-
-export async function createItinerary(payload: ICreateItinerary) {
-  try {
-    const response = await api.post('/api/v1/itineraries/', payload)
-    return response.data
-  } catch (error) {
-    let message;
-    if (error instanceof AxiosError) {
-      message = error.response?.data.message;
-    }
-    throw new Error(message || 'Something went wrong');
-  }
-}
-export async function updateItinerary(payload: IUpdateItinerary) {
-  try {
-    const response = await api.put(`/api/v1/itineraries/${payload.id}`, payload)
     return response.data
   } catch (error) {
     let message;

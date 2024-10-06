@@ -148,29 +148,39 @@ model Accommodation {
 }
 
 model Tour {
-  id            String       @id @default(cuid())
+  id            String          @id @default(cuid())
   transactionId String
   remarks       String?
   tourGuide     String
   tourContact   String
   driverName    String
   driverContact String
-  itineraries   Itinerary[]
-  transaction   Transaction? @relation(fields: [transactionId], references: [id])
-  createdAt     DateTime?    @default(now())
-  updatedAt     DateTime?    @updatedAt
+  itineraries   TourItinerary[]
+  transaction   Transaction?    @relation(fields: [transactionId], references: [id])
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
 }
 
-model Itinerary {
-  id          String          @id @default(cuid())
+model TourItinerary {
+  id          String    @id @default(cuid())
   tourId      String?
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  tour        Tour?     @relation(fields: [tourId], references: [id])
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+}
+
+model TransportItinerary {
+  id          String          @id @default(cuid())
   transportId String?
   title       String
   description String
   startDate   DateTime
   endDate     DateTime
   transport   Transportation? @relation(fields: [transportId], references: [id])
-  tour        Tour?           @relation(fields: [tourId], references: [id])
   createdAt   DateTime?       @default(now())
   updatedAt   DateTime?       @updatedAt
 }
@@ -184,7 +194,7 @@ model Transportation {
   vehiclePlateNumber String
   serviceType        TransportServiceType
   vehicleType        VehicleType
-  itineraries        Itinerary[]
+  itineraries        TransportItinerary[]
   transaction        Transaction?         @relation(fields: [transactionId], references: [id])
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
