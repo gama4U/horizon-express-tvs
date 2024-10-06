@@ -3,17 +3,14 @@ import TopBar from "../../../components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Separator } from "../../../components/ui/separator";
-import PrintPreview from "../../../components/section/sales-agreement/print-preview";
-import SalesAgreementInfo from "../../../components/section/sales-agreement/info";
-import SalesAgreementItems from "../../../components/section/sales-agreement/items";
-import EditSalesAgreementDialog from "../../../components/dialogs/sales-agreement/edit";
 import { fetchPurchaseRequestOrder } from "@/api/queries/purchase-request.queries";
+import PurchaseRequestInfo from "@/components/section/purchase-request/info";
 
-export default function SalesAgreementDetails() {
+export default function PurchaseRequestDetails() {
   const {id} = useParams();
 
   const {data, isLoading} = useQuery({
-    queryKey: ['sales-agreement-details', id],
+    queryKey: ['purchase-request-details', id],
     queryFn: async () => {
       if (!id) return;
       return await fetchPurchaseRequestOrder(id)
@@ -25,12 +22,12 @@ export default function SalesAgreementDetails() {
       <TopBar
         LeftSideHeader={
           <p className="text-sm">
-            Sales agreement details
+            Purchase request order details
           </p>
         }
         LeftSideSubHeader={
           <p className="text-primary text-xs">
-            Manage sales agreement details here
+            Manage purchase request order details here
           </p>
         }
       />
@@ -42,16 +39,16 @@ export default function SalesAgreementDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <EditSalesAgreementDialog data={data}/>
+                {/* <EditSalesAgreementDialog data={data}/> */}
               </div>
               <Separator className="bg-slate-200"/>
-              <SalesAgreementInfo data={data} />
-              <SalesAgreementItems 
+              <PurchaseRequestInfo data={data} />
+              {/* <SalesAgreementItems 
                 data={data.salesAgreementItems}
                 salesAgreementId={data.id}
-              />
+              /> */}
             </section>
-            <PrintPreview data={data}/>
+            {/* <PrintPreview data={data}/> */}
           </>
         ) : (
           <div className="h-[300px] bg-white w-full text-[12px] text-muted-foreground flex items-center justify-center">

@@ -85,8 +85,8 @@ export async function findPurchaseRequests({skip, take, search, type, paymentTyp
   return {purchaseRequests, total};
 }
 
-export async function findSalesAgreementById(id: string) {
-  return await prisma.salesAgreement.findUnique({
+export async function findPurchaseRequestById(id: string) {
+  return await prisma.purchaseRequestOrder.findUnique({
     where: {id},
     include: {
       creator: {
@@ -99,24 +99,24 @@ export async function findSalesAgreementById(id: string) {
           userType: true,
         }
       },
-      purchaseOrder: true,
+      salesAgreement: true,
       transaction: true,
-      salesAgreementItems: {
+      purchaseOrderItems: {
         orderBy: {
           createdAt: 'desc'
         }
       },
       _count: {
         select: {
-          salesAgreementItems: true
+          purchaseOrderItems: true
         }
       }
     }
   });
 }
 
-export async function deleteSalesAgreementById(id: string) {
-  return await prisma.salesAgreement.delete({
+export async function deletePurchaseRequestById(id: string) {
+  return await prisma.purchaseRequestOrder.delete({
     where: {
       id
     }

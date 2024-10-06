@@ -5,7 +5,8 @@ import { deleteSalesAgreementById, findSalesAgreementById, updateSalesAgreement 
 import { PaymentType, PurchaseRequestOrderType } from '@prisma/client';
 import { deleteSalesAgreementItems } from '../services/sales-agreement-item.service';
 import { createPurchaseRequestSchema, findPurchaseRequestsSchema, updatePurchaseRequestSchema } from '../schemas/purchase-request.schema';
-import { createPurchaseRequest, findPurchaseRequests, updatePurchaseRequest } from '../services/purchase-request.service';
+import { createPurchaseRequest, deletePurchaseRequestById, findPurchaseRequestById, findPurchaseRequests, updatePurchaseRequest } from '../services/purchase-request.service';
+import { deletePurchaseRequestItems } from '../services/purchase-request-item.service';
 
 const purchaseRequestRouter = express.Router();
 
@@ -80,14 +81,14 @@ purchaseRequestRouter.get('/', validate(findPurchaseRequestsSchema), async(req: 
 
 purchaseRequestRouter.get('/:id', async(req: Request, res: Response) => {
   try {
-    const salesAgreementId = req.params.id;
+    const id = req.params.id;
     
-    const salesAgreement = await findSalesAgreementById(salesAgreementId);
-    if (!salesAgreement) {
-      return res.status(404).json({message: 'Sales agreement not found'});
+    const purchaseRequest = await findPurchaseRequestById(id);
+    if (!purchaseRequest) {
+      return res.status(404).json({message: 'Purchase request not found'});
     }
 
-    return res.status(200).json(salesAgreement);
+    return res.status(200).json(purchaseRequest);
   
   } catch (error) {
     return res.status(500).json({
@@ -96,29 +97,29 @@ purchaseRequestRouter.get('/:id', async(req: Request, res: Response) => {
   }
 })
 
-// purchaseRequestRouter.delete('/:id', async(req: Request, res: Response) => {
-//   try {
-//     const id = req.params.id;
+purchaseRequestRouter.delete('/:id', async(req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
     
-//     const  deletedItems = await deletePurchaseRequestItems(id);
-//     if (!deletedItems) {
-//       throw new Error('Failed to delete sales agreement items');
-//     }
+    const  deletedItems = await deletePurchaseRequestItems(id);
+    if (!deletedItems) {
+      throw new Error('Failed to delete purchase request items');
+    }
 
-//     const deleted = await deleteSalesAgreementById(salesAgreementId);
-//     if (!deleted) {
-//       return res.status(404).json({message: 'Sales agreement not found'});
-//     }
+    const deleted = await deletePurchaseRequestById(id);
+    if (!deleted) {
+      throw new Error('Failed to delete purchase request');
+    }
 
-//     return res.status(200).json({
-//       message: 'Sales agreement deleted successfully'
-//     });
+    return res.status(200).json({
+      message: 'Purchase request deleted successfully'
+    });
   
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: 'Internal server error'
-//     })
-//   }
-// })
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error'
+    })
+  }
+})
 
 export default purchaseRequestRouter;

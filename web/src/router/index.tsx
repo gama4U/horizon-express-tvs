@@ -11,6 +11,7 @@ import Memorandum from "../pages/admin/memorandum";
 import SalesAgreements from "../pages/admin/sales-agreement";
 import SalesAgreementDetails from "../pages/admin/sales-agreement/details";
 import PurchaseRequests from "@/pages/admin/purchase-request";
+import PurchaseRequestDetails from "@/pages/admin/purchase-request/details";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: 'purchase-requests',
         element: <PurchaseRequests />
+      },
+      {
+        path: 'purchase-requests/:id',
+        element: <PurchaseRequestDetails />
       },
       {
         path: 'memorandum',

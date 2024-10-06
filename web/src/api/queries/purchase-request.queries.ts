@@ -19,13 +19,13 @@ export async function fetchPurchaseRequestOrders(params: IFetchPurchaseRequestOr
 
 export async function fetchPurchaseRequestOrder(id: string): Promise<IPurchaseRequestOrder> {
   try {
-    const response = await api.get(`/api/v1/sales-agreements/${id}`);
+    const response = await api.get(`/api/v1/purchase-requests/${id}`);
     return response.data;
   } catch(error) {
     let message;
     if (error instanceof AxiosError) {
       message = error.response?.data.message;
     }
-    throw new Error(message || 'Something went wrong');
+    throw new Error(message || 'Something went wrong')
   }
 }
