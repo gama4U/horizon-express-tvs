@@ -45,7 +45,7 @@ model Transaction {
   purchaseOrderId      String?               @unique
   travelVoucher        Travel?
   accommodationVoucher Accommodation[]
-  tourVoucher          Tour?
+  tourVoucher          Tour[]
   transportVoucher     Transportation?
   purchaseOrder        PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
   salesAgreement       SalesAgreement?       @relation(fields: [salesAgreementId], references: [id])
@@ -150,8 +150,10 @@ model Accommodation {
 
 model Tour {
   id            String       @id @default(cuid())
-  transactionId String?      @unique
+  transactionId String
   remarks       String?
+  tourGuide     String
+  tourContact   String
   driverName    String
   driverContact String
   itineraries   Itinerary[]
@@ -161,17 +163,17 @@ model Tour {
 }
 
 model Itinerary {
-  id          String         @id @default(cuid())
-  tourId      String
-  transportId String
+  id          String          @id @default(cuid())
+  tourId      String?
+  transportId String?
   title       String
   description String
   startDate   DateTime
   endDate     DateTime
-  transport   Transportation @relation(fields: [transportId], references: [id])
-  tour        Tour           @relation(fields: [tourId], references: [id])
-  createdAt   DateTime?      @default(now())
-  updatedAt   DateTime?      @updatedAt
+  transport   Transportation? @relation(fields: [transportId], references: [id])
+  tour        Tour?           @relation(fields: [tourId], references: [id])
+  createdAt   DateTime?       @default(now())
+  updatedAt   DateTime?       @updatedAt
 }
 
 model Transportation {

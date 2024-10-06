@@ -2,7 +2,7 @@ import { z } from "zod"
 import { format } from "date-fns"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
-import { CalendarIcon, Loader2 } from "lucide-react"
+import { CalendarIcon, Loader2, PlaneTakeoff, Ship } from "lucide-react"
 import { Button } from "../../../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../ui/dialog"
 import { Separator } from "../../../ui/separator"
@@ -107,7 +107,8 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
       }}>
       <DialogContent>
         <DialogTitle>
-          <DialogHeader>
+          <DialogHeader className="flex flex-row items-center gap-x-2">
+            <PlaneTakeoff /> <Ship />
             Add Travel Voucher
           </DialogHeader>
         </DialogTitle>

@@ -38,7 +38,7 @@ mainRouter.use('/users', userRouter);
 mainRouter.use('/uploads', uploadRouter);
 mainRouter.use('/travel-vouchers', travelVoucherRouter);
 mainRouter.use('/accommodation-vouchers', accommodationVoucherRouter);
-mainRouter.use('/tours-vouchers', tourVoucherRouter);
+mainRouter.use('/tour-vouchers', tourVoucherRouter);
 mainRouter.use('/transport-vouchers', transportVoucherRouter);
 mainRouter.use('/sales-agreements', salesAgreementRouter);
 mainRouter.use('/transactions', transactionRouter);

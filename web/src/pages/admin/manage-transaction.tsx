@@ -4,19 +4,21 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTransaction } from "../../api/queries/transaction";
 import TravelVoucher from "../../components/section/transaction/travel-voucher";
 import AddTravelVoucherDialog from "../../components/dialogs/transaction/travel-voucher/add";
-import { Separator } from "../../components/ui/separator";
 import { useState } from "react";
 import { Button } from "../../components/ui/button";
-import { Hotel, Pencil, PlaneTakeoff } from "lucide-react";
+import { Hotel, MapPin, Pencil, PlaneTakeoff } from "lucide-react";
 import EditTravelVoucherDialog from "../../components/dialogs/transaction/travel-voucher/edit";
 import Loader from "../../components/animated/Loader";
 import { AddAccommodationVoucherDialog } from "../../components/dialogs/transaction/accommodation-voucher/add";
 import AccommodationVoucher from "../../components/section/transaction/accommodation-voucher";
+import TourVoucher from "../../components/section/transaction/tour-voucher";
+import { AddTourVoucherDialog } from "../../components/dialogs/transaction/tour-voucher/add";
 
 export default function ManageTransaction() {
   const { id } = useParams();
   const [openAddTravelDialog, setOpenAddTravelDialog] = useState(false);
   const [openAddAccommodationDialog, setOpenAddAccommodationDialog] = useState(false);
+  const [openAddTourDialog, setOpenAddTourDialog] = useState(false);
   const [openEditTravelDialog, setOpenEditTravelDialog] = useState(false);
 
   const { data: transaction, isLoading } = useQuery({
@@ -66,7 +68,6 @@ export default function ManageTransaction() {
                     <p className="text-gray-400 text-xs">Transaction does not include a travel voucher.</p>
                   </div>
                 )}
-
               </>
               <>
                 <div className="flex flex-row justify-between items-center">
@@ -76,14 +77,31 @@ export default function ManageTransaction() {
                     <Hotel />
                   </Button>
                 </div>
-                {transaction?.accommodationVoucher ? (
+                {transaction?.accommodationVoucher && transaction.accommodationVoucher.length > 0 ? (
                   <AccommodationVoucher accommodationVoucher={transaction?.accommodationVoucher} />
                 ) : (
                   <div className="flex justify-center p-5">
-                    <p className="text-gray-400 text-xs">Transaction does not include an accommodation voucher.</p>
+                    <p className="text-gray-400 text-xs">Transaction does not include any accommodation voucher.</p>
                   </div>
                 )}
               </>
+              <>
+                <div className="flex flex-row justify-between items-center">
+                  <p className="text-xs font-medium">Tour Voucher</p>
+                  <Button className="text-xs gap-x-2" onClick={() => setOpenAddTourDialog(true)}>
+                    Add
+                    <MapPin />
+                  </Button>
+                </div>
+                {transaction?.tourVoucher && transaction.tourVoucher.length > 0 ? (
+                  <TourVoucher tourVoucher={transaction.tourVoucher} />
+                ) : (
+                  <div className="flex justify-center p-5">
+                    <p className="text-gray-400 text-xs">Transaction does not include any tour voucher.</p>
+                  </div>
+                )}
+              </>
+
             </div>
             <div className="w-[50%]"></div>
           </>
@@ -109,6 +127,12 @@ export default function ManageTransaction() {
         openDialog={openAddAccommodationDialog}
         setOpenDialog={setOpenAddAccommodationDialog}
       />
+      <AddTourVoucherDialog
+        transactionId={String(id)}
+        openDialog={openAddTourDialog}
+        setOpenDialog={setOpenAddTourDialog}
+      />
+
 
     </div>
   );

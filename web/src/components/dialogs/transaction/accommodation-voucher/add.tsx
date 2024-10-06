@@ -2,7 +2,7 @@ import { AccommodationType, IAddAccommodation } from "../../../../interfaces/acc
 import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover"
 import { format } from "date-fns"
 import { Calendar } from "../../../ui/calendar"
-import { CalendarIcon, Loader2 } from "lucide-react"
+import { CalendarIcon, HotelIcon, Loader2 } from "lucide-react"
 import { z } from "zod";
 import CommonInput from "../../../common/input";
 import { Button } from "../../../ui/button";
@@ -90,7 +90,8 @@ export function AddAccommodationVoucherDialog({ transactionId, openDialog, setOp
 			}}>
 			<DialogContent>
 				<DialogTitle>
-					<DialogHeader>
+					<DialogHeader className="flex flex-row items-center gap-x-2">
+						<HotelIcon />
 						Add Accommodation Voucher
 					</DialogHeader>
 				</DialogTitle>

@@ -23,7 +23,7 @@ export interface ITransaction {
   lead: IUser;
   travelVoucher?: ITravelVoucher
   accommodationVoucher?: IAccommodationVoucher[]
-  tourVoucher?: ITourVoucher
+  tourVoucher?: ITourVoucher[]
   transportVoucher?: ITransportVoucher
 
 }

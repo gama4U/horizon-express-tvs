@@ -24,7 +24,11 @@ export async function fetchTransaction({ id }: IFetchTransaction) {
     },
     include: {
       lead: true,
-      tourVoucher: true,
+      tourVoucher: {
+        include: {
+          itineraries: true
+        }
+      },
       travelVoucher: {
         include: {
           airline: true,
