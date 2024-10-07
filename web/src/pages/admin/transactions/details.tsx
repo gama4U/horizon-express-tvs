@@ -61,7 +61,7 @@ export default function ManageTransaction() {
                 <TabsList className="grid grid-cols-5 md:grid-cols-5">
                   {tabs.map((tab, index) => (
                     <TabsTrigger key={index} value={tab.value} className="">
-                      <p className="text-sm">{tab.label}</p>
+                      <p className="text-xs">{tab.label}</p>
                     </TabsTrigger>
                   ))}
                 </TabsList>

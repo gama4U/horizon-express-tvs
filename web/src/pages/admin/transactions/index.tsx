@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -57,7 +57,7 @@ export default function Transactions() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex gap-2 justify-between">
+        <div className="flex gap-2 justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
               placeholder="Search by client name or serial no."
@@ -69,9 +69,9 @@ export default function Transactions() {
             />
           </div>
           <Button
-            variant='outline'
+            size={"sm"}
             onClick={() => createTransactionMutate()}
-            className="gap-1 flex items-center text-xs"
+            className="flex gap-x-2"
           >
             {creatingTransaction ? (
               <>
@@ -80,6 +80,7 @@ export default function Transactions() {
               </>
             ) : (
               <>
+                <Plus size={14} />
                 <span>Create</span>
               </>
             )}

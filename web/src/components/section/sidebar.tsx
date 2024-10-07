@@ -73,7 +73,7 @@ const SideBar = React.memo(() => {
 								>
 									<SidebarIcons icon={item.icon} isSelected={isSelected} />
 									{isOpen && (
-										<span className={`line-clamp-1 text-sm w-full ${isSelected ? 'text-white' : 'text-black'}`}>
+										<span className={`line-clamp-1 text-xs w-full ${isSelected ? 'text-white' : 'text-black'}`}>
 											{item.label}
 										</span>
 									)}
