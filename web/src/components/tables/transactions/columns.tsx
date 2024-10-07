@@ -29,6 +29,18 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		enableHiding: false,
 	},
 	{
+		id: "id",
+		header: "Transaction Voucher #",
+		cell: ({ row }) => {
+			if (!row.original.id) return;
+			return (
+				<div className="flex items-center gap-2">
+					<span>{row.original.id}</span>
+				</div>
+			)
+		}
+	},
+	{
 		id: "lead",
 		header: "Lead",
 		cell: ({ row }) => {
@@ -43,6 +55,33 @@ export const Columns: ColumnDef<ITransaction>[] = [
 						</AvatarFallback>
 					</Avatar>
 					<span>{`${firstName} ${lastName}`}</span>
+				</div>
+			)
+		}
+	},
+	{
+		id: "salesAgreementId",
+		header: "Sales Agreement #",
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.salesAgreementId ?? <span className="italic text-gray-300">No sales agreement attached</span>}
+					</span>
+
+				</div>
+			)
+		}
+	},
+	{
+		id: "salesAgreementId",
+		header: "Purchase Order Id",
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.purchaseOrderId ?? <span className="italic text-gray-300">No purchase order attached</span>}
+					</span>
 				</div>
 			)
 		}

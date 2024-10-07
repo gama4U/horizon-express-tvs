@@ -26,7 +26,11 @@ export interface ITransaction {
   tourVoucher?: ITourVoucher[]
   transportVoucher?: ITransportVoucher[]
   salesAgreement?: ISalesAgreement
+  salesAgreementId?: string
+  purchaseOrderId?: string
   purchaseOrder?: IPurchaseRequestOrder
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export interface IFetchTransaction {
