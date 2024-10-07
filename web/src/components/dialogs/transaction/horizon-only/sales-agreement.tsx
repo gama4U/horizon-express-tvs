@@ -116,7 +116,7 @@ export default function SelectSalesAgreementDialog({
 							/>
 						</div>
 
-						{data?.salesAgreements?.slice(0, 2).map((salesAgreement, index) => (
+						{data?.salesAgreements?.slice(0, 4).map((salesAgreement, index) => (
 							<div
 								className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
                                 ${selectedAgreement?.id === salesAgreement.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}

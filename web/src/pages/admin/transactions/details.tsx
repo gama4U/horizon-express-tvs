@@ -75,7 +75,7 @@ export default function ManageTransaction() {
                       {transaction?.salesAgreement ?
                         <div>
                           <div className="flex justify-between items-center px-4">
-                            <p className="text-xs">Sales Agreement #: <span className="font-semibold">{transaction.salesAgreement.id}</span></p>
+                            <p className="text-xs">Sales Agreement #: <span className="font-semibold">{transaction.salesAgreement.serialNumber}</span></p>
                             <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectSalesAgreement(true)}>
                               Update
                               <ClipboardPlus size={14} />
@@ -101,7 +101,7 @@ export default function ManageTransaction() {
                       {transaction?.purchaseOrder ?
                         <div>
                           <div className="flex justify-between items-center px-4">
-                            <p className="text-xs">Purchase Request Order #: <span className="font-semibold">{transaction.purchaseOrder.id}</span></p>
+                            <p className="text-xs">Purchase Request Order #: <span className="font-semibold">{transaction.purchaseOrder.serialNumber}</span></p>
                             <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectPurchaseRequest(true)}>
                               Update
                               <ClipboardPlus size={14} />

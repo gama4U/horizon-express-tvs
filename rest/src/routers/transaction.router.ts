@@ -7,12 +7,17 @@ const transactionRouter = express.Router();
 
 transactionRouter.get('/', validate(getTransactionsSchema), async (req: Request, res: Response) => {
   try {
-    const { skip, take, search } = req.query;
+
+    const { skip, take, search, travel, accommodation, tour, transport } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      travel: travel === 'true' ? true : undefined,
+      accommodation: accommodation === 'true' ? true : undefined,
+      tour: tour === 'true' ? true : undefined,
+      transport: transport === 'true' ? true : undefined,
     };
 
     const transactions = await fetchTransactions(filters);

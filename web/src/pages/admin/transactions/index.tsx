@@ -13,16 +13,28 @@ import CommonInput from "@/components/common/input";
 import { DataTable } from "@/components/tables/transactions/data-table";
 import { Columns } from "@/components/tables/transactions/columns";
 import CommonToast from "@/components/common/toast";
+import { VoucherTypeFilter } from "@/components/custom/voucher-type-filter";
+import { VoucherFilters, VoucherTypes } from "@/interfaces/transaction.interface";
 
 export default function Transactions() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['transactions', pagination, debouncedSearch],
-    queryFn: async () => await fetchTransactions({ skip, take, search })
+  const [voucherFilters, setVoucherFilters] = useState<VoucherFilters>({
+    travel: false,
+    accommodation: false,
+    tour: false,
+    transport: false
   });
+
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['transactions', pagination, debouncedSearch, voucherFilters],
+    queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, ...voucherFilters })
+  });
+
+  console.log('data', data)
 
   const navigate = useNavigate();
 
@@ -44,6 +56,12 @@ export default function Transactions() {
     }
   });
 
+  const handleVoucherFilterToggle = (type: VoucherTypes) => {
+    setVoucherFilters((prevFilters) => ({
+      ...prevFilters,
+      [type]: !prevFilters[type]
+    }));
+  };
   return (
     <div className="space-y-2">
       <TopBar
@@ -57,16 +75,26 @@ export default function Transactions() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex gap-2 justify-between py-1">
+        <div className="flex items-center justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              placeholder="Search by client name or serial no."
+              placeholder="Search by transaction id or lead name"
               containerProps={{
                 className: "max-w-[500px]"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
+            <div className="flex flex-row gap-x-1 bg-slate-100 rounded-md p-2">
+              {Object.values(VoucherTypes).map((type) => (
+                <VoucherTypeFilter
+                  key={type}
+                  type={type}
+                  selected={voucherFilters[type as keyof typeof voucherFilters]}
+                  onToggle={handleVoucherFilterToggle}
+                />
+              ))}
+            </div>
           </div>
           <Button
             size={"sm"}

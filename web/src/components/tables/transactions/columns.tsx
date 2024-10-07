@@ -3,7 +3,8 @@ import { Checkbox } from "../../ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ITransaction } from "@/interfaces/transaction.interface";
+import { ITransaction, VoucherTypes } from "@/interfaces/transaction.interface";
+import { VoucherBadge } from "@/components/badges/voucher-type";
 
 export const Columns: ColumnDef<ITransaction>[] = [
 	{
@@ -60,13 +61,13 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		}
 	},
 	{
-		id: "salesAgreementId",
-		header: "Sales Agreement #",
+		id: "serialNumber",
+		header: "SA Serial #",
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
 					<span className="text-xs">
-						{row.original.salesAgreementId ?? <span className="italic text-gray-300">No sales agreement attached</span>}
+						{row.original.salesAgreement?.serialNumber ?? <span className="italic text-gray-300">No sales agreement attached</span>}
 					</span>
 
 				</div>
@@ -74,16 +75,38 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		}
 	},
 	{
-		id: "salesAgreementId",
-		header: "Purchase Order Id",
+		id: "purchaseOrderId",
+		header: "PO Serial #",
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
 					<span className="text-xs">
-						{row.original.purchaseOrderId ?? <span className="italic text-gray-300">No purchase order attached</span>}
+						{row.original.purchaseOrder?.serialNumber ?? <span className="italic text-gray-300">No purchase order attached</span>}
 					</span>
 				</div>
 			)
+		}
+	},
+	{
+		id: "voucherCount",
+		header: "Vouchers",
+		cell: ({ row }) => {
+			const { voucherCounts } = row.original;
+			const totalVouchers = Object.values(voucherCounts).reduce((sum, count) => sum + count, 0);
+
+			return (
+				<div className="flex items-center gap-x-1">
+					{totalVouchers > 0 ? (
+						Object.entries(voucherCounts).map(([type, count]) => (
+							count > 0 && (
+								<VoucherBadge key={type} type={type as VoucherTypes} count={count} />
+							)
+						))
+					) : (
+						<span className="italic text-gray-300">No vouchers included</span>
+					)}
+				</div>
+			);
 		}
 	},
 	{

@@ -18,6 +18,10 @@ export interface IFetchTransactions {
 	search?: string
 	skip?: number
 	take?: number
+	travel?: boolean;
+	accommodation?: boolean;
+	tour?: boolean;
+	transport?: boolean;
 }
 export interface ITransactions {
 	transactions: ITransaction[],

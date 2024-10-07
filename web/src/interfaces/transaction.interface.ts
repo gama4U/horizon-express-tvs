@@ -18,6 +18,13 @@ export interface IHorizonOnlyFields {
   salesAgreement: ISalesAgreement
 }
 
+export interface IVoucherCounts {
+  travel: number;
+  accommodation: number;
+  tour: number;
+  transport: number;
+}
+
 export interface ITransaction {
   id: string;
   lead: IUser;
@@ -31,9 +38,19 @@ export interface ITransaction {
   purchaseOrder?: IPurchaseRequestOrder
   createdAt?: Date
   updatedAt?: Date
+  voucherCounts: IVoucherCounts;
 }
 
 export interface IFetchTransaction {
   id?: string;
 }
 
+export type VoucherFilters = {
+  [key in VoucherTypes]: boolean;
+};
+export enum VoucherTypes {
+  TRAVEL = 'travel',
+  ACCOMMODATION = 'accommodation',
+  TOUR = 'tour',
+  TRANSPORT = 'transport',
+}

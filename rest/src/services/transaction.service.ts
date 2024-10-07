@@ -75,8 +75,14 @@ export interface IFetchTransactions {
   skip?: number;
   take?: number;
   search?: string;
+  travel?: boolean;
+  accommodation?: boolean;
+  tour?: boolean;
+  transport?: boolean;
 }
-export async function fetchTransactions({ skip, take, search }: IFetchTransactions) {
+
+
+export async function fetchTransactions({ skip, take, search, travel, accommodation, tour, transport }: IFetchTransactions) {
   let whereInput: Prisma.TransactionWhereInput = {};
 
   if (search) {
@@ -84,8 +90,22 @@ export async function fetchTransactions({ skip, take, search }: IFetchTransactio
       OR: [
         { lead: { firstName: { contains: search, mode: 'insensitive' } } },
         { lead: { lastName: { contains: search, mode: 'insensitive' } } },
+        { id: { contains: search, mode: "insensitive" } },
       ],
     };
+  }
+
+  if (travel) {
+    whereInput.travelVoucher = { some: {} };
+  }
+  if (accommodation) {
+    whereInput.accommodationVoucher = { some: {} };
+  }
+  if (tour) {
+    whereInput.tourVoucher = { some: {} };
+  }
+  if (transport) {
+    whereInput.transportVoucher = { some: {} };
   }
 
   const findTransaction = prisma.transaction.findMany({
@@ -100,27 +120,49 @@ export async function fetchTransactions({ skip, take, search }: IFetchTransactio
           lastName: true,
           email: true,
           avatar: true,
-          userType: true
-        }
+          userType: true,
+        },
       },
+      salesAgreement: true,
+      purchaseOrder: true,
+      tourVoucher: true,
+      travelVoucher: true,
+      accommodationVoucher: true,
+      transportVoucher: true,
     },
     skip: skip ?? 0,
     take: take ?? 10,
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: 'desc',
+    },
   });
 
   const countTransactions = prisma.transaction.count({
     where: {
-      ...whereInput
+      ...whereInput,
     },
   });
 
-  const [transactions, total] = await prisma.$transaction([
-    findTransaction,
-    countTransactions
-  ]);
+  const [transactions, total] = await prisma.$transaction([findTransaction, countTransactions]);
 
-  return { transactions, total };
+  const enrichedTransactions = transactions.map((transaction) => {
+    const travelVoucherCount = transaction.travelVoucher.length;
+    const accommodationVoucherCount = transaction.accommodationVoucher.length;
+    const tourVoucherCount = transaction.tourVoucher.length;
+    const transportVoucherCount = transaction.transportVoucher.length;
+
+    return {
+      ...transaction,
+      voucherCounts: {
+        travel: travelVoucherCount,
+        accommodation: accommodationVoucherCount,
+        tour: tourVoucherCount,
+        transport: transportVoucherCount,
+      },
+    };
+  });
+
+  return { transactions: enrichedTransactions, total };
 }
+
+
