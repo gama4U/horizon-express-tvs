@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createTransaction, fetchTransaction, fetchTransactions } from '../services/transaction.service';
+import { createTransaction, fetchTransaction, fetchTransactions, updateTransaction } from '../services/transaction.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getTransactionsSchema } from '../schemas/transaction.schema';
 
@@ -27,7 +27,6 @@ transactionRouter.get('/', validate(getTransactionsSchema), async (req: Request,
     return res.status(500).json({
       message: 'Internal server error'
     })
-
   }
 
 })
@@ -62,6 +61,24 @@ transactionRouter.get('/:id', async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' })
   }
 })
+
+transactionRouter.put('/:id', async (req: Request, res: Response) => {
+
+  try {
+    const { id } = req.params
+    const update = await updateTransaction({ id, ...req.body })
+    if (!update) throw new Error('Failed to fetch transaction')
+
+    return res.status(200).json(update)
+
+  } catch (error) {
+    console.log('update', error)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+
+})
+
+
 
 
 export default transactionRouter;

@@ -18,6 +18,22 @@ interface IFetchTransaction {
   id: string;
 }
 
+interface IUpdateTransaction {
+  id: string
+  salesAgreementId?: string
+  purchaseOrderId?: string
+}
+
+export async function updateTransaction({ id, ...data }: IUpdateTransaction) {
+  return await prisma.transaction.update({
+    where: { id },
+    data: {
+      salesAgreementId: data.salesAgreementId,
+      purchaseOrderId: data.purchaseOrderId
+    }
+  })
+}
+
 export async function fetchTransaction({ id }: IFetchTransaction) {
   return await prisma.transaction.findUnique({
     where: {
@@ -40,6 +56,16 @@ export async function fetchTransaction({ id }: IFetchTransaction) {
       transportVoucher: {
         include: {
           itineraries: true
+        }
+      },
+      salesAgreement: {
+        include: {
+          creator: true
+        }
+      },
+      purchaseOrder: {
+        include: {
+          creator: true
         }
       }
     }

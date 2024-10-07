@@ -5,7 +5,9 @@ import { fetchTransaction } from "@/api/queries/transaction";
 import TravelVoucher from "@/components/section/transaction/travel-voucher";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookLock, Car, Hotel, MapPin, MapPinned, Plane, PlaneIcon } from "lucide-react";
+import SelectSalesAgreementDialog from "@/components/dialogs/transaction/horizon-only/sales-agreement";
+import SelectPurchaseRequestDialog from "@/components/dialogs/transaction/horizon-only/purchase-request-order";
+import { Car, Hotel, MapPin, PlaneIcon } from "lucide-react";
 import Loader from "@/components/animated/Loader";
 import AddAccommodationVoucherDialog from "@/components/dialogs/transaction/accommodation-voucher/add";
 import AccommodationVoucher from "@/components/section/transaction/accommodation-voucher";
@@ -16,6 +18,11 @@ import TransportVoucher from "@/components/section/transaction/transport-voucher
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import AddTourVoucherDialog from "@/components/dialogs/transaction/tour-voucher/add";
 import PrintPreview from "@/components/section/transaction/print-preview";
+import { tabs } from "@/components/section/transaction/tabs";
+import { Card, CardTitle, CardHeader, CardContent, CardDescription } from "@/components/ui/card";
+import { ClipboardPlus } from "lucide-react";
+import SalesAgreementInfo from "@/components/section/sales-agreement/info";
+import PurchaseRequestInfo from "@/components/section/purchase-request/info";
 
 export default function ManageTransaction() {
   const { id } = useParams();
@@ -23,6 +30,8 @@ export default function ManageTransaction() {
   const [openAddAccommodationDialog, setOpenAddAccommodationDialog] = useState(false);
   const [openAddTourDialog, setOpenAddTourDialog] = useState(false);
   const [openAddTransportDialog, setOpenAddTransportDialog] = useState(false);
+  const [openSelectSalesAgreement, setOpenSelectSalesAgreement] = useState(false);
+  const [openSelectPurchaseRequest, setOpenSelectPurchaseRequest] = useState(false);
 
   const { data: transaction, isLoading } = useQuery({
     queryKey: ["transaction", id],
@@ -33,33 +42,6 @@ export default function ManageTransaction() {
     enabled: !!id,
   });
 
-  const tabs = [
-    {
-      label: "Horizon Only",
-      value: "horizon",
-      icon: <BookLock size={14} />
-    },
-    {
-      label: "Travel",
-      value: "travel",
-      icon: <Plane size={14} />
-    },
-    {
-      label: "Accommodation",
-      value: "accommodation",
-      icon: <Hotel size={14} />
-    },
-    {
-      label: "Tour",
-      value: "tour",
-      icon: <MapPinned size={14} />
-    },
-    {
-      label: "Transportation",
-      value: "transport",
-      icon: <Car size={14} />
-    },
-  ]
 
   return (
     <div className="h-screen w-full flex flex-col space-y-2">
@@ -69,102 +51,142 @@ export default function ManageTransaction() {
         LeftSideSubHeader={<p className="text-primary text-xs">Transaction ID: {id}</p>}
       />
 
-      <div className="bg-green-100 flex-1  flex-col">
-        {isLoading ?
+      <div className="flex-1 flex flex-col md:flex-row gap-2">
+        {isLoading ? (
           <Loader isLoading label="Fetching transaction details" />
-          :
-          <div className="flex flex-row justify-between gap-x-2">
-            <div className="flex flex-col space-y-2 w-full h-screen p-4 bg-white rounded-lg">
-              <Tabs defaultValue={tabs[0].value} className="">
-                <TabsList className="grid w-full grid-cols-5">
+        ) : (
+          <>
+            <div className="w-full md:w-1/2 h-full flex flex-col bg-white rounded-lg p-4">
+              <Tabs defaultValue={tabs[0].value} className="flex-1">
+                <TabsList className="grid grid-cols-5 md:grid-cols-5">
                   {tabs.map((tab, index) => (
-                    <TabsTrigger key={index} value={tab.value} className="flex flex-row gap-x-2 items-center">
+                    <TabsTrigger key={index} value={tab.value} className="">
                       <p className="text-sm">{tab.label}</p>
-                      {tab.icon}
                     </TabsTrigger>
                   ))}
                 </TabsList>
-                <TabsContent value={tabs[0].value}>
+                <TabsContent value={tabs[0].value} className="flex gap-y-2 flex-col">
+                  <Card className="w-full p-4">
+                    <CardHeader>
+                      <CardTitle className="text-sm">Sales Agreement</CardTitle>
+                      <CardDescription>View attached sales agreement document here.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
+                      {transaction?.salesAgreement ?
+                        <div>
+                          <div className="flex justify-between items-center px-4">
+                            <p className="text-xs">Sales Agreement #: <span className="font-semibold">{transaction.salesAgreement.id}</span></p>
+                            <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectSalesAgreement(true)}>
+                              Update
+                              <ClipboardPlus size={14} />
+                            </Button>
+                          </div>
+                          <SalesAgreementInfo data={transaction?.salesAgreement} />
+                        </div>
+                        :
+                        <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
+                          onClick={() => setOpenSelectSalesAgreement(true)}
+                        >
+                          <p className="text-xs">Add sales agreement</p>
+                          <ClipboardPlus />
+                        </div>}
+                    </CardContent>
+                  </Card>
+                  <Card className="w-full p-4">
+                    <CardHeader>
+                      <CardTitle className="text-sm">Purchase Request Order</CardTitle>
+                      <CardDescription>View attached purchase request order here.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
+                      {transaction?.purchaseOrder ?
+                        <div>
+                          <div className="flex justify-between items-center px-4">
+                            <p className="text-xs">Purchase Request Order #: <span className="font-semibold">{transaction.purchaseOrder.id}</span></p>
+                            <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectPurchaseRequest(true)}>
+                              Update
+                              <ClipboardPlus size={14} />
+                            </Button>
+                          </div>
+                          <PurchaseRequestInfo data={transaction?.purchaseOrder} />
+                        </div>
+                        :
+                        <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
+                          onClick={() => setOpenSelectPurchaseRequest(true)}
+                        >
+                          <p className="text-xs">Add purchase request order</p>
+                          <ClipboardPlus />
+                        </div>}
+                    </CardContent>
+                  </Card>
                 </TabsContent>
-                <TabsContent value={tabs[1].value}>
-                  <>
-                    <div className="flex flex-row justify-end items-center">
-                      <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddTravelDialog(true)}>
-                        Add
-                        <PlaneIcon />
-                      </Button>
+                <TabsContent value={tabs[1].value} className="flex-1">
+                  <div className="flex justify-end">
+                    <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddTravelDialog(true)}>
+                      Add
+                      <PlaneIcon />
+                    </Button>
+                  </div>
+                  {transaction?.travelVoucher?.length ? (
+                    <TravelVoucher travelVoucher={transaction?.travelVoucher} />
+                  ) : (
+                    <div className="flex justify-center p-5">
+                      <p className="text-gray-400 text-xs">Transaction does not include any travel voucher.</p>
                     </div>
-                    {transaction?.travelVoucher && transaction.travelVoucher.length > 0 ? (
-                      <TravelVoucher travelVoucher={transaction?.travelVoucher} />
-                    ) : (
-                      <div className="flex justify-center p-5">
-                        <p className="text-gray-400 text-xs">Transaction does not include any travel voucher.</p>
-                      </div>
-                    )}
-                  </>
-
+                  )}
                 </TabsContent>
-                <TabsContent value={tabs[2].value}>
-                  <>
-                    <div className="flex flex-row justify-end items-center">
-                      <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddAccommodationDialog(true)}>
-                        Add
-                        <Hotel />
-                      </Button>
+                <TabsContent value={tabs[2].value} className="flex-1">
+                  <div className="flex justify-end">
+                    <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddAccommodationDialog(true)}>
+                      Add
+                      <Hotel />
+                    </Button>
+                  </div>
+                  {transaction?.accommodationVoucher?.length ? (
+                    <AccommodationVoucher accommodationVoucher={transaction?.accommodationVoucher} />
+                  ) : (
+                    <div className="flex justify-center p-5">
+                      <p className="text-gray-400 text-xs">Transaction does not include any accommodation voucher.</p>
                     </div>
-                    {transaction?.accommodationVoucher && transaction.accommodationVoucher.length > 0 ? (
-                      <AccommodationVoucher accommodationVoucher={transaction?.accommodationVoucher} />
-                    ) : (
-                      <div className="flex justify-center p-5">
-                        <p className="text-gray-400 text-xs">Transaction does not include any accommodation voucher.</p>
-                      </div>
-                    )}
-                  </>
-
+                  )}
                 </TabsContent>
-                <TabsContent value={tabs[3].value}>
-                  <>
-                    <div className="flex flex-row justify-end items-center">
-                      <Button variant="outline" className="text-xs text-primary gap-x-2" onClick={() => setOpenAddTourDialog(true)}>
-                        Add
-                        <MapPin />
-                      </Button>
+                <TabsContent value={tabs[3].value} className="flex-1">
+                  <div className="flex justify-end">
+                    <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddTourDialog(true)}>
+                      Add
+                      <MapPin />
+                    </Button>
+                  </div>
+                  {transaction?.tourVoucher?.length ? (
+                    <TourVoucher tourVoucher={transaction?.tourVoucher} />
+                  ) : (
+                    <div className="flex justify-center p-5">
+                      <p className="text-gray-400 text-xs">Transaction does not include any tour voucher.</p>
                     </div>
-                    {transaction?.tourVoucher && transaction.tourVoucher.length > 0 ? (
-                      <TourVoucher tourVoucher={transaction.tourVoucher} />
-                    ) : (
-                      <div className="flex justify-center p-5">
-                        <p className="text-gray-400 text-xs">Transaction does not include any tour voucher.</p>
-                      </div>
-                    )}
-                  </>
+                  )}
                 </TabsContent>
-                <TabsContent value={tabs[4].value}>
-                  <>
-                    <div className="flex flex-row justify-end items-center">
-                      <Button variant="outline" className="text-xs text-primary gap-x-2" onClick={() => setOpenAddTransportDialog(true)}>
-                        Add
-                        <Car />
-                      </Button>
+                <TabsContent value={tabs[4].value} className="flex-1">
+                  <div className="flex justify-end">
+                    <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenAddTransportDialog(true)}>
+                      Add
+                      <Car />
+                    </Button>
+                  </div>
+                  {transaction?.transportVoucher?.length ? (
+                    <TransportVoucher transportVoucher={transaction?.transportVoucher} />
+                  ) : (
+                    <div className="flex justify-center p-5">
+                      <p className="text-gray-400 text-xs">Transaction does not include any transport voucher.</p>
                     </div>
-                    {transaction?.transportVoucher && transaction.transportVoucher.length > 0 ? (
-                      <TransportVoucher transportVoucher={transaction.transportVoucher} />
-                    ) : (
-                      <div className="flex justify-center p-5">
-                        <p className="text-gray-400 text-xs">Transaction does not include any transport voucher.</p>
-                      </div>
-                    )}
-                  </>
+                  )}
                 </TabsContent>
               </Tabs>
+            </div>
 
+            <div className="w-full md:w-1/2 h-full bg-white rounded-lg overflow-hidden">
+              {transaction && <PrintPreview data={transaction} />}
             </div>
-            <div className="w-full h-screen bg-white rounded-lg overflow-clip">
-              {transaction &&
-                <PrintPreview data={transaction} />}
-            </div>
-          </div>
-        }
+          </>
+        )}
       </div>
 
       <AddTravelVoucherDialog
@@ -186,6 +208,18 @@ export default function ManageTransaction() {
         transactionId={String(id)}
         openDialog={openAddTransportDialog}
         setOpenDialog={setOpenAddTransportDialog}
+      />
+      <SelectSalesAgreementDialog
+        transactionId={String(id)}
+        selectedSalesAgreement={transaction?.salesAgreement}
+        openDialog={openSelectSalesAgreement}
+        setOpenDialog={setOpenSelectSalesAgreement}
+      />
+      <SelectPurchaseRequestDialog
+        transactionId={String(id)}
+        selectedPurchaseRequestOrder={transaction?.purchaseOrder}
+        openDialog={openSelectPurchaseRequest}
+        setOpenDialog={setOpenSelectPurchaseRequest}
       />
     </div>
   );

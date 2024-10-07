@@ -1,4 +1,5 @@
 import { IAccommodationVoucher } from "./accommodation.interface";
+import { IPurchaseRequestOrder } from "./purchase-request.interface";
 import { ISalesAgreement } from "./sales-agreement.interface";
 import { ITourVoucher } from "./tour.interface";
 import { ITransportVoucher } from "./transport.interface";
@@ -24,6 +25,8 @@ export interface ITransaction {
   accommodationVoucher?: IAccommodationVoucher[]
   tourVoucher?: ITourVoucher[]
   transportVoucher?: ITransportVoucher[]
+  salesAgreement?: ISalesAgreement
+  purchaseOrder?: IPurchaseRequestOrder
 }
 
 export interface IFetchTransaction {

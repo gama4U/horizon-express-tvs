@@ -103,6 +103,27 @@ export async function createTourVoucher(payload: ICreateTourVoucher) {
   }
 }
 
+export interface IUpdateTransaction {
+  id: string
+  salesAgreementId?: string
+  purchaseOrderId?: string
+}
+
+export async function updateTransaction(payload: IUpdateTransaction) {
+  try {
+    const response = await api.put(`/api/v1/transactions/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+
+
+}
+
 
 export interface IUpdateAirline {
   id: string;
