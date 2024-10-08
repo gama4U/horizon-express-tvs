@@ -12,6 +12,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import AnimatedDiv from "../animated/Div"
 
 const Form = FormProvider
 
@@ -152,14 +153,16 @@ const FormMessage = React.forwardRef<
   }
 
   return (
-    <p
-      ref={ref}
-      id={formMessageId}
-      className={cn("text-[0.8rem] font-medium text-destructive", className)}
-      {...props}
-    >
-      {body}
-    </p>
+    <AnimatedDiv animationType="Shake">
+      <p
+        ref={ref}
+        id={formMessageId}
+        className={cn("text-xs font-medium text-destructive", className)}
+        {...props}
+      >
+        {body}
+      </p>
+    </AnimatedDiv>
   )
 })
 FormMessage.displayName = "FormMessage"
