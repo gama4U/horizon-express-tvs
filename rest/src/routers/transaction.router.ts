@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createTransaction, deleteTransaction, fetchTransaction, fetchTransactions, updateTransaction } from '../services/transaction.service';
+import { createTransaction, deleteTransaction, fetchTransaction, fetchTransactions, fetchTransactionSummary, updateTransaction } from '../services/transaction.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getTransactionsSchema } from '../schemas/transaction.schema';
 
@@ -100,6 +100,39 @@ transactionRouter.delete('/:id', async (req: Request, res: Response) => {
   }
 })
 
+
+transactionRouter.post('/summary', async (req: Request, res: Response) => {
+
+  const { from, to } = req.body;
+
+  if (!from || !to) {
+    return res.status(400).json({ message: 'Start date and end date are required.' });
+  }
+
+  try {
+    const start = new Date(from);
+    const end = new Date(to);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).json({ message: 'Invalid date format.' });
+    }
+
+    const data = await fetchTransactionSummary(start, end);
+
+    const rate = data.total > 0 ? (data.since7days / data.total) * 100 : 0;
+
+    return res.status(200).json({
+      since7days: data.since7days,
+      rate: parseFloat(rate.toFixed(2)),
+      total: data.total,
+      enrichedTransactions: data.enrichedTransactions,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 

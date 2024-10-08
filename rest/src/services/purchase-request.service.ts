@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import moment from 'moment';
 import prisma from "../../prisma/db";
 import { ICreatePurchaseRequest, IFindPurchaseRequests, IUpdatePurchaseRequest } from "../interfaces/purchase-request.interface";
 
@@ -8,7 +9,7 @@ export async function createPurchaseRequest(data: ICreatePurchaseRequest) {
   });
 }
 
-export async function updatePurchaseRequest({id, ...data}: IUpdatePurchaseRequest) {
+export async function updatePurchaseRequest({ id, ...data }: IUpdatePurchaseRequest) {
   return prisma.purchaseRequestOrder.update({
     where: {
       id
@@ -17,7 +18,7 @@ export async function updatePurchaseRequest({id, ...data}: IUpdatePurchaseReques
   })
 }
 
-export async function findPurchaseRequests({skip, take, search, type, paymentType}: IFindPurchaseRequests) {
+export async function findPurchaseRequests({ skip, take, search, type, paymentType }: IFindPurchaseRequests) {
   let whereInput: Prisma.PurchaseRequestOrderWhereInput = {};
 
   if (search) {
@@ -43,7 +44,7 @@ export async function findPurchaseRequests({skip, take, search, type, paymentTyp
     }
   }
 
-  const findPurchaseRequests =  prisma.purchaseRequestOrder.findMany({
+  const findPurchaseRequests = prisma.purchaseRequestOrder.findMany({
     where: {
       ...whereInput,
     },
@@ -59,12 +60,12 @@ export async function findPurchaseRequests({skip, take, search, type, paymentTyp
         }
       },
       _count: {
-        select:  {
+        select: {
           purchaseOrderItems: true
         }
       }
     },
-    skip:skip ?? 0,
+    skip: skip ?? 0,
     take: take ?? 10,
     orderBy: {
       createdAt: 'desc'
@@ -77,17 +78,17 @@ export async function findPurchaseRequests({skip, take, search, type, paymentTyp
     },
   });
 
-  const [purchaseRequests, total] =  await prisma.$transaction([
-    findPurchaseRequests, 
+  const [purchaseRequests, total] = await prisma.$transaction([
+    findPurchaseRequests,
     countPurchaseRequests
   ]);
 
-  return {purchaseRequests, total};
+  return { purchaseRequests, total };
 }
 
 export async function findPurchaseRequestById(id: string) {
   return await prisma.purchaseRequestOrder.findUnique({
-    where: {id},
+    where: { id },
     include: {
       creator: {
         select: {
@@ -121,4 +122,24 @@ export async function deletePurchaseRequestById(id: string) {
       id
     }
   });
+}
+export async function fetchPurchaseRequestSummary() {
+  const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
+
+  const [total, since7days] = await Promise.all([
+    prisma.purchaseRequestOrder.count(),
+    prisma.purchaseRequestOrder.count({
+      where: {
+        createdAt: {
+          gte: oneWeekAgo,
+        },
+      },
+    }),
+  ]);
+
+  const rate = total > 0 ? (since7days / total) * 100 : 0;
+
+  return {
+    total, since7days, rate
+  }
 }

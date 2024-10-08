@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
+import moment from "moment";
 
 interface ICreateTransaction {
   leadId: string;
@@ -197,5 +198,73 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
 
   return { transactions: enrichedTransactions, total };
 }
+
+
+
+
+export async function fetchTransactionSummary(startDate: Date, endDate: Date) {
+  const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
+
+  const [total, since7days, transactions] = await Promise.all([
+    prisma.transaction.count(),
+    prisma.transaction.count({
+      where: {
+        createdAt: {
+          gte: oneWeekAgo,
+        },
+      },
+    }),
+    prisma.transaction.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        travelVoucher: true,
+        accommodationVoucher: true,
+        tourVoucher: true,
+        transportVoucher: true,
+      },
+    }),
+  ]);
+
+  const enrichedTransactions = transactions.map((transaction) => {
+    const travelVoucherCount = transaction.travelVoucher.length;
+    const accommodationVoucherCount = transaction.accommodationVoucher.length;
+    const tourVoucherCount = transaction.tourVoucher.length;
+    const transportVoucherCount = transaction.transportVoucher.length;
+
+    return {
+      ...transaction,
+      voucherCounts: {
+        travel: travelVoucherCount,
+        accommodation: accommodationVoucherCount,
+        tour: tourVoucherCount,
+        transport: transportVoucherCount,
+      },
+    };
+  });
+
+  const totalVoucherCounts = {
+    travel: 0,
+    accommodation: 0,
+    tour: 0,
+    transport: 0,
+  };
+
+  enrichedTransactions.forEach((transaction) => {
+    totalVoucherCounts.travel += transaction.travelVoucher.length;
+    totalVoucherCounts.accommodation += transaction.accommodationVoucher.length;
+    totalVoucherCounts.tour += transaction.tourVoucher.length;
+    totalVoucherCounts.transport += transaction.transportVoucher.length;
+  });
+
+
+
+  return { since7days, total, enrichedTransactions, totalVoucherCounts };
+}
+
 
 
