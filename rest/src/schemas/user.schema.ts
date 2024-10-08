@@ -10,7 +10,7 @@ export const getUsersSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
-    role: z.enum([UserType.ADMIN, UserType.EMPLOYEE]).optional()
+    userType: z.enum([UserType.ADMIN, UserType.EMPLOYEE]).optional()
   })
 });
 

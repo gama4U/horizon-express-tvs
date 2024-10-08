@@ -1,11 +1,11 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
-import { IUser } from "../../interfaces/user.interface";
+import { IFetchUsers, IFetchUsersData } from "../../interfaces/user.interface";
 
-export const getAllUsers = async (): Promise<IUser[]> => {
+export const fetchUsers = async (params: IFetchUsers): Promise<IFetchUsersData> => {
 	try {
-		const response = await api.get('/api/v1/users');
-		return response.data.users;
+		const response = await api.get('/api/v1/users', { params });
+		return response.data;
 	} catch (error) {
 		let message;
 		if (error instanceof AxiosError) {
