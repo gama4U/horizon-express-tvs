@@ -85,10 +85,10 @@ transactionRouter.delete('/:id', async (req: Request, res: Response) => {
 
   try {
     const { id } = req.params
-    const response = await deleteTransaction(id)
-    if (!response) throw new Error('Failed to delete transaction')
+    const deleted = await deleteTransaction(id)
+    if (!deleted) throw new Error('Failed to delete transaction')
 
-    return res.status(200).json(response)
+    return res.status(200).json(deleted)
 
   } catch (error) {
     return res.status(500).json({ message: 'Internal server error' })

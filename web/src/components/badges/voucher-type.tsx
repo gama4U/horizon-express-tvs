@@ -7,10 +7,10 @@ interface VoucherBadgeProps {
 }
 
 const voucherTypeColors: Record<VoucherTypes, string> = {
-	travel: "bg-blue-700 text-white",
-	accommodation: "bg-green-700 text-white",
-	tour: "bg-yellow-600 text-white",
-	transport: "bg-red-700 text-white",
+	travel: "bg-blue-300 text-blue-900",
+	accommodation: "bg-green-300 text-green-900",
+	tour: "bg-yellow-300 text-yellow-900",
+	transport: "bg-red-300 text-red-900",
 }
 
 export function VoucherBadge({ type, count }: VoucherBadgeProps) {

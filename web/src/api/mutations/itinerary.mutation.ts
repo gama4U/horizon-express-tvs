@@ -55,6 +55,18 @@ export async function updateTourItinerary(payload: IUpdateTourItinerary) {
     throw new Error(message || 'Something went wrong');
   }
 }
+export async function deleteTourItinerary(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/tour-itineraries/${id}`)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
 
 export async function createTransportItinerary(payload: ICreateTransportItinerary) {
   try {
@@ -71,6 +83,18 @@ export async function createTransportItinerary(payload: ICreateTransportItinerar
 export async function updateTransportItinerary(payload: IUpdateTransportItinerary) {
   try {
     const response = await api.put(`/api/v1/transport-itineraries/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+export async function deleteTransportItinerary(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/transport-itineraries/${id}`)
     return response.data
   } catch (error) {
     let message;

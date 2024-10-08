@@ -8,6 +8,8 @@ import { ITransportVoucher } from "../../../interfaces/transport.interface";
 import { EditTransportVoucherDialog } from "../../dialogs/transaction/transport-voucher/edit";
 import { AddTransportItineraryDialog } from "../../dialogs/transaction/transport-itinerary/add";
 import { EditTransportItineraryDialog } from "../../dialogs/transaction/transport-itinerary/edit";
+import DeleteTransportation from "@/components/alert/transactions/transportation/delete";
+import DeleteItinerary from "@/components/alert/transactions/itinerary/delete-itinerary";
 
 interface ITransportVoucherProps {
   transportVoucher: ITransportVoucher[];
@@ -20,7 +22,7 @@ export default function TransportVoucher({ transportVoucher }: ITransportVoucher
   const [openEditItineraryDialog, setOpenEditItineraryDialog] = useState(false);
   const [openAddItineraryDialog, setOpenAddItineraryDialog] = useState(false);
 
-  function handleEditAccommodation(selectedTransport: ITransportVoucher) {
+  function handleEditTransportation(selectedTransport: ITransportVoucher) {
     setOpenEditDialog(true);
     setTransport(selectedTransport);
   }
@@ -39,13 +41,18 @@ export default function TransportVoucher({ transportVoucher }: ITransportVoucher
     <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-0 mt-2 bg-white rounded-lg">
       {transportVoucher.map((voucher, index) => (
         <div key={index} className="border-2 border-dotted p-4 mb-2">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-row justify-between items-center">
             <p className="text-sm font-semibold">Transportation #{index + 1}</p>
-            <Button variant="link" className="text-xs gap-x-2" onClick={() => handleEditAccommodation(voucher)}>
-              Update
-              <Pencil size={16} />
-            </Button>
+            <div className="flex flex-row gap-x-2 items-center ">
+              <Button size="icon" variant="ghost" className="text-xs gap-x-2" onClick={() => handleEditTransportation(voucher)}>
+                <Pencil size={14} />
+              </Button>
+              <DeleteTransportation id={String(voucher?.id)} />
+            </div>
           </div>
+
+          <Separator className="my-2" />
+
 
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
@@ -89,13 +96,16 @@ export default function TransportVoucher({ transportVoucher }: ITransportVoucher
             </div>
             {voucher.itineraries?.map((itinerary, idx) => (
               <div key={idx} className="space-y-4 border-2 rounded-xl p-4">
-                <div className="flex flex-row justify-between items-center ">
-                  <p className="text-xs text-primary font-semibold">Itinerary #{idx + 1}</p>
-                  <Button variant="link" className="text-xs gap-x-2" onClick={() => handleEditItinerary(itinerary)}>
-                    Edit
-                    <Pencil size={16} />
-                  </Button>
+                <div className="flex flex-row justify-between items-center">
+                  <p className="text-xs text-primary font-semibold">Itinerary #{index + 1}</p>
+                  <div className="flex flex-row gap-x-2 items-center ">
+                    <Button size="icon" variant="ghost" className="text-xs gap-x-2" onClick={() => handleEditItinerary(itinerary)}>
+                      <Pencil size={14} />
+                    </Button>
+                    <DeleteItinerary id={String(itinerary?.id)} type="transport" />
+                  </div>
                 </div>
+
                 <div>
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
                     <p className="text-xs font-medium">Title:</p>

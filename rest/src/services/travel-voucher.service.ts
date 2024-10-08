@@ -31,6 +31,13 @@ export async function updateTravelVoucher(id: string, data: IUpdateTravelVoucher
     }
   })
 }
+
+export async function deleteTravelVoucher(id: string) {
+  return await prisma.travel.delete({
+    where: { id }
+  })
+}
+
 export async function updateAirline(data: IUpdateAirlines) {
   return await prisma.airlines.update({
     where: {

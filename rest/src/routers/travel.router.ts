@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createAirlines, createShipping, createTravelVoucher, updateAirline, updateShipping, updateTravelVoucher } from '../services/travel-voucher.service';
+import { createAirlines, createShipping, createTravelVoucher, deleteTravelVoucher, updateAirline, updateShipping, updateTravelVoucher } from '../services/travel-voucher.service';
 import { validate } from '../middlewares/validate.middleware';
 import { createTravelVoucherSchema, updateTravelVoucherSchema } from '../schemas/travel-voucher.schema';
 import { TravelType } from '@prisma/client';
@@ -49,6 +49,18 @@ travelVoucherRouter.put('/:id', validate(updateTravelVoucherSchema), async (req:
     res.status(500).json(error);
   }
 });
+travelVoucherRouter.delete('/:id', async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  try {
+    const deleted = await deleteTravelVoucher(id);
+    if (!deleted) { throw new Error('Failed to delete travel voucher') }
+    res.status(200).json({ message: 'Successfully deleted travel voucher' });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 
 
 

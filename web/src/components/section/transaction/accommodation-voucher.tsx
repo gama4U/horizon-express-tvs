@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { EditAccommodationVoucherDialog } from "../../dialogs/transaction/accommodation-voucher/edit";
 import { Button } from "../../ui/button";
 import { Pencil } from "lucide-react";
+import DeleteAccommodation from "@/components/alert/transactions/acccommodation/delete";
 
 interface IAccommodationVoucherProps {
   accommodationVoucher: IAccommodationVoucher[];
@@ -24,13 +25,17 @@ export default function AccommodationVoucher({ accommodationVoucher }: IAccommod
     <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-0 mt-2 bg-white rounded-lg">
       {accommodationVoucher.map((voucher, index) => (
         <div key={index} className="border-2 border-dotted p-4 mb-2">
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-between items-center">
             <p className="text-sm font-semibold">Accommodation #{index + 1}</p>
-            <Button variant="link" className="text-xs gap-x-2" onClick={() => handleEditAccommodation(voucher)}>
-              Update
-              <Pencil size={12} />
-            </Button>
+            <div className="flex flex-row gap-x-2 items-center ">
+              <Button size="icon" variant="ghost" className="text-xs gap-x-2" onClick={() => handleEditAccommodation(voucher)}>
+                <Pencil size={14} />
+              </Button>
+              <DeleteAccommodation id={String(voucher?.id)} />
+            </div>
           </div>
+
+          <Separator className="my-2" />
 
           <div className="space-y-4">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-y-1 gap-x-4">

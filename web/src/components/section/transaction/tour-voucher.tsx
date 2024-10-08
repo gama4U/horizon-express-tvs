@@ -7,6 +7,8 @@ import { ITourVoucher, IItinerary } from "../../../interfaces/tour.interface";
 import { EditTourVoucherDialog } from "../../dialogs/transaction/tour-voucher/edit";
 import { AddTourItineraryDialog } from "../../dialogs/transaction/tour-itinerary/add";
 import { EditTourItineraryDialog } from "../../dialogs/transaction/tour-itinerary/edit";
+import DeleteTour from "@/components/alert/transactions/tour/delete";
+import DeleteItinerary from "@/components/alert/transactions/itinerary/delete-itinerary";
 
 interface ITourVoucherProps {
   tourVoucher: ITourVoucher[];
@@ -19,7 +21,7 @@ export default function TourVoucher({ tourVoucher }: ITourVoucherProps) {
   const [openEditItineraryDialog, setOpenEditItineraryDialog] = useState(false);
   const [openAddItineraryDialog, setOpenAddItineraryDialog] = useState(false);
 
-  function handleEditAccommodation(selectedTour: ITourVoucher) {
+  function handleEditTour(selectedTour: ITourVoucher) {
     setOpenEditDialog(true);
     setTour(selectedTour);
   }
@@ -38,13 +40,17 @@ export default function TourVoucher({ tourVoucher }: ITourVoucherProps) {
     <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-0 mt-2 bg-white rounded-lg">
       {tourVoucher.map((voucher, index) => (
         <div key={index} className="border-2 border-dotted p-4 mb-2">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-row justify-between items-center">
             <p className="text-sm font-semibold">Tour #{index + 1}</p>
-            <Button variant="link" className="text-xs gap-x-2" onClick={() => handleEditAccommodation(voucher)}>
-              Update
-              <Pencil size={16} />
-            </Button>
+            <div className="flex flex-row gap-x-2 items-center ">
+              <Button size="icon" variant="ghost" className="text-xs gap-x-2" onClick={() => handleEditTour(voucher)}>
+                <Pencil size={14} />
+              </Button>
+              <DeleteTour id={String(voucher?.id)} />
+            </div>
           </div>
+
+          <Separator className="my-2" />
 
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
@@ -83,12 +89,14 @@ export default function TourVoucher({ tourVoucher }: ITourVoucherProps) {
             </div>
             {voucher.itineraries?.map((itinerary, idx) => (
               <div key={idx} className="space-y-4 border-2 rounded-xl p-4">
-                <div className="flex flex-row justify-between items-center ">
-                  <p className="text-xs text-primary font-semibold">Itinerary #{idx + 1}</p>
-                  <Button variant="link" className="text-xs gap-x-2" onClick={() => handleEditItinerary(itinerary)}>
-                    Edit
-                    <Pencil size={16} />
-                  </Button>
+                <div className="flex flex-row justify-between items-center">
+                  <p className="text-xs text-primary font-semibold">Itinerary #{index + 1}</p>
+                  <div className="flex flex-row gap-x-2 items-center ">
+                    <Button size="icon" variant="ghost" className="text-xs gap-x-2" onClick={() => handleEditItinerary(itinerary)}>
+                      <Pencil size={14} />
+                    </Button>
+                    <DeleteItinerary id={String(itinerary?.id)} type="tour" />
+                  </div>
                 </div>
                 <div>
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">

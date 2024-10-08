@@ -45,6 +45,15 @@ export async function updateTourVoucher({ id, ...data }: IUpdateTourVoucher) {
     },
   });
 }
+
+export async function deleteTourVoucher(id: string) {
+  return await prisma.tour.delete({
+    where: {
+      id
+    }
+  })
+}
+
 export interface ICreateTourItinerary {
   tourId: string
   title: string
@@ -74,6 +83,11 @@ export async function updateTourItinerary({ id, ...data }: IUpdateTourItinerary)
     data
   })
 }
+export async function deleteTourItinerary(id: string) {
+  return await prisma.tourItinerary.delete({
+    where: { id },
+  })
+}
 
 export interface ICreateTransportItinerary {
   transportId: string
@@ -101,6 +115,11 @@ export async function updateTransportItinerary({ id, ...data }: IUpdateTransport
   return await prisma.transportItinerary.update({
     where: { id },
     data
+  })
+}
+export async function deleteTransportItinerary(id: string) {
+  return await prisma.transportItinerary.delete({
+    where: { id },
   })
 }
 

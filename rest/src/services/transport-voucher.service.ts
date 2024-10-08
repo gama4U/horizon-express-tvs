@@ -34,3 +34,10 @@ export async function updateTransportVoucher({ id, ...data }: IUpdateTransportVo
     data
   })
 }
+export async function deleteTransportVoucher(id: string) {
+  return await prisma.transportation.delete({
+    where: {
+      id: id
+    }
+  })
+}

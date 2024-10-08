@@ -16,6 +16,20 @@ export async function createTransaction(): Promise<ICreatedTransaction> {
     throw new Error(message || 'Something went wrong');
   }
 }
+
+export async function deleteTransaction(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/transactions/${id}`);
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+
 export interface ICreateAirline {
   name: string;
   code: string;
@@ -120,10 +134,7 @@ export async function updateTransaction(payload: IUpdateTransaction) {
     }
     throw new Error(message || 'Something went wrong');
   }
-
-
 }
-
 
 export interface IUpdateAirline {
   id: string;
@@ -162,6 +173,19 @@ export async function updateTravelVoucher(payload: IUpdateTravelVoucher) {
     throw new Error(message || 'Something went wrong');
   }
 }
+
+export async function deleteTravelVoucher(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/travel-vouchers/${id}`)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
 export interface IUpdateAccommodationVoucher {
   id: string;
   name: string;
@@ -174,6 +198,18 @@ export interface IUpdateAccommodationVoucher {
 export async function updateAccommodationVoucher(payload: IUpdateAccommodationVoucher) {
   try {
     const response = await api.put(`/api/v1/accommodation-vouchers/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+export async function deleteAccommodationVoucher(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/accommodation-vouchers/${id}`)
     return response.data
   } catch (error) {
     let message;
@@ -237,10 +273,34 @@ export async function updateTransportVoucher(payload: IUpdateTransportVoucher) {
     throw new Error(message || 'Something went wrong');
   }
 }
+export async function deleteTransportVoucher(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/transport-vouchers/${id}`)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
 
 export async function updateTourVoucher(payload: IUpdateTourVoucher) {
   try {
     const response = await api.put(`/api/v1/tour-vouchers/${payload.id}`, payload)
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+export async function deleteTourVoucher(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/tour-vouchers/${id}`)
     return response.data
   } catch (error) {
     let message;

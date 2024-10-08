@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Pencil } from "lucide-react";
 import { Separator } from "../../ui/separator";
 import EditTravelVoucherDialog from "../../dialogs/transaction/travel-voucher/edit";
+import DeleteTravel from "@/components/alert/transactions/travel/delete";
 
 interface TravelVoucherProps {
   travelVoucher: ITravelVoucher[];
@@ -23,13 +24,17 @@ export default function TravelVoucher({ travelVoucher }: TravelVoucherProps) {
     <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-0 mt-2 bg-white rounded-lg">
       {travelVoucher.map((voucher, index) => (
         <div key={index} className="border-2 border-dotted p-4 mb-2">
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-between items-center">
             <p className="text-sm font-semibold">Travel #{index + 1}</p>
-            <Button variant="link" className="text-xs gap-x-2" onClick={() => handleEditTravelVoucher(voucher)}>
-              Update
-              <Pencil size={12} />
-            </Button>
+            <div className="flex flex-row gap-x-2 items-center ">
+              <Button size="icon" variant="ghost" className="text-xs gap-x-2" onClick={() => handleEditTravelVoucher(voucher)}>
+                <Pencil size={14} />
+              </Button>
+              <DeleteTravel id={String(voucher?.id)} />
+            </div>
           </div>
+
+          <Separator className="my-2" />
 
           {voucher.type === TravelVoucherType.AIRLINES &&
             <div className="space-y-4">

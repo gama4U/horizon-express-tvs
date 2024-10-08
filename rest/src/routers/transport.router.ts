@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
 import { createTransportVoucherSchema, updateTransportVoucherSchema } from '../schemas/transport-voucher.schema';
-import { createTransportVoucher, updateTransportVoucher } from '../services/transport-voucher.service';
+import { createTransportVoucher, deleteTransportVoucher, updateTransportVoucher } from '../services/transport-voucher.service';
 
 const transportVoucherRouter = express.Router();
 
@@ -29,6 +29,19 @@ transportVoucherRouter.put('/:id', validate(updateTransportVoucherSchema), async
     res.status(500).json(error)
   }
 });
+transportVoucherRouter.delete('/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const deleted = await deleteTransportVoucher(id)
+
+    if (!deleted) { throw new Error('Failed to delete transport voucher') }
+    res.status(200).json({ message: "Successfully deleted tour voucher" })
+  } catch (error) {
+    console.log('error', error)
+    res.status(500).json(error)
+  }
+});
+
 
 
 

@@ -5,6 +5,7 @@ import { NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ITransaction, VoucherTypes } from "@/interfaces/transaction.interface";
 import { VoucherBadge } from "@/components/badges/voucher-type";
+import DeleteTransaction from "@/components/alert/transactions/delete";
 
 export const Columns: ColumnDef<ITransaction>[] = [
 	{
@@ -28,18 +29,6 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		),
 		enableSorting: false,
 		enableHiding: false,
-	},
-	{
-		id: "id",
-		header: "Transaction Voucher #",
-		cell: ({ row }) => {
-			if (!row.original.id) return;
-			return (
-				<div className="flex items-center gap-2">
-					<span>{row.original.id}</span>
-				</div>
-			)
-		}
 	},
 	{
 		id: "lead",
@@ -111,16 +100,20 @@ export const Columns: ColumnDef<ITransaction>[] = [
 	},
 	{
 		id: "actions",
+		header: "Actions",
 		enableHiding: false,
 		cell: ({ row }) => {
 			return (
-				<div className="flex items-center justify-center gap-4">
+				<div className="flex items-center justify-start gap-4">
 					<Link to={`/admin/transactions/${row.original.id}`}>
 						<NotepadText
 							size={16}
 							className="cursor-pointer hover:text-primary"
 						/>
 					</Link>
+					<DeleteTransaction
+						transactionId={row.original.id}
+					/>
 				</div>
 			)
 		},

@@ -32,3 +32,10 @@ export async function updateAccommodationVoucher(id: string, data: IUpdateAccomm
     data
   })
 }
+export async function deleteAccommodationVoucher(id: string) {
+  return await prisma.accommodation.delete({
+    where: {
+      id: id
+    },
+  })
+}
