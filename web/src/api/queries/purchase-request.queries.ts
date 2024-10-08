@@ -8,7 +8,7 @@ export async function fetchPurchaseRequestOrders(params: IFetchPurchaseRequestOr
       params
     });
     return response.data;
-  } catch(error) {
+  } catch (error) {
     let message;
     if (error instanceof AxiosError) {
       message = error.response?.data.message;
@@ -21,11 +21,28 @@ export async function fetchPurchaseRequestOrder(id: string): Promise<IPurchaseRe
   try {
     const response = await api.get(`/api/v1/purchase-requests/${id}`);
     return response.data;
-  } catch(error) {
+  } catch (error) {
     let message;
     if (error instanceof AxiosError) {
       message = error.response?.data.message;
     }
     throw new Error(message || 'Something went wrong')
+  }
+}
+interface IPurchaseRequestSummary {
+  total: number
+  since7days: number
+  rate: number
+}
+export async function fetchPurchaseRequestSummary(): Promise<IPurchaseRequestSummary> {
+  try {
+    const response = await api.post('/api/v1/purchase-requests/summary');
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
   }
 }

@@ -34,7 +34,6 @@ export default function Transactions() {
     queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, ...voucherFilters })
   });
 
-  console.log('data', data)
 
   const navigate = useNavigate();
 

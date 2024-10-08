@@ -13,17 +13,17 @@ import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
 import Loader from "@/components/animated/Loader";
 
 export default function SalesAgreements() {
-  const {skip, take, pagination, onPaginationChange} = usePagination();
+  const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const [clientTypeFilter, setClientTypeFilter] = useState<ClientTypeFilter>('ALL');
   const debouncedSearch = useDebounce(search, 500);
 
-  const {data, isLoading} = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['sales-agreements', pagination, debouncedSearch, clientTypeFilter],
-    queryFn: async() => await fetchSalesAgreements({
-      skip, 
-      take, 
-      search, 
+    queryFn: async () => await fetchSalesAgreements({
+      skip,
+      take,
+      search,
       ...(clientTypeFilter && {
         typeOfClient: clientTypeFilter
       })
@@ -58,10 +58,10 @@ export default function SalesAgreements() {
               onValueChange={(value) => setClientTypeFilter(value)}
             />
           </div>
-          <CreateSalesAgreementDialog/>
+          <CreateSalesAgreementDialog />
         </div>
-        <Loader isLoading={isLoading} />
-        <DataTable 
+        <Loader isLoading={isLoading} type="skeleton" />
+        <DataTable
           columns={Columns}
           data={data?.salesAgreements ?? []}
           total={data?.total ?? 0}

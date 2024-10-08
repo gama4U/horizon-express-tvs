@@ -44,6 +44,7 @@ const SideBar = React.memo(() => {
 			animate={containerControls}
 			initial="open"
 			className={`bg-[#FFFFFF] z-50  p-3 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col`}>
+
 			<div>
 				<div className={`flex flex-col ${isOpen ? "items-end" : "items-center"}`}>
 					<Button variant="ghost" size="icon" onClick={handleOpenClose}>

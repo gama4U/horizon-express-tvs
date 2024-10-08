@@ -5,16 +5,16 @@ import { deleteSalesAgreementById, findSalesAgreementById, updateSalesAgreement 
 import { PaymentType, PurchaseRequestOrderType } from '@prisma/client';
 import { deleteSalesAgreementItems } from '../services/sales-agreement-item.service';
 import { createPurchaseRequestSchema, findPurchaseRequestsSchema, updatePurchaseRequestSchema } from '../schemas/purchase-request.schema';
-import { createPurchaseRequest, deletePurchaseRequestById, findPurchaseRequestById, findPurchaseRequests, updatePurchaseRequest } from '../services/purchase-request.service';
+import { createPurchaseRequest, deletePurchaseRequestById, fetchPurchaseRequestSummary, findPurchaseRequestById, findPurchaseRequests, updatePurchaseRequest } from '../services/purchase-request.service';
 import { deletePurchaseRequestItems } from '../services/purchase-request-item.service';
 
 const purchaseRequestRouter = express.Router();
 
-purchaseRequestRouter.post('/', validate(createPurchaseRequestSchema), async(req: Request, res: Response) => {
+purchaseRequestRouter.post('/', validate(createPurchaseRequestSchema), async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
 
-    const created = await createPurchaseRequest({creatorId: userId, ...req.body});
+    const created = await createPurchaseRequest({ creatorId: userId, ...req.body });
     if (!created) {
       throw new Error('Failed to create sales agreement')
     }
@@ -31,11 +31,11 @@ purchaseRequestRouter.post('/', validate(createPurchaseRequestSchema), async(req
   }
 });
 
-purchaseRequestRouter.put('/:id', validate(updatePurchaseRequestSchema), async(req: Request, res: Response) => {
+purchaseRequestRouter.put('/:id', validate(updatePurchaseRequestSchema), async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
 
-    const created = await updatePurchaseRequest({id, ...req.body});
+    const created = await updatePurchaseRequest({ id, ...req.body });
     if (!created) {
       throw new Error('Failed to update purchase request')
     }
@@ -52,16 +52,16 @@ purchaseRequestRouter.put('/:id', validate(updatePurchaseRequestSchema), async(r
   }
 });
 
-purchaseRequestRouter.get('/', validate(findPurchaseRequestsSchema), async(req: Request, res: Response) => {
+purchaseRequestRouter.get('/', validate(findPurchaseRequestsSchema), async (req: Request, res: Response) => {
   try {
-    const {skip, take, search, type, paymentType} = req.query;
+    const { skip, take, search, type, paymentType } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
-      search: search ?  String(search) : undefined,
-      type: type ?  type as PurchaseRequestOrderType : undefined,
-      paymentType:  paymentType ?  paymentType as PaymentType : undefined,
+      search: search ? String(search) : undefined,
+      type: type ? type as PurchaseRequestOrderType : undefined,
+      paymentType: paymentType ? paymentType as PaymentType : undefined,
     };
 
     const purchaseRequests = await findPurchaseRequests(filters);
@@ -79,17 +79,17 @@ purchaseRequestRouter.get('/', validate(findPurchaseRequestsSchema), async(req: 
   }
 });
 
-purchaseRequestRouter.get('/:id', async(req: Request, res: Response) => {
+purchaseRequestRouter.get('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    
+
     const purchaseRequest = await findPurchaseRequestById(id);
     if (!purchaseRequest) {
-      return res.status(404).json({message: 'Purchase request not found'});
+      return res.status(404).json({ message: 'Purchase request not found' });
     }
 
     return res.status(200).json(purchaseRequest);
-  
+
   } catch (error) {
     return res.status(500).json({
       message: 'Internal server error'
@@ -97,11 +97,11 @@ purchaseRequestRouter.get('/:id', async(req: Request, res: Response) => {
   }
 })
 
-purchaseRequestRouter.delete('/:id', async(req: Request, res: Response) => {
+purchaseRequestRouter.delete('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    
-    const  deletedItems = await deletePurchaseRequestItems(id);
+
+    const deletedItems = await deletePurchaseRequestItems(id);
     if (!deletedItems) {
       throw new Error('Failed to delete purchase request items');
     }
@@ -114,12 +114,27 @@ purchaseRequestRouter.delete('/:id', async(req: Request, res: Response) => {
     return res.status(200).json({
       message: 'Purchase request deleted successfully'
     });
-  
+
   } catch (error) {
     return res.status(500).json({
       message: 'Internal server error'
     })
   }
 })
+
+purchaseRequestRouter.post('/summary', async (req: Request, res: Response) => {
+
+  try {
+    const data = await fetchPurchaseRequestSummary();
+    if (!data) {
+      return res.status(404).json({ message: 'Failed to fetch purchase request data' });
+    }
+    return res.status(200).json(data);
+  }
+  catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 export default purchaseRequestRouter;
