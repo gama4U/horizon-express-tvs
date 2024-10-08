@@ -15,9 +15,11 @@ import { fetchPurchaseRequestOrders } from "@/api/queries/purchase-request.queri
 import PurchaseRequestTypeFilter from "@/components/select/purchase-request/type-filter";
 import PaymentTypeFilterSelect from "@/components/select/purchase-request/payment-type-filter";
 import PurchaseRequestInfo from "@/components/section/purchase-request/info";
+import Lottie from "lottie-react";
+import skeletonLoader from "../../../../assets/loaders/skeleton.json"
 
 interface SelectPurchaseRequestProps {
-	transactionId: string
+	transactionId: string;
 	selectedPurchaseRequestOrder?: IPurchaseRequestOrder;
 	openDialog: boolean;
 	setOpenDialog: (open: boolean) => void;
@@ -97,7 +99,7 @@ export default function SelectPurchaseRequestDialog({
 				setOpenDialog(false);
 			}}
 		>
-			<DialogContent className="max-w-auto max-h-[90vh] overflow-y-auto rounded-[25px] p-6">
+			<DialogContent className="max-w-[520px] max-h-[90vh] overflow-y-auto rounded-[25px] p-6">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
 						Select Purchase Request Order
@@ -108,7 +110,7 @@ export default function SelectPurchaseRequestDialog({
 					<div className="w-full">
 						<div className="flex flex-1 gap-2 items-center p-[1px] border-b pb-2">
 							<CommonInput
-								placeholder="Search by client name or serial no."
+								placeholder="Search by client name or purchase order no."
 								containerProps={{
 									className: "max-w-[500px]"
 								}}
@@ -122,24 +124,32 @@ export default function SelectPurchaseRequestDialog({
 							<PaymentTypeFilterSelect
 								value={paymentTypeFilter}
 								onValueChange={(value) => setPaymentTypeFilter(value)}
-							/>						</div>
-
-						{data?.purchaseRequests?.slice(0, 2).map((purchaseRequest, index) => (
-							<div
-								className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
-                                ${selectedPurchaseRequest?.id === purchaseRequest.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
-								key={index}
-								onClick={() => handleSelectPurchaseAgreement(purchaseRequest)}>
-								{selectedPurchaseRequest?.id === purchaseRequest.id && (
-									<div className="absolute top-2 right-2 text-green-500">
-										<AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
-											<CircleCheck size={24} />
-										</AnimatedDiv>
-									</div>
-								)}
-								<PurchaseRequestInfo data={purchaseRequest} />
+							/>
+						</div>
+						{isLoading ? (
+							<div className="flex flex-col items-center">
+								<Lottie animationData={skeletonLoader} loop={true} className="w-[320px] h-[320px]" />
+								<p className="text-white font-semibold text-[14px]"></p>
 							</div>
-						))}
+						) : (
+							data?.purchaseRequests?.slice(0, 3).map((purchaseRequest, index) => (
+								<div
+									className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
+									${selectedPurchaseRequest?.id === purchaseRequest.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
+									key={index}
+									onClick={() => handleSelectPurchaseAgreement(purchaseRequest)}
+								>
+									{selectedPurchaseRequest?.id === purchaseRequest.id && (
+										<div className="absolute top-2 right-2 text-green-500">
+											<AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
+												<CircleCheck size={24} />
+											</AnimatedDiv>
+										</div>
+									)}
+									<PurchaseRequestInfo data={purchaseRequest} />
+								</div>
+							))
+						)}
 
 						<div className="flex justify-end">
 							{(selectedPurchaseRequest || selectedPurchaseRequestOrder) && (
@@ -148,9 +158,7 @@ export default function SelectPurchaseRequestDialog({
 									disabled={updatingTransaction}
 									onClick={handleUpdatePurchaseOrder}
 								>
-									{updatingTransaction ?
-										<p>Saving..</p> :
-										<p>Save</p>}
+									{updatingTransaction ? <p>Saving..</p> : <p>Save</p>}
 								</Button>
 							)}
 						</div>

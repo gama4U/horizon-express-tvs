@@ -100,8 +100,8 @@ export function DataTable<TData, TValue>({
 									className="h-24 text-center"
 								>
 									{loading
-										? <Loader isLoading={true} />
-										: 'No results.'
+										? <Loader isLoading={true} type="skeleton" />
+										: <p className="text-muted-foreground text-xs italic">No results.</p>
 									}
 								</TableCell>
 							</TableRow>

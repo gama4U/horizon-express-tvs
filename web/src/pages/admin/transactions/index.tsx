@@ -85,7 +85,7 @@ export default function Transactions() {
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <div className="flex flex-row gap-x-1 bg-slate-100 rounded-md p-2">
+            <div className="flex flex-row gap-x-1 bg-slate-100 rounded-sm p-2">
               {Object.values(VoucherTypes).map((type) => (
                 <VoucherTypeFilter
                   key={type}

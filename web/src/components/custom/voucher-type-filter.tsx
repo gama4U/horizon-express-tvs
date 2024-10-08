@@ -17,7 +17,7 @@ export function VoucherTypeFilter({ type, selected, onToggle }: VoucherTypeFilte
 	return (
 		<div
 			className={clsx(
-				"cursor-pointer px-3 py-1 rounded-lg transition-all duration-300 text-xs flex flex-row items-center gap-x-2",
+				"cursor-pointer px-3 rounded-sm py-1 transition-all duration-300 text-xs flex flex-row items-center gap-x-2",
 				selected ? "bg-primary text-white border-primary" : "bg-gray-200 text-gray-600 border-gray-300"
 			)}
 			onClick={handleToggle}

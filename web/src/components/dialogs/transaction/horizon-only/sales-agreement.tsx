@@ -13,7 +13,9 @@ import { CircleCheck } from "lucide-react";
 import AnimatedDiv from "@/components/animated/Div";
 import { Button } from "@/components/ui/button";
 import { IUpdateTransaction, updateTransaction } from "@/api/mutations/transaction.mutation";
+import skeletonLoader from "../../../../assets/loaders/skeleton.json"
 import { toast } from "sonner";
+import Lottie from "lottie-react";
 
 interface SelectSalesAgreementDialogProps {
 	transactionId: string
@@ -116,22 +118,28 @@ export default function SelectSalesAgreementDialog({
 							/>
 						</div>
 
-						{data?.salesAgreements?.slice(0, 4).map((salesAgreement, index) => (
-							<div
-								className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
-                                ${selectedAgreement?.id === salesAgreement.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
-								key={index}
-								onClick={() => handleSelectAgreement(salesAgreement)}>
-								{selectedAgreement?.id === salesAgreement.id && (
-									<div className="absolute top-2 right-2 text-green-500">
-										<AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
-											<CircleCheck size={24} />
-										</AnimatedDiv>
-									</div>
-								)}
-								<SalesAgreementInfo data={salesAgreement} />
+						{isLoading ? (
+							<div className="flex flex-col items-center">
+								<Lottie animationData={skeletonLoader} loop={true} className="w-[320px] h-[320px]" />
+								<p className="text-white font-semibold text-[14px]"></p>
 							</div>
-						))}
+						) : (
+							data?.salesAgreements?.slice(0, 3).map((salesAgreement, index) => (
+								<div
+									className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
+                                ${selectedAgreement?.id === salesAgreement.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
+									key={index}
+									onClick={() => handleSelectAgreement(salesAgreement)}>
+									{selectedAgreement?.id === salesAgreement.id && (
+										<div className="absolute top-2 right-2 text-green-500">
+											<AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
+												<CircleCheck size={24} />
+											</AnimatedDiv>
+										</div>
+									)}
+									<SalesAgreementInfo data={salesAgreement} />
+								</div>
+							)))}
 
 						<div className="flex justify-end">
 							{(selectedAgreement || selectedSalesAgreement) && (

@@ -18,20 +18,47 @@ interface IFetchTransaction {
   id: string;
 }
 
+
 interface IUpdateTransaction {
-  id: string
-  salesAgreementId?: string
-  purchaseOrderId?: string
+  id: string;
+  salesAgreementId?: string;
+  purchaseOrderId?: string;
 }
 
 export async function updateTransaction({ id, ...data }: IUpdateTransaction) {
+  if (data.salesAgreementId) {
+    const salesAgreementReferencedAlready = await prisma.transaction.findFirst({
+      where: {
+        salesAgreementId: data.salesAgreementId,
+        id: { not: id },
+      },
+    });
+
+    if (salesAgreementReferencedAlready) {
+      throw new Error('Sales Agreement is already attached to another transaction.');
+    }
+  }
+
+  if (data.purchaseOrderId) {
+    const purchaseOrderReferencedAlready = await prisma.transaction.findFirst({
+      where: {
+        purchaseOrderId: data.purchaseOrderId,
+        id: { not: id },
+      },
+    });
+
+    if (purchaseOrderReferencedAlready) {
+      throw new Error('Purchase Order is already attached in another transaction.');
+    }
+  }
+
   return await prisma.transaction.update({
     where: { id },
     data: {
-      salesAgreementId: data.salesAgreementId,
-      purchaseOrderId: data.purchaseOrderId
-    }
-  })
+      ...(data.salesAgreementId && { salesAgreementId: data.salesAgreementId }),
+      ...(data.purchaseOrderId && { purchaseOrderId: data.purchaseOrderId }),
+    },
+  });
 }
 
 export async function deleteTransaction(id: string) {

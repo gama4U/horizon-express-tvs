@@ -67,19 +67,24 @@ transactionRouter.get('/:id', async (req: Request, res: Response) => {
   }
 })
 
+
 transactionRouter.put('/:id', async (req: Request, res: Response) => {
-
   try {
-    const { id } = req.params
-    const update = await updateTransaction({ id, ...req.body })
-    if (!update) throw new Error('Failed to fetch transaction')
+    const { id } = req.params;
 
-    return res.status(200).json(update)
+    const update = await updateTransaction({ id, ...req.body });
 
-  } catch (error) {
-    return res.status(500).json({ message: 'Internal server error' })
+    if (!update) throw new Error('Failed to update transaction');
+
+    return res.status(200).json(update);
+
+  } catch (error: any) {
+    if (error.message.includes('already attached')) {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({ message: 'Internal server error', error: error.message });
   }
-})
+});
 
 transactionRouter.delete('/:id', async (req: Request, res: Response) => {
 
