@@ -1,12 +1,13 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
 import { ICreateSalesAgreement, IFindSalesAgreements, IUpdateSalesAgreement } from "../interfaces/sales-agreement.interface";
+import moment from "moment";
 
 export async function createSalesAgreement(data: ICreateSalesAgreement) {
-  return prisma.salesAgreement.create({data});
+  return prisma.salesAgreement.create({ data });
 }
 
-export async function updateSalesAgreement({id, ...data}: IUpdateSalesAgreement) {
+export async function updateSalesAgreement({ id, ...data }: IUpdateSalesAgreement) {
   return prisma.salesAgreement.update({
     where: {
       id
@@ -15,7 +16,7 @@ export async function updateSalesAgreement({id, ...data}: IUpdateSalesAgreement)
   })
 }
 
-export async function findSalesAgreements({skip, take, search, typeOfClient}: IFindSalesAgreements) {
+export async function findSalesAgreements({ skip, take, search, typeOfClient }: IFindSalesAgreements) {
   let whereInput: Prisma.SalesAgreementWhereInput = {};
 
   if (search) {
@@ -34,7 +35,7 @@ export async function findSalesAgreements({skip, take, search, typeOfClient}: IF
     }
   }
 
-  const findSalesAgreements =  prisma.salesAgreement.findMany({
+  const findSalesAgreements = prisma.salesAgreement.findMany({
     where: {
       ...whereInput,
     },
@@ -50,12 +51,12 @@ export async function findSalesAgreements({skip, take, search, typeOfClient}: IF
         }
       },
       _count: {
-        select:  {
+        select: {
           salesAgreementItems: true
         }
       }
     },
-    skip:skip ?? 0,
+    skip: skip ?? 0,
     take: take ?? 10,
     orderBy: {
       createdAt: 'desc'
@@ -68,17 +69,17 @@ export async function findSalesAgreements({skip, take, search, typeOfClient}: IF
     },
   });
 
-  const [salesAgreements, total] =  await prisma.$transaction([
-    findSalesAgreements, 
+  const [salesAgreements, total] = await prisma.$transaction([
+    findSalesAgreements,
     countSalesAgreements
   ]);
 
-  return {salesAgreements, total};
+  return { salesAgreements, total };
 }
 
 export async function findSalesAgreementById(id: string) {
   return await prisma.salesAgreement.findUnique({
-    where: {id},
+    where: { id },
     include: {
       creator: {
         select: {
@@ -112,4 +113,27 @@ export async function deleteSalesAgreementById(id: string) {
       id
     }
   });
+}
+
+export async function fetchSalesAgreementSummary() {
+  const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
+
+  const [total, since7days] = await Promise.all([
+    prisma.salesAgreement.count(),
+    prisma.salesAgreement.count({
+      where: {
+        createdAt: {
+          gte: oneWeekAgo,
+        },
+      },
+    }),
+  ]);
+
+  const rate = total > 0 ? (since7days / total) * 100 : 0;
+
+  return {
+    total, since7days, rate
+  }
+
+
 }

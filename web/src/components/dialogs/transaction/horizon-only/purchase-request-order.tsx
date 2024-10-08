@@ -99,7 +99,7 @@ export default function SelectPurchaseRequestDialog({
 				setOpenDialog(false);
 			}}
 		>
-			<DialogContent className="max-w-[520px] max-h-[90vh] overflow-y-auto rounded-[25px] p-6">
+			<DialogContent className="max-w-[720px] max-h-[90vh] overflow-y-auto rounded-[25px] p-6">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
 						Select Purchase Request Order

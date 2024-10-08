@@ -14,18 +14,18 @@ import Loader from "@/components/animated/Loader";
 import { Columns } from "@/components/tables/purchase-request/columns";
 
 export default function PurchaseRequests() {
-  const {skip, take, pagination, onPaginationChange} = usePagination();
+  const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<PurchaseRequestOrderType | 'ALL'>('ALL');
   const [paymentTypeFilter, setPaymentTypeFilter] = useState<PaymentType | 'ALL'>('ALL');
   const debouncedSearch = useDebounce(search, 500);
 
-  const {data, isLoading} = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['purchase-requests', pagination, debouncedSearch, typeFilter, paymentTypeFilter],
-    queryFn: async() => await fetchPurchaseRequestOrders({
-      skip, 
-      take, 
-      search, 
+    queryFn: async () => await fetchPurchaseRequestOrders({
+      skip,
+      take,
+      search,
       ...(paymentTypeFilter !== 'ALL' && {
         paymentType: paymentTypeFilter
       }),
@@ -58,7 +58,7 @@ export default function PurchaseRequests() {
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <PurchaseRequestTypeFilter 
+            <PurchaseRequestTypeFilter
               value={typeFilter}
               onValueChange={(value) => setTypeFilter(value)}
             />
@@ -69,8 +69,8 @@ export default function PurchaseRequests() {
           </div>
           <CreatePurchaseRequestDialog />
         </div>
-        <Loader isLoading={isLoading}/>
-        <DataTable 
+        <Loader isLoading={isLoading} type="skeleton" />
+        <DataTable
           columns={Columns}
           data={data?.purchaseRequests ?? []}
           total={data?.total ?? 0}

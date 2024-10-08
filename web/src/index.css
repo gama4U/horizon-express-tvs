@@ -77,4 +77,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .sidebar-gradient {
+    background: linear-gradient(to bottom right, #045C2B, #F15C01);
+  }
 }
