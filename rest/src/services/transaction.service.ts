@@ -34,6 +34,12 @@ export async function updateTransaction({ id, ...data }: IUpdateTransaction) {
   })
 }
 
+export async function deleteTransaction(id: string) {
+  return await prisma.transaction.delete({
+    where: { id },
+  })
+}
+
 export async function fetchTransaction({ id }: IFetchTransaction) {
   return await prisma.transaction.findUnique({
     where: {

@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createTransaction, fetchTransaction, fetchTransactions, updateTransaction } from '../services/transaction.service';
+import { createTransaction, deleteTransaction, fetchTransaction, fetchTransactions, updateTransaction } from '../services/transaction.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getTransactionsSchema } from '../schemas/transaction.schema';
 
@@ -77,11 +77,24 @@ transactionRouter.put('/:id', async (req: Request, res: Response) => {
     return res.status(200).json(update)
 
   } catch (error) {
-    console.log('update', error)
     return res.status(500).json({ message: 'Internal server error' })
   }
-
 })
+
+transactionRouter.delete('/:id', async (req: Request, res: Response) => {
+
+  try {
+    const { id } = req.params
+    const response = await deleteTransaction(id)
+    if (!response) throw new Error('Failed to delete transaction')
+
+    return res.status(200).json(response)
+
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 
 
 
