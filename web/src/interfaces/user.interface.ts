@@ -24,3 +24,32 @@ export interface IUserCredential {
   email: string;
   password: string
 }
+
+export interface IFetchUsers {
+  skip?: number;
+  take?: number;
+  search?: string;
+  userType?: string;
+}
+
+export interface IFetchUsersData {
+  users: IUser[];
+  total: number;
+}
+
+export interface ICreateUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userType: UserType;
+  password: string;
+}
+
+export interface IUpdateUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  userType: UserType;
+  password?: string;
+}

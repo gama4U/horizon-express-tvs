@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import { createUserSchema, deleteUserSchema, getUsersSchema, updateUserSchema } from '../schemas/user.schema';
 import { validate } from '../middlewares/validate.middleware';
-import { IGetUsers } from '../interfaces/user.interface';
-import { createUser, deleteUser, getUserByEmail, getUserById, getUsers, updateUser } from '../services/user.service';
+import { createUser, deleteUser, findUsers, getUserByEmail, getUserById, updateUser } from '../services/user.service';
 import bcrypt from 'bcrypt';
+import { IFindUsers } from '../interfaces/user.interface';
 
 const userRouter = express.Router();
 
@@ -33,11 +33,14 @@ userRouter.get('/', validate(getUsersSchema), async (req: Request, res: Response
       skip: Number(req.query.skip),
       take: Number(req.query.take),
       search: req.query.search,
-      role: req.query.role
-    } as IGetUsers;
-    const users = await getUsers(query);
+      type: req.query.type
+    } as IFindUsers;
+
+    const users = await findUsers(query);
     if (!users) throw new Error('Failed to get users');
+
     res.status(200).json(users);
+    
   } catch (error) {
     res.status(500).json(error);
   }
@@ -89,17 +92,5 @@ userRouter.get('/:id', async (req: Request, res: Response) => {
     res.status(500).json(error);
   }
 });
-
-userRouter.get('/', async (req: Request, res: Response) => {
-  try {
-    const users = await getUsers({});
-    if (!users) {
-      throw new Error('Failed to get users')
-    }
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-})
 
 export default userRouter;
