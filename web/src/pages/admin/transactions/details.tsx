@@ -23,6 +23,9 @@ import { Card, CardTitle, CardHeader, CardContent, CardDescription } from "@/com
 import { ClipboardPlus } from "lucide-react";
 import SalesAgreementInfo from "@/components/section/sales-agreement/info";
 import PurchaseRequestInfo from "@/components/section/purchase-request/info";
+import SalesAgreementItems from "@/components/section/sales-agreement/items";
+import PurchaseRequestItems from "@/components/section/purchase-request/items";
+import LeadDetails from "@/components/section/transaction/lead";
 
 export default function ManageTransaction() {
   const { id } = useParams();
@@ -41,7 +44,6 @@ export default function ManageTransaction() {
     },
     enabled: !!id,
   });
-
 
   return (
     <div className="h-screen w-full flex flex-col space-y-2">
@@ -81,6 +83,10 @@ export default function ManageTransaction() {
                             </Button>
                           </div>
                           <SalesAgreementInfo data={transaction?.salesAgreement} />
+                          <SalesAgreementItems
+                            data={transaction.salesAgreement.salesAgreementItems}
+                            salesAgreementId={transaction.salesAgreement.id}
+                          />
                         </div>
                         :
                         <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
@@ -107,6 +113,7 @@ export default function ManageTransaction() {
                             </Button>
                           </div>
                           <PurchaseRequestInfo data={transaction?.purchaseOrder} />
+                          <PurchaseRequestItems data={transaction.purchaseOrder.purchaseOrderItems} purchaseRequestId={transaction.purchaseOrder.id} />
                         </div>
                         :
                         <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
@@ -115,6 +122,17 @@ export default function ManageTransaction() {
                           <p className="text-xs">Add purchase request order</p>
                           <ClipboardPlus />
                         </div>}
+                    </CardContent>
+                  </Card>
+                  <Card className="w-full p-4">
+                    <CardHeader>
+                      <CardTitle className="text-sm">Lead Information</CardTitle>
+                      <CardDescription>View associated lead's details here.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
+                      {transaction?.lead &&
+                        <LeadDetails leadData={transaction.lead} />
+                      }
                     </CardContent>
                   </Card>
                 </TabsContent>

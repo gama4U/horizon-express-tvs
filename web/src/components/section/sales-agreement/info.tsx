@@ -5,7 +5,7 @@ interface Props {
   data: ISalesAgreement
 }
 
-export default function SalesAgreementInfo({data}: Props) {
+export default function SalesAgreementInfo({ data }: Props) {
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
       <div className="flex flex-col gap-1">
@@ -29,7 +29,7 @@ export default function SalesAgreementInfo({data}: Props) {
           Type of client
         </span>
         <ClientTypeBadge
-          value={data.typeOfClient} 
+          value={data.typeOfClient}
         />
       </div>
       <div>
@@ -55,6 +55,9 @@ export default function SalesAgreementInfo({data}: Props) {
         <h3 className="text-[12px]">
           {data.approvedBy}
         </h3>
+      </div>
+      <div className="flex flex-col">
+
       </div>
     </div>
   )

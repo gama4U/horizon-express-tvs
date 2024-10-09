@@ -10,9 +10,9 @@ import EditPurchaseRequestDialog from "@/components/dialogs/purchase-request/edi
 import PurchaseRequestItems from "@/components/section/purchase-request/items";
 
 export default function PurchaseRequestDetails() {
-  const {id} = useParams();
+  const { id } = useParams();
 
-  const {data, isLoading} = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['purchase-request-details', id],
     queryFn: async () => {
       if (!id) return;
@@ -23,6 +23,7 @@ export default function PurchaseRequestDetails() {
   return (
     <div className="space-y-2">
       <TopBar
+        showBackButton={true}
         LeftSideHeader={
           <p className="text-sm">
             Purchase request order details
@@ -43,16 +44,16 @@ export default function PurchaseRequestDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <EditPurchaseRequestDialog data={data}/>
+                <EditPurchaseRequestDialog data={data} />
               </div>
-              <Separator className="bg-slate-200"/>
+              <Separator className="bg-slate-200" />
               <PurchaseRequestInfo data={data} />
-              <PurchaseRequestItems 
+              <PurchaseRequestItems
                 data={data.purchaseOrderItems}
                 purchaseRequestId={data.id}
               />
             </section>
-            <PrintPreview data={data}/>
+            <PrintPreview data={data} />
           </>
         ) : (
           <div className="h-[90vh] bg-white w-full rounded-lg" />

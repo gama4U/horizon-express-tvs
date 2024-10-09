@@ -4,9 +4,13 @@ import { ICreatedTransaction } from "../../interfaces/transaction.interface";
 import { TravelVoucherType } from "../../interfaces/travel.interface";
 import { TransportServiceType, VehicleType } from "../../interfaces/transport.interface";
 
-export async function createTransaction(): Promise<ICreatedTransaction> {
+
+export interface ICreateTransaction {
+  id: string
+}
+export async function createTransaction(data: ICreateTransaction): Promise<ICreatedTransaction> {
   try {
-    const response = await api.post('/api/v1/transactions');
+    const response = await api.post('/api/v1/transactions', data);
     return response.data;
   } catch (error) {
     let message;
@@ -48,7 +52,7 @@ export interface ICreateShipping {
 
 export interface ICreateTravelVoucher {
   transactionId: string;
-  type: TravelVoucherType;
+  type?: TravelVoucherType;
   airline?: ICreateAirline;
   shipping?: ICreateShipping
 }

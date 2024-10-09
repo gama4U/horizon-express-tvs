@@ -17,23 +17,22 @@ model User {
   userType              UserType
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
-  transactions          Transaction[]
   salesAgreements       SalesAgreement[]
   purchaseRequestOrders PurchaseRequestOrder[]
 }
 
 model Transaction {
   id                   String                @id @default(cuid())
-  leadId               String
-  salesAgreementId     String?               @unique
-  purchaseOrderId      String?               @unique
   travelVoucher        Travel[]
   accommodationVoucher Accommodation[]
   tourVoucher          Tour[]
   transportVoucher     Transportation[]
+  salesAgreementId     String?               @unique
+  purchaseOrderId      String?               @unique
   purchaseOrder        PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
   salesAgreement       SalesAgreement?       @relation(fields: [salesAgreementId], references: [id])
-  lead                 User                  @relation(fields: [leadId], references: [id])
+  leadId               String
+  lead                 Lead                  @relation(fields: [leadId], references: [id])
   createdAt            DateTime?             @default(now())
   updatedAt            DateTime?             @updatedAt
 }
@@ -83,6 +82,20 @@ model PurchaseRequestOrder {
   salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
   createdAt          DateTime?                  @default(now())
   updatedAt          DateTime?                  @updatedAt
+}
+
+model Lead {
+  id            String        @id @default(cuid())
+  firstName     String
+  middleName    String
+  lastName      String
+  email         String
+  contactNumber String
+  documents     String[]
+  transactions  Transaction[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model PurchaseRequestOrderItem {

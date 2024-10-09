@@ -33,15 +33,13 @@ transactionRouter.get('/', validate(getTransactionsSchema), async (req: Request,
       message: 'Internal server error'
     })
   }
-
 })
 
 transactionRouter.post('/', async (req: Request, res: Response) => {
+  console.log('here', req.body)
   try {
-    const userId = String(req.user?.id);
-    const { salesAgreementId } = req.body;
 
-    const created = await createTransaction({ leadId: userId, salesAgreementId });
+    const created = await createTransaction(req.body);
     if (!created) {
       throw new Error('Failed to create transaction');
     }
@@ -49,6 +47,7 @@ transactionRouter.post('/', async (req: Request, res: Response) => {
     return res.status(200).json(created);
 
   } catch (error) {
+    console.log('error is', error)
     return res.status(500).json({ message: 'Internal server error' })
   }
 })

@@ -8,6 +8,7 @@ import { ITransaction } from '@/interfaces/transaction.interface';
 import { AccommodationType } from '@/interfaces/accommodation.interface';
 import { TransportServiceType, VehicleType } from '@/interfaces/transport.interface';
 import logo from '../../../assets/logo.png'
+import { TravelVoucherType } from '@/interfaces/travel.interface';
 
 interface Props {
   data: ITransaction;
@@ -18,7 +19,7 @@ export default function PrintPreview({ data }: Props) {
   const reactToPrintFn = useReactToPrint({ contentRef });
 
   return (
-    <div className="w-full bg-white rounded-lg">
+    <div className="w-full bg-white rounded-lg p-4">
       <div className="h-[50px] px-4 flex items-center justify-between">
         <h1 className="text-xs text-muted-foreground italic">Print preview</h1>
         <Button onClick={() => reactToPrintFn()} size={'sm'} className="gap-1">
@@ -55,7 +56,7 @@ export default function PrintPreview({ data }: Props) {
               </div>
             </div>
             <div className="flex items-start gap-2 text-xs">
-              <span className="font-semibold">Voucher #:</span>
+              <span className="font-semibold">Transaction Voucher #:</span>
               <span>{data.id}</span>
             </div>
             {data.travelVoucher && data.travelVoucher.length > 0 && (
@@ -66,25 +67,40 @@ export default function PrintPreview({ data }: Props) {
                   <hr className="border-t-2 border-gray-500 my-2 border-dashed" />
                 </>
                 {data.travelVoucher.map((voucher, index) => (
-                  <>
-                    <p className='mb-1 text-xs underline'>Travel #{index + 1}</p>
-                    <div key={voucher.id} className="text-xs grid grid-cols-2">
-                      <div>
-                        <p>Name: {voucher.airline?.name}</p>
-                        <p>Code: {voucher.airline?.code}</p>
-                      </div>
-                      <div>
-                        <p>Origin: {voucher.airline?.origin}</p>
-                        <p>Destination: {voucher.airline?.destination}</p>
-                      </div>
-                      <div>
-                        <p>ETD: {format(new Date(voucher.airline?.etd ?? new Date()), "MMMM d, yyyy")}</p>
-                      </div>
-                      <div>
-                        <p>ETA: {format(new Date(voucher.airline?.eta ?? new Date()), "MMMM d, yyyy")}</p>
-                      </div>
-                    </div>
-                  </>
+                  <div className='my-2'>
+                    <p className='mb-1 text-xs'>Travel #{index + 1} - {voucher.type}</p>
+                    {voucher.type === TravelVoucherType.AIRLINES &&
+                      <div key={voucher.id} className="text-xs grid grid-cols-2">
+                        <div>
+                          <p>Name of Airlines: {voucher.airline?.name}</p>
+                          <p>Airline Flight Code: {voucher.airline?.code}</p>
+                        </div>
+                        <div>
+                          <p>Origin: {voucher.airline?.origin}</p>
+                          <p>Destination: {voucher.airline?.destination}</p>
+                        </div>
+                        <div>
+                          <p>ETD: {format(new Date(voucher.airline?.etd ?? new Date()), "MMMM d, yyyy")}</p>
+                        </div>
+                        <div>
+                          <p>ETA: {format(new Date(voucher.airline?.eta ?? new Date()), "MMMM d, yyyy")}</p>
+                        </div>
+                      </div>}
+                    {voucher.type === TravelVoucherType.SHIPPING &&
+                      <div key={voucher.id} className="text-xs grid grid-cols-2">
+                        <div>
+                          <p>Name of Shipping: {voucher.shipping?.name}</p>
+                          <p>Voyage Number: {voucher.shipping?.voyageNumber}</p>
+                        </div>
+                        <div>
+                          <p>Origin: {voucher.shipping?.origin}</p>
+                          <p>Destination: {voucher.shipping?.destination}</p>
+                        </div>
+                        <div>
+                          <p>Date of Travel: {format(new Date(voucher.shipping?.dateOfTravel ?? new Date()), "MMMM d, yyyy")}</p>
+                        </div>
+                      </div>}
+                  </div>
                 ))}
               </div>
             )}
@@ -143,8 +159,8 @@ export default function PrintPreview({ data }: Props) {
                         <p>Driver Contact: {tour.driverContact}</p>
                       </div>
                       {tour.itineraries.length > 0 && (
-                        <div className="col-span-2">
-                          <h4 className="font-semibold">Itineraries</h4>
+                        <div className="col-span-2 my-2">
+                          <h4 className="font-semibold mb-1">Itineraries</h4>
                           <table className="w-full text-left text-xs border">
                             <thead>
                               <tr>
@@ -197,8 +213,8 @@ export default function PrintPreview({ data }: Props) {
                       </div>
                       {transport.remarks && <div><p>Remarks: {transport.remarks}</p></div>}
                       {transport.itineraries.length > 0 && (
-                        <div className="col-span-2">
-                          <h4 className="font-semibold">Itineraries</h4>
+                        <div className="col-span-2 my-2">
+                          <h4 className="font-semibold mb-1">Itineraries</h4>
                           <table className="w-full text-left text-xs border">
                             <thead>
                               <tr>

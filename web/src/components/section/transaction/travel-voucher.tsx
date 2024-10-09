@@ -107,7 +107,6 @@ export default function TravelVoucher({ travelVoucher }: TravelVoucherProps) {
               </div>
             </div>
           }
-          {index < travelVoucher.length - 1 && <Separator className="my-4" />}
         </div>
       ))}
       {travel &&

@@ -11,6 +11,7 @@ import SalesAgreementDetails from "../pages/admin/sales-agreement/details";
 import Transactions from "../pages/admin/transactions";
 import PurchaseRequests from "@/pages/admin/purchase-request";
 import PurchaseRequestDetails from "@/pages/admin/purchase-request/details";
+import Leads from "@/pages/admin/leads";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,11 @@ const router = createBrowserRouter([
         path: 'users',
         element: <Users />
       },
+      {
+        path: 'leads',
+        element: <Leads />
+      },
+
       {
         path: 'purchase-requests',
         element: <PurchaseRequests />

@@ -3,14 +3,12 @@ import prisma from "../../prisma/db";
 import moment from "moment";
 
 interface ICreateTransaction {
-  leadId: string;
-  salesAgreementId: string;
+  id: string;
 }
-export async function createTransaction({ leadId, salesAgreementId }: ICreateTransaction) {
+export async function createTransaction({ id }: ICreateTransaction) {
   return await prisma.transaction.create({
     data: {
-      leadId,
-      salesAgreementId
+      leadId: id
     }
   })
 }
@@ -94,12 +92,14 @@ export async function fetchTransaction({ id }: IFetchTransaction) {
       },
       salesAgreement: {
         include: {
-          creator: true
+          creator: true,
+          salesAgreementItems: true
         }
       },
       purchaseOrder: {
         include: {
-          creator: true
+          creator: true,
+          purchaseOrderItems: {}
         }
       }
     }
@@ -153,8 +153,6 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
           firstName: true,
           lastName: true,
           email: true,
-          avatar: true,
-          userType: true,
         },
       },
       salesAgreement: true,
