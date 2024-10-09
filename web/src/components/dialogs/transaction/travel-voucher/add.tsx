@@ -2,7 +2,7 @@ import { z } from "zod"
 import { format } from "date-fns"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { CalendarIcon, Loader2, PlaneTakeoff, Ship } from "lucide-react"
+import { CalendarIcon, CircleCheck, Loader2, Plane, PlaneTakeoff, Ship } from "lucide-react"
 import { Button } from "../../../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../ui/dialog"
 import { Separator } from "../../../ui/separator"
@@ -25,11 +25,6 @@ import { toast } from "sonner"
 import { useEffect, useState } from "react"
 
 
-const travelTypesMap: Record<TravelVoucherType, string> = {
-  [TravelVoucherType.AIRLINES]: 'Airlines',
-  [TravelVoucherType.SHIPPING]: 'Shipping',
-}
-
 interface AddTravelVoucherProps {
   transactionId: string
   openDialog: boolean
@@ -37,8 +32,6 @@ interface AddTravelVoucherProps {
 }
 
 const formSchema = z.object({
-  type: z.enum([TravelVoucherType.AIRLINES, TravelVoucherType.SHIPPING
-  ]),
   airline: z.object({
     name: z.string().min(1, { message: "Airline name is required" }),
     code: z.string().min(1, { message: "Airline code is required" }),
@@ -58,18 +51,14 @@ const formSchema = z.object({
 export default function AddTravelVoucherDialog({ transactionId, openDialog, setOpenDialog }: AddTravelVoucherProps) {
 
   const queryClient = useQueryClient()
+  const [step, setStep] = useState(0)
+  const [selectedType, setSelectedType] = useState<TravelVoucherType | undefined>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
     },
   })
-  const [selectedTravelType, setSelectedTravelType] = useState<TravelVoucherType | null>()
 
-  useEffect(() => {
-    if (form.watch('type')) {
-      setSelectedTravelType(form.getValues('type'))
-    }
-  }, [form.watch('type')])
   const { mutate: createTravelVoucherMutate, isPending: creatingTravelVoucher } = useMutation({
     mutationFn: async (data: ICreateTravelVoucher) => createTravelVoucher(data),
     onError: (error) => {
@@ -80,6 +69,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['transaction'] })
+      setStep(0)
       setOpenDialog(false)
       form.reset();
       toast.success("Travel voucher successfully added", {
@@ -91,60 +81,80 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createTravelVoucherMutate({
+      type: selectedType,
       transactionId: transactionId,
       ...values
     })
   }
+  const cardOptions = [
+    {
+      key: TravelVoucherType.AIRLINES,
+      title: 'Airline',
+      description: 'Create an airline travel type voucher',
+      icon: <Plane size={82} className="text-muted-foreground" />
+    },
+    {
+      key: TravelVoucherType.SHIPPING,
+      title: 'Shipping',
+      description: 'Create a shipping travel type voucher',
+      icon: <Ship size={82} className="text-muted-foreground" />
+    }
+  ];
+  const handleSelectCard = (option: TravelVoucherType) => {
+    setSelectedType(option);
+    setStep(1)
+  };
+
 
   return (
     <Dialog
       open={openDialog}
       onOpenChange={() => {
+        setSelectedType(undefined)
+        setStep(0)
         setOpenDialog(false)
         form.reset()
       }}>
       <DialogContent>
         <DialogTitle>
           <DialogHeader className="flex flex-row items-center gap-x-2">
-            <PlaneTakeoff /> <Ship />
             Add Travel Voucher
           </DialogHeader>
         </DialogTitle>
         <Separator />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="text-xs">
-                          <SelectValue placeholder="Select vehicle type" className="text-xs" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(travelTypesMap).map(([key, value], index) => (
-                          <SelectItem
-                            value={key}
-                            key={index}
-                            className="text-xs"
-                          >
-                            {value}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {
-              selectedTravelType === TravelVoucherType.AIRLINES &&
+            {step === 0 &&
+              <div className="flex gap-x-2 justify-between w-full">
+                {cardOptions.map((card) => (
+                  <AnimatedDiv
+                    slideEntrancePoint={-20}
+                    animationType="SlideInFromUp"
+                    key={card.key}
+                    className={`relative rounded-lg p-4 border-[1px] my-2 shadow-lg cursor-pointer hover:bg-green-100 flex flex-col justify-between w-[50%] h-[200px] ${selectedType === card.key ? 'border-green-500 bg-green-100' : 'border-dotted'
+                      }`}
+                    onClick={() => handleSelectCard(card.key)}
+                  >
+                    {selectedType === card.key && (
+                      <div className="absolute top-2 right-2 text-green-500">
+                        <AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
+                          <CircleCheck size={24} />
+                        </AnimatedDiv>
+                      </div>
+                    )}
+                    <div className="flex flex-col items-start">
+                      <p className="text-lg font-normal text-muted-foreground">{card.title}</p>
+                      <p className="text-xs text-muted-foreground">{card.description}</p>
+                    </div>
+                    <div className="flex justify-end">
+                      {card.icon}
+                    </div>
+                  </AnimatedDiv>
+                ))}
+              </div>
+            }
+            {(step === 1 &&
+              selectedType === TravelVoucherType.AIRLINES) &&
               <AnimatedDiv animationType="SlideInFromLeft" className="space-y-2" slideEntrancePoint={-50} duration={0.1}>
                 <FormField
                   control={form.control}
@@ -286,8 +296,8 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
                 />
               </AnimatedDiv>
             }
-            {
-              selectedTravelType === TravelVoucherType.SHIPPING &&
+            {(step === 1 &&
+              selectedType === TravelVoucherType.SHIPPING) &&
               <>
                 <AnimatedDiv animationType="SlideInFromLeft" className="space-y-2" slideEntrancePoint={-50} duration={0.1}>
                   <FormField
@@ -392,18 +402,24 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
                 </AnimatedDiv>
               </>
             }
-            <div className="flex flex-row justify-end">
-              <Button type="submit" className="text-xs" disabled={creatingTravelVoucher}>
-                {
-                  creatingTravelVoucher ?
-                    <div className="flex flex-row items-center gap-x-">
-                      <p className="text-xs">Creating..</p>
-                      <Loader2 className="animate-spin" />
-                    </div> :
-                    <p className="text-xs">Create</p>
-                }
-              </Button>
-            </div>
+            {step === 1 &&
+              <div className="flex flex-row justify-end gap-x-2">
+                <Button type="button" className="text-xs bg-muted-foreground" onClick={() => {
+                  form.reset()
+                  setStep(0)
+                }}>Back</Button>
+                <Button type="submit" className="text-xs" disabled={creatingTravelVoucher}>
+                  {
+                    creatingTravelVoucher ?
+                      <div className="flex flex-row items-center gap-x-">
+                        <p className="text-xs">Creating..</p>
+                        <Loader2 className="animate-spin" />
+                      </div> :
+                      <p className="text-xs">Create</p>
+                  }
+                </Button>
+              </div>
+            }
           </form>
         </Form>
       </DialogContent>

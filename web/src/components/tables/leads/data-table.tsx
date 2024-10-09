@@ -11,9 +11,8 @@ import {
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { DataTablePagination } from "../../common/table-pagination";
-import { ITransaction } from "@/interfaces/transaction.interface";
 import Loader from "@/components/animated/Loader";
-import { useNavigate } from "react-router-dom";
+import { ILead } from "@/api/mutations/lead.mutation";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -46,7 +45,7 @@ export function DataTable<TData, TValue>({
 		getCoreRowModel: getCoreRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
-		getRowId: row => (row as ITransaction).id,
+		getRowId: row => (row as ILead).id,
 		state: {
 			pagination,
 			sorting,
@@ -54,8 +53,6 @@ export function DataTable<TData, TValue>({
 			rowSelection,
 		},
 	});
-
-	const navigate = useNavigate()
 
 	return (
 		<>
@@ -83,8 +80,6 @@ export function DataTable<TData, TValue>({
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
-									onClick={() => navigate(`/admin/transactions/${row.id}/`)}
-									className="hover:bg-primary-foreground cursor-pointer"
 									key={row.id}
 									data-state={row.getIsSelected() && "selected"}
 								>

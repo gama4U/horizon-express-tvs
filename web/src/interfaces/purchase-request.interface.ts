@@ -1,3 +1,4 @@
+import { IPurchaseRequestOrderItem } from "./purchase-request-item.interface";
 import { ISalesAgreement } from "./sales-agreement.interface";
 import { IUser } from "./user.interface";
 
@@ -13,7 +14,7 @@ export interface IPurchaseRequestOrder {
   nos: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;
-  purchaseOrderItems: any[];
+  purchaseOrderItems: IPurchaseRequestOrderItem[],
   transaction?: any;
   creator?: IUser;
   salesAgreement?: ISalesAgreement;

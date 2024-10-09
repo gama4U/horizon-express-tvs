@@ -7,6 +7,7 @@ import {
 	StickyNote,
 	NotepadText,
 	Clipboard,
+	CircleUser,
 } from "lucide-react"
 import { Button } from "../ui/button"
 
@@ -38,9 +39,11 @@ export const SidebarIcons = ({ icon, isSelected }: SidebarIconsType) => {
 			return <NotepadText size={size} className={className} color={color} />;
 		case "Sales":
 			return <Clipboard size={size} className={className} color={color} />;
-
+		case "Leads":
+			return <CircleUser size={size} className={className} color={color} />;
 		default:
 			return <FileQuestion className="mr-2" size={size} />;
+
 	}
 };
 

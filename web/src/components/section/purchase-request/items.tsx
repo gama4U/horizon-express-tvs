@@ -9,7 +9,7 @@ interface Props {
   purchaseRequestId: string;
 }
 
-export default function PurchaseRequestItems({data, purchaseRequestId}: Props) {
+export default function PurchaseRequestItems({ data, purchaseRequestId }: Props) {
   return (
     <div className='p-4'>
       <div className="border border-slate-200 rounded-lg">
@@ -17,12 +17,12 @@ export default function PurchaseRequestItems({data, purchaseRequestId}: Props) {
           <h1 className='text-[12px] font-semibold'>
             Items
           </h1>
-          <AddPurchaseRequestItemDialog 
+          <AddPurchaseRequestItemDialog
             purchaseRequestId={purchaseRequestId}
           />
         </div>
         <Separator />
-        <DataTable 
+        <DataTable
           columns={Columns}
           data={data}
         />

@@ -1,9 +1,7 @@
-import { Loader2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { createTransaction } from "@/api/mutations/transaction.mutation";
 import TopBar from "@/components/section/topbar";
 import usePagination from "@/hooks/usePagination";
 import { useState } from "react";
@@ -12,14 +10,15 @@ import { fetchTransactions } from "@/api/queries/transaction";
 import CommonInput from "@/components/common/input";
 import { DataTable } from "@/components/tables/transactions/data-table";
 import { Columns } from "@/components/tables/transactions/columns";
-import CommonToast from "@/components/common/toast";
 import { VoucherTypeFilter } from "@/components/custom/voucher-type-filter";
 import { VoucherFilters, VoucherTypes } from "@/interfaces/transaction.interface";
+import CreateTransactionDialog from "@/components/dialogs/transaction/add";
 
 export default function Transactions() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
+  const [openCreateTransaction, setOpenCreateTransaction] = useState(false)
 
   const [voucherFilters, setVoucherFilters] = useState<VoucherFilters>({
     travel: false,
@@ -34,26 +33,8 @@ export default function Transactions() {
     queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, ...voucherFilters })
   });
 
-
   const navigate = useNavigate();
 
-  const { mutate: createTransactionMutate, isPending: creatingTransaction } = useMutation({
-    mutationFn: async () => await createTransaction(),
-    onError: (error) => {
-      toast.error(error.message, {
-        className: 'text-destructive',
-        position: 'top-center',
-      })
-    },
-    onSuccess: (data) => {
-      toast.custom(() => (
-        <CommonToast message="Successfully created transaction" />
-      ), {
-        position: "bottom-right",
-      })
-      navigate(`/admin/transactions/${data.id}/`);
-    }
-  });
 
   const handleVoucherFilterToggle = (type: VoucherTypes) => {
     setVoucherFilters((prevFilters) => ({
@@ -97,20 +78,11 @@ export default function Transactions() {
           </div>
           <Button
             size={"sm"}
-            onClick={() => createTransactionMutate()}
+            onClick={() => setOpenCreateTransaction(true)}
             className="flex gap-x-2"
           >
-            {creatingTransaction ? (
-              <>
-                <p>Creating...</p>
-                <Loader2 size={18} className="animate-spin" />
-              </>
-            ) : (
-              <>
-                <Plus size={14} />
-                <span>Create</span>
-              </>
-            )}
+            <Plus size={14} />
+            <span>Create</span>
           </Button>
         </div>
         <DataTable
@@ -122,6 +94,9 @@ export default function Transactions() {
           pagination={pagination}
         />
       </div>
+      <CreateTransactionDialog openDialog={openCreateTransaction} setOpenDialog={setOpenCreateTransaction} successNavigate={(data) => {
+        navigate(`/admin/transactions/${data.id}/`);
+      }} />
     </div>
   )
 }

@@ -10,7 +10,6 @@ import { ClientTypeFilter } from "../../../interfaces/sales-agreement.interface"
 import CommonInput from "../../../components/common/input";
 import ClientTypeFilterSelect from "../../../components/select/sales-agreement/client-type-filter";
 import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
-import Loader from "@/components/animated/Loader";
 
 export default function SalesAgreements() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
@@ -60,9 +59,9 @@ export default function SalesAgreements() {
           </div>
           <CreateSalesAgreementDialog />
         </div>
-        <Loader isLoading={isLoading} type="skeleton" />
         <DataTable
           columns={Columns}
+          loading={isLoading}
           data={data?.salesAgreements ?? []}
           total={data?.total ?? 0}
           onPaginationChange={onPaginationChange}

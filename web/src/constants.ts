@@ -9,10 +9,11 @@ export type SidebarItemsType = {
 const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Dashboard", icon: "Dashboard", link: "/admin" },
   { label: "Transactions", icon: "Transactions", link: "/admin/transactions" },
-  { label: "Users", icon: "Users", link: "/admin/users" },
-  { label: "Memorandum", icon: "Memorandum", link: "/admin/memorandum" },
   { label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
   { label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
+  { label: "Leads", icon: "Leads", link: "/admin/leads" },
+  { label: "Memorandum", icon: "Memorandum", link: "/admin/memorandum" },
+  { label: "Users", icon: "Users", link: "/admin/users" },
 ]
 
 const ContainerVariants = {

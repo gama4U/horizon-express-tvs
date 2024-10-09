@@ -10,9 +10,9 @@ import { fetchSalesAgreement } from "@/api/queries/sales-agreements.queries";
 import Loader from "@/components/animated/Loader";
 
 export default function SalesAgreementDetails() {
-  const {id} = useParams();
+  const { id } = useParams();
 
-  const {data, isLoading} = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['sales-agreement-details', id],
     queryFn: async () => {
       if (!id) return;
@@ -23,6 +23,7 @@ export default function SalesAgreementDetails() {
   return (
     <div className="space-y-2">
       <TopBar
+        showBackButton={true}
         LeftSideHeader={
           <p className="text-sm">
             Sales agreement details
@@ -44,16 +45,16 @@ export default function SalesAgreementDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <EditSalesAgreementDialog data={data}/>
+                <EditSalesAgreementDialog data={data} />
               </div>
-              <Separator className="bg-slate-200"/>
+              <Separator className="bg-slate-200" />
               <SalesAgreementInfo data={data} />
-              <SalesAgreementItems 
+              <SalesAgreementItems
                 data={data.salesAgreementItems}
                 salesAgreementId={data.id}
               />
             </section>
-            <PrintPreview data={data}/>
+            <PrintPreview data={data} />
           </>
         ) : (
           <div className="h-[90vh] bg-white w-full rounded-lg" />
