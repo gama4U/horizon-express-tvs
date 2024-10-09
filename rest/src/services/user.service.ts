@@ -1,6 +1,6 @@
 import { Prisma, User } from "@prisma/client";
 import prisma from "../../prisma/db";
-import { IGetUsers, IUpdateUser } from "../interfaces/user.interface";
+import { IFindUsers, IUpdateUser } from "../interfaces/user.interface";
 
 export async function createUser(data: User) {
   return await prisma.user.create({ data });
@@ -22,10 +22,9 @@ export async function getUserById(id: string) {
   })
 }
 
-export async function getUsers(params: IGetUsers) {
-  const { skip, take, search, userType} = params;
+export async function findUsers(params: IFindUsers) {
+  const { skip, take, search, type} = params;
   let searchFilter = {};
-  let includes: Prisma.UserInclude = {};
 
   if(search) {
     const searchParts = search.split(/\s+/);
@@ -42,24 +41,27 @@ export async function getUsers(params: IGetUsers) {
 
   const where: Prisma.UserWhereInput = {
     ...searchFilter,
-    ...(userType && { userType }),
+    ...(type && { userType: type }),
   }
   
-  return await prisma.$transaction(async(transaction) => {
-    const users = await transaction.user.findMany({
-      where,
-      include: {
-        ...includes
-      },
-      skip: skip || 0,
-      take: take || 10,
-    });
-    const total = await transaction.user.count({
-      where,
-    });
-    const sanitizedUsers = users.map(({password, ...user}) => user);
-    return { users: sanitizedUsers, total }
-  })
+  const findUsers = prisma.user.findMany({
+    where,
+    include: {
+      _count: true
+    },
+    skip: skip || 0,
+    take: take || 10,
+  });
+
+  const countUsers = prisma.user.count({
+    where,
+  });
+
+  const [users, total] = await prisma.$transaction([findUsers, countUsers]);
+
+  const sanitizedUsers = users.map(({password, ...user}) => user);
+
+  return { users: sanitizedUsers, total }
 }
 
 export async function updateUser(params: IUpdateUser) {

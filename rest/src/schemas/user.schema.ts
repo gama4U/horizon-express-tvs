@@ -10,7 +10,7 @@ export const getUsersSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
-    role: z.enum([UserType.ADMIN, UserType.EMPLOYEE]).optional()
+    type: z.enum([UserType.ADMIN, UserType.EMPLOYEE]).optional()
   })
 });
 
@@ -19,7 +19,7 @@ export const createUserSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
     email: z.string().email(),
-    role: z.enum([UserType.ADMIN, UserType.EMPLOYEE]),
+    userType: z.enum([UserType.ADMIN, UserType.EMPLOYEE]),
     password: z.string().min(8).refine((password: string) => {
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       return passwordRegex.test(password);
@@ -34,6 +34,7 @@ export const updateUserSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
     email: z.string().email(),
+    userType: z.enum([UserType.ADMIN, UserType.EMPLOYEE]),
     password: z.string().min(8).refine((password: string) => {
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       return passwordRegex.test(password);
