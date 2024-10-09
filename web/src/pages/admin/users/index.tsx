@@ -35,11 +35,11 @@ export default function Users() {
       <TopBar
         LeftSideHeader={
           <p className="text-sm">
-            Sales Agreements
+            Users
           </p>
         }
         LeftSideSubHeader={
-          <p className="text-primary text-xs">Manage sales agreements here.</p>
+          <p className="text-primary text-xs">Manage users here.</p>
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
