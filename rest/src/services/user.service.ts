@@ -23,7 +23,7 @@ export async function getUserById(id: string) {
 }
 
 export async function findUsers(params: IFindUsers) {
-  const { skip, take, search, userType} = params;
+  const { skip, take, search, type} = params;
   let searchFilter = {};
 
   if(search) {
@@ -41,7 +41,7 @@ export async function findUsers(params: IFindUsers) {
 
   const where: Prisma.UserWhereInput = {
     ...searchFilter,
-    ...(userType && { userType }),
+    ...(type && { userType: type }),
   }
   
   const findUsers = prisma.user.findMany({

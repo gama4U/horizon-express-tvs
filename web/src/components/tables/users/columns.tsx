@@ -2,6 +2,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { IUser } from "@/interfaces/user.interface";
+import UserTypeBadge from "@/components/badges/user-tye";
+import EditUserDialog from "@/components/dialogs/user/edit-user";
+import DeleteUserDialog from "@/components/alert/user/delete";
 
 export const Columns: ColumnDef<IUser>[] = [
   {
@@ -47,7 +50,7 @@ export const Columns: ColumnDef<IUser>[] = [
     id: "email",
     header: "Email",
     cell: ({ row }) => (
-      <span className="capitalize">
+      <span>
         {row.original.email}
       </span>
     ),
@@ -56,8 +59,10 @@ export const Columns: ColumnDef<IUser>[] = [
     id: "userType",
     header: "User type",
     cell: ({ row }) => (
-      <span className="capitalize">
-        {row.original.userType}
+      <span>
+        <UserTypeBadge 
+          value={row.original.userType}
+        />
       </span>
     )
   },
@@ -67,12 +72,12 @@ export const Columns: ColumnDef<IUser>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-center gap-4">
-          {/* <EditSalesAgreementDialog 
+          <EditUserDialog 
             data={row.original}
           />
-          <DeleteSalesAgreement 
-            salesAgreementId={row.original.id}
-          /> */}
+          <DeleteUserDialog 
+            userId={row.original.id}
+          />
         </div>
       )
     },

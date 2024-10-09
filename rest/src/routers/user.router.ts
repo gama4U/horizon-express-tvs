@@ -33,7 +33,7 @@ userRouter.get('/', validate(getUsersSchema), async (req: Request, res: Response
       skip: Number(req.query.skip),
       take: Number(req.query.take),
       search: req.query.search,
-      role: req.query.role
+      type: req.query.type
     } as IFindUsers;
 
     const users = await findUsers(query);

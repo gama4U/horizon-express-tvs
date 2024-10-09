@@ -8,18 +8,25 @@ import Loader from "@/components/animated/Loader";
 import { fetchUsers } from "@/api/queries/user.query";
 import { DataTable } from "@/components/tables/users/data-table";
 import { Columns } from "@/components/tables/users/columns";
+import UserTypeFilter from "@/components/select/user/user-type-filter";
+import { UserType } from "@/interfaces/user.interface";
+import CreateUserDialog from "@/components/dialogs/user/create-user";
 
 export default function Users() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
+  const [userType, setUserType] = useState<UserType | 'ALL'>('ALL');
   const debouncedSearch = useDebounce(search, 500);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['users', pagination, debouncedSearch],
+    queryKey: ['users', pagination, debouncedSearch, userType],
     queryFn: async () => await fetchUsers({
       skip,
       take,
       search,
+      ...(userType !== 'ALL' && {
+        type: userType
+      }) 
     })
   });
 
@@ -46,8 +53,12 @@ export default function Users() {
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
+            <UserTypeFilter 
+              value={userType}
+              onValueChange={(value) => setUserType(value)}
+            />
           </div>
-          {/* <CreateSalesAgreementDialog /> */}
+          <CreateUserDialog />
         </div>
         <Loader isLoading={isLoading} type="skeleton" />
         <DataTable

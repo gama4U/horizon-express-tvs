@@ -4,7 +4,7 @@ export interface IFindUsers {
   skip?: number;
   take?: number;
   search?: string;
-  userType?: UserType;
+  type?: UserType;
 }
 
 export interface IUpdateUser {
