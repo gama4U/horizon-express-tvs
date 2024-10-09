@@ -86,12 +86,6 @@ export const Columns: ColumnDef<ILead>[] = [
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center justify-start gap-4">
-					<Link to={`/admin/leads/${row.original.id}`}>
-						<NotepadText
-							size={16}
-							className="cursor-pointer hover:text-primary"
-						/>
-					</Link>
 					<EditLeadDialog
 						leadData={row.original}
 					/>

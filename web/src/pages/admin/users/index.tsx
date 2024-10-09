@@ -4,7 +4,6 @@ import usePagination from "../../../hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import CommonInput from "../../../components/common/input";
-import Loader from "@/components/animated/Loader";
 import { fetchUsers } from "@/api/queries/user.query";
 import { DataTable } from "@/components/tables/users/data-table";
 import { Columns } from "@/components/tables/users/columns";
@@ -26,7 +25,7 @@ export default function Users() {
       search,
       ...(userType !== 'ALL' && {
         type: userType
-      }) 
+      })
     })
   });
 
@@ -53,17 +52,17 @@ export default function Users() {
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <UserTypeFilter 
+            <UserTypeFilter
               value={userType}
               onValueChange={(value) => setUserType(value)}
             />
           </div>
           <CreateUserDialog />
         </div>
-        <Loader isLoading={isLoading} type="skeleton" />
         <DataTable
           columns={Columns}
           data={data?.users ?? []}
+          loading={isLoading}
           total={data?.total ?? 0}
           onPaginationChange={onPaginationChange}
           pagination={pagination}

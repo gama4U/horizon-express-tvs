@@ -10,7 +10,7 @@ import CommonInput from "@/components/common/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
-import { createLead, ICreateLead, ILead, IUpdateLead, updateLead } from "@/api/mutations/lead.mutation";
+import { ILead, IUpdateLead, updateLead } from "@/api/mutations/lead.mutation";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
@@ -88,7 +88,7 @@ export default function EditLeadDialog({ leadData }: IUpdateLeadProps) {
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
 						<UserCircle />
-						Create Lead
+						Update Lead Information
 					</DialogHeader>
 				</DialogTitle>
 				<Separator />

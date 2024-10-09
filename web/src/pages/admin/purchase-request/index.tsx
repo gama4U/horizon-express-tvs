@@ -10,7 +10,6 @@ import { PaymentType, PurchaseRequestOrderType } from "@/interfaces/purchase-req
 import PurchaseRequestTypeFilter from "@/components/select/purchase-request/type-filter";
 import CreatePurchaseRequestDialog from "@/components/dialogs/purchase-request/create";
 import { DataTable } from "@/components/tables/purchase-request/data-table";
-import Loader from "@/components/animated/Loader";
 import { Columns } from "@/components/tables/purchase-request/columns";
 
 export default function PurchaseRequests() {
@@ -69,10 +68,10 @@ export default function PurchaseRequests() {
           </div>
           <CreatePurchaseRequestDialog />
         </div>
-        <Loader isLoading={isLoading} type="skeleton" />
         <DataTable
           columns={Columns}
           data={data?.purchaseRequests ?? []}
+          loading={isLoading}
           total={data?.total ?? 0}
           onPaginationChange={onPaginationChange}
           pagination={pagination}

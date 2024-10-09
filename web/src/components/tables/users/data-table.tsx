@@ -1,22 +1,24 @@
-import { 
+import {
   ColumnDef,
   OnChangeFn,
   PaginationState,
-  SortingState, 
-  VisibilityState, 
-  flexRender, 
-  getCoreRowModel, 
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import { DataTablePagination } from "../../common/table-pagination";
+import Loader from "@/components/animated/Loader";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   total: number;
+  loading: boolean;
   onPaginationChange: OnChangeFn<PaginationState>;
   pagination?: PaginationState;
 }
@@ -26,6 +28,7 @@ export function DataTable<TData, TValue>({
   data,
   total,
   onPaginationChange,
+  loading,
   pagination
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -64,9 +67,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -96,7 +99,10 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {loading
+                    ? <Loader isLoading={true} type="skeleton" />
+                    : <p className="text-muted-foreground text-xs italic">No results.</p>
+                  }
                 </TableCell>
               </TableRow>
             )}
@@ -104,7 +110,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <DataTablePagination table={table}/>
+        <DataTablePagination table={table} />
       </div>
     </>
   )
