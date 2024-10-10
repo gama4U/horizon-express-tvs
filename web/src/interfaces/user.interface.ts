@@ -6,6 +6,7 @@ export interface IUser {
   userType: UserType;
   password?: string;
   avatar?: string;
+  signature?: string;
   createdAt: Date;
   updatedAt: Date;
 }

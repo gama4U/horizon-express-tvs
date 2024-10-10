@@ -40,3 +40,16 @@ export async function  updateUserPassword(data: IChangeUserPassword) {
     throw new Error(message || 'Something went wrong');
   }
 }
+
+export async function  updateUserSignature(signatureUrl: string) {
+  try {
+    const response = await api.patch('/api/v1/profile/signature', {signature: signatureUrl});
+    return response.data;
+  } catch(error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}

@@ -4,7 +4,14 @@ export const updateAvatarSchema = z.object({
   body: z.object({
     avatar: z.string(),
   })
-})
+});
+
+
+export const updateSignatureSchema = z.object({
+  body: z.object({
+    signature: z.string()
+  })
+});
 
 export const updateProfileSchema = z.object({
   body: z.object({

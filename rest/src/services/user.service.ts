@@ -1,6 +1,6 @@
 import { Prisma, User } from "@prisma/client";
 import prisma from "../../prisma/db";
-import { IFindUsers, IUpdateUser, IUpdateUserAvatar, IUpdateUserPassword } from "../interfaces/user.interface";
+import { IFindUsers, IUpdateUser, IUpdateUserAvatar, IUpdateUserPassword, IUpdateUserSignature } from "../interfaces/user.interface";
 
 export async function createUser(data: User) {
   return await prisma.user.create({ data });
@@ -99,3 +99,10 @@ export async function updateUserPassword({id, password}: IUpdateUserPassword) {
     }
   });
 }
+
+export async function updateUserSignature({id, signature}: IUpdateUserSignature) {
+  return await prisma.user.update({
+    where: {id},
+    data: {signature}
+  })
+} 

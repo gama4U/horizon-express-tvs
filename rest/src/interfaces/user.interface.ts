@@ -21,6 +21,11 @@ export interface IUpdateUserAvatar {
   avatar: string;
 }
 
+export interface IUpdateUserSignature {
+  id: string;
+  signature: string;
+}
+
 export interface IUpdateUserPassword {
   id: string;
   password: string;

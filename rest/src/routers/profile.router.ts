@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
-import { findUserById, updateUser, updateUserAvatar, updateUserPassword } from '../services/user.service';
+import { findUserById, updateUser, updateUserAvatar, updateUserPassword, updateUserSignature } from '../services/user.service';
 import { validate } from '../middlewares/validate.middleware';
-import { updateAvatarSchema, updateProfileSchema, updateUserPasswordSchema } from '../schemas/profile.schema';
+import { updateAvatarSchema, updateProfileSchema, updateSignatureSchema, updateUserPasswordSchema } from '../schemas/profile.schema';
 import bcrypt from 'bcrypt';
 
 const profileRouter = express.Router();
@@ -94,6 +94,25 @@ profileRouter.put('/password', validate(updateUserPasswordSchema), async(req: Re
     return res.status(200).json({
       message: 'Password updated successfully'
       
+    });
+
+  } catch(error) {
+    return res.status(500).json({message: "Internal server error"});
+  }
+});
+
+profileRouter.patch('/signature', validate(updateSignatureSchema), async(req: Request, res: Response) => {
+  try {
+    const userId = String(req.user?.id);
+    const {signature} = req.body;
+    
+    const updated = await updateUserSignature({id: userId, signature});
+    if (!updated) {
+      throw new Error('Failed to update user signature');
+    }
+    
+    return res.status(200).json({
+      message: 'Signature updated successfully'
     });
 
   } catch(error) {
