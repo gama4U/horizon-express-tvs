@@ -177,7 +177,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex flex-row justify-between gap-x-2 items-center">
-                        <p className="text-xs w-1/3">Code:</p>
+                        <p className="text-xs w-1/3">Airline Flight Code:</p>
                         <FormControl className="w-2/3">
                           <CommonInput inputProps={{ ...field }} placeholder="e.g. 5G, PR, Z2, etc" containerProps={{ className: 'text-xs' }} />
                         </FormControl>

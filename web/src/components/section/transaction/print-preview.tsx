@@ -28,11 +28,10 @@ export default function PrintPreview({ data }: Props) {
         </Button>
       </div>
       <Separator />
-      <div ref={contentRef} className="p-4 min-h-[900px] space-y-4">
+      <div ref={contentRef} className="p-8 min-h-full space-y-4">
         <div className='flex justify-center items-center gap-x-4'>
-          <img src={logo} className='object-contain w-[80px] h-[80px]' />
-          <div className="text-center text-muted-foreground">
-            <h1 className="text-lg font-semibold">HORIZON EXPRESS TRAVEL AND TOURS INC.</h1>
+          <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
+            <img src={logo} className='object-contain w-[180px] h-[110px]' />
             <h3 className="text-xs font-semibold">Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000</h3>
             <div className="flex flex-col text-xs">
               <span>Email: accounting.cebu@horizonexpress.ph</span>

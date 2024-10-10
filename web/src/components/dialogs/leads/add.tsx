@@ -58,7 +58,7 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 			setOpenDialog(false)
 			form.reset()
 			toast.custom(() => (
-				<CommonToast message="Successfully created led" />
+				<CommonToast message="Successfully created lead" />
 			), {
 				position: "bottom-right",
 			})

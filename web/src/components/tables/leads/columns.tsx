@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import DeleteTransaction from "@/components/alert/transactions/delete";
 import { ILead } from "@/api/mutations/lead.mutation";
 import EditLeadDialog from "@/components/dialogs/leads/edit";
+import EmailLink from "@/components/common/email";
 
 export const Columns: ColumnDef<ILead>[] = [
 	{
@@ -60,21 +61,23 @@ export const Columns: ColumnDef<ILead>[] = [
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					<span className="text-xs">
-						{row.original.contactNumber}
-					</span>
-
+					<EmailLink email={row.original.email} />
 				</div>
 			)
 		}
 	},
 	{
 		id: "transactions",
-		header: "Transactions",
+		header: "Transactions Count",
 		cell: ({ row }) => {
+			const transactions = row.original.transactions;
 			return (
 				<div className="flex items-center gap-x-1">
-					<span className="italic text-gray-300">No transactions included</span>
+					{transactions && transactions.length > 0 ? (
+						<span className="text-xs text-center">{transactions.length}</span>
+					) : (
+						<span className="italic text-gray-300">No transactions</span>
+					)}
 				</div>
 			);
 		}

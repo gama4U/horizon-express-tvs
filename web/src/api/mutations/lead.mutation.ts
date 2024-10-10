@@ -3,11 +3,11 @@ import api from "../../utils/api.util";
 import { ITransaction } from "@/interfaces/transaction.interface";
 
 export interface ICreateLead {
-  firstName: string
-  middleName: string
-  lastName: string
-  email: string
-  contactNumber: string
+  firstName?: string
+  middleName?: string
+  lastName?: string
+  email?: string
+  contactNumber?: string
   documents?: string[]
 }
 export interface IUpdateLead {
