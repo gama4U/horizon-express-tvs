@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { createUserSchema, deleteUserSchema, getUsersSchema, updateUserSchema } from '../schemas/user.schema';
 import { validate } from '../middlewares/validate.middleware';
-import { createUser, deleteUser, findUsers, getUserByEmail, getUserById, updateUser } from '../services/user.service';
+import { createUser, deleteUser, findUserById, findUsers, getUserByEmail, updateUser } from '../services/user.service';
 import bcrypt from 'bcrypt';
 import { IFindUsers } from '../interfaces/user.interface';
 
@@ -83,7 +83,7 @@ userRouter.delete('/:id', validate(deleteUserSchema), async (req: Request, res: 
 userRouter.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const user = await getUserById(id);
+    const user = await findUserById(id);
     if (!user) {
       throw new Error('Failed to get user')
     }

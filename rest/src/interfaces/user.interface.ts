@@ -15,3 +15,13 @@ export interface IUpdateUser {
   userType?: UserType;
   password?: string;
 }
+
+export interface IUpdateUserAvatar {
+  id: string;
+  avatar: string;
+}
+
+export interface IUpdateUserPassword {
+  id: string;
+  password: string;
+}

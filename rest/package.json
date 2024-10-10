@@ -1,5 +1,5 @@
 {
-  "name": "kurso",
+  "name": "horizon-rest",
   "version": "1.0.0",
   "description": "Online course system",
   "main": "index.js",

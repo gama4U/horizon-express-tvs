@@ -1,6 +1,6 @@
 import { Prisma, User } from "@prisma/client";
 import prisma from "../../prisma/db";
-import { IFindUsers, IUpdateUser } from "../interfaces/user.interface";
+import { IFindUsers, IUpdateUser, IUpdateUserAvatar, IUpdateUserPassword } from "../interfaces/user.interface";
 
 export async function createUser(data: User) {
   return await prisma.user.create({ data });
@@ -14,7 +14,7 @@ export async function getUserByEmail(email: string) {
   });
 }
 
-export async function getUserById(id: string) {
+export async function findUserById(id: string) {
   return await prisma.user.findUnique({
     where: {
       id
@@ -79,5 +79,23 @@ export async function deleteUser(id: string) {
     where: {
       id
     }
-  })
+  });
+}
+
+export async function updateUserAvatar({id, avatar}: IUpdateUserAvatar) {
+  return await prisma.user.update({
+    where: {id},
+    data: {
+      avatar
+    }
+  });
+}
+
+export async function updateUserPassword({id, password}: IUpdateUserPassword) {
+  return await prisma.user.update({
+    where: {id},
+    data: {
+      password
+    }
+  });
 }

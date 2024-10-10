@@ -21,6 +21,7 @@ import salesAgreementItemRouter from "./routers/sales-agreement-items.router";
 import purchaseRequestRouter from "./routers/purchase-request.router";
 import purchaseRequestItemRouter from "./routers/purchase-request-items.router";
 import leadRouter from "./routers/lead.router";
+import profileRouter from "./routers/profile.router";
 
 declare module 'express' {
   interface Request {
@@ -54,8 +55,7 @@ mainRouter.use('/sales-agreement-items', salesAgreementItemRouter);
 mainRouter.use('/purchase-requests', purchaseRequestRouter);
 mainRouter.use('/purchase-request-items', purchaseRequestItemRouter);
 mainRouter.use('/leads', leadRouter);
-
-
+mainRouter.use('/profile', profileRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)

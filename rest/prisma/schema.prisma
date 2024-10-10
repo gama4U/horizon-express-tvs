@@ -8,33 +8,39 @@ datasource db {
 }
 
 model User {
-  id                    String                 @id @default(cuid())
-  firstName             String
-  lastName              String
-  email                 String                 @unique
-  password              String
-  avatar                String?
-  userType              UserType
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  salesAgreements       SalesAgreement[]
-  purchaseRequestOrders PurchaseRequestOrder[]
+  id                                       String                 @id @default(cuid())
+  firstName                                String
+  lastName                                 String
+  email                                    String                 @unique
+  password                                 String
+  avatar                                   String?
+  userType                                 UserType
+  createdAt                                DateTime               @default(now())
+  updatedAt                                DateTime               @updatedAt
+  purchaseRequestOrders                    PurchaseRequestOrder[]
+  salesAgreements                          SalesAgreement[]
+  Transaction_Transaction_approverIdToUser Transaction[]          @relation("Transaction_approverIdToUser")
+  Transaction_Transaction_creatorIdToUser  Transaction[]          @relation("Transaction_creatorIdToUser")
 }
 
 model Transaction {
-  id                   String                @id @default(cuid())
-  travelVoucher        Travel[]
-  accommodationVoucher Accommodation[]
-  tourVoucher          Tour[]
-  transportVoucher     Transportation[]
-  salesAgreementId     String?               @unique
-  purchaseOrderId      String?               @unique
-  purchaseOrder        PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
-  salesAgreement       SalesAgreement?       @relation(fields: [salesAgreementId], references: [id])
-  leadId               String
-  lead                 Lead                  @relation(fields: [leadId], references: [id])
-  createdAt            DateTime?             @default(now())
-  updatedAt            DateTime?             @updatedAt
+  id                                String                @id @default(cuid())
+  salesAgreementId                  String?               @unique
+  purchaseOrderId                   String?               @unique
+  leadId                            String
+  createdAt                         DateTime?             @default(now())
+  updatedAt                         DateTime?             @updatedAt
+  approverId                        String?
+  creatorId                         String?
+  accommodationVoucher              Accommodation[]
+  tourVoucher                       Tour[]
+  User_Transaction_approverIdToUser User?                 @relation("Transaction_approverIdToUser", fields: [approverId], references: [id])
+  User_Transaction_creatorIdToUser  User?                 @relation("Transaction_creatorIdToUser", fields: [creatorId], references: [id])
+  lead                              Lead                  @relation(fields: [leadId], references: [id])
+  purchaseOrder                     PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
+  salesAgreement                    SalesAgreement?       @relation(fields: [salesAgreementId], references: [id])
+  transportVoucher                  Transportation[]
+  travelVoucher                     Travel[]
 }
 
 model SalesAgreement {
@@ -45,12 +51,12 @@ model SalesAgreement {
   preparedBy          String?
   approvedBy          String?
   serialNumber        String
-  salesAgreementItems SalesAgreementItem[]
-  purchaseOrder       PurchaseRequestOrder?
-  transaction         Transaction?
-  creator             User                  @relation(fields: [creatorId], references: [id])
   createdAt           DateTime?             @default(now())
   updatedAt           DateTime?             @updatedAt
+  purchaseOrder       PurchaseRequestOrder?
+  creator             User                  @relation(fields: [creatorId], references: [id])
+  salesAgreementItems SalesAgreementItem[]
+  transaction         Transaction?
 }
 
 model SalesAgreementItem {
@@ -60,9 +66,9 @@ model SalesAgreementItem {
   quantity         Int?
   unitPrice        Float?
   total            Float?
-  salesAgreement   SalesAgreement @relation(fields: [salesAgreementId], references: [id])
   createdAt        DateTime?      @default(now())
   updatedAt        DateTime?      @updatedAt
+  salesAgreement   SalesAgreement @relation(fields: [salesAgreementId], references: [id])
 }
 
 model PurchaseRequestOrder {
@@ -76,12 +82,12 @@ model PurchaseRequestOrder {
   nos                String?
   type               PurchaseRequestOrderType?
   paymentType        PaymentType?
-  purchaseOrderItems PurchaseRequestOrderItem[]
-  transaction        Transaction?
-  creator            User?                      @relation(fields: [creatorId], references: [id])
-  salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
   createdAt          DateTime?                  @default(now())
   updatedAt          DateTime?                  @updatedAt
+  creator            User?                      @relation(fields: [creatorId], references: [id])
+  salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
+  purchaseOrderItems PurchaseRequestOrderItem[]
+  transaction        Transaction?
 }
 
 model Lead {
@@ -92,10 +98,9 @@ model Lead {
   email         String
   contactNumber String
   documents     String[]
+  createdAt     DateTime?     @default(now())
+  updatedAt     DateTime?     @updatedAt
   transactions  Transaction[]
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
 }
 
 model PurchaseRequestOrderItem {
@@ -105,20 +110,20 @@ model PurchaseRequestOrderItem {
   quantity               Int?
   unitPrice              Float?
   total                  Float?
-  purchaseRequestOrder   PurchaseRequestOrder @relation(fields: [purchaseRequestOrderId], references: [id])
   createdAt              DateTime?            @default(now())
   updatedAt              DateTime?            @updatedAt
+  purchaseRequestOrder   PurchaseRequestOrder @relation(fields: [purchaseRequestOrderId], references: [id])
 }
 
 model Travel {
-  id            String       @id @default(cuid())
+  id            String      @id @default(cuid())
   transactionId String
   type          TravelType
+  createdAt     DateTime?   @default(now())
+  updatedAt     DateTime?   @updatedAt
   airline       Airlines?
   shipping      Shipping?
-  transaction   Transaction? @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  createdAt     DateTime?    @default(now())
-  updatedAt     DateTime?    @updatedAt
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 model Airlines {
@@ -130,9 +135,9 @@ model Airlines {
   eta         DateTime
   origin      String
   destination String
-  travel      Travel?   @relation(fields: [travelId], references: [id], onDelete: Cascade)
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
+  travel      Travel?   @relation(fields: [travelId], references: [id], onDelete: Cascade)
 }
 
 model Shipping {
@@ -155,9 +160,9 @@ model Accommodation {
   checkoutDate            DateTime
   hotelConfirmationNumber String
   remarks                 String?
-  transaction             Transaction?      @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   createdAt               DateTime?         @default(now())
   updatedAt               DateTime?         @updatedAt
+  transaction             Transaction       @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 model Tour {
@@ -168,10 +173,10 @@ model Tour {
   tourContact   String
   driverName    String
   driverContact String
-  itineraries   TourItinerary[]
-  transaction   Transaction?    @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   createdAt     DateTime?       @default(now())
   updatedAt     DateTime?       @updatedAt
+  transaction   Transaction     @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  itineraries   TourItinerary[]
 }
 
 model TourItinerary {
@@ -181,9 +186,9 @@ model TourItinerary {
   description String
   startDate   DateTime
   endDate     DateTime
-  tour        Tour?     @relation(fields: [tourId], references: [id], onDelete: Cascade)
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
+  tour        Tour?     @relation(fields: [tourId], references: [id], onDelete: Cascade)
 }
 
 model Transportation {
@@ -195,10 +200,10 @@ model Transportation {
   vehiclePlateNumber String
   serviceType        TransportServiceType
   vehicleType        VehicleType
-  itineraries        TransportItinerary[]
-  transaction        Transaction?         @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
+  itineraries        TransportItinerary[]
+  transaction        Transaction          @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 model TransportItinerary {
@@ -208,9 +213,9 @@ model TransportItinerary {
   description String
   startDate   DateTime
   endDate     DateTime
-  transport   Transportation? @relation(fields: [transportId], references: [id], onDelete: Cascade)
   createdAt   DateTime?       @default(now())
   updatedAt   DateTime?       @updatedAt
+  transport   Transportation? @relation(fields: [transportId], references: [id], onDelete: Cascade)
 }
 
 enum UserType {
