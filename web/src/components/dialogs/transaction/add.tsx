@@ -20,6 +20,7 @@ import { fetchLeads } from "@/api/queries/leads.query";
 import Lottie from "lottie-react";
 import skeletonLoader from "../../../assets/loaders/skeleton.json"
 import LeadDetails from "@/components/section/transaction/lead";
+import { useAuth } from "@/providers/auth-provider";
 
 
 interface ICreateTransactionDialog {
@@ -71,6 +72,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	const [search, setSearch] = useState('');
 	const debouncedSearch = useDebounce(search, 500);
 	const [selectedLead, setSelectedLead] = useState<ILead | null>(null);
+	const { session } = useAuth()
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['leads', pagination, debouncedSearch],
@@ -123,6 +125,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 		onSuccess: (data) => {
 			queryClient.refetchQueries({ queryKey: ['transactions'] })
 			createTransactionMutate({
+				creatorId: String(session.user?.id),
 				id: data.id
 			})
 		}
@@ -131,7 +134,6 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	const handleSelectLead = (lead: ILead) => {
 		setSelectedLead(lead);
 	};
-
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		if (selection.type === 'add') {
@@ -342,7 +344,10 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 								{selectedLead &&
 									<Button className="text-xs" disabled={creatingLead || creatingTransaction} onClick={() => {
 										if (selectedLead) {
-											createTransactionMutate(selectedLead)
+											createTransactionMutate({
+												id: selectedLead.id,
+												creatorId: String(session?.user?.id)
+											})
 										}
 									}}>
 										{

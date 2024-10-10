@@ -23,6 +23,8 @@ export default function Dashboard() {
       to: selectedDateRange?.to
     }),
   });
+
+  console.log('transactions', transactions)
   const { data: salesAgreements, isLoading: salesLoading } = useQuery({
     queryKey: ['sales-agreement-summary'],
     queryFn: async () => await fetchSalesAgreementSummary(

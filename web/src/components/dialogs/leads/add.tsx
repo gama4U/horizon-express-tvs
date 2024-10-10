@@ -115,6 +115,21 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 								/>
 								<FormField
 									control={form.control}
+									name="middleName"
+									render={({ field }) => (
+										<FormItem>
+											<div className="flex flex-row items-center justify-between gap-x-2">
+												<p className="text-xs w-1/3">Last Name:</p>
+												<FormControl className="w-2/3">
+													<CommonInput inputProps={{ ...field }} placeholder="Last name" containerProps={{ className: 'text-xs' }} />
+												</FormControl>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
 									name="lastName"
 									render={({ field }) => (
 										<FormItem>

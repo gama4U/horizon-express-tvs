@@ -35,8 +35,8 @@ import CommonInput from "@/components/common/input";
 
 const formSchema = z.object({
   firstName: z.string()
-    .trim().min(1, { 
-      message: "First name is required" 
+    .trim().min(1, {
+      message: "First name is required"
     }),
   lastName: z.string()
     .trim().min(1, {
@@ -49,7 +49,7 @@ const formSchema = z.object({
     UserType.EMPLOYEE,
   ]),
   password: z.string()
-    .trim().min(8, { 
+    .trim().min(8, {
       message: "Password must be at least 8 characters."
     })
     .refine(password => {
@@ -59,7 +59,7 @@ const formSchema = z.object({
       message: 'Password must have uppercase, lowercase, number, and special characters (@$!%*?&).'
     }).optional(),
   confirmPassword: z.string()
-    .trim().min(1, { 
+    .trim().min(1, {
       message: "Please confirm your password"
     }).optional(),
 });
@@ -73,7 +73,7 @@ interface Props {
   data: IUser
 }
 
-export default function EditUserDialog({data}: Props) {
+export default function EditUserDialog({ data }: Props) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -99,27 +99,27 @@ export default function EditUserDialog({data}: Props) {
     }
   }, [data]);
 
-  const {mutate: updateUserMutate, isPending} = useMutation({
+  const { mutate: updateUserMutate, isPending } = useMutation({
     mutationFn: async (data: IUpdateUser) => await updateUser(data),
     onSuccess: () => {
-      queryClient.refetchQueries({queryKey: ['users']})
+      queryClient.refetchQueries({ queryKey: ['users'] })
       form.reset();
       setOpen(false);
-      toast.success("Users updated successfully", { 
-        position: 'top-center', 
+      toast.success("Users updated successfully", {
+        position: 'top-center',
         className: 'text-primary'
       });
     },
     onError: (error) => {
-      toast.success(error.message, { 
-        position: 'top-center', 
+      toast.success(error.message, {
+        position: 'top-center',
         className: 'text-destructive'
       });
     }
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const {confirmPassword, ...userData} = values;
+    const { confirmPassword, ...userData } = values;
     updateUserMutate({
       id: data.id,
       ...userData
@@ -130,15 +130,15 @@ export default function EditUserDialog({data}: Props) {
     <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
       <DialogTrigger>
         <Button size={'icon'} variant={'ghost'} className="hover:text-primary">
-          <Pencil size={16}/>
+          <Pencil size={16} />
         </Button>
-      </DialogTrigger>  
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <UserPlus size={24}/>
+            <UserPlus size={24} />
             <p className="flex-1 truncate">
-              Create new user
+              Update user
             </p>
           </DialogTitle>
         </DialogHeader>
@@ -153,7 +153,7 @@ export default function EditUserDialog({data}: Props) {
                     <FormItem className="w-full">
                       <FormLabel>First name</FormLabel>
                       <FormControl>
-                        <CommonInput inputProps={{ ...field }} placeholder="First name"/>
+                        <CommonInput inputProps={{ ...field }} placeholder="First name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -166,7 +166,7 @@ export default function EditUserDialog({data}: Props) {
                     <FormItem className="w-full">
                       <FormLabel>Last name</FormLabel>
                       <FormControl>
-                        <CommonInput inputProps={{ ...field }} placeholder="Last name"/>
+                        <CommonInput inputProps={{ ...field }} placeholder="Last name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -180,7 +180,7 @@ export default function EditUserDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Email"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Email" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,9 +219,9 @@ export default function EditUserDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <CommonInput 
-                        inputProps={{ ...field }} 
-                        type={'password'} 
+                      <CommonInput
+                        inputProps={{ ...field }}
+                        type={'password'}
                         placeholder="Password"
                       />
                     </FormControl>
@@ -236,9 +236,9 @@ export default function EditUserDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Confirm password</FormLabel>
                     <FormControl>
-                      <CommonInput 
+                      <CommonInput
                         inputProps={{ ...field }}
-                        type={'password'} 
+                        type={'password'}
                         placeholder="Confirm password"
                       />
                     </FormControl>
@@ -249,8 +249,8 @@ export default function EditUserDialog({data}: Props) {
             </div>
             <div className="flex gap-2 justify-end">
               <DialogClose>
-                <Button 
-                  type="button" 
+                <Button
+                  type="button"
                   variant={'outline'}
                   className="flex gap-2 mt-4"
                   disabled={isPending}
@@ -258,13 +258,13 @@ export default function EditUserDialog({data}: Props) {
                   <span>Cancel</span>
                 </Button>
               </DialogClose>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="flex gap-2 mt-4"
                 disabled={isPending}
               >
-                {isPending && 
-                  <Loader2 size={20} className="animate-spin"/>
+                {isPending &&
+                  <Loader2 size={20} className="animate-spin" />
                 }
                 <span>Create</span>
               </Button>

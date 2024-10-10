@@ -13,7 +13,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { DataTablePagination } from "../../common/table-pagination";
 import { ITransaction } from "@/interfaces/transaction.interface";
 import Loader from "@/components/animated/Loader";
-import { useNavigate } from "react-router-dom";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -55,8 +54,6 @@ export function DataTable<TData, TValue>({
 		},
 	});
 
-	const navigate = useNavigate()
-
 	return (
 		<>
 			<div className="rounded-md border">
@@ -83,8 +80,7 @@ export function DataTable<TData, TValue>({
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
-									onClick={() => navigate(`/admin/transactions/${row.id}/`)}
-									className="hover:bg-primary-foreground cursor-pointer"
+									className="hover:bg-primary-foreground cursor-pointer h-[60px]"
 									key={row.id}
 									data-state={row.getIsSelected() && "selected"}
 								>

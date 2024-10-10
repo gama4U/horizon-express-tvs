@@ -1,7 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { NotepadText } from "lucide-react";
-import { Link } from "react-router-dom";
 import DeleteTransaction from "@/components/alert/transactions/delete";
 import { ILead } from "@/api/mutations/lead.mutation";
 import EditLeadDialog from "@/components/dialogs/leads/edit";

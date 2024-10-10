@@ -7,6 +7,7 @@ import { TransportServiceType, VehicleType } from "../../interfaces/transport.in
 
 export interface ICreateTransaction {
   id: string
+  creatorId: string
 }
 export async function createTransaction(data: ICreateTransaction): Promise<ICreatedTransaction> {
   try {

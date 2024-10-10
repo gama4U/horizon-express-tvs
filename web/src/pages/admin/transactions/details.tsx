@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import TopBar from "@/components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTransaction } from "@/api/queries/transaction";
@@ -19,7 +19,7 @@ import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import AddTourVoucherDialog from "@/components/dialogs/transaction/tour-voucher/add";
 import PrintPreview from "@/components/section/transaction/print-preview";
 import { tabs } from "@/components/section/transaction/tabs";
-import { Card, CardTitle, CardHeader, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ClipboardPlus } from "lucide-react";
 import SalesAgreementInfo from "@/components/section/sales-agreement/info";
 import PurchaseRequestInfo from "@/components/section/purchase-request/info";
@@ -37,8 +37,6 @@ export default function ManageTransaction() {
   const [openSelectSalesAgreement, setOpenSelectSalesAgreement] = useState(false);
   const [openSelectPurchaseRequest, setOpenSelectPurchaseRequest] = useState(false);
 
-  const navigate = useNavigate()
-
   const { data: transaction, isLoading } = useQuery({
     queryKey: ["transaction", id],
     queryFn: async () => {
@@ -47,6 +45,7 @@ export default function ManageTransaction() {
     },
     enabled: !!id,
   });
+
 
   return (
     <div className="h-screen w-full flex flex-col space-y-2">
@@ -77,8 +76,8 @@ export default function ManageTransaction() {
                     <AccordionItem value="item-1">
                       <AccordionTrigger>Sales Agreement</AccordionTrigger>
                       <AccordionContent>
-                        <Card className="w-full p-4 border-none">
-                          <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
+                        <Card className="w-full p-4 border">
+                          <CardContent className="p-4 justify-center border-none border-2 rounded-lg">
                             {transaction?.salesAgreement ?
                               <div>
                                 <div className="flex justify-between items-center px-4">
@@ -109,8 +108,8 @@ export default function ManageTransaction() {
                     <AccordionItem value="item-2">
                       <AccordionTrigger>Purchase Request</AccordionTrigger>
                       <AccordionContent>
-                        <Card className="w-full p-4 border-none">
-                          <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
+                        <Card className="w-full p-4">
+                          <CardContent className="p-4 justify-center  rounded-lg">
                             {transaction?.purchaseOrder ?
                               <div>
                                 <div className="flex justify-between items-center px-4">

@@ -44,22 +44,31 @@ export function TransactionChart({
 		}));
 
 		return dateRange.map((dateEntry) => {
-			const transactionForDate = enrichedTransactions.find(
-				(transaction) => format(new Date(transaction.createdAt), "yyyy-MM-dd") === dateEntry.date
+			const transactionsForDate = enrichedTransactions.filter(
+				(transaction) =>
+					format(new Date(transaction.createdAt), "yyyy-MM-dd") === dateEntry.date
 			);
 
-			return transactionForDate
-				? {
-					...dateEntry,
-					travel: transactionForDate.voucherCounts.travel || 0,
-					accommodation: transactionForDate.voucherCounts.accommodation || 0,
-					tour: transactionForDate.voucherCounts.tour || 0,
-					transport: transactionForDate.voucherCounts.transport || 0,
-				}
-				: dateEntry;
+			if (transactionsForDate.length === 0) {
+				return dateEntry;
+			}
+
+			const aggregatedCounts = transactionsForDate.reduce(
+				(acc, transaction) => ({
+					travel: acc.travel + transaction.voucherCounts.travel,
+					accommodation: acc.accommodation + transaction.voucherCounts.accommodation,
+					tour: acc.tour + transaction.voucherCounts.tour,
+					transport: acc.transport + transaction.voucherCounts.transport,
+				}),
+				{ travel: 0, accommodation: 0, tour: 0, transport: 0 }
+			);
+
+			return {
+				...dateEntry,
+				...aggregatedCounts,
+			};
 		});
 	}, [enrichedTransactions, selectedDateRange]);
-
 	const chartConfig = {
 		travel: {
 			label: "Travel",
