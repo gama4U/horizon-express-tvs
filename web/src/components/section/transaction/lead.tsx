@@ -62,15 +62,14 @@ export default function LeadDetails({ leadData, forSelection }: LeadDetailsProps
                 </Button>
               </div>
 
-              {leadData.documents?.map((documents, idx) => (
-                <div key={idx} className="space-y-4 border-2 rounded-xl p-4">
-                  <div className="flex flex-row justify-between items-center">
-                    <p className="text-xs text-primary font-semibold">Document # 1</p>
-                  </div>
-                  <div>
-                  </div>
+              <div className="space-y-4 border-2 rounded-xl p-4">
+                <div className="flex flex-row justify-between items-center">
+                  <p className="text-xs text-primary font-semibold">Document # 1</p>
                 </div>
-              ))}
+                <div>
+                </div>
+              </div>
+              ))
             </div>
           </>
         }

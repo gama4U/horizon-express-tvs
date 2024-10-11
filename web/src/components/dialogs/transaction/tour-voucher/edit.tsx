@@ -1,12 +1,9 @@
 import { z } from "zod";
 import CommonInput from "../../../common/input";
-import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover"
-import { format } from "date-fns"
-import { Calendar } from "../../../ui/calendar"
-import { CalendarIcon, ClipboardPlus, Loader2, MapPin, Trash2 } from "lucide-react"
+import { Loader2, MapPin } from "lucide-react"
 import { Button } from "../../../ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "../../../ui/dialog"
 import { Separator } from "../../../ui/separator"

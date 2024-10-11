@@ -7,9 +7,9 @@ import TopBar from "@/components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Profile() {
-  const {data: profile, isLoading} = useQuery({
+  const { data: profile } = useQuery({
     queryKey: ['profile'],
-    queryFn: async() => await fetchProfile()
+    queryFn: async () => await fetchProfile()
   });
 
   return (
@@ -27,10 +27,10 @@ export default function Profile() {
       <div className="space-y-4 bg-white p-4 pb-8 rounded-lg">
         {profile && (
           <div className="max-w-[800px] m-auto space-y-4 p-4">
-            <UserAvatar data={profile}/>
+            <UserAvatar data={profile} />
             <ProfileInfo data={profile} />
             <ChangePassword />
-            <MySignature signature={profile.signature ?? null}/>
+            <MySignature signature={profile.signature ?? null} />
           </div>
         )}
       </div>

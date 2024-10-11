@@ -6,7 +6,7 @@ import { IUploadFile } from "@/interfaces/upload.interface";
 import { IUser } from "@/interfaces/user.interface";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosProgressEvent } from "axios";
+// import { AxiosProgressEvent } from "axios";
 import { Loader2 } from "lucide-react";
 import { ChangeEvent, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -15,43 +15,42 @@ interface Props {
   data?: IUser
 }
 
-export default function UserAvatar({data}: Props) {
-  const pictureInputRef = useRef<HTMLInputElement | null>(null); 
+export default function UserAvatar({ data }: Props) {
+  const pictureInputRef = useRef<HTMLInputElement | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const queryClient = useQueryClient();
 
-  const {mutate: updateAvatarMutate, isPending: uploading} = useMutation({
-    mutationFn: async(avatarUrl: string) => await updateAvatar(avatarUrl),
+  const { mutate: updateAvatarMutate } = useMutation({
+    mutationFn: async (avatarUrl: string) => await updateAvatar(avatarUrl),
     onSuccess() {
-      queryClient.refetchQueries({queryKey: ['profile']});
-      toast.success('Avatar uploaded successfully', { 
-        position: 'top-center', 
+      queryClient.refetchQueries({ queryKey: ['profile'] });
+      toast.success('Avatar uploaded successfully', {
+        position: 'top-center',
         className: 'text-primary',
       })
     },
     onError(error) {
-      toast.error(error.message, { 
-        position: 'top-center', 
+      toast.error(error.message, {
+        position: 'top-center',
         className: 'text-destructive'
       })
     }
   });
 
-  const {mutate: uploadFileMutate, isPending: savingProfilePicture} = useMutation({
-    mutationFn: async(data: IUploadFile) => await uploadFile(data),
+  const { mutate: uploadFileMutate, isPending: savingProfilePicture } = useMutation({
+    mutationFn: async (data: IUploadFile) => await uploadFile(data),
     onSuccess(data) {
       updateAvatarMutate(data.url);
       setAvatarFile(null);
     },
     onError(error) {
-      toast.error(error.message, { 
-        position: 'top-center', 
+      toast.error(error.message, {
+        position: 'top-center',
         className: 'text-destructive',
       })
     }
   });
-  
+
   const handleChangePicture = () => {
     if (pictureInputRef) {
       pictureInputRef.current?.click();
@@ -60,42 +59,41 @@ export default function UserAvatar({data}: Props) {
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if(file) {
+    if (file) {
       setAvatarFile(file)
     }
   }
 
   const handleCancelChangePicture = () => {
     setAvatarFile(null);
-    if(pictureInputRef.current) {
+    if (pictureInputRef.current) {
       pictureInputRef.current.value = '';
     }
   }
 
   const handleSavePicture = () => {
-    if(!avatarFile) return;
+    if (!avatarFile) return;
     const formData = new FormData();
     formData.append('file', avatarFile);
-    uploadFileMutate({data: formData, onUploadProgress});
+    uploadFileMutate({ data: formData });
   }
 
-  const onUploadProgress = (event: AxiosProgressEvent) => {
-    const percentCompleted = Math.round((event.loaded * 100) / Number(event.total));
-    setUploadProgress(percentCompleted)
-  };
+  // const onUploadProgress = (event: AxiosProgressEvent) => {
+  //   // const percentCompleted = Math.round((event.loaded * 100) / Number(event.total));
+  // };
 
   return (
     <div className="w-full p-4 flex items-center gap-4 border rounded-lg">
       {avatarFile ? (
         <Avatar className="h-[80px] w-[80px] border">
-          <AvatarImage 
+          <AvatarImage
             src={URL.createObjectURL(avatarFile)}
             className="object-cover"
           />
         </Avatar>
       ) : (
         <Avatar className="h-[80px] w-[80px] border">
-          <AvatarImage 
+          <AvatarImage
             src={data?.avatar}
             className="object-cover"
           />
@@ -109,18 +107,18 @@ export default function UserAvatar({data}: Props) {
         <div className="space-x-4">
           {avatarFile ? (
             <>
-              <Button 
+              <Button
                 size={'sm'}
                 className="w-[150px] gap-1"
                 onClick={handleSavePicture}
                 disabled={savingProfilePicture}
               >
                 {savingProfilePicture && (
-                  <Loader2 size={18} className="animate-spin"/>
+                  <Loader2 size={18} className="animate-spin" />
                 )}
                 <span>Save</span>
               </Button>
-              <Button 
+              <Button
                 size={'sm'}
                 variant={'outline'}
                 className="w-[150px]"
@@ -131,7 +129,7 @@ export default function UserAvatar({data}: Props) {
               </Button>
             </>
           ) : (
-            <Button 
+            <Button
               size={'sm'}
               className="w-[150px]"
               onClick={handleChangePicture}

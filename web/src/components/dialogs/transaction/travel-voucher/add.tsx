@@ -2,7 +2,7 @@ import { z } from "zod"
 import { format } from "date-fns"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { CalendarIcon, CircleCheck, Loader2, Plane, PlaneTakeoff, Ship } from "lucide-react"
+import { CalendarIcon, CircleCheck, Loader2, Plane, Ship } from "lucide-react"
 import { Button } from "../../../ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../ui/dialog"
 import { Separator } from "../../../ui/separator"
@@ -14,7 +14,6 @@ import {
   FormItem,
   FormMessage,
 } from "../../../ui/form"
-import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from "../../../ui/select"
 import CommonInput from "../../../common/input"
 import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover"
 import { Calendar } from "../../../ui/calendar"
@@ -22,7 +21,7 @@ import AnimatedDiv from "../../../animated/Div"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createTravelVoucher, ICreateTravelVoucher } from "../../../../api/mutations/transaction.mutation"
 import { toast } from "sonner"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 
 interface AddTravelVoucherProps {
