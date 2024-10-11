@@ -8,8 +8,7 @@ api.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
     }
-    // config.baseURL = import.meta.env.VITE_REST_BASE_URL;
-    config.baseURL = "http://edge.horizonexpress.ph";
+    config.baseURL = import.meta.env.VITE_REST_BASE_URL;
     config.timeout = 60000;
     return config;
   },
