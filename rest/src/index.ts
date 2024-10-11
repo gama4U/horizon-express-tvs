@@ -41,6 +41,13 @@ app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
 app.use('/auth', authRouter);
 app.use('/api/v1', mainRouter);
 
+app.use(express.json()); // This middleware is required to parse JSON bodies
+
+// Define your POST route
+app.post('/api', (req, res) => {
+  res.json({ message: 'API is working!' });
+});
+
 mainRouter.use('/users', userRouter);
 mainRouter.use('/uploads', uploadRouter);
 mainRouter.use('/travel-vouchers', travelVoucherRouter);
