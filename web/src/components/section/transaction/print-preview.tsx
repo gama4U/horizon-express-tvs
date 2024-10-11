@@ -28,11 +28,10 @@ export default function PrintPreview({ data }: Props) {
         </Button>
       </div>
       <Separator />
-      <div ref={contentRef} className="p-4 min-h-[900px] space-y-4">
+      <div ref={contentRef} className="p-4 min-h-full space-y-4">
         <div className='flex justify-center items-center gap-x-4'>
-          <img src={logo} className='object-contain w-[80px] h-[80px]' />
-          <div className="text-center text-muted-foreground">
-            <h1 className="text-lg font-semibold">HORIZON EXPRESS TRAVEL AND TOURS INC.</h1>
+          <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
+            <img src={logo} className='object-contain w-[180px] h-[110px]' />
             <h3 className="text-xs font-semibold">Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000</h3>
             <div className="flex flex-col text-xs">
               <span>Email: accounting.cebu@horizonexpress.ph</span>
@@ -55,7 +54,7 @@ export default function PrintPreview({ data }: Props) {
                 <span>{format(new Date(data?.createdAt ?? new Date), 'MMMM d, yyyy')}</span>
               </div>
             </div>
-            <div className="flex items-start gap-2 text-xs">
+            <div className="flex items-start gap-2 text-xs mb-2">
               <span className="font-semibold">Transaction Voucher #:</span>
               <span>{data.id}</span>
             </div>
@@ -201,15 +200,13 @@ export default function PrintPreview({ data }: Props) {
 
                     <div key={transport.id} className="text-xs grid grid-cols-2 gap-4">
                       <div>
-                        <p>Driver: {transport.driverName}</p>
-                        <p>Contact: {transport.driverContact}</p>
-                      </div>
-                      <div>
+                        <p>Vehicle Type: {VehicleType[transport.vehicleType]}</p>
                         <p>Vehicle Plate: {transport.vehiclePlateNumber}</p>
                         <p>Service Type: {TransportServiceType[transport.serviceType]}</p>
                       </div>
                       <div>
-                        <p>Vehicle Type: {VehicleType[transport.vehicleType]}</p>
+                        <p>Driver: {transport.driverName}</p>
+                        <p>Contact: {transport.driverContact}</p>
                       </div>
                       {transport.remarks && <div><p>Remarks: {transport.remarks}</p></div>}
                       {transport.itineraries.length > 0 && (
@@ -242,6 +239,29 @@ export default function PrintPreview({ data }: Props) {
                 ))}
               </div>
             )}
+          </div>
+          <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-8'>
+            <div className='w-full text-center max-w-[250px] text-[12px]'>
+              <div className='flex-1 border-b leading-[16px]'>
+                <span className='text-[12px] font-semibold'>
+                  {data?.preparedBy?.firstName} {data?.preparedBy?.lastName}
+                </span>
+              </div>
+              <span className='leading-[16px]'>
+                Prepared by
+              </span>
+            </div>
+
+            <div className='w-full text-center max-w-[250px] text-[12px]'>
+              <div className='flex-1 border-b leading-[16px]'>
+                <span className='text-[12px] font-semibold'>
+                  {data?.approver?.firstName} {data?.approver?.lastName}
+                </span>
+              </div>
+              <span className='leading-[16px]'>
+                Approved & Reviewed by
+              </span>
+            </div>
           </div>
         </div>
       </div>

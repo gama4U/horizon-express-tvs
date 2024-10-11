@@ -58,7 +58,7 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 			setOpenDialog(false)
 			form.reset()
 			toast.custom(() => (
-				<CommonToast message="Successfully created led" />
+				<CommonToast message="Successfully created lead" />
 			), {
 				position: "bottom-right",
 			})
@@ -107,6 +107,21 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 												<p className="text-xs w-1/3">Middle Name:</p>
 												<FormControl className="w-2/3">
 													<CommonInput inputProps={{ ...field }} placeholder="Middle name" containerProps={{ className: 'text-xs' }} />
+												</FormControl>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="middleName"
+									render={({ field }) => (
+										<FormItem>
+											<div className="flex flex-row items-center justify-between gap-x-2">
+												<p className="text-xs w-1/3">Last Name:</p>
+												<FormControl className="w-2/3">
+													<CommonInput inputProps={{ ...field }} placeholder="Last name" containerProps={{ className: 'text-xs' }} />
 												</FormControl>
 											</div>
 											<FormMessage />

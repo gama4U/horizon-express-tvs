@@ -29,6 +29,8 @@ export interface IVoucherCounts {
 export interface ITransaction {
   id: string;
   lead: ILead;
+  preparedBy: IUser;
+  approver: IUser;
   travelVoucher?: ITravelVoucher[]
   accommodationVoucher?: IAccommodationVoucher[]
   tourVoucher?: ITourVoucher[]

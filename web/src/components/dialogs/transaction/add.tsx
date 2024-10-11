@@ -8,12 +8,19 @@ import { Form, FormItem, FormControl, FormField, FormMessage } from "@/component
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CommonInput from "@/components/common/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createTransaction, ICreateTransaction } from "@/api/mutations/transaction.mutation";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
-import { createLead, ICreateLead } from "@/api/mutations/lead.mutation";
+import { createLead, ICreateLead, ILead } from "@/api/mutations/lead.mutation";
 import { Button } from "@/components/ui/button";
+import usePagination from "@/hooks/usePagination";
+import useDebounce from "@/hooks/useDebounce";
+import { fetchLeads } from "@/api/queries/leads.query";
+import Lottie from "lottie-react";
+import skeletonLoader from "../../../assets/loaders/skeleton.json"
+import LeadDetails from "@/components/section/transaction/lead";
+import { useAuth } from "@/providers/auth-provider";
 
 
 interface ICreateTransactionDialog {
@@ -56,13 +63,32 @@ const formSchema = z.object({
 
 
 export default function CreateTransactionDialog({ openDialog, setOpenDialog, successNavigate }: ICreateTransactionDialog) {
-	const [step, setStep] = useState(0)
+	const [selection, setSelection] = useState({
+		step: 0,
+		type: ""
+	})
 	const [selectedCard, setSelectedCard] = useState<string | null>(null);
+	const { skip, take, pagination } = usePagination();
+	const [search, setSearch] = useState('');
+	const debouncedSearch = useDebounce(search, 500);
+	const [selectedLead, setSelectedLead] = useState<ILead | null>(null);
+	const { session } = useAuth()
+
+	const { data, isLoading } = useQuery({
+		queryKey: ['leads', pagination, debouncedSearch],
+		queryFn: async () => await fetchLeads({ skip, take, search: debouncedSearch }),
+		enabled: (selection.type === 'select' && selection.step === 1)
+	});
+
 
 	const handleSelectCard = (option: string) => {
 		setSelectedCard(option);
-		setStep(1)
+		setSelection({
+			step: 1,
+			type: option === 'new' ? "add" : "select"
+		})
 	};
+
 	const queryClient = useQueryClient()
 
 
@@ -99,19 +125,32 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 		onSuccess: (data) => {
 			queryClient.refetchQueries({ queryKey: ['transactions'] })
 			createTransactionMutate({
+				creatorId: String(session.user?.id),
 				id: data.id
 			})
 		}
 	});
 
+	const handleSelectLead = (lead: ILead) => {
+		setSelectedLead(lead);
+	};
+
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		createLeadMutate(values)
+		if (selection.type === 'add') {
+			createLeadMutate(values)
+		}
 	}
 
 
 	return (
-		<Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)}>
-			<DialogContent>
+		<Dialog open={openDialog} onOpenChange={() => {
+			setSelection({
+				step: 0,
+				type: ""
+			})
+			setOpenDialog(false)
+		}}>
+			<DialogContent className="max-w-[520px] max-h-[90vh] overflow-y-auto rounded-[25px] p-6">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
 						<SquareMenu />
@@ -120,7 +159,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 				</DialogTitle>
 				<Separator />
 				<div className="space-y-8 p-4">
-					{step === 0 &&
+					{selection.step === 0 &&
 						<div className="flex gap-x-2 justify-between w-full">
 							{cardOptions.map((card) => (
 								<AnimatedDiv
@@ -148,7 +187,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 								</AnimatedDiv>
 							))}
 						</div>}
-					{step === 1 &&
+					{(selection.step === 1 && selection.type === 'add') &&
 						<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
 							<Form {...form}>
 								<p className="text-sm font-medium my-2">Create new lead for transaction</p>
@@ -229,7 +268,12 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 										)}
 									/>
 									<div className="flex flex-row items-center gap-x-2 justify-end">
-										<Button className="text-xs bg-muted-foreground" onClick={() => setStep(0)}>Back</Button>
+										<Button className="text-xs bg-muted-foreground" onClick={() => {
+											setSelection({
+												step: 0,
+												type: ""
+											})
+										}}>Back</Button>
 										<Button type="submit" className="text-xs" disabled={creatingLead || creatingTransaction}>
 											{
 												creatingLead || creatingTransaction ?
@@ -243,6 +287,79 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 									</div>
 								</form>
 							</Form>
+						</AnimatedDiv>
+					}
+					{(selection.step === 1 && selection.type === 'select') &&
+						<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
+							<p className="text-sm font-medium my-2">
+								Select a Lead
+							</p>
+							<div className="flex flex-row justify-center">
+								<div className="w-full">
+									<div className="flex flex-1 gap-2 items-center p-[1px] border-b pb-2">
+										<CommonInput
+											placeholder="Search by lead name"
+											containerProps={{
+												className: "max-w-[500px]"
+											}}
+											defaultValue={search}
+											onChange={(event) => setSearch(event.target.value)}
+										/>
+									</div>
+									{isLoading ? (
+										<div className="flex flex-col items-center">
+											<Lottie animationData={skeletonLoader} loop={true} className="w-[320px] h-[320px]" />
+											<p className="text-white font-semibold text-[14px]"></p>
+										</div>
+									) : (
+										data?.leadsData?.slice(0, 3).map((lead, index) => (
+											<div
+												className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
+												${selectedLead?.id === lead.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
+												key={index}
+												onClick={() => handleSelectLead(lead)}
+											>
+												{selectedLead?.id === lead.id && (
+													<div className="absolute top-2 right-2 text-green-500">
+														<AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
+															<CircleCheck size={24} />
+														</AnimatedDiv>
+													</div>
+												)}
+												<LeadDetails leadData={lead} forSelection={true} />
+											</div>
+
+										))
+									)}
+								</div>
+							</div>
+							<div className="flex flex-row items-center gap-x-2 justify-end">
+								<Button className="text-xs bg-muted-foreground" onClick={() => {
+									setSelection({
+										step: 0,
+										type: ""
+									})
+								}}>Back</Button>
+
+								{selectedLead &&
+									<Button className="text-xs" disabled={creatingLead || creatingTransaction} onClick={() => {
+										if (selectedLead) {
+											createTransactionMutate({
+												id: selectedLead.id,
+												creatorId: String(session?.user?.id)
+											})
+										}
+									}}>
+										{
+											creatingLead || creatingTransaction ?
+												<div className="flex flex-row items-center gap-x-">
+													<p className="text-xs">Creating..</p>
+													<Loader2 className="animate-spin" />
+												</div> :
+												<p className="text-xs">Create</p>
+										}
+									</Button>}
+							</div>
 						</AnimatedDiv>
 					}
 				</div>

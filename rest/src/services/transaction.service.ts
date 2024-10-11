@@ -4,11 +4,13 @@ import moment from "moment";
 
 interface ICreateTransaction {
   id: string;
+  creatorId: string
 }
-export async function createTransaction({ id }: ICreateTransaction) {
+export async function createTransaction({ id, creatorId }: ICreateTransaction) {
   return await prisma.transaction.create({
     data: {
-      leadId: id
+      leadId: id,
+      creatorId: creatorId
     }
   })
 }
@@ -78,6 +80,8 @@ export async function fetchTransaction({ id }: IFetchTransaction) {
           itineraries: true
         }
       },
+      approver: true,
+      preparedBy: true,
       travelVoucher: {
         include: {
           airline: true,
@@ -129,19 +133,28 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
     };
   }
 
+
+  const voucherFilters: Prisma.TransactionWhereInput[] = [];
+
   if (travel) {
-    whereInput.travelVoucher = { some: {} };
+    voucherFilters.push({ travelVoucher: { some: {} } });
   }
   if (accommodation) {
-    whereInput.accommodationVoucher = { some: {} };
+    voucherFilters.push({ accommodationVoucher: { some: {} } });
   }
   if (tour) {
-    whereInput.tourVoucher = { some: {} };
+    voucherFilters.push({ tourVoucher: { some: {} } });
   }
   if (transport) {
-    whereInput.transportVoucher = { some: {} };
+    voucherFilters.push({ transportVoucher: { some: {} } });
   }
 
+  if (voucherFilters.length > 0) {
+    whereInput = {
+      ...whereInput,
+      OR: voucherFilters,
+    };
+  }
   const findTransaction = prisma.transaction.findMany({
     where: {
       ...whereInput,
@@ -151,10 +164,13 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
         select: {
           id: true,
           firstName: true,
+          middleName: true,
           lastName: true,
           email: true,
         },
       },
+      preparedBy: true,
+      approver: true,
       salesAgreement: true,
       purchaseOrder: true,
       tourVoucher: true,

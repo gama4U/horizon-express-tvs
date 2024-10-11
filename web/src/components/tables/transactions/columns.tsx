@@ -1,6 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ITransaction, VoucherTypes } from "@/interfaces/transaction.interface";
@@ -35,16 +34,10 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		header: "Lead",
 		cell: ({ row }) => {
 			if (!row.original.lead) return;
-			const { firstName, lastName, avatar } = row.original.lead;
+			const { firstName, middleName, lastName } = row.original.lead;
 			return (
-				<div className="flex items-center gap-2">
-					<Avatar>
-						<AvatarImage src={avatar} />
-						<AvatarFallback>
-							{firstName[0].toUpperCase()}
-						</AvatarFallback>
-					</Avatar>
-					<span>{`${firstName} ${lastName}`}</span>
+				<div className="flex items-cetter gap-2">
+					<span>{`${firstName} ${middleName} ${lastName}`}</span>
 				</div>
 			)
 		}

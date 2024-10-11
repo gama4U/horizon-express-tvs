@@ -19,13 +19,14 @@ import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import AddTourVoucherDialog from "@/components/dialogs/transaction/tour-voucher/add";
 import PrintPreview from "@/components/section/transaction/print-preview";
 import { tabs } from "@/components/section/transaction/tabs";
-import { Card, CardTitle, CardHeader, CardContent, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ClipboardPlus } from "lucide-react";
 import SalesAgreementInfo from "@/components/section/sales-agreement/info";
 import PurchaseRequestInfo from "@/components/section/purchase-request/info";
 import SalesAgreementItems from "@/components/section/sales-agreement/items";
 import PurchaseRequestItems from "@/components/section/purchase-request/items";
 import LeadDetails from "@/components/section/transaction/lead";
+import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function ManageTransaction() {
   const { id } = useParams();
@@ -44,6 +45,7 @@ export default function ManageTransaction() {
     },
     enabled: !!id,
   });
+
 
   return (
     <div className="h-screen w-full flex flex-col space-y-2">
@@ -67,74 +69,71 @@ export default function ManageTransaction() {
                   ))}
                 </TabsList>
                 <TabsContent value={tabs[0].value} className="flex gap-y-2 flex-col">
-                  <Card className="w-full p-4">
-                    <CardHeader>
-                      <CardTitle className="text-sm">Sales Agreement</CardTitle>
-                      <CardDescription>View attached sales agreement document here.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
-                      {transaction?.salesAgreement ?
-                        <div>
-                          <div className="flex justify-between items-center px-4">
-                            <p className="text-xs">Sales Agreement #: <span className="font-semibold">{transaction.salesAgreement.serialNumber}</span></p>
-                            <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectSalesAgreement(true)}>
-                              Update
-                              <ClipboardPlus size={14} />
-                            </Button>
-                          </div>
-                          <SalesAgreementInfo data={transaction?.salesAgreement} />
-                          <SalesAgreementItems
-                            data={transaction.salesAgreement.salesAgreementItems}
-                            salesAgreementId={transaction.salesAgreement.id}
-                          />
-                        </div>
-                        :
-                        <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
-                          onClick={() => setOpenSelectSalesAgreement(true)}
-                        >
-                          <p className="text-xs">Add sales agreement</p>
-                          <ClipboardPlus />
-                        </div>}
-                    </CardContent>
-                  </Card>
-                  <Card className="w-full p-4">
-                    <CardHeader>
-                      <CardTitle className="text-sm">Purchase Request Order</CardTitle>
-                      <CardDescription>View attached purchase request order here.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
-                      {transaction?.purchaseOrder ?
-                        <div>
-                          <div className="flex justify-between items-center px-4">
-                            <p className="text-xs">Purchase Request Order #: <span className="font-semibold">{transaction.purchaseOrder.serialNumber}</span></p>
-                            <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectPurchaseRequest(true)}>
-                              Update
-                              <ClipboardPlus size={14} />
-                            </Button>
-                          </div>
-                          <PurchaseRequestInfo data={transaction?.purchaseOrder} />
-                          <PurchaseRequestItems data={transaction.purchaseOrder.purchaseOrderItems} purchaseRequestId={transaction.purchaseOrder.id} />
-                        </div>
-                        :
-                        <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
-                          onClick={() => setOpenSelectPurchaseRequest(true)}
-                        >
-                          <p className="text-xs">Add purchase request order</p>
-                          <ClipboardPlus />
-                        </div>}
-                    </CardContent>
-                  </Card>
-                  <Card className="w-full p-4">
-                    <CardHeader>
-                      <CardTitle className="text-sm">Lead Information</CardTitle>
-                      <CardDescription>View associated lead's details here.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4 justify-center border-dotted border-2 rounded-lg">
-                      {transaction?.lead &&
-                        <LeadDetails leadData={transaction.lead} />
-                      }
-                    </CardContent>
-                  </Card>
+                  {transaction?.lead &&
+                    <LeadDetails leadData={transaction.lead} forSelection={true} />
+                  }
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger>Sales Agreement</AccordionTrigger>
+                      <AccordionContent>
+                        <Card className="w-full p-4 border">
+                          <CardContent className="p-4 justify-center border-none border-2 rounded-lg">
+                            {transaction?.salesAgreement ?
+                              <div>
+                                <div className="flex justify-between items-center px-4">
+                                  <p className="text-xs">Sales Agreement #: <span className="font-semibold">{transaction.salesAgreement.serialNumber}</span></p>
+                                  <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectSalesAgreement(true)}>
+                                    Update
+                                    <ClipboardPlus size={14} />
+                                  </Button>
+                                </div>
+                                <SalesAgreementInfo data={transaction?.salesAgreement} />
+                                <SalesAgreementItems
+                                  data={transaction.salesAgreement.salesAgreementItems}
+                                  salesAgreementId={transaction.salesAgreement.id}
+                                />
+                              </div>
+                              :
+                              <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
+                                onClick={() => setOpenSelectSalesAgreement(true)}
+                              >
+                                <p className="text-xs">Add sales agreement</p>
+                                <ClipboardPlus />
+                              </div>}
+                          </CardContent>
+                        </Card>
+
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-2">
+                      <AccordionTrigger>Purchase Request</AccordionTrigger>
+                      <AccordionContent>
+                        <Card className="w-full p-4">
+                          <CardContent className="p-4 justify-center  rounded-lg">
+                            {transaction?.purchaseOrder ?
+                              <div>
+                                <div className="flex justify-between items-center px-4">
+                                  <p className="text-xs">Purchase Request Order #: <span className="font-semibold">{transaction.purchaseOrder.serialNumber}</span></p>
+                                  <Button variant="outline" className="text-xs gap-x-2 text-primary" onClick={() => setOpenSelectPurchaseRequest(true)}>
+                                    Update
+                                    <ClipboardPlus size={14} />
+                                  </Button>
+                                </div>
+                                <PurchaseRequestInfo data={transaction?.purchaseOrder} />
+                                <PurchaseRequestItems data={transaction.purchaseOrder.purchaseOrderItems} purchaseRequestId={transaction.purchaseOrder.id} />
+                              </div>
+                              :
+                              <div className="rounded-lg border-[1px] h-[200px] flex flex-row items-center justify-center text-muted-foreground gap-2 hover:bg-green-50 cursor-pointer"
+                                onClick={() => setOpenSelectPurchaseRequest(true)}
+                              >
+                                <p className="text-xs">Add purchase request order</p>
+                                <ClipboardPlus />
+                              </div>}
+                          </CardContent>
+                        </Card>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </TabsContent>
                 <TabsContent value={tabs[1].value} className="flex-1">
                   <div className="flex justify-end">

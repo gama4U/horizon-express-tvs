@@ -36,7 +36,6 @@ transactionRouter.get('/', validate(getTransactionsSchema), async (req: Request,
 })
 
 transactionRouter.post('/', async (req: Request, res: Response) => {
-  console.log('here', req.body)
   try {
 
     const created = await createTransaction(req.body);
@@ -47,7 +46,6 @@ transactionRouter.post('/', async (req: Request, res: Response) => {
     return res.status(200).json(created);
 
   } catch (error) {
-    console.log('error is', error)
     return res.status(500).json({ message: 'Internal server error' })
   }
 })

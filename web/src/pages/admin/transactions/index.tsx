@@ -35,7 +35,6 @@ export default function Transactions() {
 
   const navigate = useNavigate();
 
-
   const handleVoucherFilterToggle = (type: VoucherTypes) => {
     setVoucherFilters((prevFilters) => ({
       ...prevFilters,
@@ -85,6 +84,7 @@ export default function Transactions() {
             <span>Create</span>
           </Button>
         </div>
+
         <DataTable
           columns={Columns}
           data={data?.transactions ?? []}

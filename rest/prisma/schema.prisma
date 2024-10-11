@@ -19,6 +19,8 @@ model User {
   updatedAt             DateTime               @updatedAt
   salesAgreements       SalesAgreement[]
   purchaseRequestOrders PurchaseRequestOrder[]
+  preparedTransactions  Transaction[]          @relation("PreparedTransactions")
+  approvedTransactions  Transaction[]          @relation("ApprovedTransactions")
 }
 
 model Transaction {
@@ -31,6 +33,10 @@ model Transaction {
   purchaseOrderId      String?               @unique
   purchaseOrder        PurchaseRequestOrder? @relation(fields: [purchaseOrderId], references: [id])
   salesAgreement       SalesAgreement?       @relation(fields: [salesAgreementId], references: [id])
+  creatorId            String?
+  preparedBy           User?                 @relation("PreparedTransactions", fields: [creatorId], references: [id])
+  approverId           String?
+  approver             User?                 @relation("ApprovedTransactions", fields: [approverId], references: [id])
   leadId               String
   lead                 Lead                  @relation(fields: [leadId], references: [id])
   createdAt            DateTime?             @default(now())
