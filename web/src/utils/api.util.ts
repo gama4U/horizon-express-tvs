@@ -5,10 +5,11 @@ const api = axios.create();
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('sessionToken');
-    if(token) {
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
     }
-    config.baseURL = import.meta.env.VITE_REST_BASE_URL;
+    // config.baseURL = import.meta.env.VITE_REST_BASE_URL;
+    config.baseURL = "http://edge.horizonexpress.ph";
     config.timeout = 60000;
     return config;
   },
@@ -28,7 +29,7 @@ api.interceptors.response.use(
       localStorage.removeItem('sessionUser');
     }
     return Promise.reject(error)
-  } 
+  }
 );
 
 export default api;
