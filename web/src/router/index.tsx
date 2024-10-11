@@ -12,6 +12,7 @@ import Transactions from "../pages/admin/transactions";
 import PurchaseRequests from "@/pages/admin/purchase-request";
 import PurchaseRequestDetails from "@/pages/admin/purchase-request/details";
 import Leads from "@/pages/admin/leads";
+import Profile from "@/pages/admin/profile";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
         path: 'sales-agreements/:id',
         element: <SalesAgreementDetails />
       },
+      {
+        path: 'profile',
+        element: <Profile />
+      }
     ]
   },
 ]);

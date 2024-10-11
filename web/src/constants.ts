@@ -14,6 +14,7 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Leads", icon: "Leads", link: "/admin/leads" },
   { label: "Memorandum", icon: "Memorandum", link: "/admin/memorandum" },
   { label: "Users", icon: "Users", link: "/admin/users" },
+  { label: "Profile", icon: "Profile", link: "/admin/profile" },
 ]
 
 const ContainerVariants = {

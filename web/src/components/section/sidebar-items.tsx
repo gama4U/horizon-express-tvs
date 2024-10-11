@@ -8,6 +8,7 @@ import {
 	NotepadText,
 	Clipboard,
 	CircleUser,
+	UserCog,
 } from "lucide-react"
 import { Button } from "../ui/button"
 
@@ -41,6 +42,8 @@ export const SidebarIcons = ({ icon, isSelected }: SidebarIconsType) => {
 			return <Clipboard size={size} className={className} color={color} />;
 		case "Leads":
 			return <CircleUser size={size} className={className} color={color} />;
+		case "Profile":
+			return <UserCog size={size} className={className} color={color} />;
 		default:
 			return <FileQuestion className="mr-2" size={size} />;
 

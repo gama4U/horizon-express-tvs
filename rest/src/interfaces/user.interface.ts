@@ -15,3 +15,18 @@ export interface IUpdateUser {
   userType?: UserType;
   password?: string;
 }
+
+export interface IUpdateUserAvatar {
+  id: string;
+  avatar: string;
+}
+
+export interface IUpdateUserSignature {
+  id: string;
+  signature: string;
+}
+
+export interface IUpdateUserPassword {
+  id: string;
+  password: string;
+}

@@ -7,6 +7,7 @@ export interface IUser {
   userType: UserType;
   password?: string;
   avatar?: string;
+  signature?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -53,4 +54,15 @@ export interface IUpdateUser {
   email: string;
   userType: UserType;
   password?: string;
+}
+
+export interface IUpdateUserProfile {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface IChangeUserPassword {
+  currentPassword: string;
+  password: string; 
 }

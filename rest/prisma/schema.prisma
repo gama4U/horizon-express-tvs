@@ -15,6 +15,7 @@ model User {
   password              String
   avatar                String?
   userType              UserType
+  signature             String?
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   salesAgreements       SalesAgreement[]
