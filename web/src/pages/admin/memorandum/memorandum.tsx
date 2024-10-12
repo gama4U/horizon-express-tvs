@@ -60,7 +60,7 @@ export default function Memorandum() {
             <Plus size={14} />
             <span>Create</span>
           </Button>
-          <CreateMemorandumDialog openDialog={openCreateMemo} setOpenDialog={setOpenCreateMemo} creatorI={String(session.user.id)} />
+          <CreateMemorandumDialog openDialog={openCreateMemo} setOpenDialog={setOpenCreateMemo} creatorId={String(session?.user?.id)} />
         </div>
         <DataTable
           columns={Columns}

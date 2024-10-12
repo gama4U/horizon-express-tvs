@@ -1,9 +1,6 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
 import { IFetchTransaction, ITransaction } from "../../interfaces/transaction.interface";
-import { ISalesAgreement } from "@/interfaces/sales-agreement.interface";
-import { IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface";
-import { IMemorandum } from "./memorandums.query";
 import { IUser } from "@/interfaces/user.interface";
 
 export async function fetchTransaction({ id }: IFetchTransaction): Promise<ITransaction> {
