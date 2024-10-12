@@ -288,8 +288,3 @@ enum AccommodationType {
   AIRBNB
   OTHERS
 }
-
-enum PermissionType {
-  SUPER_ADMIN
-  SUPERVISOR
-}
