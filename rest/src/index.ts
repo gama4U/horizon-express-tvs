@@ -22,6 +22,7 @@ import purchaseRequestRouter from "./routers/purchase-request.router";
 import purchaseRequestItemRouter from "./routers/purchase-request-items.router";
 import leadRouter from "./routers/lead.router";
 import profileRouter from "./routers/profile.router";
+import memorandumRouter from "./routers/memorandum.router";
 
 declare module 'express' {
   interface Request {
@@ -61,6 +62,7 @@ mainRouter.use('/purchase-requests', purchaseRequestRouter);
 mainRouter.use('/purchase-request-items', purchaseRequestItemRouter);
 mainRouter.use('/leads', leadRouter);
 mainRouter.use('/profile', profileRouter);
+mainRouter.use('/memorandums', memorandumRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)
