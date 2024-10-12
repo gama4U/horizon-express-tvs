@@ -79,6 +79,48 @@ const router = createBrowserRouter([
       }
     ]
   },
+  {
+    path: '/employee',
+    element: <Layout />,
+    children: [
+      {
+        path: '',
+        element: <Transactions />
+      },
+      {
+        path: 'transactions/:id/',
+        element: <ManageTransaction />
+      },
+      {
+        path: 'leads',
+        element: <Leads />
+      },
+      {
+        path: 'purchase-requests',
+        element: <PurchaseRequests />
+      },
+      {
+        path: 'purchase-requests/:id',
+        element: <PurchaseRequestDetails />
+      },
+      {
+        path: 'sales-agreements',
+        element: <SalesAgreements />
+      },
+      {
+        path: 'sales-agreements/:id',
+        element: <SalesAgreementDetails />
+      },
+      {
+        path: 'memorandum',
+        element: (<></>)
+      },
+      {
+        path: 'profile',
+        element: <Profile />
+      }
+    ]
+  },
 ]);
 
 export default router;

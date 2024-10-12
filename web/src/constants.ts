@@ -1,4 +1,5 @@
 import { TypeOfClient } from "./interfaces/sales-agreement.interface";
+import { UserType } from "./interfaces/user.interface";
 
 export type SidebarItemsType = {
   label: string;
@@ -15,6 +16,15 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
   { label: "Users", icon: "Users", link: "/admin/users" },
   { label: "Profile", icon: "Profile", link: "/admin/profile" },
+]
+
+const EmployeeSidebarItems: Array<SidebarItemsType> = [
+  { label: "Transactions", icon: "Transactions", link: "/employee" },
+  { label: "Sales Agreements", icon: "Purchase", link: "/employee/sales-agreements" },
+  { label: "Purchase Requests", icon: "Sales", link: "/employee/purchase-requests" },
+  { label: "Leads", icon: "Leads", link: "/employee/leads" },
+  { label: "Memorandum", icon: "Memorandum", link: "/employee/memorandum" },
+  { label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
 
 const ContainerVariants = {
@@ -47,12 +57,19 @@ const ClientTypesMap: Record<TypeOfClient, string> = {
   GOVERNMENT: 'Government',
 }
 
+const UserRedirectRoute: Record<UserType, string> = {
+	ADMIN: '/admin',
+	EMPLOYEE: '/employee'
+}
+
 const Constants = {
   VersionNumber,
   AdminSidebarItems,
+  EmployeeSidebarItems,
   ContainerVariants,
   NoTopbarPaths,
-  ClientTypesMap
+  ClientTypesMap,
+  UserRedirectRoute
 }
 
 export default Constants

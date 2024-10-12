@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import Constants from "../../../constants";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/providers/auth-provider";
+import { UserType } from "@/interfaces/user.interface";
 
 const formSchema = z.object({
   clientName: z.string().min(1, {
@@ -34,6 +36,7 @@ const formSchema = z.object({
 export default function CreateSalesAgreementDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const {session: {user}} = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,7 +56,7 @@ export default function CreateSalesAgreementDialog() {
         position: 'top-center', 
         className: 'text-primary'
       });
-      navigate(`/admin/sales-agreements/${data.id}`)
+      navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/sales-agreements/${data.id}`)
     },
     onError: (error) => {
       toast.error(error.message, { 
