@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { IUserCredential, UserType } from "../../interfaces/user.interface";
+import { IUserCredential } from "../../interfaces/user.interface";
 import { useAuth } from "../../providers/auth-provider";
 import { signIn } from "../../api/mutations/auth.mutation";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form";
