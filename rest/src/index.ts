@@ -34,11 +34,20 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(cors({
-  origin: 'edge.horizonexpress.ph'
-}));
+const allowedOrigins = [
+  'https://edge.horizonexpress.ph',
+  'http://localhost:5173',
+];
 
-// app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
@@ -51,7 +60,7 @@ mainRouter.use('/uploads', uploadRouter);
 mainRouter.use('/travel-vouchers', travelVoucherRouter);
 mainRouter.use('/accommodation-vouchers', accommodationVoucherRouter);
 mainRouter.use('/tour-vouchers', tourVoucherRouter);
-mainRouter.use('/transport-vouchers', transportVoucherRouter);
+mainRouter.use('/transport-vouchers', transportVoucherRouter);` `
 mainRouter.use('/sales-agreements', salesAgreementRouter);
 mainRouter.use('/transactions', transactionRouter);
 mainRouter.use('/tour-itineraries', tourItineraryRouter);

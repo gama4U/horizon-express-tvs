@@ -15,6 +15,7 @@ model User {
   password              String
   avatar                String?
   userType              UserType
+  permission            PermissionType?
   signature             String?
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
@@ -269,4 +270,9 @@ enum AccommodationType {
   RESORT
   AIRBNB
   OTHERS
+}
+
+enum PermissionType {
+  SUPER_ADMIN
+  SUPERVISOR
 }

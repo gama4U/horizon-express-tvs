@@ -7,6 +7,8 @@ import { NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import EditSalesAgreementDialog from "../../dialogs/sales-agreement/edit";
 import DeleteSalesAgreement from "../../alert/sales-agreement/delete";
+import { useAuth } from "@/providers/auth-provider";
+import { UserType } from "@/interfaces/user.interface";
 
 export const Columns: ColumnDef<ISalesAgreement>[] = [
   {
@@ -99,9 +101,10 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const {session: {user}} = useAuth();
       return (
         <div className="flex items-center justify-center gap-4">
-          <Link to={`/admin/sales-agreements/${row.original.id}`}>
+          <Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/sales-agreements/${row.original.id}`}>
             <NotepadText 
               size={16}
               className="cursor-pointer hover:text-primary"

@@ -1,4 +1,4 @@
-import { UserType } from "@prisma/client";
+import { PermissionType, UserType } from "@prisma/client";
 
 export interface IFindUsers {
   skip?: number;
@@ -13,6 +13,7 @@ export interface IUpdateUser {
   lastName: string;
   email: string;
   userType?: UserType;
+  permission?: PermissionType;
   password?: string;
 }
 

@@ -5,6 +5,7 @@ import { IUser } from "@/interfaces/user.interface";
 import UserTypeBadge from "@/components/badges/user-tye";
 import EditUserDialog from "@/components/dialogs/user/edit-user";
 import DeleteUserDialog from "@/components/alert/user/delete";
+import UserPermissionBadge from "@/components/badges/user-permission";
 
 export const Columns: ColumnDef<IUser>[] = [
   {
@@ -36,7 +37,7 @@ export const Columns: ColumnDef<IUser>[] = [
       return (
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={row.original.avatar} />
+            <AvatarImage src={row.original.avatar} className="object-cover"/>
             <AvatarFallback>
               {row.original.firstName[0]}
             </AvatarFallback>
@@ -63,6 +64,19 @@ export const Columns: ColumnDef<IUser>[] = [
         <UserTypeBadge 
           value={row.original.userType}
         />
+      </span>
+    )
+  },
+  {
+    id: "permission",
+    header: "Permission",
+    cell: ({ row }) => (
+      <span>
+        {row.original.permission && (
+          <UserPermissionBadge 
+            value={row.original.permission}
+          />
+        )}        
       </span>
     )
   },

@@ -45,7 +45,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrderItem>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4"> 
           <EditPurchaseRequestItemDialog data={row.original} />
           <DeletePurchaseRequestItem purchaseRequestId={row.original.id}/>
         </div>

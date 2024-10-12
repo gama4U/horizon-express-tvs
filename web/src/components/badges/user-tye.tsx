@@ -6,8 +6,8 @@ interface Props {
 }
 
 const badgeStyleMap: Record<UserType, string> = {
-  ADMIN: 'bg-orange-100 hover:bg-orange-200',
-  EMPLOYEE: 'bg-blue-100 hover:bg-blue-200',
+  ADMIN: 'bg-green-100 hover:bg-green-200',
+  EMPLOYEE: 'bg-orange-100 hover:bg-orange-200',
 } 
 
 const badgeLabelMap: Record<UserType, string> = {
