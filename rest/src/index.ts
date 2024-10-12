@@ -34,7 +34,12 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(cors());
+app.use(cors({
+  origin: 'edge.horizonexpress.ph'
+}));
+
+// app.use(cors());
+
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
