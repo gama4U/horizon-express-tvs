@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ICreateUser, UserType } from "@/interfaces/user.interface";
+import { ICreateUser, PermissionType, UserType } from "@/interfaces/user.interface";
 import { createUser } from "@/api/mutations/user.mutation";
 import { Button } from "@/components/ui/button";
 import CommonInput from "@/components/common/input";
@@ -48,6 +48,10 @@ const formSchema = z.object({
     UserType.ADMIN,
     UserType.EMPLOYEE,
   ]),
+  permission: z.enum([
+    PermissionType.SUPER_ADMIN,
+    PermissionType.SUPERVISOR,
+  ]).optional(),
   password: z.string()
     .trim().min(8, { 
       message: "Password must be at least 8 characters."
@@ -70,6 +74,11 @@ const formSchema = z.object({
 const selectUserMap: Record<UserType, string> = {
   ADMIN: 'Admin',
   EMPLOYEE: 'Employee'
+}
+
+const userPermissionMap: Record<PermissionType, string> = {
+  SUPER_ADMIN: 'Super Admin',
+  SUPERVISOR: 'Supervisor'
 }
 
 export default function CreateUserDialog() {
@@ -108,12 +117,22 @@ export default function CreateUserDialog() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const {confirmPassword, ...data} = values;
+    
     if(data.password.trim() !== confirmPassword.trim()) {
-      return toast("Passwords are not the same!", { 
+      toast("Passwords are not the same!", { 
         position: 'top-center', 
         icon: <CircleX size={20} className="text-destructive" />
       });
+      return;
     }
+    
+    if (values.userType === UserType.ADMIN && !values.permission) {
+      form.setError('permission', {
+        message: 'Permission is required for admin user',
+      });
+      return;
+    }
+
     createUserMutate(data);
   }
 
@@ -204,6 +223,34 @@ export default function CreateUserDialog() {
                   </FormItem>
                 )}
               />
+              {form.getValues('userType') === UserType.ADMIN && (
+                <FormField
+                  control={form.control}
+                  name="permission"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Permission</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
+                            <SelectValue placeholder="Select permission" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.entries(userPermissionMap)?.map(([value, label]) => {
+                            return (
+                              <SelectItem value={value} className="text-[12px] text-muted-foreground">
+                                {label}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="password"

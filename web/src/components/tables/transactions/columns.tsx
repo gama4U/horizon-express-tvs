@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { ITransaction, VoucherTypes } from "@/interfaces/transaction.interface";
 import { VoucherBadge } from "@/components/badges/voucher-type";
 import DeleteTransaction from "@/components/alert/transactions/delete";
+import { useAuth } from "@/providers/auth-provider";
+import { UserType } from "@/interfaces/user.interface";
 
 export const Columns: ColumnDef<ITransaction>[] = [
 	{
@@ -96,9 +98,10 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		header: "Actions",
 		enableHiding: false,
 		cell: ({ row }) => {
+      const {session: {user}} = useAuth();
 			return (
 				<div className="flex items-center justify-start gap-4">
-					<Link to={`/admin/transactions/${row.original.id}`}>
+					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/transactions/${row.original.id}`}>
 						<NotepadText
 							size={16}
 							className="cursor-pointer hover:text-primary"

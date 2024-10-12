@@ -24,18 +24,17 @@ export default function Dashboard() {
     }),
   });
 
-  console.log('transactions', transactions)
   const { data: salesAgreements, isLoading: salesLoading } = useQuery({
     queryKey: ['sales-agreement-summary'],
     queryFn: async () => await fetchSalesAgreementSummary(
     ),
   });
+
   const { data: purchaseRequests, isLoading: purchaseLoading } = useQuery({
     queryKey: ['purchase-request-summary'],
     queryFn: async () => await fetchPurchaseRequestSummary(
     ),
   });
-
 
   const handleDateChange = (range: DateRange | undefined) => {
     setSelectedDateRange(range);

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { IUserCredential, UserType } from "../../interfaces/user.interface";
 import { useAuth } from "../../providers/auth-provider";
@@ -17,6 +17,7 @@ import backgroundImage from "../../assets/cover-photo.jpg";
 import Loader from "../../components/animated/Loader";
 import AnimatedDiv from "../../components/animated/Div";
 import { useState } from "react";
+import Constants from "@/constants";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -26,7 +27,7 @@ const formSchema = z.object({
 });
 
 export default function SignIn() {
-  const { login } = useAuth();
+  const { session, login } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -40,35 +41,32 @@ export default function SignIn() {
 
   const { mutate: signInMutate, isPending: signingUp } = useMutation({
     mutationFn: async (data: IUserCredential) => await signIn(data),
+    onSuccess: (data) => {
+      login(data.token, data.user);
+      setLoading(true);
+      setTimeout(() => {
+        toast.success("Signed in successfully", {
+          className: 'text-primary',
+          position: 'top-center',
+        });
+        navigate(Constants.UserRedirectRoute[data.user.userType]);
+      }, 1500);
+    },
     onError: (error) => {
       toast.error(error.message, {
         className: 'text-destructive',
         position: 'top-center',
       });
     },
-    onSuccess: (data) => {
-      login(data.token, data.user);
-      setLoading(true);
-
-      setTimeout(() => {
-        switch (data.user.userType) {
-          case UserType.ADMIN:
-            navigate('/admin');
-            break;
-          default:
-            navigate('/');
-        }
-        toast.success("Signed in successfully", {
-          className: 'text-primary',
-          position: 'top-center',
-        });
-      }, 1500);
-    }
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     signInMutate(data);
   }
+
+	if (session?.token && session?.user) {
+		return <Navigate to={Constants.UserRedirectRoute[session.user.userType]} />;
+	}
 
   return (
     <div className="relative h-screen w-full flex items-center justify-center">

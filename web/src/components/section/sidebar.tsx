@@ -8,11 +8,16 @@ import Constants, { SidebarItemsType } from "../../constants";
 import { LogoutButton, SidebarIcons } from "./sidebar-items";
 import { useAuth } from "../../providers/auth-provider";
 import { useNavigate } from "react-router-dom";
+import { UserType } from "@/interfaces/user.interface";
+
+const sidebarItemsMap: Record<UserType, SidebarItemsType[]> = {
+	ADMIN: Constants.AdminSidebarItems,
+	EMPLOYEE: Constants.EmployeeSidebarItems
+}
 
 const SideBar = React.memo(() => {
 	SideBar.displayName = 'SideBar';
-
-	const { logout } = useAuth();
+	const {session: {user}, logout } = useAuth();
 
 	const navigate = useNavigate();
 	const [isOpen, setIsOpen] = useState(false);
@@ -28,13 +33,14 @@ const SideBar = React.memo(() => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	const checkRoute = (link: SidebarItemsType["link"]) => {
-		return link === "/admin" ? pathname === link : pathname.startsWith(link);
-	};
-
 	useEffect(() => {
 		containerControls.start(isOpen ? "open" : "close");
 	}, [isOpen, containerControls]);
+
+	const checkRoute = (link: SidebarItemsType["link"]) => {
+		const parentRoutes = ['/admin', '/employee'];
+		return parentRoutes.includes(link) ? pathname === link : pathname.startsWith(link);
+	};
 
 	const handleRedirect = (link: SidebarItemsType["link"]) => navigate(link);
 
@@ -64,7 +70,7 @@ const SideBar = React.memo(() => {
 				</div>
 
 				<div className="flex flex-col mt-5">
-					{Constants.AdminSidebarItems.map((item: SidebarItemsType, index: number) => {
+					{user && sidebarItemsMap[user.userType].map((item: SidebarItemsType, index: number) => {
 						const isSelected = checkRoute(item.link);
 						return (
 							<AnimatedDiv className="" animationType="Bubble" delay={0} key={index}>
