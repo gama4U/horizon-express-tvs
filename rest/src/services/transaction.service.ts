@@ -281,4 +281,116 @@ export async function fetchTransactionSummary(startDate: Date, endDate: Date) {
 }
 
 
+export async function fetchRecentEntries() {
+  // Fetch the most recent created entries
+  const transactionsPromise = prisma.transaction.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      preparedBy: true,
+    },
+    take: 5,
+  });
+
+  const salesAgreementsPromise = prisma.salesAgreement.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      creator: true,
+    },
+    take: 5,
+  });
+
+  const purchaseOrdersPromise = prisma.purchaseRequestOrder.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      creator: true,
+    },
+    take: 5,
+  });
+
+  const memorandumsPromise = prisma.memorandum.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+  });
+
+  // Fetch updated entries
+  const updatedTransactionsPromise = prisma.transaction.findMany({
+    where: { updatedAt: { not: null } },
+    orderBy: { updatedAt: 'desc' },
+    include: {
+      preparedBy: true,
+    },
+    take: 5,
+  });
+
+  const updatedSalesAgreementsPromise = prisma.salesAgreement.findMany({
+    where: { updatedAt: { not: null } },
+    orderBy: { updatedAt: 'desc' },
+    include: {
+      creator: true,
+    },
+    take: 5,
+  });
+
+  const updatedPurchaseOrdersPromise = prisma.purchaseRequestOrder.findMany({
+    where: { updatedAt: { not: null } },
+    orderBy: { updatedAt: 'desc' },
+    include: {
+      creator: true,
+    },
+    take: 5,
+  });
+
+  const updatedMemorandumsPromise = prisma.memorandum.findMany({
+    where: { updatedAt: { not: null } },
+    orderBy: { updatedAt: 'desc' },
+    take: 5,
+  });
+
+
+
+
+  const [
+    transactions,
+    salesAgreements,
+    purchaseOrders,
+    memorandums,
+    updatedTransactions,
+    updatedSalesAgreements,
+    updatedPurchaseOrders,
+    updatedMemorandums,
+  ] = await Promise.all([
+    transactionsPromise,
+    salesAgreementsPromise,
+    purchaseOrdersPromise,
+    memorandumsPromise,
+    updatedTransactionsPromise,
+    updatedSalesAgreementsPromise,
+    updatedPurchaseOrdersPromise,
+    updatedMemorandumsPromise,
+  ]);
+
+  const allEntries = [
+    ...transactions.map(item => ({ ...item, type: 'Transaction', status: 'Created' })),
+    ...salesAgreements.map(item => ({ ...item, type: 'Sales Agreement', status: 'Created' })),
+    ...purchaseOrders.map(item => ({ ...item, type: 'Purchase Request Order', status: 'Created' })),
+    ...memorandums.map(item => ({ ...item, type: 'Memorandum', status: 'Created' })),
+
+    ...updatedTransactions.map(item => ({ ...item, type: 'Transaction', status: 'Updated' })),
+    ...updatedSalesAgreements.map(item => ({ ...item, type: 'Sales Agreement', status: 'Updated' })),
+    ...updatedPurchaseOrders.map(item => ({ ...item, type: 'Purchase Request Order', status: 'Updated' })),
+    ...updatedMemorandums.map(item => ({ ...item, type: 'Memorandum', status: 'Updated' })),
+
+  ];
+
+  allEntries.sort((a, b) => {
+    const aDate = a.updatedAt || a.createdAt || new Date(0);
+    const bDate = b.updatedAt || b.createdAt || new Date(0);
+
+    return bDate.getTime() - aDate.getTime();
+  });
+
+  return allEntries.slice(0, 10);
+}
+
+
 

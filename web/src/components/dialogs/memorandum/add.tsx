@@ -17,6 +17,7 @@ import 'react-quill/dist/quill.snow.css';
 
 interface ICreateMemorandumProps {
 	openDialog: boolean;
+	creatorId: string;
 	setOpenDialog: (open: boolean) => void;
 }
 
@@ -36,7 +37,7 @@ const formSchema = z.object({
 }
 );
 
-export default function CreateMemorandumDialog({ openDialog, setOpenDialog }: ICreateMemorandumProps) {
+export default function CreateMemorandumDialog({ openDialog, setOpenDialog, creatorId }: ICreateMemorandumProps) {
 	const queryClient = useQueryClient();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -62,7 +63,10 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog }: IC
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		createMemoMutate(values);
+		createMemoMutate({
+			creatorId,
+			...values
+		});
 	}
 
 	return (

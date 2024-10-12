@@ -1,6 +1,10 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
 import { IFetchTransaction, ITransaction } from "../../interfaces/transaction.interface";
+import { ISalesAgreement } from "@/interfaces/sales-agreement.interface";
+import { IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface";
+import { IMemorandum } from "./memorandums.query";
+import { IUser } from "@/interfaces/user.interface";
 
 export async function fetchTransaction({ id }: IFetchTransaction): Promise<ITransaction> {
 	try {
@@ -78,4 +82,28 @@ export async function fetchTransactionsSummary(data: IFetchTransactionsSummary):
 		throw new Error(message || 'Something went wrong');
 	}
 }
+export interface RecentActivity {
+	createdAt: Date
+	preparedBy: IUser
+	creator: IUser
+	type: string
+	purchaseOrderId: string
+	salesAgreementId: string
+	id: string
+	status: string
+}
+
+export async function fetchRecentAcitvities(): Promise<RecentActivity[]> {
+	try {
+		const response = await api.post('/api/v1/transactions/recent-activities');
+		return response.data;
+	} catch (error) {
+		let message;
+		if (error instanceof AxiosError) {
+			message = error.response?.data.message;
+		}
+		throw new Error(message || 'Something went wrong');
+	}
+}
+
 

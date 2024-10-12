@@ -23,6 +23,7 @@ model User {
   purchaseRequestOrders PurchaseRequestOrder[]
   preparedTransactions  Transaction[]          @relation("PreparedTransactions")
   approvedTransactions  Transaction[]          @relation("ApprovedTransactions")
+  memorandums           Memorandum[]
 }
 
 model Transaction {
@@ -99,6 +100,8 @@ model Memorandum {
   re               String
   addressee        String
   contents         String
+  creatorId        String
+  creator          User   @relation(fields: [creatorId], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

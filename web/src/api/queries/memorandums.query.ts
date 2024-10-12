@@ -51,4 +51,20 @@ export async function fetchMemorandum(id: string): Promise<IMemorandum> {
   }
 }
 
-
+interface IMemorandumSummary {
+  total: number
+  since7days: number
+  rate: number
+}
+export async function fetchMemorandumSummary(): Promise<IMemorandumSummary> {
+  try {
+    const response = await api.post('/api/v1/memorandums/summary');
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}

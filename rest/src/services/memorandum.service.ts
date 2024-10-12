@@ -1,12 +1,14 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
 import { getNextMemorandumNumber } from "../utils/generateNumber";
+import moment from "moment";
 
 export interface ICreateMemorandum {
   to: string
   re: string
   addressee: string
   contents: string
+  creatorId: string
 }
 
 export async function createMemorandum(data: ICreateMemorandum) {
@@ -91,4 +93,25 @@ export async function findMemorandumById(id: string) {
   return await prisma.memorandum.findUnique({
     where: { id },
   });
+}
+
+export async function fetchMemorandumSummary() {
+  const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
+
+  const [total, since7days] = await Promise.all([
+    prisma.memorandum.count(),
+    prisma.memorandum.count({
+      where: {
+        createdAt: {
+          gte: oneWeekAgo,
+        },
+      },
+    }),
+  ]);
+
+  const rate = total > 0 ? (since7days / total) * 100 : 0;
+
+  return {
+    total, since7days, rate
+  }
 }

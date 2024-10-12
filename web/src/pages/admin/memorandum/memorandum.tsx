@@ -10,9 +10,11 @@ import { Plus } from "lucide-react"
 import { fetchMemorandums } from "@/api/queries/memorandums.query";
 import { DataTable } from "@/components/tables/memorandums/data-table";
 import { Columns } from "@/components/tables/memorandums/columns";
+import { useAuth } from "@/providers/auth-provider";
 
 export default function Memorandum() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
+  const { session } = useAuth()
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateMemo, setOpenCreateMemo] = useState(false)
@@ -58,7 +60,7 @@ export default function Memorandum() {
             <Plus size={14} />
             <span>Create</span>
           </Button>
-          <CreateMemorandumDialog openDialog={openCreateMemo} setOpenDialog={setOpenCreateMemo} />
+          <CreateMemorandumDialog openDialog={openCreateMemo} setOpenDialog={setOpenCreateMemo} creatorI={String(session.user.id)} />
         </div>
         <DataTable
           columns={Columns}

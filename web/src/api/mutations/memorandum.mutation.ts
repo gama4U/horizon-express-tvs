@@ -6,6 +6,7 @@ export interface ICreateMemorandum {
   re: string
   addressee: string
   contents: string
+  creatorId: string
 }
 
 export interface IUpdateMemorandum {

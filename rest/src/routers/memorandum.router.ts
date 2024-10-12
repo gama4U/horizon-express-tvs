@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createMemorandum, deleteMemorandum, fetchMemorandums, findMemorandumById, updateMemorandum } from '../services/memorandum.service';
+import { createMemorandum, deleteMemorandum, fetchMemorandums, fetchMemorandumSummary, findMemorandumById, updateMemorandum } from '../services/memorandum.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getMemorandumsSchema } from '../schemas/memorandum.schema';
 
@@ -100,6 +100,21 @@ memorandumRouter.delete('/:id', async (req: Request, res: Response) => {
     })
   }
 })
+
+memorandumRouter.post('/summary', async (req: Request, res: Response) => {
+
+  try {
+    const data = await fetchMemorandumSummary();
+    if (!data) {
+      return res.status(404).json({ message: 'Failed to fetch sales agreement data' });
+    }
+    return res.status(200).json(data);
+  }
+  catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 export default memorandumRouter;

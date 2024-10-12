@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createTransaction, deleteTransaction, fetchTransaction, fetchTransactions, fetchTransactionSummary, updateTransaction } from '../services/transaction.service';
+import { createTransaction, deleteTransaction, fetchRecentEntries, fetchTransaction, fetchTransactions, fetchTransactionSummary, updateTransaction } from '../services/transaction.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getTransactionsSchema } from '../schemas/transaction.schema';
 
@@ -131,6 +131,19 @@ transactionRouter.post('/summary', async (req: Request, res: Response) => {
   }
 });
 
+
+transactionRouter.post('/recent-activities', async (req: Request, res: Response) => {
+  try {
+    const recentActivities = await fetchRecentEntries();
+    if (!recentActivities) {
+      throw new Error('Failed to fetch recent activities');
+    }
+
+    return res.status(200).json(recentActivities);
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 
