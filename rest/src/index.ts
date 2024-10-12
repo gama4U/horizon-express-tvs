@@ -22,6 +22,7 @@ import purchaseRequestRouter from "./routers/purchase-request.router";
 import purchaseRequestItemRouter from "./routers/purchase-request-items.router";
 import leadRouter from "./routers/lead.router";
 import profileRouter from "./routers/profile.router";
+import memorandumRouter from "./routers/memorandum.router";
 
 declare module 'express' {
   interface Request {
@@ -34,11 +35,20 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(cors({
-  origin: 'edge.horizonexpress.ph'
-}));
+const allowedOrigins = [
+  'https://edge.horizonexpress.ph',
+  'http://localhost:5173',
+];
 
-// app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
@@ -61,6 +71,7 @@ mainRouter.use('/purchase-requests', purchaseRequestRouter);
 mainRouter.use('/purchase-request-items', purchaseRequestItemRouter);
 mainRouter.use('/leads', leadRouter);
 mainRouter.use('/profile', profileRouter);
+mainRouter.use('/memorandums', memorandumRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)

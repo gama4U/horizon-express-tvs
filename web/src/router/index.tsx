@@ -5,7 +5,6 @@ import Landing from "../pages";
 import SignIn from "../pages/auth/sign-in";
 import ManageTransaction from "../pages/admin/transactions/details";
 import Users from "../pages/admin/users";
-import Memorandum from "../pages/admin/memorandum";
 import SalesAgreements from "../pages/admin/sales-agreement";
 import SalesAgreementDetails from "../pages/admin/sales-agreement/details";
 import Transactions from "../pages/admin/transactions";
@@ -13,6 +12,8 @@ import PurchaseRequests from "@/pages/admin/purchase-request";
 import PurchaseRequestDetails from "@/pages/admin/purchase-request/details";
 import Leads from "@/pages/admin/leads";
 import Profile from "@/pages/admin/profile";
+import Memorandum from "@/pages/admin/memorandum/memorandum";
+import MemorandumDetails from "@/pages/admin/memorandum/details";
 
 const router = createBrowserRouter([
   {
@@ -61,12 +62,58 @@ const router = createBrowserRouter([
         element: <Memorandum />
       },
       {
+        path: 'memorandum/:id',
+        element: <MemorandumDetails />
+      },
+      {
         path: 'sales-agreements',
         element: <SalesAgreements />
       },
       {
         path: 'sales-agreements/:id',
         element: <SalesAgreementDetails />
+      },
+      {
+        path: 'profile',
+        element: <Profile />
+      }
+    ]
+  },
+  {
+    path: '/employee',
+    element: <Layout />,
+    children: [
+      {
+        path: '',
+        element: <Transactions />
+      },
+      {
+        path: 'transactions/:id/',
+        element: <ManageTransaction />
+      },
+      {
+        path: 'leads',
+        element: <Leads />
+      },
+      {
+        path: 'purchase-requests',
+        element: <PurchaseRequests />
+      },
+      {
+        path: 'purchase-requests/:id',
+        element: <PurchaseRequestDetails />
+      },
+      {
+        path: 'sales-agreements',
+        element: <SalesAgreements />
+      },
+      {
+        path: 'sales-agreements/:id',
+        element: <SalesAgreementDetails />
+      },
+      {
+        path: 'memorandum',
+        element: (<></>)
       },
       {
         path: 'profile',

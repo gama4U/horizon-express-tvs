@@ -29,7 +29,6 @@ export default function Transactions() {
     transport: false
   });
 
-
   const { data, isLoading } = useQuery({
     queryKey: ['transactions', pagination, debouncedSearch, voucherFilters],
     queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, ...voucherFilters })

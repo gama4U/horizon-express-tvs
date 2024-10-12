@@ -8,6 +8,8 @@ import PaymentTypeBadge from "@/components/badges/payment-type";
 import PurchaseRequestTypeBadge from "@/components/badges/purchase-request-type";
 import EditPurchaseRequestDialog from "@/components/dialogs/purchase-request/edit";
 import DeletePurchaseRequest from "@/components/alert/purchse-request/delete";
+import { useAuth } from "@/providers/auth-provider";
+import { UserType } from "@/interfaces/user.interface";
 
 export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
   {
@@ -104,9 +106,11 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const {session: {user}} = useAuth();
+
       return (
         <div className="flex items-center justify-center gap-4">
-          <Link to={`/admin/purchase-requests/${row.original.id}`}>
+          <Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/purchase-requests/${row.original.id}`}>
             <NotepadText 
               size={16}
               className="cursor-pointer hover:text-primary"

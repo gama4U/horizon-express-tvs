@@ -13,6 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { useNavigate } from "react-router-dom";
 import { ICreatePurchaseRequest, PaymentType, PurchaseRequestOrderType } from "@/interfaces/purchase-request.interface";
 import { createPurchaseRequest } from "@/api/mutations/purchase-request..mutation";
+import { useAuth } from "@/providers/auth-provider";
+import { UserType } from "@/interfaces/user.interface";
 
 const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
   HOTEL: 'Hotel',
@@ -57,6 +59,7 @@ const formSchema = z.object({
 export default function CreatePurchaseRequestDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const {session: {user}} = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,7 +82,7 @@ export default function CreatePurchaseRequestDialog() {
         position: 'top-center', 
         className: 'text-primary'
       });
-      navigate(`/admin/purchase-requests/${data.id}`)
+      navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/purchase-requests/${data.id}`)
     },
     onError: (error) => {
       toast.error(error.message, { 

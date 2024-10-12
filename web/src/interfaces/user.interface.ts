@@ -5,6 +5,7 @@ export interface IUser {
   lastName: string;
   email: string;
   userType: UserType;
+  permission?: PermissionType | null;
   password?: string;
   avatar?: string;
   signature?: string;
@@ -15,6 +16,11 @@ export interface IUser {
 export enum UserType {
   ADMIN = 'ADMIN',
   EMPLOYEE = 'EMPLOYEE'
+}
+
+export enum PermissionType {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  SUPERVISOR = 'SUPERVISOR'
 }
 
 export interface IUserSession {
@@ -45,6 +51,7 @@ export interface ICreateUser {
   email: string;
   userType: UserType;
   password: string;
+  permission?: PermissionType;
 }
 
 export interface IUpdateUser {
