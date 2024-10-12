@@ -13,7 +13,7 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
   { label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
   { label: "Leads", icon: "Leads", link: "/admin/leads" },
-  { label: "Memorandum", icon: "Memorandum", link: "/admin/memorandum" },
+  { label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
   { label: "Users", icon: "Users", link: "/admin/users" },
   { label: "Profile", icon: "Profile", link: "/admin/profile" },
 ]

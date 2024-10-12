@@ -92,6 +92,18 @@ model PurchaseRequestOrder {
   updatedAt          DateTime?                  @updatedAt
 }
 
+model Memorandum {
+  id               String @id @default(cuid())
+  memorandumNumber String
+  to               String
+  re               String
+  addressee        String
+  contents         String
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
 model Lead {
   id            String        @id @default(cuid())
   firstName     String
@@ -226,6 +238,11 @@ enum UserType {
   EMPLOYEE
 }
 
+enum PermissionType {
+  SUPER_ADMIN
+  SUPERVISOR
+}
+
 enum ClientType {
   WALK_IN
   CORPORATE
@@ -270,9 +287,4 @@ enum AccommodationType {
   RESORT
   AIRBNB
   OTHERS
-}
-
-enum PermissionType {
-  SUPER_ADMIN
-  SUPERVISOR
 }
