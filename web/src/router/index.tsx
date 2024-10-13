@@ -12,7 +12,7 @@ import PurchaseRequests from "@/pages/admin/purchase-request";
 import PurchaseRequestDetails from "@/pages/admin/purchase-request/details";
 import Leads from "@/pages/admin/leads";
 import Profile from "@/pages/admin/profile";
-import Memorandum from "@/pages/admin/memorandum/memorandum";
+import Memorandum from "@/pages/admin/memorandum/";
 import MemorandumDetails from "@/pages/admin/memorandum/details";
 
 const router = createBrowserRouter([

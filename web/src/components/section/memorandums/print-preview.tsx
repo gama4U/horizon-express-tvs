@@ -65,7 +65,7 @@ export default function PrintPreview({ data }: Props) {
 							</div>
 						</div>
 
-						<div className='w-full lg:w-[200px] flex items-end gap-1 text-[12px]'>
+						<div className='w-full lg:w-full flex items-end gap-1 text-[12px]'>
 							<span className='leading-[16px] font-semibold'>Re:</span>
 							<div className='flex-1 leading-[16px]'>
 								<span>{data.re}</span>
