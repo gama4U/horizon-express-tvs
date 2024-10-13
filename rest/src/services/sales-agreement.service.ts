@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
-import { ICreateSalesAgreement, IFindSalesAgreements, IUpdateSalesAgreement } from "../interfaces/sales-agreement.interface";
+import { ICreateSalesAgreement, IFindSalesAgreements, IUpdateSalesAgreement, IUpdateSalesAgreementApprover } from "../interfaces/sales-agreement.interface";
 import moment from "moment";
 
 export async function createSalesAgreement(data: ICreateSalesAgreement) {
@@ -89,6 +89,18 @@ export async function findSalesAgreementById(id: string) {
           lastName: true,
           email: true,
           userType: true,
+          signature: true
+        }
+      },
+      approver: {
+        select: {
+          id: true,
+          avatar: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          userType: true,
+          signature: true
         }
       },
       purchaseOrder: true,
@@ -134,6 +146,11 @@ export async function fetchSalesAgreementSummary() {
   return {
     total, since7days, rate
   }
+}
 
-
+export async function updateSalesAgreementApprover({id, approverId}: IUpdateSalesAgreementApprover) {
+  return await prisma.salesAgreement.update({
+    where:  {id},
+    data: {approverId}
+  });
 }

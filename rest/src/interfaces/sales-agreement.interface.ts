@@ -25,3 +25,8 @@ export interface IFindSalesAgreements {
   search?: string;
   typeOfClient?: ClientType;
 }
+
+export interface IUpdateSalesAgreementApprover {
+  id: string;
+  approverId: string;
+}

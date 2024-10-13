@@ -205,6 +205,7 @@ export default function PrintPreview({data}: Props) {
             )}
           </tbody>
         </table>
+
         <div className='flex items-center gap-4 text-muted-foreground'>
           <div className='flex w-full items-end gap-1 text-[12px]'>
             <span className='leading-[16px] font-semibold'>
@@ -226,6 +227,51 @@ export default function PrintPreview({data}: Props) {
                 {data.nos }
               </span>
             </div>
+          </div>
+        </div>
+
+        <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-4'>
+          <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
+            <div className='flex-1 border-b leading-[16px]'>
+              {data.creator && (
+                <div className='flex flex-col items-center'>
+                  {data.creator.signature && (
+                    <img 
+                      className='relative -bottom-2 h-[45px] object-contain'
+                      src={data.creator.signature} 
+                      alt="signature"
+                    />
+                  )}
+                  <span className='text-[12px] font-semibold uppercase'>
+                    {`${data?.creator?.firstName} ${data?.creator?.lastName}`}
+                  </span>
+                </div>
+              )}
+            </div>
+            <span className='leading-[16px]'>
+              Prepared by
+            </span>
+          </div>
+          <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
+            <div className='flex-1 border-b leading-[16px]'>
+              {data.approver && (
+                <div className='flex flex-col items-center'>
+                  {data.approver.signature && (
+                    <img 
+                      className='relative -bottom-2 h-[45px] object-contain'
+                      src={data.approver.signature} 
+                      alt="signature"
+                    />
+                  )}
+                  <span className='text-[12px] font-semibold uppercase'>
+                    {`${data?.approver?.firstName} ${data?.approver?.lastName}`}
+                  </span>
+                </div>
+              )}
+            </div>
+            <span className='leading-[16px]'>
+              Approved & Reviewed by
+            </span>
           </div>
         </div>
       </div>

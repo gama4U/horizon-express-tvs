@@ -98,6 +98,7 @@ export async function findPurchaseRequestById(id: string) {
           lastName: true,
           email: true,
           userType: true,
+          signature: true
         }
       },
       salesAgreement: true,
@@ -115,6 +116,7 @@ export async function findPurchaseRequestById(id: string) {
           lastName: true,
           email: true,
           userType: true,
+          signature: true
         }
       },
       _count: {

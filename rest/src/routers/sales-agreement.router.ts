@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import { createSalesAgreementSchema, getSalesAgreementsSchema, updateSalesAgreementSchema } from '../schemas/sales-agreement.schema';
 import { validate } from '../middlewares/validate.middleware';
-import { createSalesAgreement, deleteSalesAgreementById, fetchSalesAgreementSummary, findSalesAgreementById, findSalesAgreements, updateSalesAgreement } from '../services/sales-agreement.service';
-import { ClientType } from '@prisma/client';
+import { createSalesAgreement, deleteSalesAgreementById, fetchSalesAgreementSummary, findSalesAgreementById, findSalesAgreements, updateSalesAgreement, updateSalesAgreementApprover } from '../services/sales-agreement.service';
+import { ClientType, UserType } from '@prisma/client';
 import { deleteSalesAgreementItems } from '../services/sales-agreement-item.service';
+import { authorize } from '../middlewares/authorize.middleware';
 
 const salesAgreementRouter = express.Router();
 
@@ -120,7 +121,6 @@ salesAgreementRouter.delete('/:id', async (req: Request, res: Response) => {
 })
 
 salesAgreementRouter.post('/summary', async (req: Request, res: Response) => {
-
   try {
     const data = await fetchSalesAgreementSummary();
     if (!data) {
@@ -133,5 +133,25 @@ salesAgreementRouter.post('/summary', async (req: Request, res: Response) => {
   }
 });
 
+salesAgreementRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(req:Request, res: Response) => {
+  try {
+    const approverId = String(req.user?.id);
+    const id = req.params.id;
+
+    const update = await updateSalesAgreementApprover({id, approverId});
+    if (!update) {
+      throw new Error('Failed to approve sales agreement');
+    }
+
+    return res.status(200).json({
+      message: 'Sales agreement approved successfully'
+    });
+
+  } catch(error) {
+    return res.status(500).json({
+      message: 'Internal server error'
+    });
+  }
+});
 
 export default salesAgreementRouter;

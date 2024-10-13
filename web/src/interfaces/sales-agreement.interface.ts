@@ -4,6 +4,7 @@ import { IUser } from "./user.interface";
 export interface ISalesAgreement {
   id: string;
   creatorId: string;
+  approverId: string;
   clientName: string;
   typeOfClient: TypeOfClient;
   preparedBy: string;
@@ -13,7 +14,7 @@ export interface ISalesAgreement {
   purchaseOrder: any;
   transaction: any;
   creator: IUser;
-  createdAt: Date;
+  approver: IUser;
   updatedAt: Date;
 }
 
