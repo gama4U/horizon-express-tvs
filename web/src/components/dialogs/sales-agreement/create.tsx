@@ -29,8 +29,6 @@ const formSchema = z.object({
     TypeOfClient.CORPORATE,
     TypeOfClient.GOVERNMENT,
   ]),
-  preparedBy: z.string().optional(),
-  approvedBy: z.string().optional()
 })
 
 export default function CreateSalesAgreementDialog() {
@@ -138,32 +136,6 @@ export default function CreateSalesAgreementDialog() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage className="text-[10px]"/>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="preparedBy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prepared by:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Prepared by (optional)"/>
-                    </FormControl>
-                    <FormMessage className="text-[10px]"/>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="approvedBy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Approved by:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Approved by (optional)"/>
-                    </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
                 )}

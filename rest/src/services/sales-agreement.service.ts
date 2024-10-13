@@ -47,7 +47,19 @@ export async function findSalesAgreements({ skip, take, search, typeOfClient }: 
           lastName: true,
           email: true,
           avatar: true,
-          userType: true
+          userType: true,
+          signature: true
+        }
+      },
+      approver: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          avatar: true,
+          userType: true,
+          signature: true
         }
       },
       _count: {

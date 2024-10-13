@@ -54,7 +54,6 @@ model SalesAgreement {
   approverId          String?
   typeOfClient        ClientType
   clientName          String?
-  preparedBy          String?
   serialNumber        String
   salesAgreementItems SalesAgreementItem[]
   purchaseOrder       PurchaseRequestOrder?
