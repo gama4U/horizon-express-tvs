@@ -1,4 +1,4 @@
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 
 export interface ICreateTourVoucher {
   transactionId: string

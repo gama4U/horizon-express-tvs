@@ -1,4 +1,4 @@
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import { ICreatePurchaseRequestItem, IUpdatePurchaseRequestItem } from "../interfaces/purchase-request-item.interface";
 
 export async function createPurchaseRequestItem(data: ICreatePurchaseRequestItem) {

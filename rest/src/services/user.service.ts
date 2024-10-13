@@ -1,5 +1,5 @@
 import { Prisma, User } from "@prisma/client";
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import { IFindUsers, IUpdateUser, IUpdateUserAvatar, IUpdateUserPassword, IUpdateUserSignature } from "../interfaces/user.interface";
 
 export async function createUser(data: User) {

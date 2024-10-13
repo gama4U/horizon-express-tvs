@@ -17,7 +17,7 @@ export interface IUpdateAccommodationVoucher {
 }
 
 import { AccommodationType } from "@prisma/client"
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 
 export async function createAccommodationVoucher(data: ICreateAccommodationVoucher) {
   return await prisma.accommodation.create({

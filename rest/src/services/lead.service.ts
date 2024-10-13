@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import { ICreateLead, IUpdateLead } from "../interfaces/lead.interface";
 
 export async function createLead(data: ICreateLead) {

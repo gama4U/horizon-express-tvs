@@ -1,4 +1,4 @@
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import { ICreateAirlines, ICreateShipping, ICreateTravelVoucher, IUpdateAirlines, IUpdateShipping, IUpdateTravelVoucher } from "../interfaces/travel-voucher.interface";
 
 

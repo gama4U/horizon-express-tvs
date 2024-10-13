@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import { ICreateSalesAgreement, IFindSalesAgreements, IUpdateSalesAgreement, IUpdateSalesAgreementApprover } from "../interfaces/sales-agreement.interface";
 import moment from "moment";
 

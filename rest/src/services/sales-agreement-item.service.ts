@@ -1,4 +1,4 @@
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import { ICreateSalesAgreementItem, IUpdateSalesAgreementItem } from "../interfaces/sales-agreement-item.interface";
 
 export async function createSalesAgreementItem(data: ICreateSalesAgreementItem) {

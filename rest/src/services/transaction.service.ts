@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import moment from "moment";
 import { IUpdateTransactionApprover } from "../interfaces/transaction.interface";
 

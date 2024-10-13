@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import moment from 'moment';
-import prisma from "../../prisma/db";
+import prisma from "../utils/db.utils";
 import { ICreatePurchaseRequest, IFindPurchaseRequests, IUpdatePurchaseRequest, IUpdatePurchaseRequestApprover } from "../interfaces/purchase-request.interface";
 
 export async function createPurchaseRequest(data: ICreatePurchaseRequest) {
