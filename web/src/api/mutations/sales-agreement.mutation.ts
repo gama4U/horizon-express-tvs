@@ -40,3 +40,16 @@ export async function deleteSalesAgreement(id: string) {
     throw new Error(message || 'Something went wrong')
   }
 }
+
+export async function approveSalesAgreement(id: string) {
+  try {
+    const response = await api.patch(`/api/v1/sales-agreements/${id}/approver`);
+    return response.data;
+  } catch(error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong')
+  }
+}

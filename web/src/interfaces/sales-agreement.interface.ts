@@ -4,16 +4,15 @@ import { IUser } from "./user.interface";
 export interface ISalesAgreement {
   id: string;
   creatorId: string;
+  approverId: string;
   clientName: string;
   typeOfClient: TypeOfClient;
-  preparedBy: string;
-  approvedBy: string;
   serialNumber: string;
   salesAgreementItems: ISalesAgreementItem[];
   purchaseOrder: any;
   transaction: any;
-  creator: IUser;
-  createdAt: Date;
+  creator?: IUser;
+  approver?: IUser;
   updatedAt: Date;
 }
 
@@ -27,8 +26,6 @@ export interface ICreateSalesAgreement {
   clientName: string;
   serialNumber: string;
   typeOfClient: TypeOfClient;
-  preparedBy?: string;
-  approvedBy?: string;
 }
 
 export interface IUpdateSalesAgreement {
@@ -36,8 +33,6 @@ export interface IUpdateSalesAgreement {
   clientName: string;
   serialNumber: string;
   typeOfClient: TypeOfClient;
-  preparedBy?: string;
-  approvedBy?: string;
 }
 
 export interface IFetchSalesAgreements {

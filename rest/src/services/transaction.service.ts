@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
 import moment from "moment";
+import { IUpdateTransactionApprover } from "../interfaces/transaction.interface";
 
 interface ICreateTransaction {
   id: string;
@@ -392,5 +393,10 @@ export async function fetchRecentEntries() {
   return allEntries.slice(0, 10);
 }
 
-
+export async function updateTransactionApprover({id, approverId}: IUpdateTransactionApprover) {
+  return await prisma.transaction.update({
+    where: {id},
+    data: {approverId}
+  });
+}
 

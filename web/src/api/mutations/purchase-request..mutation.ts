@@ -41,3 +41,15 @@ export async function deletePurchaseRequest(id: string) {
   }
 }
 
+export async function approvePurchaseRequestOrder(id: string) {
+  try {
+    const response = await api.patch(`/api/v1/purchase-requests/${id}/approver`);
+    return response.data;
+  } catch(error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}

@@ -1,4 +1,4 @@
-import { Printer } from 'lucide-react';
+import { Loader2, Printer, ThumbsUp } from 'lucide-react';
 import { format } from "date-fns";
 import { Button } from '../../ui/button';
 import { Separator } from '../../ui/separator';
@@ -9,23 +9,69 @@ import { AccommodationType } from '@/interfaces/accommodation.interface';
 import { TransportServiceType, VehicleType } from '@/interfaces/transport.interface';
 import logo from '../../../assets/logo.png'
 import { TravelVoucherType } from '@/interfaces/travel.interface';
+import { useAuth } from '@/providers/auth-provider';
+import { UserType } from '@/interfaces/user.interface';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { approveTransaction } from '@/api/mutations/transaction.mutation';
 
 interface Props {
   data: ITransaction;
 }
 
 export default function PrintPreview({ data }: Props) {
+  const queryClient = useQueryClient();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
+  const {session: {user}} = useAuth();
+
+  const {mutate: approveMutate, isPending: approving} = useMutation({
+    mutationFn: async(id: string) => await approveTransaction(id),
+    onSuccess: (data) => {
+      queryClient.refetchQueries({queryKey: ['transaction']})
+      toast.success(data.message, { 
+        position: 'top-center', 
+        className: 'text-primary'
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message, { 
+        position: 'top-center',
+        className: 'text-destructive'
+      })
+    },
+  });
 
   return (
     <div className="w-full bg-white rounded-lg p-4">
       <div className="h-[50px] px-4 flex items-center justify-between">
         <h1 className="text-xs text-muted-foreground italic">Print preview</h1>
-        <Button onClick={() => reactToPrintFn()} size={'sm'} className="gap-1">
-          <Printer size={16} />
-          <span>Print</span>
-        </Button>
+        <div className='flex items-center gap-1'>
+          {(!data?.approver && user?.userType === UserType.ADMIN) && (
+            <Button
+              size={'sm'}
+              onClick={() => approveMutate(data?.id)}
+              className='gap-1'
+              disabled={approving}
+            >
+              {(approving || queryClient.isFetching({queryKey: ['transaction']})) ? (
+                <Loader2 size={16} className='animate-spin'/>
+              ) : (
+                <ThumbsUp size={16}/>
+              )}
+              <span>Approve</span>
+            </Button>
+          )}
+          <Button 
+            onClick={() => reactToPrintFn()} 
+            size={'sm'} 
+            className='gap-1'
+            disabled={data.approver ? false : true}
+          >
+            <Printer size={16}/>
+            <span>Print</span>
+          </Button>
+        </div>
       </div>
       <Separator />
       <div ref={contentRef} className="p-4 min-h-full space-y-4">
@@ -240,23 +286,45 @@ export default function PrintPreview({ data }: Props) {
               </div>
             )}
           </div>
-          <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-8'>
-            <div className='w-full text-center max-w-[250px] text-[12px]'>
+
+          <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-4'>
+            <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
               <div className='flex-1 border-b leading-[16px]'>
-                <span className='text-[12px] font-semibold'>
-                  {data?.preparedBy?.firstName} {data?.preparedBy?.lastName}
-                </span>
+                {data.preparedBy && (
+                  <div className='flex flex-col items-center'>
+                    {data.preparedBy.signature && (
+                      <img 
+                        className='relative -bottom-2 h-[45px] object-contain'
+                        src={data.preparedBy.signature} 
+                        alt="signature"
+                      />
+                    )}
+                    <span className='text-[12px] font-semibold uppercase'>
+                      {`${data?.preparedBy?.firstName} ${data?.preparedBy?.lastName}`}
+                    </span>
+                  </div>
+                )}
               </div>
               <span className='leading-[16px]'>
                 Prepared by
               </span>
             </div>
-
-            <div className='w-full text-center max-w-[250px] text-[12px]'>
+            <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
               <div className='flex-1 border-b leading-[16px]'>
-                <span className='text-[12px] font-semibold'>
-                  {data?.approver?.firstName} {data?.approver?.lastName}
-                </span>
+                {data.approver && (
+                  <div className='flex flex-col items-center'>
+                    {data.approver.signature && (
+                      <img 
+                        className='relative -bottom-2 h-[45px] object-contain'
+                        src={data.approver.signature} 
+                        alt="signature"
+                      />
+                    )}
+                    <span className='text-[12px] font-semibold uppercase'>
+                      {`${data?.approver?.firstName} ${data?.approver?.lastName}`}
+                    </span>
+                  </div>
+                )}
               </div>
               <span className='leading-[16px]'>
                 Approved & Reviewed by

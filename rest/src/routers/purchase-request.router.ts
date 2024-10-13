@@ -1,12 +1,10 @@
 import express, { Request, Response } from 'express';
-import { updateSalesAgreementSchema } from '../schemas/sales-agreement.schema';
 import { validate } from '../middlewares/validate.middleware';
-import { deleteSalesAgreementById, findSalesAgreementById, updateSalesAgreement } from '../services/sales-agreement.service';
-import { PaymentType, PurchaseRequestOrderType } from '@prisma/client';
-import { deleteSalesAgreementItems } from '../services/sales-agreement-item.service';
+import { PaymentType, PurchaseRequestOrderType, UserType } from '@prisma/client';
 import { createPurchaseRequestSchema, findPurchaseRequestsSchema, updatePurchaseRequestSchema } from '../schemas/purchase-request.schema';
-import { createPurchaseRequest, deletePurchaseRequestById, fetchPurchaseRequestSummary, findPurchaseRequestById, findPurchaseRequests, updatePurchaseRequest } from '../services/purchase-request.service';
+import { createPurchaseRequest, deletePurchaseRequestById, fetchPurchaseRequestSummary, findPurchaseRequestById, findPurchaseRequests, updatePurchaseRequest, updatePurchaseRequestOrderApprover } from '../services/purchase-request.service';
 import { deletePurchaseRequestItems } from '../services/purchase-request-item.service';
+import { authorize } from '../middlewares/authorize.middleware';
 
 const purchaseRequestRouter = express.Router();
 
@@ -123,7 +121,6 @@ purchaseRequestRouter.delete('/:id', async (req: Request, res: Response) => {
 })
 
 purchaseRequestRouter.post('/summary', async (req: Request, res: Response) => {
-
   try {
     const data = await fetchPurchaseRequestSummary();
     if (!data) {
@@ -136,5 +133,25 @@ purchaseRequestRouter.post('/summary', async (req: Request, res: Response) => {
   }
 });
 
+purchaseRequestRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(req: Request, res: Response) => {
+  try {
+    const approverId = String(req.user?.id);
+    const {id} = req.params;
+
+    const updated = await updatePurchaseRequestOrderApprover({id, approverId});
+    if (!updated) {
+      throw new Error('Failed to update purchase request approver');
+    }
+
+    return res.status(200).json({
+      message: 'Purchase request approved successfully'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error'
+    });
+  }
+});
 
 export default purchaseRequestRouter;

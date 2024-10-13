@@ -4,8 +4,6 @@ export interface ICreateSalesAgreement {
   creatorId: string;
   typeOfClient: ClientType;
   clientName: string;
-  preparedBy?: string;
-  approvedBy?: string;
   serialNumber: string;
 }
 
@@ -14,8 +12,6 @@ export interface IUpdateSalesAgreement {
   creatorId: string;
   typeOfClient: ClientType;
   clientName: string;
-  preparedBy?: string;
-  approvedBy?: string;
   serialNumber: string;
 }
 
@@ -24,4 +20,9 @@ export interface IFindSalesAgreements {
   take?: number;
   search?: string;
   typeOfClient?: ClientType;
+}
+
+export interface IUpdateSalesAgreementApprover {
+  id: string;
+  approverId: string;
 }

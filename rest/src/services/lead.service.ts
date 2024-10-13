@@ -35,16 +35,18 @@ export async function fetchLeads({ skip, take, search }: IFindLeads) {
   let whereInput: Prisma.LeadWhereInput = {};
 
   if (search) {
+    const searchParts = search.split(/\s+/);
     whereInput = {
-      OR: [
-        { firstName: { contains: search, mode: "insensitive" } },
-        { middleName: { contains: search, mode: "insensitive" } },
-        { lastName: { contains: search, mode: "insensitive" } },
-        { email: { contains: search, mode: "insensitive" } },
-      ],
+      AND: searchParts.map((part) => ({
+        OR: [
+          { firstName: { contains: part, mode: "insensitive" } },
+          { middleName: { contains: part, mode: "insensitive" } },
+          { lastName: { contains: part, mode: "insensitive" } },
+          { email: { contains: part, mode: "insensitive"}}
+        ],
+      })),
     }
   }
-
 
   const leads = prisma.lead.findMany({
     where: {

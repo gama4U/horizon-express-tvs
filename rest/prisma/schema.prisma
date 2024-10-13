@@ -8,22 +8,24 @@ datasource db {
 }
 
 model User {
-  id                    String                 @id @default(cuid())
-  firstName             String
-  lastName              String
-  email                 String                 @unique
-  password              String
-  avatar                String?
-  userType              UserType
-  permission            PermissionType?
-  signature             String?
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  salesAgreements       SalesAgreement[]
-  purchaseRequestOrders PurchaseRequestOrder[]
-  preparedTransactions  Transaction[]          @relation("PreparedTransactions")
-  approvedTransactions  Transaction[]          @relation("ApprovedTransactions")
-  memorandums           Memorandum[]
+  id                            String                 @id @default(cuid())
+  firstName                     String
+  lastName                      String
+  email                         String                 @unique
+  password                      String
+  avatar                        String?
+  userType                      UserType
+  permission                    PermissionType?
+  signature                     String?
+  createdAt                     DateTime               @default(now())
+  updatedAt                     DateTime               @updatedAt
+  createdSalesAgreements        SalesAgreement[]       @relation("CreateSalesAgreements")
+  approvedSalesAgreements       SalesAgreement[]       @relation("ApproveSalesAgreements")
+  createdPurchaseRequestOrders  PurchaseRequestOrder[] @relation("CreatePurchaseRequestOrders")
+  approvedPurchaseRequestOrders PurchaseRequestOrder[] @relation("ApprovePurchaseRequestOrders")
+  preparedTransactions          Transaction[]          @relation("PreparedTransactions")
+  approvedTransactions          Transaction[]          @relation("ApprovedTransactions")
+  memorandums                   Memorandum[]
 }
 
 model Transaction {
@@ -49,15 +51,15 @@ model Transaction {
 model SalesAgreement {
   id                  String                @id @default(cuid())
   creatorId           String
+  approverId          String?
   typeOfClient        ClientType
   clientName          String?
-  preparedBy          String?
-  approvedBy          String?
   serialNumber        String
   salesAgreementItems SalesAgreementItem[]
   purchaseOrder       PurchaseRequestOrder?
   transaction         Transaction?
-  creator             User                  @relation(fields: [creatorId], references: [id])
+  creator             User                  @relation("CreateSalesAgreements", fields: [creatorId], references: [id])
+  approver            User?                 @relation("ApproveSalesAgreements", fields: [approverId], references: [id])
   createdAt           DateTime?             @default(now())
   updatedAt           DateTime?             @updatedAt
 }
@@ -83,12 +85,14 @@ model PurchaseRequestOrder {
   expenses           String?
   other              String?
   nos                String?
+  approverId         String?
   type               PurchaseRequestOrderType?
   paymentType        PaymentType?
   purchaseOrderItems PurchaseRequestOrderItem[]
   transaction        Transaction?
-  creator            User?                      @relation(fields: [creatorId], references: [id])
+  creator            User?                      @relation("CreatePurchaseRequestOrders", fields: [creatorId], references: [id])
   salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
+  approver           User?                      @relation("ApprovePurchaseRequestOrders", fields: [approverId], references: [id])
   createdAt          DateTime?                  @default(now())
   updatedAt          DateTime?                  @updatedAt
 }

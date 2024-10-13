@@ -13,7 +13,7 @@ export default function SalesAgreementInfo({ data }: Props) {
           Creator
         </span>
         <h3 className="text-[12px]">
-          {`${data.creator.firstName} ${data.creator.lastName}`}
+          {`${data.creator?.firstName} ${data.creator?.lastName}`}
         </h3>
       </div>
       <div>
@@ -45,7 +45,7 @@ export default function SalesAgreementInfo({ data }: Props) {
           Prepared by
         </span>
         <h3 className="text-[12px]">
-          {data.preparedBy}
+          {`${data.creator?.firstName || ''} ${data.creator?.lastName || ''}`}
         </h3>
       </div>
       <div className="flex flex-col gap-1">
@@ -53,7 +53,7 @@ export default function SalesAgreementInfo({ data }: Props) {
           Approved by
         </span>
         <h3 className="text-[12px]">
-          {data.approvedBy}
+          {`${data.approver?.firstName || ''} ${data.approver?.lastName || ''}`}
         </h3>
       </div>
       <div className="flex flex-col">

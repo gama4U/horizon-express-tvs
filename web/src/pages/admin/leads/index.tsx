@@ -38,7 +38,7 @@ export default function Leads() {
         <div className="flex items-center justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              placeholder="Search by lead name (First,Middle,Last Name)"
+              placeholder="Search by name or email"
               containerProps={{
                 className: "max-w-[500px]"
               }}

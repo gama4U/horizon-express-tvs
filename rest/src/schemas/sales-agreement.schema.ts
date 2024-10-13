@@ -14,8 +14,6 @@ export const createSalesAgreementSchema = z.object({
       ClientType.CORPORATE,
       ClientType.GOVERNMENT,
     ]),
-    preparedBy: z.string().optional(),
-    approvedBy: z.string().optional()
   })
 });
 
@@ -32,8 +30,6 @@ export const updateSalesAgreementSchema = z.object({
       ClientType.CORPORATE,
       ClientType.GOVERNMENT,
     ]),
-    preparedBy: z.string().optional(),
-    approvedBy: z.string().optional()
   })
 });
 

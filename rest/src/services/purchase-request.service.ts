@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import moment from 'moment';
 import prisma from "../../prisma/db";
-import { ICreatePurchaseRequest, IFindPurchaseRequests, IUpdatePurchaseRequest } from "../interfaces/purchase-request.interface";
+import { ICreatePurchaseRequest, IFindPurchaseRequests, IUpdatePurchaseRequest, IUpdatePurchaseRequestApprover } from "../interfaces/purchase-request.interface";
 
 export async function createPurchaseRequest(data: ICreatePurchaseRequest) {
   return prisma.purchaseRequestOrder.create({
@@ -98,6 +98,7 @@ export async function findPurchaseRequestById(id: string) {
           lastName: true,
           email: true,
           userType: true,
+          signature: true
         }
       },
       salesAgreement: true,
@@ -105,6 +106,17 @@ export async function findPurchaseRequestById(id: string) {
       purchaseOrderItems: {
         orderBy: {
           createdAt: 'desc'
+        }
+      },
+      approver: {
+        select: {
+          id: true,
+          avatar: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          userType: true,
+          signature: true
         }
       },
       _count: {
@@ -142,4 +154,12 @@ export async function fetchPurchaseRequestSummary() {
   return {
     total, since7days, rate
   }
+}
+
+
+export async function updatePurchaseRequestOrderApprover({id, approverId}: IUpdatePurchaseRequestApprover) {
+  return await prisma.purchaseRequestOrder.update({
+    where: {id},
+    data: {approverId}
+  });
 }

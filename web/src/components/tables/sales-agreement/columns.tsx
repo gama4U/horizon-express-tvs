@@ -42,7 +42,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
       return (
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={avatar} />
+            <AvatarImage src={avatar} className="object-cover"/>
             <AvatarFallback>
               {firstName[0].toUpperCase()}
             </AvatarFallback>
@@ -82,20 +82,27 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
   {
     id: "preparedBy",
     header: "Prepared by",
-    cell: ({ row }) => (
-      <span className="capitalize">
-        {row.original.preparedBy}
-      </span>
-    )
+    cell: ({ row }) => {
+      const creator = row.original.creator;
+      return (
+        <span className="capitalize">
+          {`${creator?.firstName} ${creator?.firstName}`}
+        </span>
+      )
+    }
   },
   {
     id: "approvedBy",
     header: "Approved by",
-    cell: ({ row }) => (
-      <span className="capitalize">
-        {row.original.approvedBy}
-      </span>
-    )
+    cell: ({ row }) => {
+      const approver = row.original.approver;
+      const approvedBy = `${approver?.firstName || ''} ${approver?.lastName || ''}`
+      return (
+        <span className="capitalize">
+          {approvedBy} 
+        </span>
+      )
+    }
   },
   {
     id: "actions",

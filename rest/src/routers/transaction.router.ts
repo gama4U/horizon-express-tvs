@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
-import { createTransaction, deleteTransaction, fetchRecentEntries, fetchTransaction, fetchTransactions, fetchTransactionSummary, updateTransaction } from '../services/transaction.service';
+import { createTransaction, deleteTransaction, fetchRecentEntries, fetchTransaction, fetchTransactions, fetchTransactionSummary, updateTransaction, updateTransactionApprover } from '../services/transaction.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getTransactionsSchema } from '../schemas/transaction.schema';
+import { authorize } from '../middlewares/authorize.middleware';
+import { UserType } from '@prisma/client';
 
 const transactionRouter = express.Router();
 
@@ -131,7 +133,6 @@ transactionRouter.post('/summary', async (req: Request, res: Response) => {
   }
 });
 
-
 transactionRouter.post('/recent-activities', async (req: Request, res: Response) => {
   try {
     const recentActivities = await fetchRecentEntries();
@@ -140,12 +141,32 @@ transactionRouter.post('/recent-activities', async (req: Request, res: Response)
     }
 
     return res.status(200).json(recentActivities);
+
   } catch (error) {
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
+transactionRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(req: Request, res: Response) => {
+  try {
+    const approverId = String(req.user?.id);
+    const {id} = req.params;
 
+    const updated = await updateTransactionApprover({id, approverId})
+    if (!updated) {
+      throw new Error("Failed to update transaction approver");
+    }
+
+    return res.status(200).json({
+      message: 'Approved successfully'
+    });
+
+  } catch(error) {
+    return res.status(500).json({
+      message: "Internal server error"
+    })
+  }
+})
 
 export default transactionRouter;
 

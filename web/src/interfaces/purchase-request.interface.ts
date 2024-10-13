@@ -6,6 +6,7 @@ export interface IPurchaseRequestOrder {
   id: string;
   transactionId: string;
   creatorId: string;
+  approverId: string;
   salesAgreementId: string;
   suppliersName: string;
   serialNumber: string;
@@ -17,6 +18,7 @@ export interface IPurchaseRequestOrder {
   purchaseOrderItems: IPurchaseRequestOrderItem[],
   transaction?: any;
   creator?: IUser;
+  approver?: IUser;
   salesAgreement?: ISalesAgreement;
   createdAt: Date;
   updatedAt: Date;

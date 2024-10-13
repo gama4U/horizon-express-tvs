@@ -1,9 +1,14 @@
-import { Printer } from 'lucide-react'
+import { Loader2, Printer, ThumbsUp } from 'lucide-react'
 import { Button } from '../../ui/button'
 import { Separator } from '../../ui/separator'
 import { useRef } from 'react'
 import {useReactToPrint} from 'react-to-print';
 import { IPurchaseRequestOrder, PaymentType, PurchaseRequestOrderType } from '@/interfaces/purchase-request.interface'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { approvePurchaseRequestOrder } from '@/api/mutations/purchase-request..mutation';
+import { useAuth } from '@/providers/auth-provider';
+import { UserType } from '@/interfaces/user.interface';
 
 interface Props {
   data: IPurchaseRequestOrder
@@ -23,17 +28,60 @@ const paymentTypeLabelMap: Record<PaymentType, string> = {
 }
 
 export default function PrintPreview({data}: Props) {
+  const queryClient = useQueryClient();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
+  const {session: {user}} = useAuth();
+
+  const {mutate: approveMutate, isPending: approving} = useMutation({
+    mutationFn: async(id: string) => await approvePurchaseRequestOrder(id),
+    onSuccess: (data) => {
+      queryClient.refetchQueries({queryKey: ['purchase-request-details']})
+      toast.success(data.message, { 
+        position: 'top-center', 
+        className: 'text-primary'
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message, { 
+        position: 'top-center',
+        className: 'text-destructive'
+      })
+    },
+  });
 
   return (
     <div className="w-full bg-white rounded-lg">
       <div className='h-[50px] px-4 flex items-center justify-between'>
-        <h1 className='text-[12px] text-muted-foreground italic'>Print preview</h1>
-        <Button onClick={() => reactToPrintFn()} size={'sm'} className='gap-1'>
-          <Printer size={16}/>
-          <span>Print</span>
-        </Button>
+        <h1 className='text-[12px] text-muted-foreground italic'>
+          Print preview
+        </h1>
+        <div className='flex items-center gap-1'>
+          {(!data?.approver && user?.userType === UserType.ADMIN) && (
+            <Button
+              size={'sm'}
+              onClick={() => approveMutate(data?.id)}
+              className='gap-1'
+              disabled={approving}
+            >
+              {approving ? (
+                <Loader2 size={16} className='animate-spin'/>
+              ) : (
+                <ThumbsUp size={16}/>
+              )}
+              <span>Approve</span>
+            </Button>
+          )}
+          <Button 
+            onClick={() => reactToPrintFn()} 
+            size={'sm'} 
+            className='gap-1'
+            disabled={data.approver ? false : true}
+          >
+            <Printer size={16}/>
+            <span>Print</span>
+          </Button>
+        </div>
       </div>
       <Separator />
       <div ref={contentRef} className='p-4 min-h-[900px] space-y-4'>
@@ -157,6 +205,7 @@ export default function PrintPreview({data}: Props) {
             )}
           </tbody>
         </table>
+
         <div className='flex items-center gap-4 text-muted-foreground'>
           <div className='flex w-full items-end gap-1 text-[12px]'>
             <span className='leading-[16px] font-semibold'>
@@ -178,6 +227,51 @@ export default function PrintPreview({data}: Props) {
                 {data.nos }
               </span>
             </div>
+          </div>
+        </div>
+
+        <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-4'>
+          <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
+            <div className='flex-1 border-b leading-[16px]'>
+              {data.creator && (
+                <div className='flex flex-col items-center'>
+                  {data.creator.signature && (
+                    <img 
+                      className='relative -bottom-2 h-[45px] object-contain'
+                      src={data.creator.signature} 
+                      alt="signature"
+                    />
+                  )}
+                  <span className='text-[12px] font-semibold uppercase'>
+                    {`${data?.creator?.firstName} ${data?.creator?.lastName}`}
+                  </span>
+                </div>
+              )}
+            </div>
+            <span className='leading-[16px]'>
+              Prepared by
+            </span>
+          </div>
+          <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
+            <div className='flex-1 border-b leading-[16px]'>
+              {data.approver && (
+                <div className='flex flex-col items-center'>
+                  {data.approver.signature && (
+                    <img 
+                      className='relative -bottom-2 h-[45px] object-contain'
+                      src={data.approver.signature} 
+                      alt="signature"
+                    />
+                  )}
+                  <span className='text-[12px] font-semibold uppercase'>
+                    {`${data?.approver?.firstName} ${data?.approver?.lastName}`}
+                  </span>
+                </div>
+              )}
+            </div>
+            <span className='leading-[16px]'>
+              Approved & Reviewed by
+            </span>
           </div>
         </div>
       </div>
