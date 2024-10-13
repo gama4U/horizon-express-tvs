@@ -1,22 +1,14 @@
 import { readFile } from "fs/promises";
 import {
   PutObjectCommand,
-  S3Client,
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import path from 'path'
+import s3Client from "../utils/s3-client.utils";
 
 interface MainParams {
   filePath: string;
 }
-const s3Client = new S3Client({
-  region: 'ap-southeast-2',
-  credentials: {
-    accessKeyId: String(process.env.AWS_ACCESS_KEY_ID),
-    secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY)
-  }
-});
-
 
 export const uploadFile = async (): Promise<void> => {
   const filePath = path.join(__dirname, '../uploads/' + '1728579366129-383789816.png')
@@ -31,7 +23,6 @@ export const uploadFile = async (): Promise<void> => {
 
   try {
     const response = await s3Client.send(command);
-    console.log(response);
   } catch (caught) {
     if (
       caught instanceof S3ServiceException &&

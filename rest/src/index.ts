@@ -52,7 +52,7 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
-app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
+// app.use('/uploads/', express.static(path.join(__dirname, './uploads')));
 app.use('/auth', authRouter);
 app.use('/api/v1', mainRouter);
 

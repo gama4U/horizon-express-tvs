@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../prisma/db";
-import { getNextMemorandumNumber } from "../utils/generateNumber";
+import { getNextMemorandumNumber } from "../utils/generate-number";
 import moment from "moment";
 
 export interface ICreateMemorandum {
