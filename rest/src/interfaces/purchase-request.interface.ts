@@ -29,3 +29,8 @@ export interface IFindPurchaseRequests {
   type?: PurchaseRequestOrderType;
   paymentType?: PaymentType;
 }
+
+export interface IUpdatePurchaseRequestApprover {
+  id: string;
+  approverId: string;
+}

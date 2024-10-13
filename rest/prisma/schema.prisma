@@ -20,9 +20,10 @@ model User {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   salesAgreements       SalesAgreement[]
-  purchaseRequestOrders PurchaseRequestOrder[]
+  purchaseRequestOrders PurchaseRequestOrder[] @relation("CreatePurchaseRequestOrders")
   preparedTransactions  Transaction[]          @relation("PreparedTransactions")
   approvedTransactions  Transaction[]          @relation("ApprovedTransactions")
+  approvedPurchaseRequestOrders PurchaseRequestOrder[]  @relation("ApprovePurchaseRequestOrders")
   memorandums           Memorandum[]
 }
 
@@ -83,12 +84,14 @@ model PurchaseRequestOrder {
   expenses           String?
   other              String?
   nos                String?
+  approverId         String?
   type               PurchaseRequestOrderType?
   paymentType        PaymentType?
   purchaseOrderItems PurchaseRequestOrderItem[]
   transaction        Transaction?
-  creator            User?                      @relation(fields: [creatorId], references: [id])
+  creator            User?                      @relation("CreatePurchaseRequestOrders", fields: [creatorId], references: [id])
   salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
+  approver           User?                       @relation("ApprovePurchaseRequestOrders", fields: [approverId], references: [id])
   createdAt          DateTime?                  @default(now())
   updatedAt          DateTime?                  @updatedAt
 }
