@@ -4,6 +4,8 @@ import { IMemorandum } from "@/api/queries/memorandums.query";
 import { NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import DeleteMemorandum from "@/components/alert/memorandum/delete";
+import { useAuth } from "@/providers/auth-provider";
+import { UserType } from "@/interfaces/user.interface";
 
 export const Columns: ColumnDef<IMemorandum>[] = [
 	{
@@ -83,9 +85,10 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 		header: "Actions",
 		enableHiding: false,
 		cell: ({ row }) => {
+			const {session: {user}} = useAuth();
 			return (
 				<div className="flex items-center justify-start gap-4">
-					<Link to={`/admin/memorandum/${row.original.id}`}>
+					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/memorandum/${row.original.id}`}>
 						<NotepadText
 							size={16}
 							className="cursor-pointer hover:text-primary"

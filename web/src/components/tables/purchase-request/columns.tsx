@@ -43,7 +43,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
       return (
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={avatar} />
+            <AvatarImage src={avatar} className="object-cover"/>
             <AvatarFallback>
               {firstName[0].toUpperCase()}
             </AvatarFallback>

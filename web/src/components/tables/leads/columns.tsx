@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import DeleteTransaction from "@/components/alert/transactions/delete";
 import { ILead } from "@/api/mutations/lead.mutation";
 import EditLeadDialog from "@/components/dialogs/leads/edit";
 import EmailLink from "@/components/common/email";
+import DeleteLeadDialog from "@/components/alert/lead/delete";
 
 export const Columns: ColumnDef<ILead>[] = [
 	{
@@ -90,8 +90,8 @@ export const Columns: ColumnDef<ILead>[] = [
 					<EditLeadDialog
 						leadData={row.original}
 					/>
-					<DeleteTransaction
-						transactionId={row.original.id}
+					<DeleteLeadDialog	
+						leadId={row.original.id}
 					/>
 				</div>
 			)

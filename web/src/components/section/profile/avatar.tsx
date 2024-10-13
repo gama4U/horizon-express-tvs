@@ -6,7 +6,6 @@ import { IUploadFile } from "@/interfaces/upload.interface";
 import { IUser } from "@/interfaces/user.interface";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import { AxiosProgressEvent } from "axios";
 import { Loader2 } from "lucide-react";
 import { ChangeEvent, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -77,10 +76,6 @@ export default function UserAvatar({ data }: Props) {
     formData.append('file', avatarFile);
     uploadFileMutate({ data: formData });
   }
-
-  // const onUploadProgress = (event: AxiosProgressEvent) => {
-  //   // const percentCompleted = Math.round((event.loaded * 100) / Number(event.total));
-  // };
 
   return (
     <div className="w-full p-4 flex items-center gap-4 border rounded-lg">

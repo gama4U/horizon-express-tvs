@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createLead, fetchLeads, updateLead } from '../services/lead.service';
+import { createLead, deleteLead, fetchLeads, updateLead } from '../services/lead.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getLeadsSchema } from '../schemas/lead.schema';
 
@@ -43,7 +43,8 @@ leadRouter.get('/', validate(getLeadsSchema), async (req: Request, res: Response
       message: 'Internal server error'
     })
   }
-})
+});
+
 leadRouter.put('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
@@ -57,5 +58,24 @@ leadRouter.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
+leadRouter.delete('/:id', async(req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    
+    const deleted = await deleteLead(id);
+    if (!deleted) {
+      throw new Error('Failed to delete lead');
+    }
+
+    return res.status(200).json({
+      message: 'Lead deleted successfully'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error'
+    });
+  }
+})
 
 export default leadRouter;

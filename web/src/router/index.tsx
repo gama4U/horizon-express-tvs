@@ -113,7 +113,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'memorandum',
-        element: (<></>)
+        element: <Memorandum />
+      },
+      {
+        path: 'memorandum/:id',
+        element: <MemorandumDetails />
       },
       {
         path: 'profile',

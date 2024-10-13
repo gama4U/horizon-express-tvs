@@ -56,6 +56,19 @@ export async function updateLead({ id, ...data }: IUpdateLead) {
   }
 }
 
+export async function deleteLead(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/leads/${id}`);
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || "Something went wrong");
+  }
+}
+
 export async function deletePurchaseRequestItem(id: string) {
   try {
     const response = await api.delete(`/api/v1/leads/${id}`);
