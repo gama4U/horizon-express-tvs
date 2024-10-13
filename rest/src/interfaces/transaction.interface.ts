@@ -12,3 +12,8 @@ export interface ITransaction {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IUpdateTransactionApprover {
+  id: string;
+  approverId: string;
+}

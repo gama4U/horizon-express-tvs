@@ -316,4 +316,16 @@ export async function deleteTourVoucher(id: string) {
   }
 }
 
+export async function approveTransaction(id: string) {
+  try {
+    const response = await api.patch(`/api/v1/transactions/${id}/approver`);
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
 

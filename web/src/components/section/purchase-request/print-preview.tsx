@@ -1,4 +1,4 @@
-import { CheckCircle, Loader2, Printer } from 'lucide-react'
+import { Loader2, Printer, ThumbsUp } from 'lucide-react'
 import { Button } from '../../ui/button'
 import { Separator } from '../../ui/separator'
 import { useRef } from 'react'
@@ -67,7 +67,7 @@ export default function PrintPreview({data}: Props) {
               {approving ? (
                 <Loader2 size={16} className='animate-spin'/>
               ) : (
-                <CheckCircle size={16}/>
+                <ThumbsUp size={16}/>
               )}
               <span>Approve</span>
             </Button>

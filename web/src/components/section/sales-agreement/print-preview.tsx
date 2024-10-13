@@ -1,4 +1,4 @@
-import { CheckCircle, Loader2, Printer } from 'lucide-react'
+import { Loader2, Printer, ThumbsUp } from 'lucide-react'
 import Constants from '../../../constants'
 import { ISalesAgreement } from '../../../interfaces/sales-agreement.interface'
 import { Button } from '../../ui/button'
@@ -53,7 +53,7 @@ export default function PrintPreview({data}: Props) {
               {approving ? (
                 <Loader2 size={16} className='animate-spin'/>
               ) : (
-                <CheckCircle size={16}/>
+                <ThumbsUp size={16}/>
               )}
               <span>Approve</span>
             </Button>
@@ -167,7 +167,7 @@ export default function PrintPreview({data}: Props) {
             )}
           </tbody>
         </table>
-        
+
         <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-4'>
           <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
             <div className='flex-1 border-b leading-[16px]'>
