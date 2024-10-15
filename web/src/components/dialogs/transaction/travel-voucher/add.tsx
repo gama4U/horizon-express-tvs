@@ -117,7 +117,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
       <DialogContent>
         <DialogTitle>
           <DialogHeader className="flex flex-row items-center gap-x-2">
-            Add Travel Voucher
+            Add Travel Voucher {selectedType && `- ${selectedType}`}
           </DialogHeader>
         </DialogTitle>
         <Separator />
@@ -128,7 +128,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
                 {cardOptions.map((card) => (
                   <AnimatedDiv
                     slideEntrancePoint={-20}
-                    animationType="SlideInFromUp"
+                    animationType="CardSpin"
                     key={card.key}
                     className={`relative rounded-lg p-4 border-[1px] my-2 shadow-lg cursor-pointer hover:bg-green-100 flex flex-col justify-between w-[50%] h-[200px] ${selectedType === card.key ? 'border-green-500 bg-green-100' : 'border-dotted'
                       }`}
@@ -405,6 +405,7 @@ export default function AddTravelVoucherDialog({ transactionId, openDialog, setO
               <div className="flex flex-row justify-end gap-x-2">
                 <Button type="button" className="text-xs bg-muted-foreground" onClick={() => {
                   form.reset()
+                  setSelectedType(undefined)
                   setStep(0)
                 }}>Back</Button>
                 <Button type="submit" className="text-xs" disabled={creatingTravelVoucher}>

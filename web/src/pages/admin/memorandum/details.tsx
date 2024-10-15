@@ -3,7 +3,8 @@ import TopBar from "../../../components/section/topbar";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/animated/Loader";
 import { fetchMemorandum } from "@/api/queries/memorandums.query";
-import PrintPreview from "@/components/section/memorandums/print-preview";
+import MemorandumPreview from "@/components/section/memorandums/details";
+
 
 export default function MemorandumDetails() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ export default function MemorandumDetails() {
         showBackButton={true}
         LeftSideHeader={
           <p className="text-sm">
-            Memorandum Details
+            Memorandum {data?.memorandumNumber}
           </p>
         }
         LeftSideSubHeader={
@@ -35,7 +36,7 @@ export default function MemorandumDetails() {
         <Loader isLoading={isLoading} />
         {data ? (
           <>
-            <PrintPreview data={data} />
+            <MemorandumPreview data={data} />
           </>
         ) : (
           <div className="h-[90vh] bg-white w-full rounded-lg" />

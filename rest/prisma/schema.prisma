@@ -76,6 +76,8 @@ model SalesAgreementItem {
   updatedAt        DateTime?      @updatedAt
 }
 
+
+
 model PurchaseRequestOrder {
   id                 String                     @id @default(cuid())
   creatorId          String?
@@ -257,10 +259,11 @@ enum ClientType {
 }
 
 enum PurchaseRequestOrderType {
-  TICKET
-  LOCAL_PACKAGE
-  INTERNATIONAL_PACKAGE
-  HOTEL
+  ACCOMMODATION
+  DOMESTIC_AIRLINE_TICKETING
+  SHIPPING
+  INTERNATIONAL_AIRLINE_TICKETING
+  TRANSPORTATION_RENTAL
   VISA
 }
 

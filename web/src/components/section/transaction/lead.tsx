@@ -69,7 +69,6 @@ export default function LeadDetails({ leadData, forSelection }: LeadDetailsProps
                 <div>
                 </div>
               </div>
-              ))
             </div>
           </>
         }

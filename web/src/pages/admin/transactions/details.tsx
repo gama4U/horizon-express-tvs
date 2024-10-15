@@ -70,7 +70,7 @@ export default function ManageTransaction() {
                 </TabsList>
                 <TabsContent value={tabs[0].value} className="flex gap-y-2 flex-col">
                   {transaction?.lead &&
-                    <LeadDetails leadData={transaction.lead} forSelection={true} />
+                    <LeadDetails leadData={transaction.lead} forSelection={false} />
                   }
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">
