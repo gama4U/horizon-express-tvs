@@ -164,7 +164,8 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 							{cardOptions.map((card) => (
 								<AnimatedDiv
 									slideEntrancePoint={-20}
-									animationType="SlideInFromUp"
+									animationType="CardSpin"
+									duration={0.5}
 									key={card.key}
 									className={`relative rounded-lg p-4 border-[1px] my-2 shadow-lg cursor-pointer hover:bg-green-100 flex flex-col justify-between w-[50%] h-[200px] ${selectedCard === card.key ? 'border-green-500 bg-green-100' : 'border-dotted'
 										}`}

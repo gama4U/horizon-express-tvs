@@ -17,11 +17,12 @@ import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 
 const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
-  HOTEL: 'Hotel',
-  INTERNATIONAL_PACKAGE: 'International Package',
-  LOCAL_PACKAGE: 'Local Package',
-  TICKET: 'Ticket',
+  ACCOMMODATION: 'Accommodation',
   VISA: 'Visa',
+  SHIPPING: 'Shipping',
+  TRANSPORTATION_RENTAL: 'Transportation Rental',
+  DOMESTIC_AIRLINE_TICKETING: 'Domestic Airline Ticketing',
+  INTERNATIONAL_AIRLINE_TICKETING: 'International Airline Ticketing',
 }
 
 const paymentTypeLabelMap: Record<PaymentType, string> = {
@@ -37,11 +38,12 @@ const formSchema = z.object({
     message: 'Serial number is required'
   }),
   type: z.enum([
-    PurchaseRequestOrderType.HOTEL,
-    PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-    PurchaseRequestOrderType.LOCAL_PACKAGE,
-    PurchaseRequestOrderType.TICKET,
+    PurchaseRequestOrderType.ACCOMMODATION,
     PurchaseRequestOrderType.VISA,
+    PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+    PurchaseRequestOrderType.SHIPPING,
+    PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+    PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
   ]),
   paymentType: z.enum([
     PaymentType.CASH,
@@ -59,33 +61,33 @@ const formSchema = z.object({
 export default function CreatePurchaseRequestDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const {session: {user}} = useAuth();
+  const { session: { user } } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       suppliersName: '',
       serialNumber: '',
-      type: PurchaseRequestOrderType.HOTEL,
+      type: PurchaseRequestOrderType.VISA,
       paymentType: PaymentType.CASH,
       expenses: '',
       nos: '',
     }
   });
 
-  const {mutate: createMutate, isPending} = useMutation({
+  const { mutate: createMutate, isPending } = useMutation({
     mutationFn: async (data: ICreatePurchaseRequest) => await createPurchaseRequest(data),
     onSuccess: (data) => {
       form.reset();
       setOpen(false);
-      toast.success(data.message, { 
-        position: 'top-center', 
+      toast.success(data.message, {
+        position: 'top-center',
         className: 'text-primary'
       });
       navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/purchase-requests/${data.id}`)
     },
     onError: (error) => {
-      toast.error(error.message, { 
+      toast.error(error.message, {
         position: 'top-center',
         className: 'text-destructive'
       })
@@ -102,14 +104,14 @@ export default function CreatePurchaseRequestDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button size={'sm'} className="gap-1">
-          <Plus size={16}/>
+          <Plus size={16} />
           <span>Create</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FilePlus size={24} className="text-secondary"/>
+            <FilePlus size={24} className="text-secondary" />
             Create purchase request order
           </DialogTitle>
           <Form {...form}>
@@ -121,9 +123,9 @@ export default function CreatePurchaseRequestDialog() {
                   <FormItem>
                     <FormLabel>Supplier's name:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Name of supplier"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Name of supplier" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -134,9 +136,9 @@ export default function CreatePurchaseRequestDialog() {
                   <FormItem>
                     <FormLabel>Ser. No.:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Serial number"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Serial number" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -165,7 +167,7 @@ export default function CreatePurchaseRequestDialog() {
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage className="text-[10px]"/>
+                      <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
@@ -173,7 +175,7 @@ export default function CreatePurchaseRequestDialog() {
                   control={form.control}
                   name="paymentType"
                   render={({ field }) => (
-                    <FormItem  className="w-full">
+                    <FormItem className="w-full">
                       <FormLabel>Payment:</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
@@ -193,7 +195,7 @@ export default function CreatePurchaseRequestDialog() {
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage className="text-[10px]"/>
+                      <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
@@ -205,9 +207,9 @@ export default function CreatePurchaseRequestDialog() {
                   <FormItem>
                     <FormLabel>Expenses:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Expenses"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Expenses" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -218,9 +220,9 @@ export default function CreatePurchaseRequestDialog() {
                   <FormItem>
                     <FormLabel>Nos:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Nos"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Nos" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -231,16 +233,16 @@ export default function CreatePurchaseRequestDialog() {
                   <FormItem>
                     <FormLabel>Others:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Others"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Others" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
               <div className="flex gap-2 justify-end">
                 <DialogClose>
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     variant={'outline'}
                     className="flex gap-2 mt-4"
                     disabled={isPending}
@@ -248,13 +250,13 @@ export default function CreatePurchaseRequestDialog() {
                     <span>Cancel</span>
                   </Button>
                 </DialogClose>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="flex gap-2 mt-4"
                   disabled={isPending}
                 >
-                  {isPending && 
-                    <Loader2 size={20} className="animate-spin"/>
+                  {isPending &&
+                    <Loader2 size={20} className="animate-spin" />
                   }
                   <span>Create</span>
                 </Button>

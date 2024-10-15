@@ -10,11 +10,12 @@ export const createPurchaseRequestSchema = z.object({
       message: 'Serial number is required'
     }),
     type: z.enum([
-      PurchaseRequestOrderType.HOTEL,
-      PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-      PurchaseRequestOrderType.LOCAL_PACKAGE,
-      PurchaseRequestOrderType.TICKET,
       PurchaseRequestOrderType.VISA,
+      PurchaseRequestOrderType.SHIPPING,
+      PurchaseRequestOrderType.ACCOMMODATION,
+      PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+      PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+      PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
     ]),
     paymentType: z.enum([
       PaymentType.CASH,
@@ -39,11 +40,12 @@ export const updatePurchaseRequestSchema = z.object({
       message: 'Serial number is required'
     }),
     type: z.enum([
-      PurchaseRequestOrderType.HOTEL,
-      PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-      PurchaseRequestOrderType.LOCAL_PACKAGE,
-      PurchaseRequestOrderType.TICKET,
       PurchaseRequestOrderType.VISA,
+      PurchaseRequestOrderType.SHIPPING,
+      PurchaseRequestOrderType.ACCOMMODATION,
+      PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+      PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+      PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
     ]),
     paymentType: z.enum([
       PaymentType.CASH,
@@ -70,11 +72,12 @@ export const findPurchaseRequestsSchema = z.object({
     }).optional(),
     search: z.string().optional(),
     type: z.enum([
-      PurchaseRequestOrderType.HOTEL,
-      PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-      PurchaseRequestOrderType.LOCAL_PACKAGE,
-      PurchaseRequestOrderType.TICKET,
       PurchaseRequestOrderType.VISA,
+      PurchaseRequestOrderType.SHIPPING,
+      PurchaseRequestOrderType.ACCOMMODATION,
+      PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+      PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+      PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
     ]).optional(),
     paymentType: z.enum([
       PaymentType.CASH,

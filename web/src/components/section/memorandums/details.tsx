@@ -10,7 +10,7 @@ interface Props {
 	data: IMemorandum;
 }
 
-export default function PrintPreview({ data }: Props) {
+export default function MemorandumPreview({ data }: Props) {
 	const contentRef = useRef<HTMLDivElement | null>(null);
 	const reactToPrintFn = useReactToPrint({ contentRef });
 	const [openEditMemo, setOpenEditMemo] = useState(false);

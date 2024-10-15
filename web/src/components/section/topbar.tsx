@@ -20,7 +20,7 @@ const TopBar = ({ LeftSideHeader, LeftSideSubHeader, RightSideComponent, showBac
 	}, [location.pathname]);
 
 	return (
-		<AnimatedDiv key={key} className="z-0" delay={0} animationType="SlideInFromLeft" duration={0.3} slideEntrancePoint={-20} >
+		<AnimatedDiv key={key} className="z-0" delay={0} animationType="SlideInFromUp" duration={0.3} slideEntrancePoint={-20} >
 			<div className="bg-[#FFFFFF] px-4 rounded-lg w-full items-center h-[59px] flex flex-row justify-between sticky top-0 z-10">
 				<div className="flex flex-row gap-x-2 items-center">
 					{showBackButton &&

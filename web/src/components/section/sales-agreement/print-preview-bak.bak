@@ -1,3 +1,4 @@
+
 import { Loader2, Printer, ThumbsUp } from 'lucide-react'
 import Constants from '../../../constants'
 import { ISalesAgreement } from '../../../interfaces/sales-agreement.interface'
@@ -219,36 +220,33 @@ export default function PrintPreview({ data }: Props) {
             </div>
           </div>
 
-          <div className='flex border p-4 flex-col  gap-4  text-[8px] text-muted-foreground'>
-            <div className='flex flex-row justify-between'>
-              <div className='w-1/2'>
-                <p className='font-semibold mb-2'>Payment Terms:</p>
-                <p className='text-left'>
-                  Payments must be settled by the agreed-upon date. A 1% monthly charge will be applied to overdue balances, calculated for any fraction of a month past the due date.
-                </p>
-              </div>
-
-              <div className='w-1/2'>
-                <p className='font-semibold mb-2'>Cancellation Policy:</p>
-                <p className='text-left'>
-                  46 days or more before arrival: 100% refundable<br />
-                  31-45 days before arrival: 50% refundable<br />
-                  15-30 days before arrival: 80% refundable<br />
-                  14 days or less before arrival: 100% non-refundable
-                </p>
-              </div>
-            </div>
+          <div className='flex border p-4 flex-col  gap-4  text-[8px] '>
             <div className='w-full '>
-              <p className='text-center'>
+              <p className='font-semibold mb-2'>Payment Terms:</p>
+              <p className='text-left'>
+                Payments must be settled by the agreed-upon date. A 1% monthly charge will be applied to overdue balances, calculated for any fraction of a month past the due date.
+              </p>
+            </div>
+
+            <div className='w-full '>
+              <p className='font-semibold mb-2'>Cancellation Policy:</p>
+              <p className='text-left'>
+                46 days or more before arrival: 100% refundable<br />
+                31-45 days before arrival: 50% refundable<br />
+                15-30 days before arrival: 80% refundable<br />
+                14 days or less before arrival: 100% non-refundable
+                <br /><br />
                 Please note that these policies are subject to the cancellation terms of the principal supplier and may be negotiated or modified accordingly.
               </p>
             </div>
-            <div className='w-full'>
-              <p className='font-semibold mb-2 text-center'>Acknowledgement:</p>
-              <p className='text-center'>
+            <div className='w-full '>
+              <p className='font-semibold mb-2'>Acknowledgement:</p>
+              <p className='text-left'>
                 By acknowledging this sales agreement, you confirm that all details provided are accurate and accepted.
               </p>
             </div>
+
+
 
             <div className='w-full flex flex-row justify-between items-start text-[8px]  gap-4'>
               <div className='md:w-1/2 items-center text-center'>
@@ -289,7 +287,6 @@ export default function PrintPreview({ data }: Props) {
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </div>

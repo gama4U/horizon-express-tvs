@@ -6,7 +6,7 @@ interface Props {
   data: IPurchaseRequestOrder
 }
 
-export default function PurchaseRequestInfo({data}: Props) {
+export default function PurchaseRequestInfo({ data }: Props) {
   return (
     <>
       <div className="grid grid-cols-3 gap-4 p-4">
@@ -39,7 +39,7 @@ export default function PurchaseRequestInfo({data}: Props) {
             Type
           </span>
           <PurchaseRequestTypeBadge
-            value={data.type} 
+            value={data.type}
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -47,7 +47,7 @@ export default function PurchaseRequestInfo({data}: Props) {
             Payment type
           </span>
           <PaymentTypeBadge
-            value={data.paymentType} 
+            value={data.paymentType}
           />
         </div>
         <div className="flex flex-col gap-1">
