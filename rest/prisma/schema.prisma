@@ -17,6 +17,7 @@ model User {
   userType                      UserType
   permission                    PermissionType?
   signature                     String?
+  officeBranch                  OfficeBranch?
   createdAt                     DateTime               @default(now())
   updatedAt                     DateTime               @updatedAt
   createdSalesAgreements        SalesAgreement[]       @relation("CreateSalesAgreements")
@@ -89,7 +90,7 @@ model PurchaseRequestOrder {
   nos                String?
   approverId         String?
   type               PurchaseRequestOrderType?
-  paymentType        PaymentType?
+  paymentType        PaymentType?             
   purchaseOrderItems PurchaseRequestOrderItem[]
   transaction        Transaction?
   creator            User?                      @relation("CreatePurchaseRequestOrders", fields: [creatorId], references: [id])
@@ -250,6 +251,8 @@ enum UserType {
 enum PermissionType {
   SUPER_ADMIN
   SUPERVISOR
+  ACCOUNTING
+  RESERVATION
 }
 
 enum ClientType {
@@ -297,4 +300,9 @@ enum AccommodationType {
   RESORT
   AIRBNB
   OTHERS
+}
+
+enum OfficeBranch {
+  CEBU
+  CALBAYOG
 }

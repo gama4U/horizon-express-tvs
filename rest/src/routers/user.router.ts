@@ -12,16 +12,22 @@ const saltRounds = 15;
 userRouter.post('/', validate(createUserSchema), async (req: Request, res: Response) => {
   try {
     const { password, ...data } = req.body;
+    
     const foundUser = await getUserByEmail(data.email);
+
     if (foundUser) return res.status(400).json({
       message: 'Account already exists'
     });
+    
     const hashedPassword = await bcrypt.hash(password, saltRounds);
+    
     const created = await createUser({ ...data, password: hashedPassword });
     if (!created) throw new Error('Failed to create user');
+    
     res.status(200).json({
       message: 'User created successfully'
     });
+    
   } catch (error) {
     res.status(500).json(error);
   }

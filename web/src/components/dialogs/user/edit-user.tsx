@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { IUpdateUser, IUser, PermissionType, UserType } from "@/interfaces/user.interface";
+import { IUpdateUser, IUser, OfficeBranch, PermissionType, UserType } from "@/interfaces/user.interface";
 import { updateUser } from "@/api/mutations/user.mutation";
 import { Button } from "@/components/ui/button";
 import CommonInput from "@/components/common/input";
@@ -51,7 +51,13 @@ const formSchema = z.object({
   permission: z.enum([
     PermissionType.SUPER_ADMIN,
     PermissionType.SUPERVISOR,
-  ]).optional(),
+    PermissionType.ACCOUNTING,
+    PermissionType.RESERVATION,
+  ]),
+  officeBranch: z.enum([
+    OfficeBranch.CEBU,
+    OfficeBranch.CALBAYOG
+  ]),
   password: z.string()
     .trim().min(8, {
       message: "Password must be at least 8 characters."
@@ -73,9 +79,24 @@ const selectUserMap: Record<UserType, string> = {
   EMPLOYEE: 'Employee'
 }
 
-const userPermissionMap: Record<PermissionType, string> = {
-  SUPER_ADMIN: 'Super Admin',
-  SUPERVISOR: 'Supervisor'
+const userPermissionMap: Record<UserType, Record<PermissionType , string>> = {
+  ADMIN: {
+    SUPER_ADMIN: 'Super Admin',
+    SUPERVISOR: 'Supervisor',
+    ACCOUNTING: 'Accounting',
+    [PermissionType.RESERVATION]: ""
+  },
+  EMPLOYEE: {
+    RESERVATION: 'Reservation',
+    [PermissionType.SUPER_ADMIN]: "",
+    [PermissionType.SUPERVISOR]: "",
+    [PermissionType.ACCOUNTING]: ""
+  }
+}
+
+const userOfficeBranch: Record<OfficeBranch, string> = {
+  CEBU: 'Cebu',
+  CALBAYOG: 'Calbayog'
 }
 
 interface Props {
@@ -92,6 +113,7 @@ export default function EditUserDialog({ data }: Props) {
       lastName: '',
       email: '',
       userType: UserType.EMPLOYEE,
+      officeBranch: OfficeBranch.CEBU,
       password: '',
       confirmPassword: ''
     }
@@ -104,10 +126,19 @@ export default function EditUserDialog({ data }: Props) {
         lastName: data.lastName,
         email: data.email,
         userType: data.userType,
-        permission: data.permission || undefined
+        permission: data.permission,
+        officeBranch: data.officeBranch
       })
     }
   }, [data]);
+
+  const selectedUserType = form.watch('userType');
+  useEffect(() => {
+    const currentPermission = form.getValues('permission');
+    if (currentPermission) {
+      form.resetField('permission')
+    }
+  }, [selectedUserType]);
 
   const { mutate: updateUserMutate, isPending } = useMutation({
     mutationFn: async (data: IUpdateUser) => await updateUser(data),
@@ -230,34 +261,58 @@ export default function EditUserDialog({ data }: Props) {
                   </FormItem>
                 )}
               />
-               {form.getValues('userType') === UserType.ADMIN && (
-                <FormField
-                  control={form.control}
-                  name="permission"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Permission</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-                            <SelectValue placeholder="Select permission" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(userPermissionMap)?.map(([value, label]) => {
-                            return (
-                              <SelectItem value={value} className="text-[12px] text-muted-foreground">
-                                {label}
-                              </SelectItem>
-                            );
-                          })}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+              <FormField
+                control={form.control}
+                name="permission"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Permission</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value || ''}>
+                      <FormControl>
+                        <SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select permission" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(userPermissionMap[form.getValues('userType')])
+                          .filter(([_, label]) => label !== '')
+                          .map(([value, label]) => (
+                            <SelectItem key={value} value={value} className="text-[12px] text-muted-foreground">
+                              {label}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="officeBranch"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Office branch</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select branch" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(userOfficeBranch)?.map(([value, label]) => {
+                          return (
+                            <SelectItem value={value} className="text-[12px] text-muted-foreground">
+                              {label}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="password"

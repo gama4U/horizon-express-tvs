@@ -5,10 +5,11 @@ export interface IUser {
   lastName: string;
   email: string;
   userType: UserType;
-  permission?: PermissionType | null;
+  permission: PermissionType;
   password?: string;
   avatar?: string;
   signature?: string;
+  officeBranch?: OfficeBranch;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,7 +21,14 @@ export enum UserType {
 
 export enum PermissionType {
   SUPER_ADMIN = 'SUPER_ADMIN',
-  SUPERVISOR = 'SUPERVISOR'
+  SUPERVISOR = 'SUPERVISOR',
+  ACCOUNTING = 'ACCOUNTING',
+  RESERVATION = 'RESERVATION',
+}
+
+export enum OfficeBranch {
+  CEBU = 'CEBU',
+  CALBAYOG = 'CALBAYOG'
 }
 
 export interface IUserSession {
