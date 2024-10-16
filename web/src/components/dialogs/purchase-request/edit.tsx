@@ -14,11 +14,12 @@ import { IPurchaseRequestOrder, IUpdatePurchaseRequest, PaymentType, PurchaseReq
 import { updatePurchaseRequest } from "@/api/mutations/purchase-request..mutation";
 
 const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
-  HOTEL: 'Hotel',
-  INTERNATIONAL_PACKAGE: 'International Package',
-  LOCAL_PACKAGE: 'Local Package',
-  TICKET: 'Ticket',
+  ACCOMMODATION: 'Accommodation',
   VISA: 'Visa',
+  SHIPPING: 'Shipping',
+  TRANSPORTATION_RENTAL: 'Transportation Rental',
+  DOMESTIC_AIRLINE_TICKETING: 'Domestic Airline Ticketing',
+  INTERNATIONAL_AIRLINE_TICKETING: 'International Airline Ticketing',
 }
 
 const paymentTypeLabelMap: Record<PaymentType, string> = {
@@ -34,11 +35,12 @@ const formSchema = z.object({
     message: 'Serial number is required'
   }),
   type: z.enum([
-    PurchaseRequestOrderType.HOTEL,
-    PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-    PurchaseRequestOrderType.LOCAL_PACKAGE,
-    PurchaseRequestOrderType.TICKET,
+    PurchaseRequestOrderType.ACCOMMODATION,
     PurchaseRequestOrderType.VISA,
+    PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+    PurchaseRequestOrderType.SHIPPING,
+    PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+    PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
   ]),
   paymentType: z.enum([
     PaymentType.CASH,
@@ -57,7 +59,7 @@ interface Props {
   data: IPurchaseRequestOrder;
 }
 
-export default function EditPurchaseRequestDialog({data}: Props) {
+export default function EditPurchaseRequestDialog({ data }: Props) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
@@ -66,30 +68,30 @@ export default function EditPurchaseRequestDialog({data}: Props) {
     defaultValues: {
       suppliersName: '',
       serialNumber: '',
-      type: PurchaseRequestOrderType.HOTEL,
+      type: PurchaseRequestOrderType.VISA,
       paymentType: PaymentType.CASH,
       expenses: '',
       nos: '',
     }
   });
 
-  const {mutate: updateMutate, isPending} = useMutation({
+  const { mutate: updateMutate, isPending } = useMutation({
     mutationFn: async (data: IUpdatePurchaseRequest) => await updatePurchaseRequest(data),
     onSuccess: (data) => {
       if (location.pathname === '/admin/purchase-requests') {
-        queryClient.refetchQueries({queryKey: ['purchase-requests']})
+        queryClient.refetchQueries({ queryKey: ['purchase-requests'] })
       } else {
-        queryClient.refetchQueries({queryKey: ['purchase-request-details']})
+        queryClient.refetchQueries({ queryKey: ['purchase-request-details'] })
       }
       form.reset();
       setOpen(false);
-      toast.success(data.message, { 
-        position: 'top-center', 
+      toast.success(data.message, {
+        position: 'top-center',
         className: 'text-primary'
       });
     },
     onError: (error) => {
-      toast.error(error.message, { 
+      toast.error(error.message, {
         position: 'top-center',
         className: 'text-destructive'
       })
@@ -100,10 +102,10 @@ export default function EditPurchaseRequestDialog({data}: Props) {
     if (data) {
       form.reset({
         ...data,
-        other: data.other|| ''
+        other: data.other || ''
       })
     }
-  }, [data]);
+  }, [form, data]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateMutate({
@@ -116,13 +118,13 @@ export default function EditPurchaseRequestDialog({data}: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button size={'icon'} variant={'ghost'} className="hover:text-primary">
-          <Pencil size={16}/>
+          <Pencil size={16} />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FilePlus size={24} className="text-secondary"/>
+            <FilePlus size={24} className="text-secondary" />
             Create purchase request order
           </DialogTitle>
           <Form {...form}>
@@ -134,9 +136,9 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Supplier's name:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Name of supplier"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Name of supplier" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -147,9 +149,9 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Ser. No.:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Serial number"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Serial number" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -178,7 +180,7 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage className="text-[10px]"/>
+                      <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
@@ -186,7 +188,7 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                   control={form.control}
                   name="paymentType"
                   render={({ field }) => (
-                    <FormItem  className="w-full">
+                    <FormItem className="w-full">
                       <FormLabel>Payment:</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
@@ -206,7 +208,7 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage className="text-[10px]"/>
+                      <FormMessage className="text-[10px]" />
                     </FormItem>
                   )}
                 />
@@ -218,9 +220,9 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Expenses:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Expenses"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Expenses" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -231,9 +233,9 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Nos:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Nos"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Nos" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -244,16 +246,16 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                   <FormItem>
                     <FormLabel>Others:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Others"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Others" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
               <div className="flex gap-2 justify-end">
                 <DialogClose>
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     variant={'outline'}
                     className="flex gap-2 mt-4"
                     disabled={isPending}
@@ -261,13 +263,13 @@ export default function EditPurchaseRequestDialog({data}: Props) {
                     <span>Cancel</span>
                   </Button>
                 </DialogClose>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="flex gap-2 mt-4"
                   disabled={isPending}
                 >
-                  {isPending && 
-                    <Loader2 size={20} className="animate-spin"/>
+                  {isPending &&
+                    <Loader2 size={20} className="animate-spin" />
                   }
                   <span>Save</span>
                 </Button>
