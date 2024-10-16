@@ -1,19 +1,16 @@
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Loader2, Plus, X } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus, X } from "lucide-react";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { uploadFile } from "@/api/mutations/upload.mutation";
-import { IUploadFile } from "@/interfaces/upload.interface";
-import { toast } from "sonner";
-import { updateUserSignature } from "@/api/mutations/profile.mutation";
+// import { toast } from "sonner";
+// import { updateUserSignature } from "@/api/mutations/profile.mutation";
 
 interface Props {
 	action: "add" | "change";
@@ -24,45 +21,45 @@ export default function AddDocumentDialog({ action }: Props) {
 	const inputFileRef = useRef<HTMLInputElement | null>(null);
 	const [documentFile, setDocumentFile] = useState<File | null>(null);
 	const [open, setOpen] = useState(false);
-	const queryClient = useQueryClient();
+	// const queryClient = useQueryClient();
 
-	const { mutate: updateSignatureMutate, isPending: updating } = useMutation({
-		mutationFn: async (signature: string) => await updateUserSignature(signature),
-		onSuccess() {
-			toast.error("Signature updated successfully", {
-				position: "top-center",
-				className: "text-primary",
-			});
-			queryClient.refetchQueries({ queryKey: ["profile"] });
-			setOpen(false);
-			handleClear();
-		},
-		onError(error) {
-			toast.error(error.message, {
-				position: "top-center",
-				className: "text-destructive",
-			});
-		},
-	});
+	// const { mutate: updateSignatureMutate, isPending: updating } = useMutation({
+	// 	mutationFn: async (signature: string) => await updateUserSignature(signature),
+	// 	onSuccess() {
+	// 		toast.error("Signature updated successfully", {
+	// 			position: "top-center",
+	// 			className: "text-primary",
+	// 		});
+	// 		queryClient.refetchQueries({ queryKey: ["profile"] });
+	// 		setOpen(false);
+	// 		handleClear();
+	// 	},
+	// 	onError(error) {
+	// 		toast.error(error.message, {
+	// 			position: "top-center",
+	// 			className: "text-destructive",
+	// 		});
+	// 	},
+	// });
 
-	const { mutate: uploadFileMutate, isPending: uploading } = useMutation({
-		mutationFn: async (data: IUploadFile) => await uploadFile(data),
-		onSuccess(data) {
-			updateSignatureMutate(data.url);
-		},
-		onError(error) {
-			toast.error(error.message, {
-				position: "top-center",
-				className: "text-destructive",
-			});
-		},
-	});
+	// const { mutate: uploadFileMutate, isPending: uploading } = useMutation({
+	// 	mutationFn: async (data: IUploadFile) => await uploadFile(data),
+	// 	onSuccess(data) {
+	// 		updateSignatureMutate(data.url);
+	// 	},
+	// 	onError(error) {
+	// 		toast.error(error.message, {
+	// 			position: "top-center",
+	// 			className: "text-destructive",
+	// 		});
+	// 	},
+	// });
 
-	const handleSave = () => {
-		const formData = new FormData();
-		if (!documentFile) return;
-		formData.append("file", documentFile);
-	};
+	// const handleSave = () => {
+	// 	const formData = new FormData();
+	// 	if (!documentFile) return;
+	// 	formData.append("file", documentFile);
+	// };
 
 	const handleClear = () => {
 		setDocumentFile(null)
@@ -137,29 +134,6 @@ export default function AddDocumentDialog({ action }: Props) {
 					accept="image/*"
 				/>
 
-				<div className="flex justify-end gap-2">
-					<DialogClose>
-						<Button
-							size={"sm"}
-							type="button"
-							variant={"outline"}
-							className="flex gap-2 mt-4"
-							disabled={uploading || updating}
-						>
-							<span>Cancel</span>
-						</Button>
-					</DialogClose>
-					<Button
-						size={"sm"}
-						type="submit"
-						className="flex gap-2 mt-4 w-[80px]"
-						onClick={handleSave}
-						disabled={uploading || updating}
-					>
-						{uploading || updating && <Loader2 size={20} className="animate-spin" />}
-						<span>Save</span>
-					</Button>
-				</div>
 			</DialogContent>
 		</Dialog>
 	);

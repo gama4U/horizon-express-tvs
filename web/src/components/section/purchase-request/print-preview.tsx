@@ -15,11 +15,12 @@ interface Props {
 }
 
 const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
-  HOTEL: 'Hotel',
-  INTERNATIONAL_PACKAGE: 'International Package',
-  LOCAL_PACKAGE: 'Local Package',
-  TICKET: 'Ticket',
+  ACCOMMODATION: 'Accommodation',
   VISA: 'Visa',
+  SHIPPING: 'Shipping',
+  TRANSPORTATION_RENTAL: 'Transportation Rental',
+  DOMESTIC_AIRLINE_TICKETING: 'Domestic Airline Ticketing',
+  INTERNATIONAL_AIRLINE_TICKETING: 'International Airline Ticketing',
 }
 
 const paymentTypeLabelMap: Record<PaymentType, string> = {
