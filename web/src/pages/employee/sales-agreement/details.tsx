@@ -5,7 +5,6 @@ import { Separator } from "../../../components/ui/separator";
 import PrintPreview from "../../../components/section/sales-agreement/print-preview";
 import SalesAgreementInfo from "../../../components/section/sales-agreement/info";
 import SalesAgreementItems from "../../../components/section/sales-agreement/items";
-import EditSalesAgreementDialog from "../../../components/dialogs/sales-agreement/edit";
 import { fetchSalesAgreement } from "@/api/queries/sales-agreements.queries";
 import Loader from "@/components/animated/Loader";
 
@@ -45,7 +44,6 @@ export default function SalesAgreementDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <EditSalesAgreementDialog data={data} />
               </div>
               <Separator className="bg-slate-200" />
               <SalesAgreementInfo data={data} />

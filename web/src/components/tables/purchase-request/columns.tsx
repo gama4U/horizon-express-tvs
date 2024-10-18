@@ -10,6 +10,7 @@ import EditPurchaseRequestDialog from "@/components/dialogs/purchase-request/edi
 import DeletePurchaseRequest from "@/components/alert/purchse-request/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
+import Constants from "@/constants";
 
 export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
   {
@@ -107,7 +108,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const {session: {user}} = useAuth();
-
+      const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
       return (
         <div className="flex items-center justify-center gap-4">
           <Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/purchase-requests/${row.original.id}`}>
@@ -116,12 +117,16 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
               className="cursor-pointer hover:text-primary"
             />
           </Link>
-          <EditPurchaseRequestDialog 
-            data={row.original}
-          />
-          <DeletePurchaseRequest
-            purchaseRequestId={row.original.id}
-          />
+          {(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
+            <EditPurchaseRequestDialog 
+              data={row.original}
+            />
+          )}
+          {(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
+            <DeletePurchaseRequest
+              purchaseRequestId={row.original.id}
+            />
+          )}
         </div>
       )
     },

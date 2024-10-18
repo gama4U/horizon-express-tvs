@@ -44,7 +44,7 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
   },
   {
     id: "actions",
-    header: "Actions",
+    enableHiding: false,
     cell: ({ row }) => {
       const {session: {user}} = useAuth();
       const {PermissionsCanEdit, PermissionsCanDelete} = Constants;

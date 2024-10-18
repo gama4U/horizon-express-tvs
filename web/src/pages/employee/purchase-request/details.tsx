@@ -6,7 +6,6 @@ import { fetchPurchaseRequestOrder } from "@/api/queries/purchase-request.querie
 import PurchaseRequestInfo from "@/components/section/purchase-request/info";
 import Loader from "@/components/animated/Loader";
 import PrintPreview from "@/components/section/purchase-request/print-preview";
-import EditPurchaseRequestDialog from "@/components/dialogs/purchase-request/edit";
 import PurchaseRequestItems from "@/components/section/purchase-request/items";
 
 export default function PurchaseRequestDetails() {
@@ -44,7 +43,6 @@ export default function PurchaseRequestDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <EditPurchaseRequestDialog data={data} />
               </div>
               <Separator className="bg-slate-200" />
               <PurchaseRequestInfo data={data} />
