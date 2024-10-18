@@ -2,6 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import EditSalesAgreementItemDialog from "../../dialogs/sales-agreement/edit-item";
 import { ISalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
 import DeleteSalesAgreementItem from "../../alert/sales-agreement/delete-item";
+import { useAuth } from "@/providers/auth-provider";
+import Constants from "@/constants";
 
 export const Columns: ColumnDef<ISalesAgreementItem>[] = [
   {
@@ -44,10 +46,16 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
+      const {session: {user}} = useAuth();
+      const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
       return (
         <div className="flex items-center gap-4">
-          <EditSalesAgreementItemDialog data={row.original} />
-          <DeleteSalesAgreementItem salesAgreementItemId={row.original.id}/>
+          {(user?.permission && PermissionsCanEdit.includes(user?.permission)) && (
+            <EditSalesAgreementItemDialog data={row.original} />
+          )}
+          {(user?.permission && PermissionsCanDelete.includes(user?.permission)) && (
+            <DeleteSalesAgreementItem salesAgreementItemId={row.original.id}/>
+          )}
         </div>
       )
     },

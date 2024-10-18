@@ -1,5 +1,5 @@
 import { TypeOfClient } from "./interfaces/sales-agreement.interface";
-import { UserType } from "./interfaces/user.interface";
+import { PermissionType, UserType } from "./interfaces/user.interface";
 
 export type SidebarItemsType = {
   label: string;
@@ -62,6 +62,10 @@ const UserRedirectRoute: Record<UserType, string> = {
 	EMPLOYEE: '/employee'
 }
 
+const PermissionsCanDelete = [PermissionType.SUPER_ADMIN];
+const PermissionsCanEdit = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING];
+const PermissionsCanApprove = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING, PermissionType.SUPERVISOR];
+
 const Constants = {
   VersionNumber,
   AdminSidebarItems,
@@ -69,7 +73,10 @@ const Constants = {
   ContainerVariants,
   NoTopbarPaths,
   ClientTypesMap,
-  UserRedirectRoute
+  UserRedirectRoute,
+  PermissionsCanDelete,
+  PermissionsCanEdit,
+  PermissionsCanApprove
 }
 
 export default Constants
