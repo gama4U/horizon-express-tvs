@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
-import { createMemorandum, deleteMemorandum, fetchMemorandums, fetchMemorandumSummary, findMemorandumById, updateMemorandum } from '../services/memorandum.service';
+import { createMemorandum, deleteMemorandum, fetchMemorandums, fetchMemorandumSummary, findMemorandumById, updateMemorandum, updateMemorandumApprover } from '../services/memorandum.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getMemorandumsSchema } from '../schemas/memorandum.schema';
+import { authorize } from '../middlewares/authorize.middleware';
+import { UserType } from '@prisma/client';
 
 const memorandumRouter = express.Router();
 
@@ -9,7 +11,8 @@ memorandumRouter.post('/', async (req: Request, res: Response) => {
   try {
     const memorandum = await createMemorandum(req.body)
     if (!memorandum) { throw new Error('Failed to create memorandum') }
-    res.status(200).json({ message: "Successfully created memorandum" })
+
+    return res.status(200).json(memorandum);
   } catch (error) {
     res.status(500).json(error)
   }
@@ -65,7 +68,7 @@ memorandumRouter.put('/:id', async (req: Request, res: Response) => {
     const { id } = req.params
     const itinerary = await updateMemorandum({ id, ...req.body })
     if (!itinerary) { throw new Error('Failed to update memorandum') }
-    res.status(200).json({ message: "Successfully created memorandum" })
+    res.status(200).json({ message: "Successfully updated memorandum" })
   } catch (error) {
     res.status(500).json(error)
   }
@@ -114,6 +117,27 @@ memorandumRouter.post('/summary', async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+memorandumRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: Request, res: Response) => {
+  try {
+    const approverId = String(req.user?.id);
+    const { id } = req.params;
+
+    const updated = await updateMemorandumApprover({ id, approverId })
+    if (!updated) {
+      throw new Error("Failed to update memorandum approver");
+    }
+
+    return res.status(200).json({
+      message: 'Approved successfully'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error"
+    })
+  }
+})
 
 
 
