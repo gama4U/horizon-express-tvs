@@ -12,37 +12,42 @@ import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
 import { Button } from "@/components/ui/button";
 import { createMemorandum, ICreateMemorandum } from "@/api/mutations/memorandum.mutation";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import React, { Suspense, useState } from 'react';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { EditorState, convertToRaw } from 'draft-js'
+
+const Editor = React.lazy(() =>
+	import('react-draft-wysiwyg').then((mod) => ({ default: mod.Editor }))
+);
 
 interface ICreateMemorandumProps {
 	openDialog: boolean;
 	creatorId: string;
 	setOpenDialog: (open: boolean) => void;
+	successNavigate: (data: any) => void
 }
 
 const formSchema = z.object({
 	to: z.string().trim().min(1, {
 		message: "To is required",
 	}),
-	re: z.string().trim().min(1, {
-		message: "Re is required",
-	}),
-	addressee: z.string().trim().min(1, {
-		message: "Addressee is required",
-	}),
-	contents: z.string().min(1, {
-		message: "Content is required",
+	subject: z.string().trim().min(1, {
+		message: "Subject is required",
 	}),
 }
 );
 
-export default function CreateMemorandumDialog({ openDialog, setOpenDialog, creatorId }: ICreateMemorandumProps) {
+export default function CreateMemorandumDialog({ openDialog, setOpenDialog, creatorId, successNavigate }: ICreateMemorandumProps) {
 	const queryClient = useQueryClient();
+	const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	});
+
+	const handleOnEditorStateChange = (editorState: EditorState) => {
+		setEditorState(editorState)
+	}
 
 	const { mutate: createMemoMutate, isPending: creatingMemo } = useMutation({
 		mutationFn: async (data: ICreateMemorandum) => await createMemorandum(data),
@@ -52,26 +57,30 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 				position: "top-center",
 			});
 		},
-		onSuccess: () => {
+		onSuccess: (data) => {
 			queryClient.refetchQueries({ queryKey: ["memorandums"] });
 			setOpenDialog(false);
 			form.reset();
 			toast.custom(() => <CommonToast message="Successfully created memorandum" />, {
 				position: "bottom-right",
 			});
+			successNavigate(data)
 		},
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
+		const contentState = editorState.getCurrentContent()
+		const contents = JSON.stringify(convertToRaw(contentState))
 		createMemoMutate({
 			creatorId,
+			contents,
 			...values
 		});
 	}
 
 	return (
 		<Dialog open={openDialog} onOpenChange={() => { setOpenDialog(false); }}>
-			<DialogContent>
+			<DialogContent className="max-w-[800px] max-h-[700px] overflow-auto">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
 						<StickyNote />
@@ -104,15 +113,15 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 								/>
 								<FormField
 									control={form.control}
-									name="re"
+									name="subject"
 									render={({ field }) => (
 										<FormItem>
 											<div className="flex flex-row items-center justify-between gap-x-2">
-												<p className="text-xs w-1/3">Re:</p>
+												<p className="text-xs w-1/3">Subject:</p>
 												<FormControl className="w-2/3">
 													<CommonInput
 														inputProps={{ ...field }}
-														placeholder="e.g. Quarterly Sales Report"
+														placeholder="Enter subject"
 														containerProps={{ className: 'text-xs' }}
 													/>
 												</FormControl>
@@ -121,54 +130,20 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 										</FormItem>
 									)}
 								/>
-								<FormField
-									control={form.control}
-									name="addressee"
-									render={({ field }) => (
-										<FormItem>
-											<div className="flex flex-row items-center justify-between gap-x-2">
-												<p className="text-xs w-1/3">Addressee:</p>
-												<FormControl className="w-2/3">
-													<CommonInput
-														inputProps={{ ...field }}
-														placeholder="Subject addressee"
-														containerProps={{ className: 'text-xs' }}
-													/>
-												</FormControl>
-											</div>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="contents"
-									render={({ field }) => (
-										<FormItem>
-											<div className="flex flex-col space-y-2">
-												<label className="text-xs">Content:</label>
-												<FormControl>
-													<ReactQuill
-														value={field.value}
-														onChange={field.onChange}
-														placeholder="Write the memorandum content here..."
-														modules={{
-															toolbar: [
-																[{ 'header': [1, 2, false] }],
-																['bold', 'italic', 'underline', 'strike'],
-																[{ 'list': 'ordered' }, { 'list': 'bullet' }],
-																['link', 'image'],
-																['clean']
-															],
-														}}
-														className="w-full"
-													/>
-												</FormControl>
-												<FormMessage />
-											</div>
-										</FormItem>
-									)}
-								/>
+
+								<div className="w-full min-h-[300px] max-h-[300px] h-full border border-gray-200 rounded-md p-3 flex flex-col">
+									<Suspense fallback={<div>Loading editor...</div>}>
+										<Editor
+											editorState={editorState}
+											onEditorStateChange={
+												handleOnEditorStateChange
+											}
+											editorClassName="p-1 h-full max-h-full"
+											wrapperClassName="w-full h-full max-h-full overflow-auto"
+											placeholder="Begin typing..."
+										/>
+									</Suspense>
+								</div>
 
 								<div className="flex flex-row items-center gap-x-2 justify-end">
 									<Button type="submit" className="text-xs" disabled={creatingMemo}>

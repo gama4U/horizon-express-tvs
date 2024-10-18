@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import DeleteMemorandum from "@/components/alert/memorandum/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
+import { format } from "date-fns"
 
 export const Columns: ColumnDef<IMemorandum>[] = [
 	{
@@ -55,27 +56,25 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 		}
 	},
 	{
-		id: "re",
-		header: "Re",
+		id: "subject",
+		header: "Subject",
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
 					<span className="text-xs">
-						{row.original.re}
+						{row.original.subject}
 					</span>
 				</div>
-			)
+			);
 		}
 	},
 	{
-		id: "addressee",
-		header: "Addressee",
+		id: "createdAt",
+		header: "Date Created",
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					<span className="text-xs">
-						{row.original.addressee}
-					</span>
+					<span className="text-xs">{format(new Date(row?.original?.createdAt ?? new Date), 'MMMM d, yyyy')}</span>
 				</div>
 			);
 		}
@@ -85,7 +84,7 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 		header: "Actions",
 		enableHiding: false,
 		cell: ({ row }) => {
-			const {session: {user}} = useAuth();
+			const { session: { user } } = useAuth();
 			return (
 				<div className="flex items-center justify-start gap-4">
 					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/memorandum/${row.original.id}`}>

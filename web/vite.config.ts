@@ -9,6 +9,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    global: 'window', // Polyfill global as window for browser
+  },
   build: {
     outDir: "dist", // Specify the output directory
     emptyOutDir: true, // Clears the output directory before building

@@ -3,8 +3,7 @@ import api from "../../utils/api.util";
 
 export interface ICreateMemorandum {
   to: string
-  re: string
-  addressee: string
+  subject: string
   contents: string
   creatorId: string
 }
@@ -12,12 +11,15 @@ export interface ICreateMemorandum {
 export interface IUpdateMemorandum {
   id: string
   to: string
-  re: string
-  addressee: string
+  subject: string
   contents: string
 }
+export interface ICreatedMemorandum {
+  id: string
+  creatorId: string
+}
 
-export async function createMemorandum(data: ICreateMemorandum) {
+export async function createMemorandum(data: ICreateMemorandum): Promise<ICreatedMemorandum> {
   try {
     const response = await api.post('/api/v1/memorandums', data);
     return response.data;
@@ -53,6 +55,19 @@ export async function deleteMemorandum(id: string) {
       message = error.response?.data.message;
     }
     throw new Error(message || 'Something went wrong')
+  }
+}
+
+export async function approveMemorandum(id: string) {
+  try {
+    const response = await api.patch(`/api/v1/memorandums/${id}/approver`);
+    return response.data
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
   }
 }
 
