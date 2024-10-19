@@ -1,38 +1,52 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
 import { ITransaction } from "@/interfaces/transaction.interface";
+import { OfficeBranch } from "@/interfaces/user.interface";
+import { ISalesAgreement } from "@/interfaces/sales-agreement.interface";
 
-export interface ICreateLead {
-  firstName?: string
-  middleName?: string
-  lastName?: string
+export interface ICreateClient {
+  name?: string
   email?: string
   contactNumber?: string
+  clientType: TypeOfClient
   documents?: string[]
+  department?: string
+  officeBranch?: OfficeBranch
 }
-export interface IUpdateLead {
+export interface IUpdateClient {
   id: string
-  firstName?: string
-  middleName?: string
-  lastName?: string
+  name?: string
   email?: string
   contactNumber?: string
   documents?: string[]
+  department?: string
+  officeBranch?: OfficeBranch
 }
 
-export interface ILead {
+export enum TypeOfClient {
+  WALK_IN = 'WALK_IN',
+  CORPORATE = 'CORPORATE',
+  GOVERNMENT = 'GOVERNMENT',
+  GROUP = 'GROUP',
+  INDIVIDUAL = 'INDIVIDUAL'
+}
+
+export interface IClient {
   id: string
-  firstName?: string
-  middleName?: string
-  lastName?: string
+  name?: string
   email?: string
   contactNumber?: string
   documents?: string[]
+  department?: string
+  officeBranch?: OfficeBranch
+  salesAgreements?: ISalesAgreement[]
   transactions?: ITransaction[]
+  clientType: TypeOfClient
 }
-export async function createLead(data: ICreateLead): Promise<ILead> {
+
+export async function createClient(data: ICreateClient): Promise<IClient> {
   try {
-    const response = await api.post('/api/v1/leads', data);
+    const response = await api.post('/api/v1/clients', data);
     return response.data;
   } catch (error) {
     let message;
@@ -43,9 +57,9 @@ export async function createLead(data: ICreateLead): Promise<ILead> {
   }
 }
 
-export async function updateLead({ id, ...data }: IUpdateLead) {
+export async function updateClient({ id, ...data }: IUpdateClient) {
   try {
-    const response = await api.put(`/api/v1/leads/${id}`, data);
+    const response = await api.put(`/api/v1/clients/${id}`, data);
     return response.data;
   } catch (error) {
     let message;
@@ -56,9 +70,9 @@ export async function updateLead({ id, ...data }: IUpdateLead) {
   }
 }
 
-export async function deleteLead(id: string) {
+export async function deleteClient(id: string) {
   try {
-    const response = await api.delete(`/api/v1/leads/${id}`);
+    const response = await api.delete(`/api/v1/clients/${id}`);
     return response.data;
   } catch (error) {
     let message;
@@ -69,15 +83,4 @@ export async function deleteLead(id: string) {
   }
 }
 
-export async function deletePurchaseRequestItem(id: string) {
-  try {
-    const response = await api.delete(`/api/v1/leads/${id}`);
-    return response.data;
-  } catch (error) {
-    let message;
-    if (error instanceof AxiosError) {
-      message = error.response?.data.message;
-    }
-    throw new Error(message || "Something went wrong");
-  }
-}
+

@@ -1,52 +1,56 @@
-import { Loader2, UserCircle } from "lucide-react";
+import { ContactRound, Loader2 } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import AnimatedDiv from "@/components/animated/Div";
-import { Form, FormItem, FormControl, FormField, FormMessage } from "@/components/ui/form";
+import { Form, FormItem, FormControl, FormField, FormMessage, FormLabel } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CommonInput from "@/components/common/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
-import { createLead, ICreateLead } from "@/api/mutations/lead.mutation";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { OfficeBranch } from "@/interfaces/user.interface";
+import { createSupplier, ICreateSupplier } from "@/api/mutations/supplier.mutation";
 
-
-interface ICreateLeadProps {
+interface ICreateSupplierProps {
 	openDialog: boolean;
 	setOpenDialog: (open: boolean) => void;
 }
 
+const userOfficeBranch: Record<OfficeBranch, string> = {
+	CEBU: 'Cebu',
+	CALBAYOG: 'Calbayog'
+}
+
+
 const formSchema = z.object({
-	firstName: z.string().trim().min(1, {
-		message: "First name is required."
+	name: z.string().trim().min(1, {
+		message: "Name is required."
 	}),
-	middleName: z.string().trim().min(1, {
-		message: "Middle name is required."
-	}),
-	lastName: z.string().trim().min(1, {
-		message: "Last Name is required."
-	}),
-	contactNumber: z.string().trim().min(1, {
+	contact: z.string().trim().min(1, {
 		message: "Contact number is required"
-	}),
-	email: z.string().trim().min(1, {
+	}).optional(),
+	address: z.string().trim().min(1, {
 		message: "Email is required."
-	}),
+	}).optional(),
+	officeBranch: z.enum([
+		OfficeBranch.CEBU,
+		OfficeBranch.CALBAYOG
+	]),
 });
 
 
-export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateLeadProps) {
+export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICreateSupplierProps) {
 	const queryClient = useQueryClient()
-
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	})
 
-	const { mutate: createLeadMutate, isPending: creatingLead } = useMutation({
-		mutationFn: async (data: ICreateLead) => await createLead(data),
+	const { mutate: createSupplierMutate, isPending: creatingSupplier } = useMutation({
+		mutationFn: async (data: ICreateSupplier) => await createSupplier(data),
 		onError: (error) => {
 			toast.error(error.message, {
 				className: 'text-destructive',
@@ -54,28 +58,30 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 			})
 		},
 		onSuccess: () => {
-			queryClient.refetchQueries({ queryKey: ['leads'] })
-			setOpenDialog(false)
 			form.reset()
+			queryClient.refetchQueries({ queryKey: ['suppliers'] })
+			setOpenDialog(false)
 			toast.custom(() => (
-				<CommonToast message="Successfully created lead" />
+				<CommonToast message="Successfully created supplier" />
 			), {
 				position: "bottom-right",
 			})
 		}
 	});
 
+
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		createLeadMutate(values)
+		createSupplierMutate(values)
 	}
+
 
 	return (
 		<Dialog open={openDialog} onOpenChange={() => { setOpenDialog(false) }}>
-			<DialogContent>
+			<DialogContent className="max-w-[700px] max-h-[520px] overflow-auto">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
-						<UserCircle />
-						Create Lead
+						<ContactRound />
+						Create Supplier
 					</DialogHeader>
 				</DialogTitle>
 				<Separator />
@@ -85,13 +91,39 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 								<FormField
 									control={form.control}
-									name="firstName"
+									name="officeBranch"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Office branch</FormLabel>
+											<Select onValueChange={field.onChange} defaultValue={field.value}>
+												<FormControl>
+													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
+														<SelectValue placeholder="Select branch" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{Object.entries(userOfficeBranch)?.map(([value, label]) => {
+														return (
+															<SelectItem value={value} className="text-[12px] text-muted-foreground">
+																{label}
+															</SelectItem>
+														);
+													})}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="name"
 									render={({ field }) => (
 										<FormItem>
 											<div className="flex flex-row items-center justify-between gap-x-2">
-												<p className="text-xs w-1/3">First Name:</p>
+												<p className="text-xs w-1/3">Client Name:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="First name" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }} />
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -100,37 +132,7 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 								/>
 								<FormField
 									control={form.control}
-									name="middleName"
-									render={({ field }) => (
-										<FormItem>
-											<div className="flex flex-row items-center justify-between gap-x-2">
-												<p className="text-xs w-1/3">Middle Name:</p>
-												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Middle name" containerProps={{ className: 'text-xs' }} />
-												</FormControl>
-											</div>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="lastName"
-									render={({ field }) => (
-										<FormItem>
-											<div className="flex flex-row items-center justify-between gap-x-2">
-												<p className="text-xs w-1/3">Last Name:</p>
-												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Last name" containerProps={{ className: 'text-xs' }} />
-												</FormControl>
-											</div>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="contactNumber"
+									name="contact"
 									render={({ field }) => (
 										<FormItem>
 											<div className="flex flex-row items-center justify-between gap-x-2">
@@ -145,13 +147,13 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 								/>
 								<FormField
 									control={form.control}
-									name="email"
+									name="address"
 									render={({ field }) => (
 										<FormItem>
 											<div className="flex flex-row items-center justify-between gap-x-2">
-												<p className="text-xs w-1/3">Email address:</p>
+												<p className="text-xs w-1/3">Address:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="john@sampleemail.com" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Supplier's Address" containerProps={{ className: 'text-xs' }} />
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -159,9 +161,9 @@ export default function CreateLeadDialog({ openDialog, setOpenDialog }: ICreateL
 									)}
 								/>
 								<div className="flex flex-row items-center gap-x-2 justify-end">
-									<Button type="submit" className="text-xs" disabled={creatingLead}>
+									<Button type="submit" className="text-xs" disabled={creatingSupplier}>
 										{
-											creatingLead ?
+											creatingSupplier ?
 												<div className="flex flex-row items-center gap-x-">
 													<p className="text-xs">Creating..</p>
 													<Loader2 className="animate-spin" />

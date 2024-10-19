@@ -70,6 +70,10 @@
 }
 
 @layer base {
+.reset-tw,
+.reset-tw * {
+    all: revert !important;
+}
 .prose {
     margin: 0;
     padding: 0;

@@ -14,15 +14,16 @@ interface Props {
 	placeholder?: string;
 	type?: HTMLInputTypeAttribute
 	max?: number
+	searchBar?: boolean
 }
 
 const CommonInput = forwardRef<HTMLInputElement, Props>((props, ref) => {
-	const { prefix, postfix, inputProps, containerProps, onChange, defaultValue, placeholder, type, max } = props;
+	const { prefix, postfix, searchBar, inputProps, containerProps, onChange, defaultValue, placeholder, type, max } = props;
 	const [showPassword, setShowPassword] = useState(false)
 	return (
 		<div
 			{...containerProps}
-			className={`h-[40px] px-[16px] w-full bg-slate-100 rounded-[4px] flex items-center gap-[14px] ${containerProps?.className}`}
+			className={`h-[40px] ${searchBar ? 'border-primary border-[0.5px]' : ''} px-[16px] w-full bg-slate-100 rounded-[4px] flex items-center gap-[14px] ${containerProps?.className}`}
 		>
 			{prefix}
 			<Input

@@ -1,10 +1,10 @@
-import { BookUser, CircleCheck, Loader2, SquareMenu, UserPlus } from "lucide-react";
+import { BookUser, CircleCheck, Loader2, SquareMenu, UserPlus, X } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import AnimatedDiv from "@/components/animated/Div";
-import { Form, FormItem, FormControl, FormField, FormMessage } from "@/components/ui/form";
+import { Form, FormItem, FormControl, FormField, FormMessage, FormLabel } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CommonInput from "@/components/common/input";
@@ -12,46 +12,62 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createTransaction, ICreateTransaction } from "@/api/mutations/transaction.mutation";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
-import { createLead, ICreateLead, ILead } from "@/api/mutations/lead.mutation";
 import { Button } from "@/components/ui/button";
 import usePagination from "@/hooks/usePagination";
 import useDebounce from "@/hooks/useDebounce";
-import { fetchLeads } from "@/api/queries/leads.query";
 import Lottie from "lottie-react";
 import skeletonLoader from "../../../assets/loaders/skeleton.json"
-import LeadDetails from "@/components/section/transaction/lead";
+import ClientDetails from "@/components/section/transaction/lead";
 import { useAuth } from "@/providers/auth-provider";
+import { fetchClients } from "@/api/queries/clients.query";
+import { createClient, IClient, ICreateClient, TypeOfClient } from "@/api/mutations/client.mutation";
+import { OfficeBranch } from "@/interfaces/user.interface";
+import Constants from "@/constants";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 interface ICreateTransactionDialog {
 	openDialog: boolean;
 	setOpenDialog: (open: boolean) => void;
-	successNavigate: (data: any) => void
+	successNavigate: (id: string) => void
 }
 const cardOptions = [
 	{
 		key: 'new',
 		title: 'Add',
-		description: 'Create a new lead from scratch.',
+		description: 'Create a new client from scratch.',
 		icon: <UserPlus size={82} className="text-muted-foreground" />
 	},
 	{
 		key: 'existing',
 		title: 'Select',
-		description: 'Choose from the existing leads created.',
+		description: 'Choose from the existing clients created.',
 		icon: <BookUser size={82} className="text-muted-foreground" />
 	}
 ];
 
+const clientTypesMap: Record<TypeOfClient, string> = {
+	WALK_IN: 'Walk in',
+	CORPORATE: 'Corporate',
+	GOVERNMENT: 'Government',
+	GROUP: 'Group',
+	INDIVIDUAL: 'Individual',
+}
+
+const userOfficeBranch: Record<OfficeBranch, string> = {
+	CEBU: 'Cebu',
+	CALBAYOG: 'Calbayog'
+}
+
+type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
+const departmentMap: Record<ClientWithDepartment, string[]> = {
+	CORPORATE: Constants.CorporateDepartments,
+	GOVERNMENT: Constants.GovernmentDepartments,
+}
+
 const formSchema = z.object({
-	firstName: z.string().trim().min(1, {
-		message: "First name is required."
-	}),
-	middleName: z.string().trim().min(1, {
-		message: "Middle name is required."
-	}),
-	lastName: z.string().trim().min(1, {
-		message: "Last Name is required."
+	name: z.string().trim().min(1, {
+		message: "Name is required."
 	}),
 	contactNumber: z.string().trim().min(1, {
 		message: "Contact number is required"
@@ -59,6 +75,18 @@ const formSchema = z.object({
 	email: z.string().trim().min(1, {
 		message: "Email is required."
 	}),
+	clientType: z.enum([
+		TypeOfClient.WALK_IN,
+		TypeOfClient.CORPORATE,
+		TypeOfClient.GOVERNMENT,
+		TypeOfClient.GROUP,
+		TypeOfClient.INDIVIDUAL,
+	]),
+	officeBranch: z.enum([
+		OfficeBranch.CEBU,
+		OfficeBranch.CALBAYOG
+	]),
+	department: z.string().optional(),
 });
 
 
@@ -71,12 +99,12 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	const { skip, take, pagination } = usePagination();
 	const [search, setSearch] = useState('');
 	const debouncedSearch = useDebounce(search, 500);
-	const [selectedLead, setSelectedLead] = useState<ILead | null>(null);
+	const [selectedClient, setSelectedClient] = useState<IClient | null>(null);
 	const { session } = useAuth()
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['leads', pagination, debouncedSearch],
-		queryFn: async () => await fetchLeads({ skip, take, search: debouncedSearch }),
+		queryKey: ['clients', pagination, debouncedSearch],
+		queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch }),
 		enabled: (selection.type === 'select' && selection.step === 1)
 	});
 
@@ -111,11 +139,11 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 			), {
 				position: "bottom-right",
 			})
-			successNavigate(data)
+			successNavigate(data.id)
 		}
 	});
-	const { mutate: createLeadMutate, isPending: creatingLead } = useMutation({
-		mutationFn: async (data: ICreateLead) => await createLead(data),
+	const { mutate: createClientMutate, isPending: creatingClient } = useMutation({
+		mutationFn: async (data: ICreateClient) => await createClient(data),
 		onError: (error) => {
 			toast.error(error.message, {
 				className: 'text-destructive',
@@ -124,23 +152,30 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 		},
 		onSuccess: (data) => {
 			queryClient.refetchQueries({ queryKey: ['transactions'] })
+			queryClient.refetchQueries({ queryKey: ['clients'] })
 			createTransactionMutate({
 				creatorId: String(session.user?.id),
 				id: data.id
 			})
 		}
 	});
+	const selectedClientType = form.watch('clientType');
+	const selectedDepartment = form.watch('department')
 
-	const handleSelectLead = (lead: ILead) => {
-		setSelectedLead(lead);
+	function clearDepartment() {
+		form.reset({
+			department: ''
+		})
+	}
+	const handleSelectClient = (client: IClient) => {
+		setSelectedClient(client);
 	};
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		if (selection.type === 'add') {
-			createLeadMutate(values)
+			createClientMutate(values)
 		}
 	}
-
 
 	return (
 		<Dialog open={openDialog} onOpenChange={() => {
@@ -191,47 +226,111 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 					{(selection.step === 1 && selection.type === 'add') &&
 						<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
 							<Form {...form}>
-								<p className="text-sm font-medium my-2">Create new lead for transaction</p>
+								<p className="text-sm font-medium my-2">Create new client for transaction</p>
 								<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 									<FormField
 										control={form.control}
-										name="firstName"
+										name="clientType"
 										render={({ field }) => (
 											<FormItem>
-												<div className="flex flex-row items-center justify-between gap-x-2">
-													<p className="text-xs w-1/3">First Name:</p>
-													<FormControl className="w-2/3">
-														<CommonInput inputProps={{ ...field }} placeholder="First name" containerProps={{ className: 'text-xs' }} />
+												<FormLabel>Type:</FormLabel>
+												<Select onValueChange={field.onChange} value={field.value}>
+													<FormControl>
+														<SelectTrigger className="bg-slate-100 border-none text-[12px]">
+															<SelectValue placeholder="Select a client type" />
+														</SelectTrigger>
 													</FormControl>
-												</div>
+													<SelectContent>
+														{Object.entries(clientTypesMap).map(([value, label], index) => (
+															<SelectItem
+																key={index}
+																value={value}
+																className="text-[12px]"
+															>
+																{label}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+												<FormMessage className="text-[10px]" />
+											</FormItem>
+										)}
+									/>
+									{(selectedClientType === TypeOfClient.CORPORATE || selectedClientType === TypeOfClient.GOVERNMENT) && (
+										<FormField
+											control={form.control}
+											name="department"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Department:</FormLabel>
+													<div className="flex justify-between items-center gap-x-2">
+														<Select onValueChange={field.onChange} value={field.value || ''}>
+
+															<FormControl>
+																<SelectTrigger className="bg-slate-100 border-none text-[12px]">
+																	<SelectValue placeholder="Select a department" />
+																</SelectTrigger>
+															</FormControl>
+															<SelectContent>
+																{Object.entries(departmentMap[selectedClientType as ClientWithDepartment]).map(([index, value]) => (
+																	<SelectItem
+																		key={index}
+																		value={value}
+																		className="text-[12px]"
+																	>
+																		{value}
+																	</SelectItem>
+																))}
+															</SelectContent>
+														</Select>
+														{selectedDepartment &&
+															<Button variant="outline" className="w-auto flex items-center gap-x-2" onClick={clearDepartment}>
+																<p className="text-xs">Do not set department</p>
+																<X className="h-4 w-4" />
+															</Button>
+														}
+													</div>
+													<FormMessage className="text-[10px]" />
+												</FormItem>
+											)}
+										/>
+									)}
+									<FormField
+										control={form.control}
+										name="officeBranch"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Office branch</FormLabel>
+												<Select onValueChange={field.onChange} defaultValue={field.value}>
+													<FormControl>
+														<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
+															<SelectValue placeholder="Select branch" />
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														{Object.entries(userOfficeBranch)?.map(([value, label]) => {
+															return (
+																<SelectItem value={value} className="text-[12px] text-muted-foreground">
+																	{label}
+																</SelectItem>
+															);
+														})}
+													</SelectContent>
+												</Select>
 												<FormMessage />
 											</FormItem>
 										)}
 									/>
+
 									<FormField
 										control={form.control}
-										name="middleName"
+										name="name"
 										render={({ field }) => (
 											<FormItem>
 												<div className="flex flex-row items-center justify-between gap-x-2">
-													<p className="text-xs w-1/3">Middle Name:</p>
+													<p className="text-xs w-1/3">Client Name:</p>
 													<FormControl className="w-2/3">
-														<CommonInput inputProps={{ ...field }} placeholder="Middle name" containerProps={{ className: 'text-xs' }} />
-													</FormControl>
-												</div>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="lastName"
-										render={({ field }) => (
-											<FormItem>
-												<div className="flex flex-row items-center justify-between gap-x-2">
-													<p className="text-xs w-1/3">Last Name:</p>
-													<FormControl className="w-2/3">
-														<CommonInput inputProps={{ ...field }} placeholder="Last name" containerProps={{ className: 'text-xs' }} />
+														<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }} />
 													</FormControl>
 												</div>
 												<FormMessage />
@@ -267,17 +366,16 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 												<FormMessage />
 											</FormItem>
 										)}
-									/>
-									<div className="flex flex-row items-center gap-x-2 justify-end">
+									/>									<div className="flex flex-row items-center gap-x-2 justify-end">
 										<Button className="text-xs bg-muted-foreground" onClick={() => {
 											setSelection({
 												step: 0,
 												type: ""
 											})
 										}}>Back</Button>
-										<Button type="submit" className="text-xs" disabled={creatingLead || creatingTransaction}>
+										<Button type="submit" className="text-xs" disabled={creatingClient || creatingTransaction}>
 											{
-												creatingLead || creatingTransaction ?
+												creatingClient || creatingTransaction ?
 													<div className="flex flex-row items-center gap-x-">
 														<p className="text-xs">Creating..</p>
 														<Loader2 className="animate-spin" />
@@ -292,14 +390,14 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 					}
 					{(selection.step === 1 && selection.type === 'select') &&
 						<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
-							<p className="text-sm font-medium my-2">
-								Select a Lead
+							<p className="text-sm font-medium">
+								Select a Client
 							</p>
 							<div className="flex flex-row justify-center">
 								<div className="w-full">
 									<div className="flex flex-1 gap-2 items-center p-[1px] border-b pb-2">
 										<CommonInput
-											placeholder="Search by lead name"
+											placeholder="Search by client name"
 											containerProps={{
 												className: "max-w-[500px]"
 											}}
@@ -313,23 +411,22 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 											<p className="text-white font-semibold text-[14px]"></p>
 										</div>
 									) : (
-										data?.leadsData?.slice(0, 3).map((lead, index) => (
+										data?.clientsData?.slice(0, 3).map((client, index) => (
 											<div
-												className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
-												${selectedLead?.id === lead.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
+												className={`my-2 relative border-[1px]  cursor-pointer hover:bg-green-100 
+												${selectedClient?.id === client.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
 												key={index}
-												onClick={() => handleSelectLead(lead)}
+												onClick={() => handleSelectClient(client)}
 											>
-												{selectedLead?.id === lead.id && (
-													<div className="absolute top-2 right-2 text-green-500">
+												{selectedClient?.id === client.id && (
+													<div className="absolute top-4 right-4 text-green-500">
 														<AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
 															<CircleCheck size={24} />
 														</AnimatedDiv>
 													</div>
 												)}
-												<LeadDetails leadData={lead} forSelection={true} />
+												<ClientDetails clientData={client} forSelection={true} />
 											</div>
-
 										))
 									)}
 								</div>
@@ -342,17 +439,17 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 									})
 								}}>Back</Button>
 
-								{selectedLead &&
-									<Button className="text-xs" disabled={creatingLead || creatingTransaction} onClick={() => {
-										if (selectedLead) {
+								{selectedClient &&
+									<Button className="text-xs" disabled={creatingClient || creatingTransaction} onClick={() => {
+										if (selectedClient) {
 											createTransactionMutate({
-												id: selectedLead.id,
+												id: selectedClient.id,
 												creatorId: String(session?.user?.id)
 											})
 										}
 									}}>
 										{
-											creatingLead || creatingTransaction ?
+											creatingClient || creatingTransaction ?
 												<div className="flex flex-row items-center gap-x-">
 													<p className="text-xs">Creating..</p>
 													<Loader2 className="animate-spin" />

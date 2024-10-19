@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { IMemorandum } from "@/api/queries/memorandums.query";
-import { NotepadText } from "lucide-react";
+import { Calendar, CircleUser, Hash, LetterText, ListTodo, NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import DeleteMemorandum from "@/components/alert/memorandum/delete";
 import { useAuth } from "@/providers/auth-provider";
@@ -14,6 +14,7 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 		id: 'select',
 		header: ({ table }) => (
 			<Checkbox
+				className="border-white"
 				checked={
 					table.getIsAllPageRowsSelected() ||
 					(table.getIsSomePageRowsSelected() && "indeterminate")
@@ -34,7 +35,11 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 	},
 	{
 		id: "memorandumNumber",
-		header: "Memorandum #",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Memorandum</p>
+			<Hash color="white" size={16} />
+		</div>,
+
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
@@ -45,7 +50,10 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 	},
 	{
 		id: "to",
-		header: "To",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Subject</p>
+			<CircleUser color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
@@ -58,7 +66,10 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 	},
 	{
 		id: "subject",
-		header: "Subject",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Subject</p>
+			<LetterText color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
@@ -71,7 +82,10 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 	},
 	{
 		id: "createdAt",
-		header: "Date Created",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Date Created</p>
+			<Calendar color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
@@ -82,11 +96,14 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 	},
 	{
 		id: "actions",
-		header: "Actions",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Actions</p>
+			<ListTodo color="white" size={16} />
+		</div>,
 		enableHiding: false,
 		cell: ({ row }) => {
-			const {session: {user}} = useAuth();
-			const {PermissionsCanDelete} = Constants;
+			const { session: { user } } = useAuth();
+			const { PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
 					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/memorandum/${row.original.id}`}>

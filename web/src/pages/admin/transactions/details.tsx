@@ -25,7 +25,7 @@ import SalesAgreementInfo from "@/components/section/sales-agreement/info";
 import PurchaseRequestInfo from "@/components/section/purchase-request/info";
 import SalesAgreementItems from "@/components/section/sales-agreement/items";
 import PurchaseRequestItems from "@/components/section/purchase-request/items";
-import LeadDetails from "@/components/section/transaction/lead";
+import ClientDetails from "@/components/section/transaction/lead";
 import { Accordion, AccordionItem, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function ManageTransaction() {
@@ -69,8 +69,8 @@ export default function ManageTransaction() {
                   ))}
                 </TabsList>
                 <TabsContent value={tabs[0].value} className="flex gap-y-2 flex-col">
-                  {transaction?.lead &&
-                    <LeadDetails leadData={transaction.lead} forSelection={false} />
+                  {transaction?.client &&
+                    <ClientDetails clientData={transaction.client} forSelection={false} />
                   }
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">

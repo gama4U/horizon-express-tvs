@@ -35,8 +35,8 @@ import CommonInput from "@/components/common/input";
 
 const formSchema = z.object({
   firstName: z.string()
-    .trim().min(1, { 
-      message: "First name is required" 
+    .trim().min(1, {
+      message: "First name is required"
     }),
   lastName: z.string()
     .trim().min(1, {
@@ -59,7 +59,7 @@ const formSchema = z.object({
     OfficeBranch.CALBAYOG
   ]),
   password: z.string()
-    .trim().min(8, { 
+    .trim().min(8, {
       message: "Password must be at least 8 characters."
     })
     .refine(password => {
@@ -69,7 +69,7 @@ const formSchema = z.object({
       message: 'Password must have uppercase, lowercase, number, and special characters (@$!%*?&).'
     }),
   confirmPassword: z.string()
-    .trim().min(1, { 
+    .trim().min(1, {
       message: "Please confirm your password"
     }),
 }).refine(data => data.password === data.confirmPassword, {
@@ -82,7 +82,7 @@ const selectUserMap: Record<UserType, string> = {
   EMPLOYEE: 'Employee'
 }
 
-const userPermissionMap: Record<UserType, Record<PermissionType , string>> = {
+const userPermissionMap: Record<UserType, Record<PermissionType, string>> = {
   ADMIN: {
     SUPER_ADMIN: 'Super Admin',
     SUPERVISOR: 'Supervisor',
@@ -118,20 +118,20 @@ export default function CreateUserDialog() {
     }
   });
 
-  const {mutate: createUserMutate, isPending} = useMutation({
+  const { mutate: createUserMutate, isPending } = useMutation({
     mutationFn: async (data: ICreateUser) => await createUser(data),
     onSuccess: () => {
-      queryClient.refetchQueries({queryKey: ['users']})
+      queryClient.refetchQueries({ queryKey: ['users'] })
       form.reset();
       setOpen(false);
-      toast.success("Users created successfully", { 
-        position: 'top-center', 
+      toast.success("Users created successfully", {
+        position: 'top-center',
         className: 'text-primary'
       });
     },
     onError: (error) => {
-      toast.success(error.message, { 
-        position: 'top-center', 
+      toast.success(error.message, {
+        position: 'top-center',
         className: 'text-destructive'
       });
     }
@@ -146,16 +146,16 @@ export default function CreateUserDialog() {
   }, [selectedUserType]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const {confirmPassword, ...data} = values;
-    
-    if(data.password.trim() !== confirmPassword.trim()) {
-      toast("Passwords are not the same!", { 
-        position: 'top-center', 
+    const { confirmPassword, ...data } = values;
+
+    if (data.password.trim() !== confirmPassword.trim()) {
+      toast("Passwords are not the same!", {
+        position: 'top-center',
         icon: <CircleX size={20} className="text-destructive" />
       });
       return;
     }
-    
+
     if (values.userType === UserType.ADMIN && !values.permission) {
       form.setError('permission', {
         message: 'Permission is required for admin user',
@@ -170,14 +170,14 @@ export default function CreateUserDialog() {
     <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
       <DialogTrigger>
         <Button size={'sm'} className="gap-1">
-          <Plus size={16}/>
+          <Plus size={16} />
           <span>Create</span>
         </Button>
-      </DialogTrigger>  
-      <DialogContent>
+      </DialogTrigger>
+      <DialogContent className="max-w-[600px] max-h-[560px] overflow-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <UserPlus size={24}/>
+            <UserPlus size={24} />
             <p className="flex-1 truncate">
               Create new user
             </p>
@@ -194,7 +194,7 @@ export default function CreateUserDialog() {
                     <FormItem className="w-full">
                       <FormLabel>First name</FormLabel>
                       <FormControl>
-                        <CommonInput inputProps={{ ...field }} placeholder="First name"/>
+                        <CommonInput inputProps={{ ...field }} placeholder="First name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -207,7 +207,7 @@ export default function CreateUserDialog() {
                     <FormItem className="w-full">
                       <FormLabel>Last name</FormLabel>
                       <FormControl>
-                        <CommonInput inputProps={{ ...field }} placeholder="Last name"/>
+                        <CommonInput inputProps={{ ...field }} placeholder="Last name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -221,7 +221,7 @@ export default function CreateUserDialog() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Email"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Email" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -266,13 +266,13 @@ export default function CreateUserDialog() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                      {Object.entries(userPermissionMap[form.getValues('userType')])
-                        .filter(([_, label]) => label !== '')
-                        .map(([value, label]) => (
-                          <SelectItem key={value} value={value} className="text-[12px] text-muted-foreground">
-                            {label}
-                          </SelectItem>
-                        ))}
+                        {Object.entries(userPermissionMap[form.getValues('userType')])
+                          .filter(([_, label]) => label !== '')
+                          .map(([value, label]) => (
+                            <SelectItem key={value} value={value} className="text-[12px] text-muted-foreground">
+                              {label}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -312,9 +312,9 @@ export default function CreateUserDialog() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <CommonInput 
-                        inputProps={{ ...field }} 
-                        type={'password'} 
+                      <CommonInput
+                        inputProps={{ ...field }}
+                        type={'password'}
                         placeholder="Password"
                       />
                     </FormControl>
@@ -329,9 +329,9 @@ export default function CreateUserDialog() {
                   <FormItem>
                     <FormLabel>Confirm password</FormLabel>
                     <FormControl>
-                      <CommonInput 
+                      <CommonInput
                         inputProps={{ ...field }}
-                        type={'password'} 
+                        type={'password'}
                         placeholder="Confirm password"
                       />
                     </FormControl>
@@ -342,8 +342,8 @@ export default function CreateUserDialog() {
             </div>
             <div className="flex gap-2 justify-end">
               <DialogClose>
-                <Button 
-                  type="button" 
+                <Button
+                  type="button"
                   variant={'outline'}
                   className="flex gap-2 mt-4"
                   disabled={isPending}
@@ -351,13 +351,13 @@ export default function CreateUserDialog() {
                   <span>Cancel</span>
                 </Button>
               </DialogClose>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="flex gap-2 mt-4"
                 disabled={isPending}
               >
-                {isPending && 
-                  <Loader2 size={20} className="animate-spin"/>
+                {isPending &&
+                  <Loader2 size={20} className="animate-spin" />
                 }
                 <span>Create</span>
               </Button>

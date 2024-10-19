@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { DataTablePagination } from "../../common/table-pagination";
 import Loader from "@/components/animated/Loader";
-import { ILead } from "@/api/mutations/lead.mutation";
+import { ISupplier } from "@/api/mutations/supplier.mutation";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -45,7 +45,7 @@ export function DataTable<TData, TValue>({
 		getCoreRowModel: getCoreRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
-		getRowId: row => (row as ILead).id,
+		getRowId: row => (row as ISupplier).id,
 		state: {
 			pagination,
 			sorting,
@@ -57,13 +57,13 @@ export function DataTable<TData, TValue>({
 	return (
 		<>
 			<div className="rounded-md border">
-				<Table>
-					<TableHeader>
+				<Table className="border-[1px]">
+					<TableHeader className="bg-primary">
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
 									return (
-										<TableHead key={header.id} className="text-[12px]">
+										<TableHead key={header.id} className="text-[12px] text-white">
 											{header.isPlaceholder
 												? null
 												: flexRender(

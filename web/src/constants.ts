@@ -2,61 +2,63 @@ import { TypeOfClient } from "./interfaces/sales-agreement.interface";
 import { PermissionType, UserType } from "./interfaces/user.interface";
 
 export type SidebarItemsType = {
-  label: string;
-  icon: string;
-  link: string;
+	label: string;
+	icon: string;
+	link: string;
 }
 
 const AdminSidebarItems: Array<SidebarItemsType> = [
-  { label: "Dashboard", icon: "Dashboard", link: "/admin" },
-  { label: "Transactions", icon: "Transactions", link: "/admin/transactions" },
-  { label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
-  { label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
-  { label: "Leads", icon: "Leads", link: "/admin/leads" },
-  { label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
-  { label: "Users", icon: "Users", link: "/admin/users" },
-  { label: "Profile", icon: "Profile", link: "/admin/profile" },
+	{ label: "Dashboard", icon: "Dashboard", link: "/admin" },
+	{ label: "Transactions", icon: "Transactions", link: "/admin/transactions" },
+	{ label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
+	{ label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
+	{ label: "Clients", icon: "Leads", link: "/admin/clients" },
+	{ label: "Suppliers", icon: "Suppliers", link: "/admin/suppliers" },
+	{ label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
+	{ label: "Users", icon: "Users", link: "/admin/users" },
+	{ label: "Profile", icon: "Profile", link: "/admin/profile" },
 ]
 
 const EmployeeSidebarItems: Array<SidebarItemsType> = [
-  { label: "Transactions", icon: "Transactions", link: "/employee" },
-  { label: "Sales Agreements", icon: "Purchase", link: "/employee/sales-agreements" },
-  { label: "Purchase Requests", icon: "Sales", link: "/employee/purchase-requests" },
-  { label: "Leads", icon: "Leads", link: "/employee/leads" },
-  { label: "Memorandum", icon: "Memorandum", link: "/employee/memorandum" },
-  { label: "Profile", icon: "Profile", link: "/employee/profile" },
+	{ label: "Transactions", icon: "Transactions", link: "/employee" },
+	{ label: "Sales Agreements", icon: "Purchase", link: "/employee/sales-agreements" },
+	{ label: "Purchase Requests", icon: "Sales", link: "/employee/purchase-requests" },
+	{ label: "Clients", icon: "Leads", link: "/employee/clients" },
+	{ label: "Suppliers", icon: "Suppliers", link: "/employee/suppliers" },
+	{ label: "Memorandum", icon: "Memorandum", link: "/employee/memorandum" },
+	{ label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
 
 const ContainerVariants = {
-  close: {
-    width: "4rem",
-    transition: {
-      type: "spring",
-      damping: 15,
-      duration: 0.5,
-    },
-  },
-  open: {
-    width: "16rem",
-    transition: {
-      type: "spring",
-      damping: 15,
-      duration: 0.5,
-    },
-  },
+	close: {
+		width: "4rem",
+		transition: {
+			type: "spring",
+			damping: 15,
+			duration: 0.5,
+		},
+	},
+	open: {
+		width: "16rem",
+		transition: {
+			type: "spring",
+			damping: 15,
+			duration: 0.5,
+		},
+	},
 }
 
-const VersionNumber: String = '0.1.0'
+const VersionNumber: string = '0.1.0'
 const NoTopbarPaths = [
-  "/admin/transactions"
+	"/admin/transactions"
 ]
 
 const ClientTypesMap: Record<TypeOfClient, string> = {
-  WALK_IN: 'Walk in',
-  CORPORATE: 'Corporate',
-  GOVERNMENT: 'Government',
-  GROUP: 'Group',
-  INDIVIDUAL: 'Individual',
+	WALK_IN: 'Walk in',
+	CORPORATE: 'Corporate',
+	GOVERNMENT: 'Government',
+	GROUP: 'Group',
+	INDIVIDUAL: 'Individual',
 }
 
 const UserRedirectRoute: Record<UserType, string> = {
@@ -69,21 +71,21 @@ const PermissionsCanEdit = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTIN
 const PermissionsCanApprove = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING, PermissionType.SUPERVISOR];
 
 const GovernmentDepartments = ['Security', 'Education'];
-const CorporateDepartments = ['IT Department', 'Tourism Department'];
+const CorporateDepartments = ['Information Technology', 'Tourism', 'Accounting', 'Human Resource'];
 
 const Constants = {
-  VersionNumber,
-  AdminSidebarItems,
-  EmployeeSidebarItems,
-  ContainerVariants,
-  NoTopbarPaths,
-  ClientTypesMap,
-  UserRedirectRoute,
-  PermissionsCanDelete,
-  PermissionsCanEdit,
-  PermissionsCanApprove,
-  GovernmentDepartments,
-  CorporateDepartments
+	VersionNumber,
+	AdminSidebarItems,
+	EmployeeSidebarItems,
+	ContainerVariants,
+	NoTopbarPaths,
+	ClientTypesMap,
+	UserRedirectRoute,
+	PermissionsCanDelete,
+	PermissionsCanEdit,
+	PermissionsCanApprove,
+	GovernmentDepartments,
+	CorporateDepartments
 }
 
 export default Constants

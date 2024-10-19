@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import Dashboard from "@/pages/admin/dashboard";
-import Leads from "@/pages/admin/leads";
+import Clients from "@/pages/admin/clients";
 import Memorandum from "@/pages/admin/memorandum";
 import MemorandumDetails from "@/pages/admin/memorandum/details";
 import Profile from "@/pages/admin/profile";
@@ -12,6 +12,7 @@ import Transactions from "@/pages/admin/transactions";
 import ManageTransaction from "@/pages/admin/transactions/details";
 import Users from "@/pages/admin/users";
 import { RouteObject } from "react-router-dom";
+import Suppliers from "@/pages/admin/suppliers";
 
 const adminRouter: RouteObject = {
   path: '/admin',
@@ -34,10 +35,13 @@ const adminRouter: RouteObject = {
       element: <Users />
     },
     {
-      path: 'leads',
-      element: <Leads />
+      path: 'clients',
+      element: <Clients />
     },
-
+    {
+      path: 'suppliers',
+      element: <Suppliers />
+    },
     {
       path: 'purchase-requests',
       element: <PurchaseRequests />

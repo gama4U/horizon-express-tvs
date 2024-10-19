@@ -17,6 +17,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     id: 'select',
     header: ({ table }) => (
       <Checkbox
+        className="border-white"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -25,7 +26,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
         aria-label="Select all"
       />
     ),
-     cell: ({ row }) => (
+    cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -39,12 +40,12 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     id: "creator",
     header: "Creator",
     cell: ({ row }) => {
-      if(!row.original.creator) return;
-      const {firstName, lastName, avatar} = row.original.creator;
+      if (!row.original.creator) return;
+      const { firstName, lastName, avatar } = row.original.creator;
       return (
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={avatar} className="object-cover"/>
+            <AvatarImage src={avatar} className="object-cover" />
             <AvatarFallback>
               {firstName[0].toUpperCase()}
             </AvatarFallback>
@@ -77,7 +78,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     header: "Type",
     cell: ({ row }) => (
       <span className="capitalize">
-        <PurchaseRequestTypeBadge 
+        <PurchaseRequestTypeBadge
           value={row.original.type}
         />
       </span>
@@ -107,18 +108,18 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const {session: {user}} = useAuth();
-      const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
+      const { session: { user } } = useAuth();
+      const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
       return (
         <div className="flex items-center justify-center gap-4">
           <Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/purchase-requests/${row.original.id}`}>
-            <NotepadText 
+            <NotepadText
               size={16}
               className="cursor-pointer hover:text-primary"
             />
           </Link>
           {(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
-            <EditPurchaseRequestDialog 
+            <EditPurchaseRequestDialog
               data={row.original}
             />
           )}

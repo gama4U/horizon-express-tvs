@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import Leads from "@/pages/employee/leads";
+import Clients from "@/pages/employee/clients";
 import Memorandum from "@/pages/employee/memorandum";
 import MemorandumDetails from "@/pages/employee/memorandum/details";
 import Profile from "@/pages/employee/profile";
@@ -7,6 +7,7 @@ import PurchaseRequests from "@/pages/employee/purchase-request";
 import PurchaseRequestDetails from "@/pages/employee/purchase-request/details";
 import SalesAgreements from "@/pages/employee/sales-agreement";
 import SalesAgreementDetails from "@/pages/employee/sales-agreement/details";
+import Suppliers from "@/pages/employee/suppliers";
 import Transactions from "@/pages/employee/transactions";
 import ManageTransaction from "@/pages/employee/transactions/details";
 import { RouteObject } from "react-router-dom";
@@ -24,8 +25,12 @@ const employeeRouter: RouteObject = {
       element: <ManageTransaction />
     },
     {
-      path: 'leads',
-      element: <Leads />
+      path: 'clients',
+      element: <Clients />
+    },
+    {
+      path: 'suppliers',
+      element: <Suppliers />
     },
     {
       path: 'purchase-requests',
