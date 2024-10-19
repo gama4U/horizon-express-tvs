@@ -17,6 +17,7 @@ model User {
   userType                      UserType
   permission                    PermissionType?
   signature                     String?
+  officeBranch                  OfficeBranch?
   createdAt                     DateTime               @default(now())
   updatedAt                     DateTime               @updatedAt
   createdSalesAgreements        SalesAgreement[]       @relation("CreateSalesAgreements")
@@ -27,6 +28,8 @@ model User {
   approvedTransactions          Transaction[]          @relation("ApprovedTransactions")
   memorandums                   Memorandum[]           @relation("PreparedMemorandums")
   approvedMemorandums           Memorandum[]           @relation("ApprovedMemorandums")
+  transmittal                   Transmittal[]          @relation("PreparedTransmittals")
+  approvedTransmittals          Transmittal[]          @relation("ApprovedTransmittals")
 }
 
 model Transaction {
@@ -43,8 +46,8 @@ model Transaction {
   preparedBy           User?                 @relation("PreparedTransactions", fields: [creatorId], references: [id])
   approverId           String?
   approver             User?                 @relation("ApprovedTransactions", fields: [approverId], references: [id])
-  leadId               String
-  lead                 Lead                  @relation(fields: [leadId], references: [id])
+  clientId             String
+  client               Client                @relation(fields: [clientId], references: [id])
   createdAt            DateTime?             @default(now())
   updatedAt            DateTime?             @updatedAt
 }
@@ -53,16 +56,19 @@ model SalesAgreement {
   id                  String                @id @default(cuid())
   creatorId           String
   approverId          String?
-  typeOfClient        ClientType
-  clientName          String?
   serialNumber        String
+  currency            Currency?
+  department          String?
   salesAgreementItems SalesAgreementItem[]
   purchaseOrder       PurchaseRequestOrder?
   transaction         Transaction?
-  creator             User                  @relation("CreateSalesAgreements", fields: [creatorId], references: [id])
-  approver            User?                 @relation("ApproveSalesAgreements", fields: [approverId], references: [id])
-  createdAt           DateTime?             @default(now())
-  updatedAt           DateTime?             @updatedAt
+  clientId            String
+  client              Client                @relation(fields: [clientId], references: [id])
+
+  creator   User      @relation("CreateSalesAgreements", fields: [creatorId], references: [id])
+  approver  User?     @relation("ApproveSalesAgreements", fields: [approverId], references: [id])
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model SalesAgreementItem {
@@ -82,7 +88,6 @@ model PurchaseRequestOrder {
   creatorId          String?
   serialNumber       String
   salesAgreementId   String?                    @unique
-  suppliersName      String?
   expenses           String?
   other              String?
   nos                String?
@@ -91,11 +96,42 @@ model PurchaseRequestOrder {
   paymentType        PaymentType?
   purchaseOrderItems PurchaseRequestOrderItem[]
   transaction        Transaction?
-  creator            User?                      @relation("CreatePurchaseRequestOrders", fields: [creatorId], references: [id])
-  salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
-  approver           User?                      @relation("ApprovePurchaseRequestOrders", fields: [approverId], references: [id])
-  createdAt          DateTime?                  @default(now())
-  updatedAt          DateTime?                  @updatedAt
+
+  supplierId String
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  creator        User?           @relation("CreatePurchaseRequestOrders", fields: [creatorId], references: [id])
+  salesAgreement SalesAgreement? @relation(fields: [salesAgreementId], references: [id])
+  approver       User?           @relation("ApprovePurchaseRequestOrders", fields: [approverId], references: [id])
+  createdAt      DateTime?       @default(now())
+  updatedAt      DateTime?       @updatedAt
+}
+
+model TransmittalDocuments {
+  id    String @id @default(cuid())
+  title String
+
+  transmittalId String
+  transmittal   Transmittal @relation(fields: [transmittalId], references: [id])
+}
+
+model Transmittal {
+  id               String                 @id @default(cuid())
+  memorandumNumber String
+  clientId         String
+  client           Client                 @relation(fields: [clientId], references: [id])
+  documents        TransmittalDocuments[]
+
+  recievedBy    String?
+  returnedBy    String?
+  transmittedBy String?
+  creatorId     String
+  creator       User    @relation("PreparedTransmittals", fields: [creatorId], references: [id])
+  approverId    String?
+  approver      User?   @relation("ApprovedTransmittals", fields: [approverId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Memorandum {
@@ -113,15 +149,30 @@ model Memorandum {
   updatedAt DateTime? @updatedAt
 }
 
-model Lead {
-  id            String        @id @default(cuid())
-  firstName     String
-  middleName    String
-  lastName      String
-  email         String
-  contactNumber String
-  documents     String[]
-  transactions  Transaction[]
+model Client {
+  id              String           @id @default(cuid())
+  firstName       String
+  middleName      String
+  lastName        String
+  email           String
+  contactNumber   String
+  documents       String[]
+  transactions    Transaction[]
+  transmittals    Transmittal[]
+  salesAgreements SalesAgreement[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model Supplier {
+  id           String       @id @default(cuid())
+  name         String
+  address      String?
+  contact      String?
+  officeBranch OfficeBranch
+
+  purchaseOrders PurchaseRequestOrder[]
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -250,12 +301,16 @@ enum UserType {
 enum PermissionType {
   SUPER_ADMIN
   SUPERVISOR
+  ACCOUNTING
+  RESERVATION
 }
 
 enum ClientType {
   WALK_IN
   CORPORATE
   GOVERNMENT
+  GROUP
+  INDIVIDUAL
 }
 
 enum PurchaseRequestOrderType {
@@ -297,4 +352,14 @@ enum AccommodationType {
   RESORT
   AIRBNB
   OTHERS
+}
+
+enum OfficeBranch {
+  CEBU
+  CALBAYOG
+}
+
+enum Currency {
+  USD
+  PHP
 }
