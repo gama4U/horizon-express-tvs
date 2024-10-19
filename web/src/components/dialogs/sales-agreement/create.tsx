@@ -9,13 +9,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ICreateSalesAgreement, TypeOfClient } from "../../../interfaces/sales-agreement.interface";
 import { createSalesAgreement } from "../../../api/mutations/sales-agreement.mutation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import Constants from "../../../constants";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
+import { Currency } from "@/interfaces/sales-agreement-item.interface";
 
 const formSchema = z.object({
   clientName: z.string().min(1, {
@@ -28,8 +29,31 @@ const formSchema = z.object({
     TypeOfClient.WALK_IN,
     TypeOfClient.CORPORATE,
     TypeOfClient.GOVERNMENT,
+    TypeOfClient.GROUP,
+    TypeOfClient.INDIVIDUAL,
   ]),
-})
+  department: z.string().optional(),
+  currency: z.enum([Currency.PHP, Currency.USD]),
+});
+
+const clientTypesMap: Record<TypeOfClient, string> = {
+  WALK_IN: 'Walk in',
+  CORPORATE: 'Corporate',
+  GOVERNMENT: 'Government',
+  GROUP: 'Group',
+  INDIVIDUAL: 'Individual',
+}
+
+const currencyMap: Record<Currency, string> = {
+  PHP: 'Philippine Peso (PHP)',
+  USD: 'US Dollar (USD)'
+}
+
+type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
+const departmentMap: Record<ClientWithDepartment, string[]> = {
+  CORPORATE: Constants.CorporateDepartments,
+  GOVERNMENT: Constants.GovernmentDepartments,
+}
 
 export default function CreateSalesAgreementDialog() {
   const navigate = useNavigate();
@@ -41,9 +65,11 @@ export default function CreateSalesAgreementDialog() {
     defaultValues: {
       typeOfClient: TypeOfClient.WALK_IN,
       serialNumber: '',
-      clientName: ''
+      clientName: '',
     }
   });
+
+  const selectedClientType = form.watch('typeOfClient');
 
   const {mutate: createMutate, isPending} = useMutation({
     mutationFn: async (data: ICreateSalesAgreement) => await createSalesAgreement(data),
@@ -63,6 +89,12 @@ export default function CreateSalesAgreementDialog() {
       })
     },
   });
+
+  useEffect(() => {
+    if (selectedClientType) {
+      form.resetField('department');
+    }
+  }, [selectedClientType])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createMutate({
@@ -118,14 +150,72 @@ export default function CreateSalesAgreementDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Type:</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-slate-100 border-none text-[12px]">
                           <SelectValue placeholder="Select a client type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {Object.entries(Constants.ClientTypesMap).map(([value, label], index) => (
+                        {Object.entries(clientTypesMap).map(([value, label], index) => (
+                          <SelectItem
+                            key={index}
+                            value={value}
+                            className="text-[12px]"
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[10px]"/>
+                  </FormItem>
+                )}
+              />
+              {(selectedClientType === TypeOfClient.CORPORATE || selectedClientType === TypeOfClient.GOVERNMENT) && (
+                <FormField
+                  control={form.control}
+                  name="department"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Department:</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <FormControl>
+                          <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                            <SelectValue placeholder="Select a department" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.entries(departmentMap[selectedClientType as ClientWithDepartment]).map(([index, value]) => (
+                            <SelectItem
+                              key={index}
+                              value={value}
+                              className="text-[12px]"
+                            >
+                              {value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage className="text-[10px]"/>
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency:</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select a currency" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(currencyMap).map(([value, label], index) => (
                           <SelectItem
                             key={index}
                             value={value}

@@ -10,14 +10,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { updateSalesAgreementItem } from "../../../api/mutations/sales-agreement-item.mutation";
-import { Currency, ISalesAgreementItem, IUpdateSalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ISalesAgreementItem, IUpdateSalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
 
 const formSchema = z.object({
   particulars: z.string().min(1, {
     message: 'Particulars is required'
   }),
-  currency: z.enum([Currency.PHP, Currency.USD]),
   quantity: z.string().refine(value => {
     const numberValue = Number(value);
     return !isNaN(numberValue) && numberValue > 0;
@@ -34,11 +32,6 @@ const formSchema = z.object({
     message: 'Invalid total'
   }),
 });
-
-const currencyMap: Record<Currency, string> = {
-  PHP: 'Philippine Peso (PHP)',
-  USD: 'US Dollar (USD)'
-}
 
 interface Props {
   data: ISalesAgreementItem;
@@ -67,7 +60,6 @@ export default function EditSalesAgreementItemDialog({data}: Props) {
     if (data) {
       form.reset({
         particulars: data.particulars,
-        currency: data.currency,
         quantity: String(data.quantity),
         unitPrice: String(data.unitPrice),
         total: data.total,
@@ -167,34 +159,6 @@ export default function EditSalesAgreementItemDialog({data}: Props) {
                     <FormControl>
                       <CommonInput inputProps={{ ...field, readOnly: true }} type="number" placeholder="Total"/>
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="currency"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Currency:</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                          <SelectValue placeholder="Select a currency" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(currencyMap).map(([value, label], index) => (
-                          <SelectItem
-                            key={index}
-                            value={value}
-                            className="text-[12px]"
-                          >
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
                 )}

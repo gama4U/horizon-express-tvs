@@ -1,4 +1,3 @@
-import { Currency } from "@prisma/client";
 import { z } from "zod";
 
 export const createSalesAgreementItemSchema = z.object({
@@ -6,7 +5,6 @@ export const createSalesAgreementItemSchema = z.object({
     particulars: z.string().min(1, {
       message: 'Particulars is required'
     }),
-    currency: z.enum([Currency.PHP, Currency.USD]),
     quantity: z.number().refine(value => value > 0, {
       message: 'Invalid quantity'
     }),
@@ -24,7 +22,6 @@ export const updateSalesAgreementItemSchema = z.object({
     particulars: z.string().min(1, {
       message: 'Particulars is required'
     }),
-    currency: z.enum([Currency.PHP, Currency.USD]),
     quantity: z.number().refine(value => value > 0, {
       message: 'Invalid quantity'
     }),

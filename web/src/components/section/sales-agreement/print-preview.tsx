@@ -157,8 +157,8 @@ export default function PrintPreview({ data }: Props) {
                     <tr key={index}>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString() }</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{formatCurrency(item.currency, item.unitPrice)}</td>
-                      <td className="px-4 py-2 text-center">{formatCurrency(item.currency, item.total)}</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{formatCurrency(data.currency, item.unitPrice)}</td>
+                      <td className="px-4 py-2 text-center">{formatCurrency(data.currency, item.total)}</td>
                     </tr>
                   ))}
                 </>

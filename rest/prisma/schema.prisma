@@ -57,6 +57,8 @@ model SalesAgreement {
   typeOfClient        ClientType
   clientName          String?
   serialNumber        String
+  currency            Currency?
+  department          String?
   salesAgreementItems SalesAgreementItem[]
   purchaseOrder       PurchaseRequestOrder?
   transaction         Transaction?
@@ -73,7 +75,6 @@ model SalesAgreementItem {
   quantity         Int?
   unitPrice        Float?
   total            Float?
-  currency         Currency?
   salesAgreement   SalesAgreement @relation(fields: [salesAgreementId], references: [id])
   createdAt        DateTime?      @default(now())
   updatedAt        DateTime?      @updatedAt
@@ -260,6 +261,8 @@ enum ClientType {
   WALK_IN
   CORPORATE
   GOVERNMENT
+  GROUP
+  INDIVIDUAL
 }
 
 enum PurchaseRequestOrderType {

@@ -55,6 +55,8 @@ const ClientTypesMap: Record<TypeOfClient, string> = {
   WALK_IN: 'Walk in',
   CORPORATE: 'Corporate',
   GOVERNMENT: 'Government',
+  GROUP: 'Group',
+  INDIVIDUAL: 'Individual',
 }
 
 const UserRedirectRoute: Record<UserType, string> = {
@@ -66,6 +68,9 @@ const PermissionsCanDelete = [PermissionType.SUPER_ADMIN];
 const PermissionsCanEdit = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING];
 const PermissionsCanApprove = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING, PermissionType.SUPERVISOR];
 
+const GovernmentDepartments = ['Security', 'Education'];
+const CorporateDepartments = ['IT Department', 'Tourism Department'];
+
 const Constants = {
   VersionNumber,
   AdminSidebarItems,
@@ -76,7 +81,9 @@ const Constants = {
   UserRedirectRoute,
   PermissionsCanDelete,
   PermissionsCanEdit,
-  PermissionsCanApprove
+  PermissionsCanApprove,
+  GovernmentDepartments,
+  CorporateDepartments
 }
 
 export default Constants

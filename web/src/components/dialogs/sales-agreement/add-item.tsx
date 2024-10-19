@@ -10,8 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { addSalesAgreementItem } from "../../../api/mutations/sales-agreement-item.mutation";
-import { Currency, IAddSalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { IAddSalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
 
 const formSchema = z.object({
   particulars: z.string().min(1, {
@@ -23,7 +22,6 @@ const formSchema = z.object({
   }, {
     message: 'Invalid quantity'
   }),
-  currency: z.enum([Currency.PHP, Currency.USD]),
   unitPrice: z.string().refine(value => {
     const numberValue = Number(value);
     return !isNaN(numberValue) && numberValue > 0;
@@ -34,11 +32,6 @@ const formSchema = z.object({
     message: 'Invalid total'
   }),
 });
-
-const currencyMap: Record<Currency, string> = {
-  PHP: 'Philippine Peso (PHP)',
-  USD: 'US Dollar (USD)'
-}
 
 interface Props {
   salesAgreementId: string;
@@ -158,34 +151,6 @@ export default function AddSalesAgreementItemDialog({salesAgreementId}: Props) {
                     <FormControl>
                       <CommonInput inputProps={{ ...field, readOnly: true }} type="number" placeholder="Total"/>
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="currency"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Currency:</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                          <SelectValue placeholder="Select a currency" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(currencyMap).map(([value, label], index) => (
-                          <SelectItem
-                            key={index}
-                            value={value}
-                            className="text-[12px]"
-                          >
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
                 )}
