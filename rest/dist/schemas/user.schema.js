@@ -22,12 +22,18 @@ exports.createUserSchema = zod_1.z.object({
         email: zod_1.z.string().email(),
         userType: zod_1.z.enum([
             client_1.UserType.ADMIN,
-            client_1.UserType.EMPLOYEE
+            client_1.UserType.EMPLOYEE,
         ]),
         permission: zod_1.z.enum([
             client_1.PermissionType.SUPER_ADMIN,
-            client_1.PermissionType.SUPERVISOR
-        ]).optional(),
+            client_1.PermissionType.SUPERVISOR,
+            client_1.PermissionType.ACCOUNTING,
+            client_1.PermissionType.RESERVATION
+        ]),
+        officeBranch: zod_1.z.enum([
+            client_1.OfficeBranch.CEBU,
+            client_1.OfficeBranch.CALBAYOG
+        ]),
         password: zod_1.z.string().min(8).refine((password) => {
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             return passwordRegex.test(password);
@@ -44,7 +50,9 @@ exports.updateUserSchema = zod_1.z.object({
         userType: zod_1.z.enum([client_1.UserType.ADMIN, client_1.UserType.EMPLOYEE]),
         permission: zod_1.z.enum([
             client_1.PermissionType.SUPER_ADMIN,
-            client_1.PermissionType.SUPERVISOR
+            client_1.PermissionType.SUPERVISOR,
+            client_1.PermissionType.ACCOUNTING,
+            client_1.PermissionType.RESERVATION
         ]).optional(),
         password: zod_1.z.string().min(8).refine((password) => {
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const getLeadsSchema = z.object({
+export const getClientsSchema = z.object({
   query: z.object({
     skip: z.string().refine(skip => !isNaN(Number(skip)), {
       message: 'Invalid skip value'

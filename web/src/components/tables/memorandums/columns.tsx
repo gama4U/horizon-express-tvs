@@ -7,6 +7,7 @@ import DeleteMemorandum from "@/components/alert/memorandum/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 import { format } from "date-fns"
+import Constants from "@/constants";
 
 export const Columns: ColumnDef<IMemorandum>[] = [
 	{
@@ -84,7 +85,8 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 		header: "Actions",
 		enableHiding: false,
 		cell: ({ row }) => {
-			const { session: { user } } = useAuth();
+			const {session: {user}} = useAuth();
+			const {PermissionsCanDelete} = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
 					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/memorandum/${row.original.id}`}>
@@ -93,9 +95,11 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 							className="cursor-pointer hover:text-primary"
 						/>
 					</Link>
-					<DeleteMemorandum
-						memorandumId={row.original.id}
-					/>
+					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
+						<DeleteMemorandum
+							memorandumId={row.original.id}
+						/>
+					)}
 				</div>
 			)
 		},

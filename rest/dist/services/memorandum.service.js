@@ -29,6 +29,7 @@ exports.updateMemorandum = updateMemorandum;
 exports.fetchMemorandums = fetchMemorandums;
 exports.findMemorandumById = findMemorandumById;
 exports.fetchMemorandumSummary = fetchMemorandumSummary;
+exports.updateMemorandumApprover = updateMemorandumApprover;
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
 const generate_number_1 = require("../utils/generate-number");
 const moment_1 = __importDefault(require("moment"));
@@ -69,11 +70,12 @@ function fetchMemorandums(_a) {
         if (search) {
             whereInput = {
                 OR: [
-                    { addressee: { contains: search, mode: "insensitive" } },
+                    { subject: { contains: search, mode: "insensitive" } },
+                    { memorandumNumber: { contains: search, mode: "insensitive" } },
                 ],
             };
         }
-        const leads = db_utils_1.default.memorandum.findMany({
+        const memorandums = db_utils_1.default.memorandum.findMany({
             where: Object.assign({}, whereInput),
             skip: skip !== null && skip !== void 0 ? skip : 0,
             take: take !== null && take !== void 0 ? take : 10,
@@ -85,7 +87,7 @@ function fetchMemorandums(_a) {
             where: Object.assign({}, whereInput),
         });
         const [memorandumData, total] = yield db_utils_1.default.$transaction([
-            leads,
+            memorandums,
             countMemorandums
         ]);
         return { memorandumData, total };
@@ -95,6 +97,10 @@ function findMemorandumById(id) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield db_utils_1.default.memorandum.findUnique({
             where: { id },
+            include: {
+                creator: true,
+                approver: true
+            }
         });
     });
 }
@@ -115,5 +121,13 @@ function fetchMemorandumSummary() {
         return {
             total, since7days, rate
         };
+    });
+}
+function updateMemorandumApprover(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ id, approverId }) {
+        return yield db_utils_1.default.memorandum.update({
+            where: { id },
+            data: { approverId }
+        });
     });
 }

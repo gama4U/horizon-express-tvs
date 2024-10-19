@@ -2,7 +2,7 @@ import { PaymentType, PurchaseRequestOrderType } from "@prisma/client";
 
 export interface ICreatePurchaseRequest {
   creatorId: string;
-  suppliersName: string;
+  supplierId: string;
   serialNumber: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;

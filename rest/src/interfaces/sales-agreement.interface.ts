@@ -1,10 +1,10 @@
-import { ClientType } from "@prisma/client";
+import { ClientType, Currency } from "@prisma/client";
 
 export interface ICreateSalesAgreement {
   creatorId: string;
-  typeOfClient: ClientType;
-  clientName: string;
   serialNumber: string;
+  currency: Currency;
+  clientId: string;
 }
 
 export interface IUpdateSalesAgreement {

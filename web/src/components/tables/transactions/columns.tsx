@@ -7,6 +7,7 @@ import { VoucherBadge } from "@/components/badges/voucher-type";
 import DeleteTransaction from "@/components/alert/transactions/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
+import Constants from "@/constants";
 
 export const Columns: ColumnDef<ITransaction>[] = [
 	{
@@ -99,6 +100,7 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
       const {session: {user}} = useAuth();
+			const {PermissionsCanDelete} = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
 					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/transactions/${row.original.id}`}>
@@ -107,9 +109,11 @@ export const Columns: ColumnDef<ITransaction>[] = [
 							className="cursor-pointer hover:text-primary"
 						/>
 					</Link>
-					<DeleteTransaction
-						transactionId={row.original.id}
-					/>
+					{user?.permission && PermissionsCanDelete.includes(user.permission) && (
+						<DeleteTransaction
+							transactionId={row.original.id}
+						/>
+					)}
 				</div>
 			)
 		},

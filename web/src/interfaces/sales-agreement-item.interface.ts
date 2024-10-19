@@ -27,3 +27,8 @@ export interface IUpdateSalesAgreementItem {
   unitPrice: number;
   total: number;
 }
+
+export enum Currency {
+  USD = 'USD',
+  PHP = 'PHP'
+}

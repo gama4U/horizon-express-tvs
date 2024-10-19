@@ -37,7 +37,7 @@ function createTransaction(_a) {
     return __awaiter(this, arguments, void 0, function* ({ id, creatorId }) {
         return yield db_utils_1.default.transaction.create({
             data: {
-                leadId: id,
+                clientId: id,
                 creatorId: creatorId
             }
         });
@@ -88,7 +88,7 @@ function fetchTransaction(_a) {
                 id
             },
             include: {
-                lead: true,
+                client: true,
                 tourVoucher: {
                     include: {
                         itineraries: true
@@ -130,8 +130,8 @@ function fetchTransactions(_a) {
         if (search) {
             whereInput = {
                 OR: [
-                    { lead: { firstName: { contains: search, mode: 'insensitive' } } },
-                    { lead: { lastName: { contains: search, mode: 'insensitive' } } },
+                    { client: { firstName: { contains: search, mode: 'insensitive' } } },
+                    { client: { lastName: { contains: search, mode: 'insensitive' } } },
                     { id: { contains: search, mode: "insensitive" } },
                 ],
             };
@@ -155,13 +155,14 @@ function fetchTransactions(_a) {
         const findTransaction = db_utils_1.default.transaction.findMany({
             where: Object.assign({}, whereInput),
             include: {
-                lead: {
+                client: {
                     select: {
                         id: true,
                         firstName: true,
                         middleName: true,
                         lastName: true,
                         email: true,
+                        officeBranch: true,
                     },
                 },
                 preparedBy: true,

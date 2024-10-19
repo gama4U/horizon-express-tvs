@@ -2,6 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { IPurchaseRequestOrderItem } from "@/interfaces/purchase-request-item.interface";
 import DeletePurchaseRequestItem from "@/components/alert/purchse-request/delete-item";
 import EditPurchaseRequestItemDialog from "@/components/dialogs/purchase-request/edit-item";
+import Constants from "@/constants";
+import { useAuth } from "@/providers/auth-provider";
 
 export const Columns: ColumnDef<IPurchaseRequestOrderItem>[] = [
   {
@@ -42,12 +44,17 @@ export const Columns: ColumnDef<IPurchaseRequestOrderItem>[] = [
   },
   {
     id: "actions",
-    header: "Actions",
     cell: ({ row }) => {
+      const {PermissionsCanDelete, PermissionsCanEdit} = Constants;
+      const {session: {user}} = useAuth();
       return (
         <div className="flex items-center gap-4"> 
-          <EditPurchaseRequestItemDialog data={row.original} />
-          <DeletePurchaseRequestItem purchaseRequestId={row.original.id}/>
+          {(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
+            <DeletePurchaseRequestItem purchaseRequestId={row.original.id}/>
+          )}
+           {(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
+            <EditPurchaseRequestItemDialog data={row.original} />
+          )}
         </div>
       )
     },

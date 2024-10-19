@@ -1,15 +1,15 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
-import { ICreateLead, IUpdateLead } from "../interfaces/lead.interface";
+import { ICreateClient, IUpdateClient } from "../interfaces/client.interface";
 
-export async function createLead(data: ICreateLead) {
-  return await prisma.lead.create({
+export async function createClient(data: ICreateClient) {
+  return await prisma.client.create({
     data
   })
 }
 
-export async function updateLead(id: string, data: IUpdateLead) {
-  return await prisma.lead.update({
+export async function updateClient(id: string, data: IUpdateClient) {
+  return await prisma.client.update({
     where: {
       id: id
     },
@@ -17,22 +17,22 @@ export async function updateLead(id: string, data: IUpdateLead) {
   })
 }
 
-export async function deleteLead(id: string) {
-  return await prisma.lead.delete({
+export async function deleteClient(id: string) {
+  return await prisma.client.delete({
     where: {
       id: id
     }
   })
 }
 
-export interface IFindLeads {
+export interface IFindClient {
   skip?: number;
   take?: number;
   search?: string;
 }
 
-export async function fetchLeads({ skip, take, search }: IFindLeads) {
-  let whereInput: Prisma.LeadWhereInput = {};
+export async function fetchClients({ skip, take, search }: IFindClient) {
+  let whereInput: Prisma.ClientWhereInput = {};
 
   if (search) {
     const searchParts = search.split(/\s+/);
@@ -42,13 +42,13 @@ export async function fetchLeads({ skip, take, search }: IFindLeads) {
           { firstName: { contains: part, mode: "insensitive" } },
           { middleName: { contains: part, mode: "insensitive" } },
           { lastName: { contains: part, mode: "insensitive" } },
-          { email: { contains: part, mode: "insensitive"}}
+          { email: { contains: part, mode: "insensitive" } }
         ],
       })),
     }
   }
 
-  const leads = prisma.lead.findMany({
+  const client = prisma.client.findMany({
     where: {
       ...whereInput,
     },
@@ -67,16 +67,16 @@ export async function fetchLeads({ skip, take, search }: IFindLeads) {
     }
   });
 
-  const countLeads = prisma.lead.count({
+  const countClients = prisma.client.count({
     where: {
       ...whereInput
     },
   });
 
-  const [leadsData, total] = await prisma.$transaction([
-    leads,
-    countLeads
+  const [clientsData, total] = await prisma.$transaction([
+    client,
+    countClients
   ]);
 
-  return { leadsData, total };
+  return { clientsData, total };
 }

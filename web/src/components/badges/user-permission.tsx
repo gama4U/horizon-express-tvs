@@ -7,12 +7,16 @@ interface Props {
 
 const badgeStyleMap: Record<PermissionType, string> = {
   SUPER_ADMIN: 'bg-green-100 hover:bg-green-200',
-  SUPERVISOR: 'bg-slate-100 hover:bg-slate-200',
+  ACCOUNTING: 'bg-blue-100 hover:bg-blue-200',
+  SUPERVISOR: 'bg-red-100 hover:bg-red-200',
+  RESERVATION: 'bg-slate-100 hover:bg-slate-200',
 } 
 
 const badgeLabelMap: Record<PermissionType, string> = {
   SUPER_ADMIN: 'Super Admin',
   SUPERVISOR: 'Supervisor',
+  ACCOUNTING: 'Accounting',
+  RESERVATION: 'Reservation',
 } 
 
 export default function UserPermissionBadge({value}: Props) {

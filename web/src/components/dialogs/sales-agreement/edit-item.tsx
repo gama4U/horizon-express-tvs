@@ -89,7 +89,7 @@ export default function EditSalesAgreementItemDialog({data}: Props) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     updateMutate({
       salesAgreementItemId: data.id,
-      particulars: values.particulars,
+      ...values,
       quantity: Number(values.quantity),
       unitPrice: Number(values.unitPrice),
       total: Number(values.total)

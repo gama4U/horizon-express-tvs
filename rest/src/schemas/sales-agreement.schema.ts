@@ -1,4 +1,4 @@
-import { ClientType } from "@prisma/client";
+import { ClientType, Currency } from "@prisma/client";
 import { z } from "zod";
 
 export const createSalesAgreementSchema = z.object({
@@ -14,6 +14,8 @@ export const createSalesAgreementSchema = z.object({
       ClientType.CORPORATE,
       ClientType.GOVERNMENT,
     ]),
+    currency: z.enum([Currency.PHP, Currency.USD]),
+    department: z.string().optional()
   })
 });
 

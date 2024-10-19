@@ -56,7 +56,13 @@ function findPurchaseRequests(_a) {
         if (search) {
             whereInput = {
                 OR: [
-                    { suppliersName: { contains: search, mode: "insensitive" } },
+                    {
+                        supplier: {
+                            name: { contains: search, mode: "insensitive" },
+                            address: { contains: search, mode: "insensitive" },
+                            contact: { contains: search, mode: "insensitive" },
+                        }
+                    },
                     { serialNumber: { contains: search, mode: "insensitive" } },
                 ],
             };

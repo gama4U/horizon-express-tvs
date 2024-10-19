@@ -1,4 +1,4 @@
-import { ISalesAgreementItem } from "./sales-agreement-item.interface";
+import { Currency, ISalesAgreementItem } from "./sales-agreement-item.interface";
 import { IUser } from "./user.interface";
 
 export interface ISalesAgreement {
@@ -8,6 +8,8 @@ export interface ISalesAgreement {
   clientName: string;
   typeOfClient: TypeOfClient;
   serialNumber: string;
+  currency: Currency;
+  department?: string;
   salesAgreementItems: ISalesAgreementItem[];
   purchaseOrder: any;
   transaction: any;
@@ -19,13 +21,17 @@ export interface ISalesAgreement {
 export enum TypeOfClient {
   WALK_IN = 'WALK_IN',
   CORPORATE = 'CORPORATE',
-  GOVERNMENT = 'GOVERNMENT'
+  GOVERNMENT = 'GOVERNMENT',
+  GROUP = 'GROUP',
+  INDIVIDUAL = 'INDIVIDUAL'
 }
 
 export interface ICreateSalesAgreement {
   clientName: string;
   serialNumber: string;
   typeOfClient: TypeOfClient;
+  department?: string;
+  currency: Currency;
 }
 
 export interface IUpdateSalesAgreement {

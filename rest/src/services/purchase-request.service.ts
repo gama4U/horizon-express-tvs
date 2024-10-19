@@ -24,7 +24,13 @@ export async function findPurchaseRequests({ skip, take, search, type, paymentTy
   if (search) {
     whereInput = {
       OR: [
-        { suppliersName: { contains: search, mode: "insensitive" } },
+        {
+          supplier: {
+            name: { contains: search, mode: "insensitive" },
+            address: { contains: search, mode: "insensitive" },
+            contact: { contains: search, mode: "insensitive" },
+          }
+        },
         { serialNumber: { contains: search, mode: "insensitive" } },
       ],
     }
@@ -157,9 +163,9 @@ export async function fetchPurchaseRequestSummary() {
 }
 
 
-export async function updatePurchaseRequestOrderApprover({id, approverId}: IUpdatePurchaseRequestApprover) {
+export async function updatePurchaseRequestOrderApprover({ id, approverId }: IUpdatePurchaseRequestApprover) {
   return await prisma.purchaseRequestOrder.update({
-    where: {id},
-    data: {approverId}
+    where: { id },
+    data: { approverId }
   });
 }

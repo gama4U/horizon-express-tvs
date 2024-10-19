@@ -64,7 +64,7 @@ export async function fetchMemorandums({ skip, take, search }: IFindMemorandums)
     }
   }
 
-  const leads = prisma.memorandum.findMany({
+  const memorandums = prisma.memorandum.findMany({
     where: {
       ...whereInput,
     },
@@ -82,7 +82,7 @@ export async function fetchMemorandums({ skip, take, search }: IFindMemorandums)
   });
 
   const [memorandumData, total] = await prisma.$transaction([
-    leads,
+    memorandums,
     countMemorandums
   ]);
 

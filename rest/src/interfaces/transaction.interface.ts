@@ -1,8 +1,9 @@
+import { IClient } from "./client.interface";
 
 export interface ITransaction {
   id: string;
   userId: string;
-  lead: any;
+  client: IClient;
   travelVoucher?: any;
   accommodationVoucher?: any;
   tourVoucher?: any;

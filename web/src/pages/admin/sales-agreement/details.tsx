@@ -8,9 +8,13 @@ import SalesAgreementItems from "../../../components/section/sales-agreement/ite
 import EditSalesAgreementDialog from "../../../components/dialogs/sales-agreement/edit";
 import { fetchSalesAgreement } from "@/api/queries/sales-agreements.queries";
 import Loader from "@/components/animated/Loader";
+import { useAuth } from "@/providers/auth-provider";
+import Constants from "@/constants";
 
 export default function SalesAgreementDetails() {
   const { id } = useParams();
+  const {session: {user}} = useAuth();
+  const {PermissionsCanEdit} = Constants;
 
   const { data, isLoading } = useQuery({
     queryKey: ['sales-agreement-details', id],
@@ -37,7 +41,6 @@ export default function SalesAgreementDetails() {
       />
       <div className="w-full flex gap-x-2 rounded-lg">
         <Loader isLoading={isLoading} />
-
         {data ? (
           <>
             <section className="w-full bg-white rounded-lg">
@@ -45,7 +48,9 @@ export default function SalesAgreementDetails() {
                 <h1 className="text-[12px] font-semibold">
                   Details
                 </h1>
-                <EditSalesAgreementDialog data={data} />
+                {(user?.permission && PermissionsCanEdit.includes(user?.permission)) && (
+                  <EditSalesAgreementDialog data={data} />
+                )}
               </div>
               <Separator className="bg-slate-200" />
               <SalesAgreementInfo data={data} />
