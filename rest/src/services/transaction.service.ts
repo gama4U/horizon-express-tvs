@@ -10,7 +10,7 @@ interface ICreateTransaction {
 export async function createTransaction({ id, creatorId }: ICreateTransaction) {
   return await prisma.transaction.create({
     data: {
-      leadId: id,
+      clientId: id,
       creatorId: creatorId
     }
   })
@@ -75,7 +75,7 @@ export async function fetchTransaction({ id }: IFetchTransaction) {
       id
     },
     include: {
-      lead: true,
+      client: true,
       tourVoucher: {
         include: {
           itineraries: true
@@ -127,8 +127,8 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
   if (search) {
     whereInput = {
       OR: [
-        { lead: { firstName: { contains: search, mode: 'insensitive' } } },
-        { lead: { lastName: { contains: search, mode: 'insensitive' } } },
+        { client: { firstName: { contains: search, mode: 'insensitive' } } },
+        { client: { lastName: { contains: search, mode: 'insensitive' } } },
         { id: { contains: search, mode: "insensitive" } },
       ],
     };
@@ -161,13 +161,14 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
       ...whereInput,
     },
     include: {
-      lead: {
+      client: {
         select: {
           id: true,
           firstName: true,
           middleName: true,
           lastName: true,
           email: true,
+          officeBranch: true,
         },
       },
       preparedBy: true,
@@ -393,10 +394,10 @@ export async function fetchRecentEntries() {
   return allEntries.slice(0, 10);
 }
 
-export async function updateTransactionApprover({id, approverId}: IUpdateTransactionApprover) {
+export async function updateTransactionApprover({ id, approverId }: IUpdateTransactionApprover) {
   return await prisma.transaction.update({
-    where: {id},
-    data: {approverId}
+    where: { id },
+    data: { approverId }
   });
 }
 

@@ -12,11 +12,12 @@ exports.createPurchaseRequestSchema = zod_1.z.object({
             message: 'Serial number is required'
         }),
         type: zod_1.z.enum([
-            client_1.PurchaseRequestOrderType.HOTEL,
-            client_1.PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-            client_1.PurchaseRequestOrderType.LOCAL_PACKAGE,
-            client_1.PurchaseRequestOrderType.TICKET,
             client_1.PurchaseRequestOrderType.VISA,
+            client_1.PurchaseRequestOrderType.SHIPPING,
+            client_1.PurchaseRequestOrderType.ACCOMMODATION,
+            client_1.PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+            client_1.PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+            client_1.PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
         ]),
         paymentType: zod_1.z.enum([
             client_1.PaymentType.CASH,
@@ -40,11 +41,12 @@ exports.updatePurchaseRequestSchema = zod_1.z.object({
             message: 'Serial number is required'
         }),
         type: zod_1.z.enum([
-            client_1.PurchaseRequestOrderType.HOTEL,
-            client_1.PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-            client_1.PurchaseRequestOrderType.LOCAL_PACKAGE,
-            client_1.PurchaseRequestOrderType.TICKET,
             client_1.PurchaseRequestOrderType.VISA,
+            client_1.PurchaseRequestOrderType.SHIPPING,
+            client_1.PurchaseRequestOrderType.ACCOMMODATION,
+            client_1.PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+            client_1.PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+            client_1.PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
         ]),
         paymentType: zod_1.z.enum([
             client_1.PaymentType.CASH,
@@ -69,11 +71,12 @@ exports.findPurchaseRequestsSchema = zod_1.z.object({
         }).optional(),
         search: zod_1.z.string().optional(),
         type: zod_1.z.enum([
-            client_1.PurchaseRequestOrderType.HOTEL,
-            client_1.PurchaseRequestOrderType.INTERNATIONAL_PACKAGE,
-            client_1.PurchaseRequestOrderType.LOCAL_PACKAGE,
-            client_1.PurchaseRequestOrderType.TICKET,
             client_1.PurchaseRequestOrderType.VISA,
+            client_1.PurchaseRequestOrderType.SHIPPING,
+            client_1.PurchaseRequestOrderType.ACCOMMODATION,
+            client_1.PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
+            client_1.PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
+            client_1.PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
         ]).optional(),
         paymentType: zod_1.z.enum([
             client_1.PaymentType.CASH,

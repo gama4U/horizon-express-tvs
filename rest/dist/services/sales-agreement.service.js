@@ -51,19 +51,23 @@ function updateSalesAgreement(_a) {
 function findSalesAgreements(_a) {
     return __awaiter(this, arguments, void 0, function* ({ skip, take, search, typeOfClient }) {
         let whereInput = {};
+        let searchFilter = {};
         if (search) {
-            whereInput = {
-                OR: [
-                    { clientName: { contains: search, mode: "insensitive" } },
-                    { serialNumber: { contains: search, mode: "insensitive" } },
-                ],
+            const searchParts = search.split(/\s+/);
+            searchFilter = {
+                AND: searchParts.map((part) => ({
+                    OR: [
+                        { firstName: { contains: part, mode: "insensitive" } },
+                        { lastName: { contains: part, mode: "insensitive" } },
+                        { email: { contains: part, mode: "insensitive" } },
+                        { serialNumber: { contains: search, mode: "insensitive" } },
+                    ],
+                })),
             };
         }
-        if (typeOfClient) {
-            whereInput = Object.assign(Object.assign({}, whereInput), { typeOfClient });
-        }
+        const where = Object.assign({}, searchFilter);
         const findSalesAgreements = db_utils_1.default.salesAgreement.findMany({
-            where: Object.assign({}, whereInput),
+            where: Object.assign({}, where),
             include: {
                 creator: {
                     select: {

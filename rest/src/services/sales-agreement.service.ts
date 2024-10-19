@@ -18,26 +18,30 @@ export async function updateSalesAgreement({ id, ...data }: IUpdateSalesAgreemen
 
 export async function findSalesAgreements({ skip, take, search, typeOfClient }: IFindSalesAgreements) {
   let whereInput: Prisma.SalesAgreementWhereInput = {};
+  let searchFilter = {}
 
   if (search) {
-    whereInput = {
-      OR: [
-        { clientName: { contains: search, mode: "insensitive" } },
-        { serialNumber: { contains: search, mode: "insensitive" } },
-      ],
+    const searchParts = search.split(/\s+/)
+    searchFilter = {
+      AND: searchParts.map((part) => ({
+        OR: [
+          { firstName: { contains: part, mode: "insensitive" } },
+          { lastName: { contains: part, mode: "insensitive" } },
+          { email: { contains: part, mode: "insensitive" } },
+          { serialNumber: { contains: search, mode: "insensitive" } },
+        ],
+
+      })),
     }
+  }
+  const where: Prisma.SalesAgreementWhereInput = {
+    ...searchFilter,
   }
 
-  if (typeOfClient) {
-    whereInput = {
-      ...whereInput,
-      typeOfClient,
-    }
-  }
 
   const findSalesAgreements = prisma.salesAgreement.findMany({
     where: {
-      ...whereInput,
+      ...where,
     },
     include: {
       creator: {
@@ -160,9 +164,9 @@ export async function fetchSalesAgreementSummary() {
   }
 }
 
-export async function updateSalesAgreementApprover({id, approverId}: IUpdateSalesAgreementApprover) {
+export async function updateSalesAgreementApprover({ id, approverId }: IUpdateSalesAgreementApprover) {
   return await prisma.salesAgreement.update({
-    where:  {id},
-    data: {approverId}
+    where: { id },
+    data: { approverId }
   });
 }

@@ -46,9 +46,9 @@ const transport_itinerary_router_1 = __importDefault(require("./routers/transpor
 const sales_agreement_items_router_1 = __importDefault(require("./routers/sales-agreement-items.router"));
 const purchase_request_router_1 = __importDefault(require("./routers/purchase-request.router"));
 const purchase_request_items_router_1 = __importDefault(require("./routers/purchase-request-items.router"));
-const lead_router_1 = __importDefault(require("./routers/lead.router"));
 const profile_router_1 = __importDefault(require("./routers/profile.router"));
 const memorandum_router_1 = __importDefault(require("./routers/memorandum.router"));
+const client_router_1 = __importDefault(require("./routers/client.router"));
 dotenv.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5001;
@@ -83,7 +83,7 @@ main_router_middleware_1.default.use('/transport-itineraries', transport_itinera
 main_router_middleware_1.default.use('/sales-agreement-items', sales_agreement_items_router_1.default);
 main_router_middleware_1.default.use('/purchase-requests', purchase_request_router_1.default);
 main_router_middleware_1.default.use('/purchase-request-items', purchase_request_items_router_1.default);
-main_router_middleware_1.default.use('/leads', lead_router_1.default);
+main_router_middleware_1.default.use('/clients', client_router_1.default);
 main_router_middleware_1.default.use('/profile', profile_router_1.default);
 main_router_middleware_1.default.use('/memorandums', memorandum_router_1.default);
 app.listen(port, () => {

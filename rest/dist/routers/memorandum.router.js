@@ -16,6 +16,8 @@ const express_1 = __importDefault(require("express"));
 const memorandum_service_1 = require("../services/memorandum.service");
 const validate_middleware_1 = require("../middlewares/validate.middleware");
 const memorandum_schema_1 = require("../schemas/memorandum.schema");
+const authorize_middleware_1 = require("../middlewares/authorize.middleware");
+const client_1 = require("@prisma/client");
 const memorandumRouter = express_1.default.Router();
 memorandumRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -23,7 +25,7 @@ memorandumRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, funct
         if (!memorandum) {
             throw new Error('Failed to create memorandum');
         }
-        res.status(200).json({ message: "Successfully created memorandum" });
+        return res.status(200).json(memorandum);
     }
     catch (error) {
         res.status(500).json(error);
@@ -71,7 +73,7 @@ memorandumRouter.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, fun
         if (!itinerary) {
             throw new Error('Failed to update memorandum');
         }
-        res.status(200).json({ message: "Successfully created memorandum" });
+        res.status(200).json({ message: "Successfully updated memorandum" });
     }
     catch (error) {
         res.status(500).json(error);
@@ -117,6 +119,25 @@ memorandumRouter.post('/summary', (req, res) => __awaiter(void 0, void 0, void 0
     }
     catch (error) {
         return res.status(500).json({ message: 'Internal server error' });
+    }
+}));
+memorandumRouter.patch('/:id/approver', (0, authorize_middleware_1.authorize)([client_1.UserType.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const approverId = String((_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
+        const { id } = req.params;
+        const updated = yield (0, memorandum_service_1.updateMemorandumApprover)({ id, approverId });
+        if (!updated) {
+            throw new Error("Failed to update memorandum approver");
+        }
+        return res.status(200).json({
+            message: 'Approved successfully'
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: "Internal server error"
+        });
     }
 }));
 exports.default = memorandumRouter;

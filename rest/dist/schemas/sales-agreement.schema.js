@@ -16,6 +16,8 @@ exports.createSalesAgreementSchema = zod_1.z.object({
             client_1.ClientType.CORPORATE,
             client_1.ClientType.GOVERNMENT,
         ]),
+        currency: zod_1.z.enum([client_1.Currency.PHP, client_1.Currency.USD]),
+        department: zod_1.z.string().optional()
     })
 });
 exports.updateSalesAgreementSchema = zod_1.z.object({

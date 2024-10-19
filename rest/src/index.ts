@@ -20,9 +20,9 @@ import transportItineraryRouter from "./routers/transport-itinerary.router";
 import salesAgreementItemRouter from "./routers/sales-agreement-items.router";
 import purchaseRequestRouter from "./routers/purchase-request.router";
 import purchaseRequestItemRouter from "./routers/purchase-request-items.router";
-import leadRouter from "./routers/lead.router";
 import profileRouter from "./routers/profile.router";
 import memorandumRouter from "./routers/memorandum.router";
+import clientRouter from "./routers/client.router";
 
 declare module 'express' {
   interface Request {
@@ -68,7 +68,7 @@ mainRouter.use('/transport-itineraries', transportItineraryRouter);
 mainRouter.use('/sales-agreement-items', salesAgreementItemRouter);
 mainRouter.use('/purchase-requests', purchaseRequestRouter);
 mainRouter.use('/purchase-request-items', purchaseRequestItemRouter);
-mainRouter.use('/leads', leadRouter);
+mainRouter.use('/clients', clientRouter);
 mainRouter.use('/profile', profileRouter);
 mainRouter.use('/memorandums', memorandumRouter);
 
