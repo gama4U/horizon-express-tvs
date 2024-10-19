@@ -11,6 +11,8 @@ import { fetchMemorandums } from "@/api/queries/memorandums.query";
 import { DataTable } from "@/components/tables/memorandums/data-table";
 import { Columns } from "@/components/tables/memorandums/columns";
 import { useAuth } from "@/providers/auth-provider";
+import { useNavigate } from "react-router-dom";
+import { UserType } from "@/interfaces/user.interface";
 
 export default function Memorandum() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
@@ -18,6 +20,7 @@ export default function Memorandum() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateMemo, setOpenCreateMemo] = useState(false)
+  const navigate = useNavigate()
 
   const { data, isLoading } = useQuery({
     queryKey: ['memorandums', pagination, debouncedSearch],
@@ -60,10 +63,13 @@ export default function Memorandum() {
             <Plus size={14} />
             <span>Create</span>
           </Button>
-          <CreateMemorandumDialog 
-            openDialog={openCreateMemo} 
-            setOpenDialog={setOpenCreateMemo} 
+          <CreateMemorandumDialog
+            openDialog={openCreateMemo}
+            setOpenDialog={setOpenCreateMemo}
             creatorId={String(session?.user?.id)}
+            successNavigate={(data) => {
+              navigate(`/${session?.user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/memorandum/${data.id}/`);
+            }}
           />
         </div>
         <DataTable

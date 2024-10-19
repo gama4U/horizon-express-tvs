@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
+import { IUser } from "@/interfaces/user.interface";
 
 interface IFetchMemorandums {
   skip?: number;
@@ -11,9 +12,13 @@ export interface IMemorandum {
   id: string
   memorandumNumber: string
   to: string
-  re: string
-  addressee: string
+  subject: string
   contents: string
+  creator: IUser
+  approver: IUser
+
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface IMemorandums {

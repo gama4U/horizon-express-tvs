@@ -26,7 +26,8 @@ model User {
   approvedPurchaseRequestOrders PurchaseRequestOrder[] @relation("ApprovePurchaseRequestOrders")
   preparedTransactions          Transaction[]          @relation("PreparedTransactions")
   approvedTransactions          Transaction[]          @relation("ApprovedTransactions")
-  memorandums                   Memorandum[]
+  memorandums                   Memorandum[]           @relation("PreparedMemorandums")
+  approvedMemorandums           Memorandum[]           @relation("ApprovedMemorandums")
 }
 
 model Transaction {
@@ -77,8 +78,6 @@ model SalesAgreementItem {
   updatedAt        DateTime?      @updatedAt
 }
 
-
-
 model PurchaseRequestOrder {
   id                 String                     @id @default(cuid())
   creatorId          String?
@@ -101,14 +100,15 @@ model PurchaseRequestOrder {
 }
 
 model Memorandum {
-  id               String @id @default(cuid())
+  id               String  @id @default(cuid())
   memorandumNumber String
   to               String
-  re               String
-  addressee        String
+  subject          String
   contents         String
   creatorId        String
-  creator          User   @relation(fields: [creatorId], references: [id])
+  creator          User    @relation("PreparedMemorandums", fields: [creatorId], references: [id])
+  approverId       String?
+  approver         User?   @relation("ApprovedMemorandums", fields: [approverId], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

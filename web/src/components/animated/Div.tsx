@@ -21,6 +21,7 @@ type AnimatedDivProps = {
 	| 'CardSpin'
 	| 'Float'
 	| 'Shake'
+	| 'Approve'
 	| ''
 	delay?: number;
 	duration?: number;
@@ -127,6 +128,27 @@ const AnimatedDiv = ({
 							duration: duration,
 							delay,
 							ease: 'easeInOut'
+						}
+					}
+				};
+			case 'Approve':
+				return {
+					hidden: { opacity, scale: 1 },
+					visible: {
+						opacity: 1,
+						scale: [2.5, 0.9, 0.8, 1],
+						transition: {
+							duration: 0.4,
+							delay: delay + 0.1,
+							times: [0, 0.4, 0.7, 1],
+						},
+						shake: {
+							x: [0, -8, 8, -8, 8, 0],
+							transition: {
+								duration: 0.3,
+								times: [0, 0.2, 0.4, 0.6, 0.8, 1],
+								ease: "easeInOut"
+							}
 						}
 					}
 				};

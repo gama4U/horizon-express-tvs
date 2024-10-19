@@ -5,8 +5,7 @@ import moment from "moment";
 
 export interface ICreateMemorandum {
   to: string
-  re: string
-  addressee: string
+  subject: string
   contents: string
   creatorId: string
 }
@@ -35,7 +34,6 @@ export async function deleteMemorandum(id: string) {
 export interface IUpdateMemorandum {
   id: string
   to: string
-  re: string
   addressee: string
   contents: string
 }
@@ -60,7 +58,7 @@ export async function fetchMemorandums({ skip, take, search }: IFindMemorandums)
   if (search) {
     whereInput = {
       OR: [
-        { addressee: { contains: search, mode: "insensitive" } },
+        { subject: { contains: search, mode: "insensitive" } },
         { memorandumNumber: { contains: search, mode: "insensitive" } },
       ],
     }
@@ -93,6 +91,10 @@ export async function fetchMemorandums({ skip, take, search }: IFindMemorandums)
 export async function findMemorandumById(id: string) {
   return await prisma.memorandum.findUnique({
     where: { id },
+    include: {
+      creator: true,
+      approver: true
+    }
   });
 }
 
@@ -115,4 +117,16 @@ export async function fetchMemorandumSummary() {
   return {
     total, since7days, rate
   }
+}
+
+export interface IUpdateMemorandumApprover {
+  id: string
+  approverId: string
+}
+
+export async function updateMemorandumApprover({ id, approverId }: IUpdateMemorandumApprover) {
+  return await prisma.memorandum.update({
+    where: { id },
+    data: { approverId }
+  });
 }
