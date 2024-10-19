@@ -9,6 +9,7 @@ import { useAuth } from '@/providers/auth-provider'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { approveSalesAgreement } from '@/api/mutations/sales-agreement.mutation'
+import { formatCurrency } from '@/utils/currency.utils'
 
 interface Props {
   data: ISalesAgreement
@@ -155,9 +156,9 @@ export default function PrintPreview({ data }: Props) {
                   {data.salesAgreementItems.map((item, index) => (
                     <tr key={index}>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.unitPrice.toLocaleString()}</td>
-                      <td className="px-4 py-2 text-center">{item.total.toLocaleString()}</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString() }</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{formatCurrency(item.currency, item.unitPrice)}</td>
+                      <td className="px-4 py-2 text-center">{formatCurrency(item.currency, item.total)}</td>
                     </tr>
                   ))}
                 </>

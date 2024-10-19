@@ -4,6 +4,7 @@ import { ISalesAgreementItem } from "../../../interfaces/sales-agreement-item.in
 import DeleteSalesAgreementItem from "../../alert/sales-agreement/delete-item";
 import { useAuth } from "@/providers/auth-provider";
 import Constants from "@/constants";
+import { formatCurrency } from "@/utils/currency.utils";
 
 export const Columns: ColumnDef<ISalesAgreementItem>[] = [
   {
@@ -29,7 +30,7 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     header: "Unit price",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.unitPrice.toLocaleString()}
+        {formatCurrency(row.original.currency, row.original.unitPrice)}
       </span>
     )
   },
@@ -38,7 +39,7 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     header: "Total",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.total.toLocaleString()}
+        {formatCurrency(row.original.currency, row.original.total)}
       </span>
     )
   },

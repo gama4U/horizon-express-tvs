@@ -4,6 +4,8 @@ import { ILead } from "@/api/mutations/lead.mutation";
 import EditLeadDialog from "@/components/dialogs/leads/edit";
 import EmailLink from "@/components/common/email";
 import DeleteLeadDialog from "@/components/alert/lead/delete";
+import { useAuth } from "@/providers/auth-provider";
+import Constants from "@/constants";
 
 export const Columns: ColumnDef<ILead>[] = [
 	{
@@ -85,14 +87,20 @@ export const Columns: ColumnDef<ILead>[] = [
 		header: "Actions",
 		enableHiding: false,
 		cell: ({ row }) => {
+			const {session: {user}} = useAuth();
+			const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
-					<EditLeadDialog
-						leadData={row.original}
-					/>
-					<DeleteLeadDialog	
-						leadId={row.original.id}
-					/>
+					{(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
+						<EditLeadDialog
+							leadData={row.original}
+						/>
+					)}
+					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
+						<DeleteLeadDialog	
+							leadId={row.original.id}
+						/>
+					)}
 				</div>
 			)
 		},

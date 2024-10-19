@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/utils/currency.utils"
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface"
 import ClientTypeBadge from "../../badges/client-type"
 
@@ -55,9 +56,6 @@ export default function SalesAgreementInfo({ data }: Props) {
         <h3 className="text-[12px]">
           {`${data.approver?.firstName || ''} ${data.approver?.lastName || ''}`}
         </h3>
-      </div>
-      <div className="flex flex-col">
-
       </div>
     </div>
   )

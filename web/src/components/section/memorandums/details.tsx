@@ -15,6 +15,7 @@ import { approveMemorandum } from '@/api/mutations/memorandum.mutation';
 import { useAuth } from '@/providers/auth-provider';
 import { toast } from 'sonner';
 import AnimatedDiv from '@/components/animated/Div';
+import Constants from '@/constants';
 
 interface Props {
 	data: IMemorandum;
@@ -75,6 +76,7 @@ export default function MemorandumPreview({ data }: Props) {
 
 	const isCreatorAdmin = data.creator.userType === UserType.ADMIN;
 	const isApproved = Boolean(data.approver);
+	const {PermissionsCanEdit} = Constants;
 
 	return (
 		<div className="w-[750px] bg-white rounded-lg">
@@ -99,11 +101,13 @@ export default function MemorandumPreview({ data }: Props) {
 							<span>Approve</span>
 						</Button>
 					)}
-					{user?.userType === UserType.ADMIN &&
+
+					{(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
 						<Button onClick={() => setOpenEditMemo(true)} size={'sm'} className='gap-1'>
 							<Pencil size={16} />
 							<span>Edit</span>
-						</Button>}
+						</Button>
+					)}
 
 					<Button
 						onClick={() => reactToPrintFn()}
