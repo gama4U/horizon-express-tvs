@@ -1,20 +1,20 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
-import { ILead } from "../mutations/lead.mutation";
+import { IClient } from "../mutations/client.mutation";
 
-interface IFetchLeads {
+interface IFetchClients {
   skip?: number;
   take?: number;
   search?: string;
 }
 
-interface ILeads {
-  leadsData: ILead[]
+interface IClients {
+  clientsData: IClient[]
   total: number
 }
-export async function fetchLeads({ ...params }: IFetchLeads): Promise<ILeads> {
+export async function fetchClients({ ...params }: IFetchClients): Promise<IClients> {
   try {
-    const response = await api.get('/api/v1/leads', {
+    const response = await api.get('/api/v1/clients', {
       params: {
         ...params,
       }

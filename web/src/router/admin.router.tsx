@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import Dashboard from "@/pages/admin/dashboard";
-import Leads from "@/pages/admin/leads";
+import Clients from "@/pages/admin/clients";
 import Memorandum from "@/pages/admin/memorandum";
 import MemorandumDetails from "@/pages/admin/memorandum/details";
 import Profile from "@/pages/admin/profile";
@@ -34,8 +34,8 @@ const adminRouter: RouteObject = {
       element: <Users />
     },
     {
-      path: 'leads',
-      element: <Leads />
+      path: 'clients',
+      element: <Clients />
     },
 
     {

@@ -6,20 +6,20 @@ import usePagination from "@/hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import CommonInput from "@/components/common/input";
-import { DataTable } from "@/components/tables/leads/data-table";
-import { Columns } from "@/components/tables/leads/columns";
-import { fetchLeads } from "@/api/queries/leads.query";
-import CreateLeadDialog from "@/components/dialogs/leads/add";
+import { fetchClients } from "@/api/queries/clients.query";
+import CreateClientDialog from "@/components/dialogs/clients/add";
+import { DataTable } from "@/components/tables/clients/data-table";
+import { Columns } from "@/components/tables/clients/columns";
 
-export default function Leads() {
+export default function Clients() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
-  const [openCreateLead, setOpenCreateLead] = useState(false)
+  const [openCreateClient, setOpenCreateClient] = useState(false)
 
   const { data, isLoading } = useQuery({
-    queryKey: ['leads', pagination, debouncedSearch],
-    queryFn: async () => await fetchLeads({ skip, take, search: debouncedSearch })
+    queryKey: ['clients', pagination, debouncedSearch],
+    queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch })
   });
 
   return (
@@ -27,18 +27,18 @@ export default function Leads() {
       <TopBar
         LeftSideHeader={
           <p className="text-sm">
-            Leads
+            Clients
           </p>
         }
         LeftSideSubHeader={
-          <p className="text-primary text-xs">Manage leads' records here.</p>
+          <p className="text-primary text-xs">Manage clients' records here.</p>
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
         <div className="flex items-center justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              placeholder="Search by name or email"
+              placeholder="Search by client name "
               containerProps={{
                 className: "max-w-[500px]"
               }}
@@ -48,7 +48,7 @@ export default function Leads() {
           </div>
           <Button
             size={"sm"}
-            onClick={() => setOpenCreateLead(true)}
+            onClick={() => setOpenCreateClient(true)}
             className="flex gap-x-2"
           >
             <Plus size={14} />
@@ -57,14 +57,14 @@ export default function Leads() {
         </div>
         <DataTable
           columns={Columns}
-          data={data?.leadsData ?? []}
+          data={data?.clientsData ?? []}
           total={data?.total ?? 0}
           loading={isLoading}
           onPaginationChange={onPaginationChange}
           pagination={pagination}
         />
       </div>
-      <CreateLeadDialog openDialog={openCreateLead} setOpenDialog={setOpenCreateLead} />
+      <CreateClientDialog openDialog={openCreateClient} setOpenDialog={setOpenCreateClient} />
     </div>
   )
 }

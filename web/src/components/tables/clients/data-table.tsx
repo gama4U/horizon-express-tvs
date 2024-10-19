@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table";
 import { DataTablePagination } from "../../common/table-pagination";
 import Loader from "@/components/animated/Loader";
-import { ILead } from "@/api/mutations/lead.mutation";
+import { IClient } from "@/api/mutations/client.mutation";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -45,7 +45,7 @@ export function DataTable<TData, TValue>({
 		getCoreRowModel: getCoreRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
-		getRowId: row => (row as ILead).id,
+		getRowId: row => (row as IClient).id,
 		state: {
 			pagination,
 			sorting,

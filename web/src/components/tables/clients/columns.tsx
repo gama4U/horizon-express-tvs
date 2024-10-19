@@ -1,13 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { ILead } from "@/api/mutations/lead.mutation";
-import EditLeadDialog from "@/components/dialogs/leads/edit";
+import EditClientDialog from "@/components/dialogs/clients/edit";
 import EmailLink from "@/components/common/email";
-import DeleteLeadDialog from "@/components/alert/lead/delete";
+import DeleteLeadDialog from "@/components/alert/client/delete";
 import { useAuth } from "@/providers/auth-provider";
 import Constants from "@/constants";
+import ClientTypeBadge from "@/components/badges/client-type";
+import { IClient } from "@/api/mutations/client.mutation";
 
-export const Columns: ColumnDef<ILead>[] = [
+export const Columns: ColumnDef<IClient>[] = [
 	{
 		id: 'select',
 		header: ({ table }) => (
@@ -36,7 +37,7 @@ export const Columns: ColumnDef<ILead>[] = [
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					<span>{`${row.original.firstName} ${row.original.middleName} ${row.original.lastName}`}</span>
+					<span>{row.original.name}</span>
 				</div>
 			)
 		}
@@ -50,10 +51,18 @@ export const Columns: ColumnDef<ILead>[] = [
 					<span className="text-xs">
 						{row.original.contactNumber}
 					</span>
-
 				</div>
 			)
 		}
+	},
+	{
+		id: "typeOfClient",
+		header: "Client type",
+		cell: ({ row }) => (
+			<ClientTypeBadge
+				value={row.original.clientType}
+			/>
+		)
 	},
 	{
 		id: "email",
@@ -62,6 +71,37 @@ export const Columns: ColumnDef<ILead>[] = [
 			return (
 				<div className="flex items-center gap-2">
 					<EmailLink email={row.original.email} />
+				</div>
+			)
+		}
+	},
+	{
+		id: "department",
+		header: "Department",
+		cell: ({ row }) => {
+			if (!row.original.department) {
+				return (
+					<span className="text-xs italic text-muted-foreground">
+						No department assigned
+					</span>
+				)
+			}
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.department}
+					</span>
+				</div>
+			)
+		}
+	},
+	{
+		id: "officeBranch",
+		header: "Office Branch",
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<EmailLink email={row.original.officeBranch} />
 				</div>
 			)
 		}
@@ -87,18 +127,18 @@ export const Columns: ColumnDef<ILead>[] = [
 		header: "Actions",
 		enableHiding: false,
 		cell: ({ row }) => {
-			const {session: {user}} = useAuth();
-			const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
+			const { session: { user } } = useAuth();
+			const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
 					{(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
-						<EditLeadDialog
-							leadData={row.original}
+						<EditClientDialog
+							clientData={row.original}
 						/>
 					)}
 					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
-						<DeleteLeadDialog	
-							leadId={row.original.id}
+						<DeleteLeadDialog
+							clientId={row.original.id}
 						/>
 					)}
 				</div>

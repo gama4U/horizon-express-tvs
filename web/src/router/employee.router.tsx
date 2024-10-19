@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import Leads from "@/pages/employee/leads";
+import Clients from "@/pages/employee/clients";
 import Memorandum from "@/pages/employee/memorandum";
 import MemorandumDetails from "@/pages/employee/memorandum/details";
 import Profile from "@/pages/employee/profile";
@@ -24,8 +24,8 @@ const employeeRouter: RouteObject = {
       element: <ManageTransaction />
     },
     {
-      path: 'leads',
-      element: <Leads />
+      path: 'clients',
+      element: <Clients />
     },
     {
       path: 'purchase-requests',
