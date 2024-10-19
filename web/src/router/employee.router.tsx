@@ -7,6 +7,7 @@ import PurchaseRequests from "@/pages/employee/purchase-request";
 import PurchaseRequestDetails from "@/pages/employee/purchase-request/details";
 import SalesAgreements from "@/pages/employee/sales-agreement";
 import SalesAgreementDetails from "@/pages/employee/sales-agreement/details";
+import Suppliers from "@/pages/employee/suppliers";
 import Transactions from "@/pages/employee/transactions";
 import ManageTransaction from "@/pages/employee/transactions/details";
 import { RouteObject } from "react-router-dom";
@@ -26,6 +27,10 @@ const employeeRouter: RouteObject = {
     {
       path: 'clients',
       element: <Clients />
+    },
+    {
+      path: 'suppliers',
+      element: <Suppliers />
     },
     {
       path: 'purchase-requests',

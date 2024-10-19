@@ -12,6 +12,7 @@ export const Columns: ColumnDef<IUser>[] = [
     id: 'select',
     header: ({ table }) => (
       <Checkbox
+        className="border-white"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -20,7 +21,7 @@ export const Columns: ColumnDef<IUser>[] = [
         aria-label="Select all"
       />
     ),
-     cell: ({ row }) => (
+    cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -37,7 +38,7 @@ export const Columns: ColumnDef<IUser>[] = [
       return (
         <div className="flex items-center gap-2">
           <Avatar>
-            <AvatarImage src={row.original.avatar} className="object-cover"/>
+            <AvatarImage src={row.original.avatar} className="object-cover" />
             <AvatarFallback>
               {row.original.firstName[0]}
             </AvatarFallback>
@@ -61,7 +62,7 @@ export const Columns: ColumnDef<IUser>[] = [
     header: "User type",
     cell: ({ row }) => (
       <span>
-        <UserTypeBadge 
+        <UserTypeBadge
           value={row.original.userType}
         />
       </span>
@@ -73,10 +74,10 @@ export const Columns: ColumnDef<IUser>[] = [
     cell: ({ row }) => (
       <span>
         {row.original.permission && (
-          <UserPermissionBadge 
+          <UserPermissionBadge
             value={row.original.permission}
           />
-        )}        
+        )}
       </span>
     )
   },
@@ -86,10 +87,10 @@ export const Columns: ColumnDef<IUser>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-center gap-4">
-          <EditUserDialog 
+          <EditUserDialog
             data={row.original}
           />
-          <DeleteUserDialog 
+          <DeleteUserDialog
             userId={row.original.id}
           />
         </div>

@@ -49,10 +49,9 @@ export default function MemorandumPreview({ data }: Props) {
 		});
 
 		return (
-			<div
-				className="prose text-[14px]"
-				dangerouslySetInnerHTML={{ __html: contentAsHtml }}
-			/>
+			<div style={{ all: 'unset' }}>
+				<div className='reset-tw' dangerouslySetInnerHTML={{ __html: contentAsHtml }} />
+			</div>
 		);
 	};
 
@@ -76,7 +75,7 @@ export default function MemorandumPreview({ data }: Props) {
 
 	const isCreatorAdmin = data.creator.userType === UserType.ADMIN;
 	const isApproved = Boolean(data.approver);
-	const {PermissionsCanEdit} = Constants;
+	const { PermissionsCanEdit } = Constants;
 
 	return (
 		<div className="w-[750px] bg-white rounded-lg">
@@ -136,14 +135,14 @@ export default function MemorandumPreview({ data }: Props) {
 				<div className='text-center text-black flex flex-col items-center'>
 					<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
 					<h1 className='text-[14px] '>
-						262 Maharlika Highway Purok 2 Obrero Calbayog City 671j
+						262 Maharlika Highway Purok 2 Obrero Calbayog City 671
 					</h1>
 					<h3 className='text-[14px]'>
 						Email: info@horizonexpress.ph
 					</h3>
 					<div className='flex flex-col text-[14px]'>
 						<span className='text-[14px]'>
-							Contact #: 09530856053 // 09171025584 // 09171833216
+							Contact #: 09530856053, 09171025584, 09171833216
 						</span>
 					</div>
 				</div>

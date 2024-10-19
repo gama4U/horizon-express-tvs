@@ -10,10 +10,12 @@ import { TransportServiceType, VehicleType } from '@/interfaces/transport.interf
 import logo from '../../../assets/logo.png'
 import { TravelVoucherType } from '@/interfaces/travel.interface';
 import { useAuth } from '@/providers/auth-provider';
-import { UserType } from '@/interfaces/user.interface';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { approveTransaction } from '@/api/mutations/transaction.mutation';
+import Constants from '@/constants';
+import { OfficeBranch } from '@/interfaces/user.interface';
+import { RenderHeaderText } from '@/components/common/header';
 
 interface Props {
   data: ITransaction;
@@ -47,7 +49,7 @@ export default function PrintPreview({ data }: Props) {
       <div className="h-[50px] px-4 flex items-center justify-between">
         <h1 className="text-xs text-muted-foreground italic">Print preview</h1>
         <div className='flex items-center gap-1'>
-          {(!data?.approver && user?.userType === UserType.ADMIN) && (
+          {(!data?.approver && user?.permission && Constants.PermissionsCanApprove.includes(user?.permission)) && (
             <Button
               size={'sm'}
               onClick={() => approveMutate(data?.id)}
@@ -80,20 +82,15 @@ export default function PrintPreview({ data }: Props) {
         <div className='flex justify-center items-center gap-x-4 flex-3'>
           <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
             <img src={logo} className='object-contain w-[180px] h-[110px]' />
-            <h3 className="text-xs font-semibold">Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000</h3>
-            <div className="flex flex-col text-xs">
-              <span>Email: accounting.cebu@horizonexpress.ph</span>
-              <span>Contact Number: 09171871163</span>
-            </div>
+            {RenderHeaderText(data.client.officeBranch as OfficeBranch)}
           </div>
         </div>
-
 
         <div className="flex flex-col gap-2 justify-start  flex-1 p-2">
           <div className="flex items-start gap-2 text-xs justify-between">
             <div className='flex row gap-x-2'>
-              <span className="font-semibold">Lead Name:</span>
-              <span>{data.lead.firstName} {data.lead.lastName}</span>
+              <span className="font-semibold">Client Name:</span>
+              <span>{data.client.name}</span>
             </div>
             <div className='flex row gap-x-2'>
               <span className="font-semibold">Date Created:</span>

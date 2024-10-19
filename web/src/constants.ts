@@ -13,6 +13,7 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
 	{ label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
 	{ label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
 	{ label: "Clients", icon: "Leads", link: "/admin/clients" },
+	{ label: "Suppliers", icon: "Suppliers", link: "/admin/suppliers" },
 	{ label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
 	{ label: "Users", icon: "Users", link: "/admin/users" },
 	{ label: "Profile", icon: "Profile", link: "/admin/profile" },
@@ -23,6 +24,7 @@ const EmployeeSidebarItems: Array<SidebarItemsType> = [
 	{ label: "Sales Agreements", icon: "Purchase", link: "/employee/sales-agreements" },
 	{ label: "Purchase Requests", icon: "Sales", link: "/employee/purchase-requests" },
 	{ label: "Clients", icon: "Leads", link: "/employee/clients" },
+	{ label: "Suppliers", icon: "Suppliers", link: "/employee/suppliers" },
 	{ label: "Memorandum", icon: "Memorandum", link: "/employee/memorandum" },
 	{ label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]

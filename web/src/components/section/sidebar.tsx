@@ -3,22 +3,31 @@ import { motion, useAnimationControls } from "framer-motion";
 import { Button } from "../ui/button";
 import { PanelRightClose, PanelRightOpen } from "lucide-react";
 import AnimatedDiv from "../animated/Div";
-import logo from "../../assets/logo.png"
 import Constants, { SidebarItemsType } from "../../constants";
 import { LogoutButton, SidebarIcons } from "./sidebar-items";
 import { useAuth } from "../../providers/auth-provider";
 import { useNavigate } from "react-router-dom";
-import { UserType } from "@/interfaces/user.interface";
+import { PermissionType, UserType } from "@/interfaces/user.interface";
+import placeholder from "../../assets/placeholder.png"
+import logo from "../../assets/logo.png"
+import { useQuery } from "@tanstack/react-query";
+import { fetchProfile } from "@/api/queries/user.query";
 
 const sidebarItemsMap: Record<UserType, SidebarItemsType[]> = {
 	ADMIN: Constants.AdminSidebarItems,
 	EMPLOYEE: Constants.EmployeeSidebarItems
 }
 
+const PermissionsRecord: Record<PermissionType, string> = {
+	SUPER_ADMIN: 'Super Admin',
+	SUPERVISOR: 'Supervisor',
+	RESERVATION: 'Reservation',
+	ACCOUNTING: 'Accounting',
+}
+
 const SideBar = React.memo(() => {
 	SideBar.displayName = 'SideBar';
-	const {session: {user}, logout } = useAuth();
-
+	const { session: { user }, logout } = useAuth();
 	const navigate = useNavigate();
 	const [isOpen, setIsOpen] = useState(false);
 	const containerControls = useAnimationControls();
@@ -42,6 +51,11 @@ const SideBar = React.memo(() => {
 		return parentRoutes.includes(link) ? pathname === link : pathname.startsWith(link);
 	};
 
+	const { data: profile } = useQuery({
+		queryKey: ['profile'],
+		queryFn: async () => await fetchProfile(),
+	});
+
 	const handleRedirect = (link: SidebarItemsType["link"]) => navigate(link);
 
 	return (
@@ -49,27 +63,38 @@ const SideBar = React.memo(() => {
 			variants={Constants.ContainerVariants}
 			animate={containerControls}
 			initial="open"
-			className={`bg-[#FFFFFF] z-50  p-3 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col`}>
-
+			className={`bg-[#FFFFFF] overflow-y-auto z-50  p-3 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col`}
+			style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+		>
 			<div>
-				<div className={`flex flex-col ${isOpen ? "items-end" : "items-center"}`}>
+				<div className={`flex flex-row items-center justify-between ${isOpen ? "items-end" : "items-center"}`}>
+					{isOpen &&
+						<img src={logo} className="object-contain w-[40px] h-[40px]" />
+					}
 					<Button variant="ghost" size="icon" onClick={handleOpenClose}>
 						{isOpen ? (
-							<PanelRightOpen size={24} />
+							<PanelRightOpen size={20} />
 						) : (
-							<PanelRightClose size={24} />
+							<PanelRightClose size={20} />
 						)}
 					</Button>
 				</div>
-				<div className="justify-center flex mb-5">
+				<div className="justify-start flex flex-row items-center gap-x-2">
 					<img
-						src={logo}
-						alt="company-logo"
-						className="w-[120px] h-[120px] object-contain"
+						src={profile?.avatar ?? placeholder}
+						alt="user-avatar"
+						className={`w-[60px] h-[60px] object-contain ${isOpen ? 'border-[#F98948] border-[2px] rounded-full' : 'border-none'}`}
 					/>
+					{isOpen && <div className="text-[10px]">
+						<p className="text-primary font-semibold mb-[0.5px] text-[12px]">{profile?.firstName} {profile?.lastName}</p>
+						{profile?.permission &&
+							<p className="text-muted-foreground">{PermissionsRecord[profile?.permission]}, {profile.officeBranch}</p>
+						}
+					</div>
+					}
 				</div>
 
-				<div className="flex flex-col mt-5">
+				<div className="flex flex-col mt-2">
 					{user && sidebarItemsMap[user.userType].map((item: SidebarItemsType, index: number) => {
 						const isSelected = checkRoute(item.link);
 						return (
@@ -89,20 +114,20 @@ const SideBar = React.memo(() => {
 						);
 					})}
 				</div>
-			</div>
+			</div >
 
 			<div className="rounded-md bg-white flex w-full px-2 py-1 justify-between items-center border">
 				{isOpen && (
 					<div>
 						<div className="bg-clip-text text-[8px] font-bold text-secondary ">
-							Transaction Voucher System
+							Horizon Express Travel & Tours
 						</div>
 						<p className="text-[#919191] text-[8px]">version {Constants.VersionNumber}</p>
 					</div>
 				)}
 				<LogoutButton handleLogout={logout} />
 			</div>
-		</motion.nav>
+		</motion.nav >
 	);
 });
 

@@ -79,5 +79,5 @@ export interface IUpdateUserProfile {
 
 export interface IChangeUserPassword {
   currentPassword: string;
-  password: string; 
+  password: string;
 }

@@ -14,7 +14,6 @@ const TopBar = ({ LeftSideHeader, LeftSideSubHeader, RightSideComponent, showBac
 	const location = useLocation();
 	const [key, setKey] = useState(0);
 
-
 	useEffect(() => {
 		setKey((prevKey) => prevKey + 1);
 	}, [location.pathname]);

@@ -1,15 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { IMemorandum } from "@/api/queries/memorandums.query";
-import { Calendar, CircleUser, Hash, LetterText, ListTodo, NotepadText } from "lucide-react";
-import { Link } from "react-router-dom";
-import DeleteMemorandum from "@/components/alert/memorandum/delete";
 import { useAuth } from "@/providers/auth-provider";
-import { UserType } from "@/interfaces/user.interface";
-import { format } from "date-fns"
 import Constants from "@/constants";
+import { ISupplier } from "@/api/mutations/supplier.mutation";
+import EditSupplierDialog from "@/components/dialogs/suppliers/edit";
+import DeleteSupplierDialog from "@/components/alert/supplier/delete";
+import { CircleUserRound, ListTodo, Map, MapPinHouse, NotepadText, Phone } from "lucide-react";
 
-export const Columns: ColumnDef<IMemorandum>[] = [
+export const Columns: ColumnDef<ISupplier>[] = [
 	{
 		id: 'select',
 		header: ({ table }) => (
@@ -34,62 +32,83 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 		enableHiding: false,
 	},
 	{
-		id: "memorandumNumber",
+		id: "name",
 		header: () => <div className="flex items-center gap-x-2">
-			<p>Memorandum</p>
-			<Hash color="white" size={16} />
+			<p>Name</p>
+			<CircleUserRound color="white" size={16} />
+		</div>,
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span>{row.original.name}</span>
+				</div>
+			)
+		}
+	},
+	{
+		id: "contactNumber",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Contact Number</p>
+			<Phone color="white" size={16} />
+		</div>,
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.contact}
+					</span>
+				</div>
+			)
+		}
+	},
+	{
+		id: "address",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Address</p>
+			<Map color="white" size={16} />
+		</div>,
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.address}
+					</span>
+				</div>
+			)
+		}
+	},
+	{
+		id: "officeBranch",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Office Branch</p>
+			<MapPinHouse color="white" size={16} />
+		</div>,
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.officeBranch}
+					</span>
+				</div>
+			)
+		}
+	},
+	{
+		id: "purchaseOrders",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Purchase Request Order Count</p>
+			<NotepadText color="white" size={16} />
 		</div>,
 
 		cell: ({ row }) => {
+			const purchaseOrders = row.original.purchaseOrders;
 			return (
-				<div className="flex items-center gap-2">
-					<span>{`${row.original.memorandumNumber}`}</span>
-				</div>
-			)
-		}
-	},
-	{
-		id: "to",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Subject</p>
-			<CircleUser color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
-			return (
-				<div className="flex items-center gap-2">
-					<span className="text-xs">
-						{row.original.to}
-					</span>
-				</div>
-			)
-		}
-	},
-	{
-		id: "subject",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Subject</p>
-			<LetterText color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
-			return (
-				<div className="flex items-center gap-2">
-					<span className="text-xs">
-						{row.original.subject}
-					</span>
-				</div>
-			);
-		}
-	},
-	{
-		id: "createdAt",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Date Created</p>
-			<Calendar color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
-			return (
-				<div className="flex items-center gap-2">
-					<span className="text-xs">{format(new Date(row?.original?.createdAt ?? new Date), 'MMMM d, yyyy')}</span>
+				<div className="flex items-center gap-x-1">
+					{purchaseOrders && purchaseOrders.length > 0 ? (
+						<span className="text-xs text-center">{purchaseOrders.length}</span>
+					) : (
+						<span className="italic text-gray-300">No purchase orders</span>
+					)}
 				</div>
 			);
 		}
@@ -103,18 +122,17 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const { session: { user } } = useAuth();
-			const { PermissionsCanDelete } = Constants;
+			const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
-					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/memorandum/${row.original.id}`}>
-						<NotepadText
-							size={16}
-							className="cursor-pointer hover:text-primary"
+					{(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
+						<EditSupplierDialog
+							supplierData={row.original}
 						/>
-					</Link>
+					)}
 					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
-						<DeleteMemorandum
-							memorandumId={row.original.id}
+						<DeleteSupplierDialog
+							supplierId={row.original.id}
 						/>
 					)}
 				</div>

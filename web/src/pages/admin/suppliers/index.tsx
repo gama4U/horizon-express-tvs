@@ -6,20 +6,20 @@ import usePagination from "@/hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import CommonInput from "@/components/common/input";
-import { Columns } from "@/components/tables/clients/columns";
-import { fetchClients } from "@/api/queries/clients.query";
-import CreateClientDialog from "@/components/dialogs/clients/add";
-import { DataTable } from "@/components/tables/clients/data-table";
+import { Columns } from "@/components/tables/suppliers/columns";
+import { DataTable } from "@/components/tables/suppliers/data-table";
+import { fetchSuppliers } from "@/api/queries/suppliers.query";
+import CreateSupplierDialog from "@/components/dialogs/suppliers/add";
 
-export default function Clients() {
+export default function Suppliers() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
-  const [openCreateClient, setOpenCreateClient] = useState(false)
+  const [openCreateSupplier, setOpenCreateSupplier] = useState(false)
 
   const { data, isLoading } = useQuery({
-    queryKey: ['clients', pagination, debouncedSearch],
-    queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch })
+    queryKey: ['suppliers', pagination, debouncedSearch],
+    queryFn: async () => await fetchSuppliers({ skip, take, search: debouncedSearch })
   });
 
   return (
@@ -27,11 +27,11 @@ export default function Clients() {
       <TopBar
         LeftSideHeader={
           <p className="text-sm">
-            Clients
+            Suppliers
           </p>
         }
         LeftSideSubHeader={
-          <p className="text-primary text-xs">Manage clients' records here.</p>
+          <p className="text-primary text-xs">Manage suppliers' records here.</p>
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
@@ -49,7 +49,7 @@ export default function Clients() {
           </div>
           <Button
             size={"sm"}
-            onClick={() => setOpenCreateClient(true)}
+            onClick={() => setOpenCreateSupplier(true)}
             className="flex gap-x-2"
           >
             <Plus size={14} />
@@ -58,14 +58,14 @@ export default function Clients() {
         </div>
         <DataTable
           columns={Columns}
-          data={data?.clientsData ?? []}
+          data={data?.suppliersData ?? []}
           total={data?.total ?? 0}
           loading={isLoading}
           onPaginationChange={onPaginationChange}
           pagination={pagination}
         />
       </div>
-      <CreateClientDialog openDialog={openCreateClient} setOpenDialog={setOpenCreateClient} />
+      <CreateSupplierDialog openDialog={openCreateSupplier} setOpenDialog={setOpenCreateSupplier} />
     </div>
   )
 }

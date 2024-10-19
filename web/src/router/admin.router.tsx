@@ -12,6 +12,7 @@ import Transactions from "@/pages/admin/transactions";
 import ManageTransaction from "@/pages/admin/transactions/details";
 import Users from "@/pages/admin/users";
 import { RouteObject } from "react-router-dom";
+import Suppliers from "@/pages/admin/suppliers";
 
 const adminRouter: RouteObject = {
   path: '/admin',
@@ -37,7 +38,10 @@ const adminRouter: RouteObject = {
       path: 'clients',
       element: <Clients />
     },
-
+    {
+      path: 'suppliers',
+      element: <Suppliers />
+    },
     {
       path: 'purchase-requests',
       element: <PurchaseRequests />

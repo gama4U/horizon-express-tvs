@@ -9,6 +9,7 @@ import {
 	Clipboard,
 	CircleUser,
 	UserCog,
+	ContactRound,
 } from "lucide-react"
 import { Button } from "../ui/button"
 
@@ -44,6 +45,8 @@ export const SidebarIcons = ({ icon, isSelected }: SidebarIconsType) => {
 			return <CircleUser size={size} className={className} color={color} />;
 		case "Profile":
 			return <UserCog size={size} className={className} color={color} />;
+		case "Suppliers":
+			return <ContactRound size={size} className={className} color={color} />;
 		default:
 			return <FileQuestion className="mr-2" size={size} />;
 
@@ -53,7 +56,7 @@ export const SidebarIcons = ({ icon, isSelected }: SidebarIconsType) => {
 export const LogoutButton = ({ handleLogout }: LogoutButtonType) => {
 	return (
 		<Button variant="ghost" size="icon" onClick={handleLogout}>
-			<SquarePower className="h-6 w-6 " />
+			<SquarePower className="h-5 w-5 " />
 		</Button>
 	)
 }

@@ -7,12 +7,14 @@ import { useAuth } from "@/providers/auth-provider";
 import Constants from "@/constants";
 import ClientTypeBadge from "@/components/badges/client-type";
 import { IClient } from "@/api/mutations/client.mutation";
+import { CircleUserRound, ListTodo, Mail, MapPinHouse, ReceiptText } from "lucide-react";
 
 export const Columns: ColumnDef<IClient>[] = [
 	{
 		id: 'select',
 		header: ({ table }) => (
 			<Checkbox
+				className="border-white"
 				checked={
 					table.getIsAllPageRowsSelected() ||
 					(table.getIsSomePageRowsSelected() && "indeterminate")
@@ -32,8 +34,11 @@ export const Columns: ColumnDef<IClient>[] = [
 		enableHiding: false,
 	},
 	{
-		id: "lead",
-		header: "Name",
+		id: "name",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Name</p>
+			<CircleUserRound color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
@@ -43,14 +48,16 @@ export const Columns: ColumnDef<IClient>[] = [
 		}
 	},
 	{
-		id: "contactNumber",
-		header: "Contact Number",
+		id: "email",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Email</p>
+			<Mail color="white" size={16} />
+		</div>,
+
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					<span className="text-xs">
-						{row.original.contactNumber}
-					</span>
+					<EmailLink email={row.original.email} />
 				</div>
 			)
 		}
@@ -65,19 +72,11 @@ export const Columns: ColumnDef<IClient>[] = [
 		)
 	},
 	{
-		id: "email",
-		header: "Email Address",
-		cell: ({ row }) => {
-			return (
-				<div className="flex items-center gap-2">
-					<EmailLink email={row.original.email} />
-				</div>
-			)
-		}
-	},
-	{
 		id: "department",
-		header: "Department",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Department</p>
+			<MapPinHouse color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			if (!row.original.department) {
 				return (
@@ -97,18 +96,26 @@ export const Columns: ColumnDef<IClient>[] = [
 	},
 	{
 		id: "officeBranch",
-		header: "Office Branch",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Branch</p>
+			<MapPinHouse color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					<EmailLink email={row.original.officeBranch} />
+					<span className="text-xs">
+						{row.original.officeBranch}
+					</span>
 				</div>
 			)
 		}
 	},
 	{
 		id: "transactions",
-		header: "Transactions Count",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Transactions</p>
+			<ReceiptText color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			const transactions = row.original.transactions;
 			return (
@@ -124,18 +131,23 @@ export const Columns: ColumnDef<IClient>[] = [
 	},
 	{
 		id: "actions",
-		header: "Actions",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Actions</p>
+			<ListTodo color="white" size={16} />
+		</div>,
 		enableHiding: false,
 		cell: ({ row }) => {
 			const { session: { user } } = useAuth();
 			const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
-					{(user?.permission && PermissionsCanEdit.includes(user.permission)) && (
+					{(user?.permission && PermissionsCanEdit.includes(user.permission)) ? (
 						<EditClientDialog
 							clientData={row.original}
 						/>
-					)}
+					) :
+						<p className="text-xs text-muted-foreground text-center italic">None</p>
+					}
 					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
 						<DeleteLeadDialog
 							clientId={row.original.id}
