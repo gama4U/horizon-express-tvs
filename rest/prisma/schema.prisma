@@ -107,20 +107,12 @@ model PurchaseRequestOrder {
   updatedAt      DateTime?       @updatedAt
 }
 
-model TransmittalDocuments {
-  id    String @id @default(cuid())
-  title String
-
-  transmittalId String
-  transmittal   Transmittal @relation(fields: [transmittalId], references: [id])
-}
-
 model Transmittal {
-  id               String                 @id @default(cuid())
+  id               String   @id @default(cuid())
   memorandumNumber String
   clientId         String
-  client           Client                 @relation(fields: [clientId], references: [id])
-  documents        TransmittalDocuments[]
+  client           Client   @relation(fields: [clientId], references: [id])
+  documents        String[]
 
   recievedBy    String?
   returnedBy    String?
@@ -157,9 +149,11 @@ model Client {
   email           String
   contactNumber   String
   documents       String[]
+  clientType      ClientType
   transactions    Transaction[]
   transmittals    Transmittal[]
   salesAgreements SalesAgreement[]
+  officeBranch    OfficeBranch
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
