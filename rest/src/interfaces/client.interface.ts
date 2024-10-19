@@ -2,9 +2,7 @@ import { ClientType, OfficeBranch } from "@prisma/client"
 
 export interface IClient {
   id: string
-  firstName: string
-  middleName: string
-  lastName: string
+  name: string
   email: string
   contactNumber: string
   documents: string[]
@@ -12,9 +10,7 @@ export interface IClient {
 }
 
 export interface ICreateClient {
-  firstName: string
-  middleName: string
-  lastName: string
+  name: string
   email: string
   contactNumber: string
   documents: string[]
@@ -22,9 +18,7 @@ export interface ICreateClient {
   clientType: ClientType
 }
 export interface IUpdateClient {
-  firstName?: string
-  middleName?: string
-  lastName?: string
+  name?: string
   email?: string
   contactNumber?: string
   officeBranch: OfficeBranch

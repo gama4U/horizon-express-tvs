@@ -39,10 +39,7 @@ export async function fetchClients({ skip, take, search }: IFindClient) {
     whereInput = {
       AND: searchParts.map((part) => ({
         OR: [
-          { firstName: { contains: part, mode: "insensitive" } },
-          { middleName: { contains: part, mode: "insensitive" } },
-          { lastName: { contains: part, mode: "insensitive" } },
-          { email: { contains: part, mode: "insensitive" } }
+          { name: { contains: part, mode: "insensitive" } },
         ],
       })),
     }

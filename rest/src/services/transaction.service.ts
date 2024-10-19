@@ -127,8 +127,7 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
   if (search) {
     whereInput = {
       OR: [
-        { client: { firstName: { contains: search, mode: 'insensitive' } } },
-        { client: { lastName: { contains: search, mode: 'insensitive' } } },
+        { client: { name: { contains: search, mode: 'insensitive' } } },
         { id: { contains: search, mode: "insensitive" } },
       ],
     };
@@ -164,9 +163,7 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
       client: {
         select: {
           id: true,
-          firstName: true,
-          middleName: true,
-          lastName: true,
+          name: true,
           email: true,
           officeBranch: true,
         },
