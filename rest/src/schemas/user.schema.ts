@@ -1,4 +1,4 @@
-import { PermissionType, UserType } from "@prisma/client";
+import { OfficeBranch, PermissionType, UserType } from "@prisma/client";
 import { z } from "zod";
 
 export const getUsersSchema = z.object({
@@ -21,12 +21,18 @@ export const createUserSchema = z.object({
     email: z.string().email(),
     userType: z.enum([
       UserType.ADMIN, 
-      UserType.EMPLOYEE
+      UserType.EMPLOYEE,
     ]),
     permission: z.enum([
       PermissionType.SUPER_ADMIN, 
-      PermissionType.SUPERVISOR
-    ]).optional(),
+      PermissionType.SUPERVISOR,
+      PermissionType.ACCOUNTING,
+      PermissionType.RESERVATION
+    ]),
+    officeBranch: z.enum([
+      OfficeBranch.CEBU,
+      OfficeBranch.CALBAYOG
+    ]),
     password: z.string().min(8).refine((password: string) => {
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       return passwordRegex.test(password);
@@ -44,7 +50,9 @@ export const updateUserSchema = z.object({
     userType: z.enum([UserType.ADMIN, UserType.EMPLOYEE]),
     permission: z.enum([
       PermissionType.SUPER_ADMIN, 
-      PermissionType.SUPERVISOR
+      PermissionType.SUPERVISOR,
+      PermissionType.ACCOUNTING,
+      PermissionType.RESERVATION
     ]).optional(),
     password: z.string().min(8).refine((password: string) => {
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

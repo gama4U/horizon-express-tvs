@@ -36,6 +36,7 @@ const formSchema = z.object({
 interface Props {
   salesAgreementId: string;
 }
+
 export default function AddSalesAgreementItemDialog({salesAgreementId}: Props) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -78,7 +79,7 @@ export default function AddSalesAgreementItemDialog({salesAgreementId}: Props) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     createMutate({
       salesAgreementId,
-      particulars: values.particulars,
+      ...values,
       quantity: Number(values.quantity),
       unitPrice: Number(values.unitPrice),
       total: Number(values.total)

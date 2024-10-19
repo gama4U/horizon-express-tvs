@@ -9,6 +9,7 @@ import EditSalesAgreementDialog from "../../dialogs/sales-agreement/edit";
 import DeleteSalesAgreement from "../../alert/sales-agreement/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
+import Constants from "@/constants";
 
 export const Columns: ColumnDef<ISalesAgreement>[] = [
   {
@@ -108,6 +109,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
       const {session: {user}} = useAuth();
       return (
         <div className="flex items-center justify-center gap-4">
@@ -117,12 +119,16 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
               className="cursor-pointer hover:text-primary"
             />
           </Link>
-          <EditSalesAgreementDialog 
-            data={row.original}
-          />
-          <DeleteSalesAgreement 
-            salesAgreementId={row.original.id}
-          />
+          {user?.permission && PermissionsCanEdit.includes(user?.permission) && (
+            <EditSalesAgreementDialog 
+              data={row.original}
+            />
+          )}
+          {user?.permission && PermissionsCanDelete.includes(user?.permission) && (
+            <DeleteSalesAgreement 
+              salesAgreementId={row.original.id}
+            />
+          )}
         </div>
       )
     },

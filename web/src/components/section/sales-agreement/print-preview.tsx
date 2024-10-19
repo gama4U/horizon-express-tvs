@@ -8,8 +8,8 @@ import { useReactToPrint } from 'react-to-print';
 import { useAuth } from '@/providers/auth-provider'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { UserType } from '@/interfaces/user.interface'
 import { approveSalesAgreement } from '@/api/mutations/sales-agreement.mutation'
+import { formatCurrency } from '@/utils/currency.utils'
 
 interface Props {
   data: ISalesAgreement
@@ -20,6 +20,7 @@ export default function PrintPreview({ data }: Props) {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   const { session: { user } } = useAuth();
+  const { PermissionsCanApprove } = Constants;
 
   const { mutate: approveMutate, isPending: approving } = useMutation({
     mutationFn: async (id: string) => await approveSalesAgreement(id),
@@ -43,7 +44,7 @@ export default function PrintPreview({ data }: Props) {
       <div className='h-[50px] px-4 flex items-center justify-between'>
         <h1 className='text-[12px] text-muted-foreground italic'>Print preview</h1>
         <div className='flex items-center gap-1'>
-          {(!data?.approver && user?.userType === UserType.ADMIN) && (
+          {(!data?.approver && (user?.permission && PermissionsCanApprove.includes(user?.permission))) && (
             <Button
               size={'sm'}
               onClick={() => approveMutate(data?.id)}
@@ -155,9 +156,9 @@ export default function PrintPreview({ data }: Props) {
                   {data.salesAgreementItems.map((item, index) => (
                     <tr key={index}>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.unitPrice.toLocaleString()}</td>
-                      <td className="px-4 py-2 text-center">{item.total.toLocaleString()}</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString() }</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{formatCurrency(data.currency, item.unitPrice)}</td>
+                      <td className="px-4 py-2 text-center">{formatCurrency(data.currency, item.total)}</td>
                     </tr>
                   ))}
                 </>

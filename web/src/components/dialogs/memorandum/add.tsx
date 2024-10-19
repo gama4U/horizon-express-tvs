@@ -79,7 +79,7 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 	}
 
 	return (
-		<Dialog open={openDialog} onOpenChange={() => { setOpenDialog(false); }}>
+		<Dialog open={openDialog} onOpenChange={(value) => setOpenDialog(value)}>
 			<DialogContent className="max-w-[800px] max-h-[700px] overflow-auto">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
@@ -88,7 +88,7 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 					</DialogHeader>
 				</DialogTitle>
 				<Separator />
-				<div className="space-y-8 p-4">
+				<div className="space-y-8">
 					<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
 						<Form {...form}>
 							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

@@ -77,7 +77,7 @@ export default function ManageTransaction() {
                       <AccordionTrigger>Sales Agreement</AccordionTrigger>
                       <AccordionContent>
                         <Card className="w-full p-4 border">
-                          <CardContent className="p-4 justify-center border-none border-2 rounded-lg">
+                          <CardContent className="p-0 justify-center border-none border-2 rounded-lg">
                             {transaction?.salesAgreement ?
                               <div>
                                 <div className="flex justify-between items-center px-4">
