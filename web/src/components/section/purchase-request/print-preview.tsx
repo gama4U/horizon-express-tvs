@@ -8,9 +8,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { approvePurchaseRequestOrder } from '@/api/mutations/purchase-request..mutation';
 import { useAuth } from '@/providers/auth-provider';
-import { UserType } from '@/interfaces/user.interface';
+import { OfficeBranch, UserType } from '@/interfaces/user.interface';
 import { formatCurrency } from '@/utils/currency.utils';
 import logo from "../../../assets/logo.png"
+import { RenderHeaderText } from '@/components/common/header';
 
 interface Props {
   data: IPurchaseRequestOrder
@@ -91,16 +92,10 @@ export default function PrintPreview({ data }: Props) {
       <Separator />
       <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
         <div>
-          <div className='flex justify-center items-center gap-x-4 flex-3'>
-            <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
-              <img src={logo} className='object-contain w-[180px] h-[110px]' />
-              <h3 className="text-xs font-semibold">Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000</h3>
-              <div className="flex flex-col text-xs">
-                <span>Email: accounting.cebu@horizonexpress.ph</span>
-                <span>Contact Number: 09171871163</span>
-              </div>
-            </div>
-          </div>
+          <div className='text-center text-black flex flex-col items-center'>
+						<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
+						{RenderHeaderText(data.supplier?.officeBranch as OfficeBranch)}
+					</div>
 
           <div className='p-2 text-muted-foreground space-y-4'>
             <div className='flex items-center gap-4'>
