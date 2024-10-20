@@ -59,17 +59,14 @@ export default function PrintPreview({ data }: Props) {
   }
 
   const renderUnitPrice = (item: ISalesAgreementItem) => {
-    if (selectedTemplate === 'template1') {
-      return formatCurrency(data.currency, item.unitPrice);
-    }
     const unitPriceWithServiceFee = item.unitPrice + (item.serviceFee || 0);
-    return formatCurrency(data.currency, unitPriceWithServiceFee);
+    if (selectedTemplate === 'template1') {
+      return formatCurrency(data.currency, unitPriceWithServiceFee);
+    }
+    return `${formatCurrency(data.currency, item.unitPrice)} + ${formatCurrency(data.currency, (item.serviceFee || 0))}`;
   }
 
   const renderTotalPrice = (item: ISalesAgreementItem) => {
-    if (selectedTemplate === 'template1') {
-      return formatCurrency(data.currency, item.total);
-    }
     const totalPriceWithServiceFee = item.total + (item.serviceFee || 0);
     return formatCurrency(data.currency, totalPriceWithServiceFee);
   }
@@ -235,12 +232,12 @@ export default function PrintPreview({ data }: Props) {
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Net of VAT: </h1>
-                  <span>{formatCurrency(data.currency, netOfVat)}</span>
+                  <span>{`(${formatCurrency(data.currency, totalServiceFee)} / ${formatCurrency(data.currency, 1.12)}) - ${formatCurrency(data.currency, netOfVat)}`}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
-                  <span>{formatCurrency(data.currency, totalDue)}</span>
+                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotal)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
                 </div>
               </>
             )}
@@ -254,17 +251,17 @@ export default function PrintPreview({ data }: Props) {
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Net of VAT: </h1>
-                  <span>{formatCurrency(data.currency, netOfVat)}</span>
+                  <span>{`(${formatCurrency(data.currency, totalServiceFee)} / ${formatCurrency(data.currency, 1.12)}) - ${formatCurrency(data.currency, netOfVat)}`}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
-                  <span>{formatCurrency(data.currency, totalDue)}</span>
+                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotal)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Net Due: </h1>
-                  <span>{formatCurrency(data.currency, netDue)}</span>
+                  <span>{`(${formatCurrency(data.currency, totalDue)} * ${formatCurrency(data.currency, 0.12)}) - ${formatCurrency(data.currency, netDue)}`}</span>
                 </div>
               </>
             )}
@@ -348,44 +345,48 @@ export default function PrintPreview({ data }: Props) {
               </p>
             </div>
 
-            <div className='w-full flex flex-row justify-between items-start text-[8px]  gap-4'>
-              <div className='md:w-1/2 items-center text-center'>
-                <p className='font-semibold'>For Cebu Branch:</p>
-                <p className='mb-1'>
-                  <strong>Peso Account:</strong>
-                  <br />
-                  <strong>BDO</strong><br />
-                  <span>Account #: 00076821747</span><br />
-                  <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                  <br />
-                  <strong>PNB</strong><br />
-                  <span>Account #: 636110036035</span><br />
-                  <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                </p>
-                <p className='mb-1'>
-                  <strong>Dollar Account:</strong>
-                  <br />
-                  <span>Account #: 100760264937</span><br />
-                  <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                </p>
-              </div>
+            <div className='w-full flex justify-center text-[8px]'>
+              {data.client.officeBranch === OfficeBranch.CEBU && (
+                <div className='md:w-1/2 items-center text-center'>
+                  <p className='font-semibold'>For Cebu Branch:</p>
+                  <p className='mb-1'>
+                    <strong>Peso Account:</strong>
+                    <br />
+                    <strong>BDO</strong><br />
+                    <span>Account #: 00076821747</span><br />
+                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
+                    <br />
+                    <strong>PNB</strong><br />
+                    <span>Account #: 636110036035</span><br />
+                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
+                  </p>
+                  <p className='mb-1'>
+                    <strong>Dollar Account:</strong>
+                    <br />
+                    <span>Account #: 100760264937</span><br />
+                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
+                  </p>
+                </div>
+              )}
 
-              <div className='md:w-1/2 items-center text-center'>
-                <p className='font-semibold'>For Calbayog Branch:</p>
-                <p className='mb-1'>
-                  <strong>Peso Account:</strong>
-                  <br />
-                  <strong>PNB</strong><br />
-                  <span>Account #: 312970004640</span><br />
-                  <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                </p>
-                <p className='mb-1'>
-                  <strong>Dollar Account:</strong>
-                  <br />
-                  <span>Account #: 312960077243</span><br />
-                  <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                </p>
-              </div>
+              {data.client.officeBranch === OfficeBranch.CALBAYOG && (
+                <div className='md:w-1/2 items-center text-center'>
+                  <p className='font-semibold'>For Calbayog Branch:</p>
+                  <p className='mb-1'>
+                    <strong>Peso Account:</strong>
+                    <br />
+                    <strong>PNB</strong><br />
+                    <span>Account #: 312970004640</span><br />
+                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
+                  </p>
+                  <p className='mb-1'>
+                    <strong>Dollar Account:</strong>
+                    <br />
+                    <span>Account #: 312960077243</span><br />
+                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
