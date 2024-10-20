@@ -15,6 +15,7 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
 	{ label: "Clients", icon: "Leads", link: "/admin/clients" },
 	{ label: "Suppliers", icon: "Suppliers", link: "/admin/suppliers" },
 	{ label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
+	{ label: "Document Transactions", icon: "Documents", link: "/admin/document-transactions" },
 	{ label: "Users", icon: "Users", link: "/admin/users" },
 	{ label: "Profile", icon: "Profile", link: "/admin/profile" },
 ]
@@ -26,6 +27,7 @@ const EmployeeSidebarItems: Array<SidebarItemsType> = [
 	{ label: "Clients", icon: "Leads", link: "/employee/clients" },
 	{ label: "Suppliers", icon: "Suppliers", link: "/employee/suppliers" },
 	{ label: "Memorandum", icon: "Memorandum", link: "/employee/memorandum" },
+	{ label: "Document Transactions", icon: "Documents", link: "/employee/document-transactions" },
 	{ label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
 
@@ -73,6 +75,24 @@ const PermissionsCanApprove = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUN
 const GovernmentDepartments = ['Security', 'Education'];
 const CorporateDepartments = ['Information Technology', 'Tourism', 'Accounting', 'Human Resource'];
 
+const CommonDocuments = [
+	{ value: "Passport", label: "Passport" },
+	{ value: "NBI Clearance", label: "NBI Clearance" },
+	{ value: "Birth Certificate", label: "Birth Certificate" },
+	{ value: "Marriage Certificate", label: "Marriage Certificate" },
+	{ value: "Business Permit", label: "Business Permit" },
+	{ value: "Tax Identification Number (TIN)", label: "Tax Identification Number (TIN)" },
+	{ value: "Philhealth Card", label: "PhilHealth Card" },
+	{ value: "SSS Card", label: "SSS Card" },
+	{ value: "Driver's License", label: "Driver's License" },
+	{ value: "Voter ID", label: "Voter ID" },
+	{ value: "Barangay Clearance", label: "Barangay Clearance" },
+	{ value: "Community Tax Certificate (Cedula)", label: "Community Tax Certificate (Cedula)" },
+	{ value: "Postal ID", label: "Postal ID" },
+	{ value: "Student ID", label: "Student ID" },
+	{ value: "Senior Citizen ID", label: "Senior Citizen ID" },
+];
+
 const Constants = {
 	VersionNumber,
 	AdminSidebarItems,
@@ -85,7 +105,8 @@ const Constants = {
 	PermissionsCanEdit,
 	PermissionsCanApprove,
 	GovernmentDepartments,
-	CorporateDepartments
+	CorporateDepartments,
+	CommonDocuments
 }
 
 export default Constants

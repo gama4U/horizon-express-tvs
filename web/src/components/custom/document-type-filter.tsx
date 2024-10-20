@@ -1,22 +1,25 @@
-import { VoucherTypes } from "@/interfaces/transaction.interface";
 import clsx from "clsx";
 import AnimatedDiv from "../animated/Div";
 import { CircleCheck } from "lucide-react";
+import { DocumentTransactionType } from "@/api/mutations/document-transaction.mutation";
 
-const voucherTypeColors: Record<VoucherTypes, string> = {
-	travel: "bg-blue-300 text-blue-900",
-	accommodation: "bg-green-300 text-green-900",
-	tour: "bg-yellow-300 text-yellow-900",
-	transport: "bg-red-300 text-red-900",
+const voucherTypeColors: Record<DocumentTransactionType, string> = {
+	RETURN: "bg-blue-300 text-blue-900",
+	RECIEVE: "bg-green-300 text-green-900",
+	TRANSMITTAL: "bg-yellow-300 text-yellow-900",
 };
 
-interface VoucherTypeFilterProps {
-	type: VoucherTypes;
+interface DocumentTransactionFilterProps {
+	type: DocumentTransactionType;
 	selected: boolean;
-	onToggle: (type: VoucherTypes) => void;
+	onToggle: (type: DocumentTransactionType) => void;
 }
 
-export function VoucherTypeFilter({ type, selected, onToggle }: VoucherTypeFilterProps) {
+export function DocumentTransactionTypeFilter({
+	type,
+	selected,
+	onToggle,
+}: DocumentTransactionFilterProps) {
 	const handleToggle = () => {
 		onToggle(type);
 	};
