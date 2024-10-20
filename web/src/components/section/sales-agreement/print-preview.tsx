@@ -73,9 +73,10 @@ export default function PrintPreview({ data }: Props) {
   }
 
   const totalServiceFee = data.salesAgreementItems.reduce((acc, item) => (acc + (item.serviceFee || 0)), 0);
-  const vat = totalServiceFee * 0.12 // (12% of Service Fee);
-  const netOfVat = totalServiceFee - vat;
+  // const vat = totalServiceFee * 0.12 // (12% of Service Fee);
+  const netOfVat = totalServiceFee / 1.12;
   const totalDue = netOfVat + grandTotal;
+  const netDue = totalDue * 0.12
 
   return (
     <div className="w-full bg-white rounded-lg">
@@ -173,7 +174,6 @@ export default function PrintPreview({ data }: Props) {
           </div>
         </div>
 
-
         <div className='flex-1'>
           <div className='flex justify-center mb-2'>
             <h1 className='text-muted-foreground text-[18px] font-semibold'>
@@ -268,13 +268,8 @@ export default function PrintPreview({ data }: Props) {
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
-                  <h1>Less: </h1>
-                  <span>{formatCurrency(data.currency, 0)}</span>
-                </div>
-                <Separator className='bg-gray-100'/>
-                <div className='flex items-center justify-between'>
                   <h1>Net Due: </h1>
-                  <span>{formatCurrency(data.currency, 0)}</span>
+                  <span>{formatCurrency(data.currency, netDue)}</span>
                 </div>
               </>
             )}
