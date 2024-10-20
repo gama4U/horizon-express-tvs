@@ -60,7 +60,6 @@ export default function Transactions() {
         <div className="flex items-center justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              searchBar
               placeholder="Search by transaction id or client name"
               containerProps={{
                 className: "max-w-[500px]"
@@ -68,7 +67,7 @@ export default function Transactions() {
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <div className="flex flex-row gap-x-1 bg-slate-100 rounded-sm p-[7.2px] border-primary border-[0.5px]">
+            <div className="flex flex-row gap-x-1 bg-slate-100 rounded-sm p-[7.2px] ">
               {Object.values(VoucherTypes).map((type) => (
                 <VoucherTypeFilter
                   key={type}

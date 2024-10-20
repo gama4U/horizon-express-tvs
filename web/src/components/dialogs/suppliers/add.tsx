@@ -80,7 +80,7 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 			<DialogContent className="max-w-[700px] max-h-[520px] overflow-auto">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
-						<ContactRound />
+						<ContactRound className="text-secondary" />
 						Create Supplier
 					</DialogHeader>
 				</DialogTitle>

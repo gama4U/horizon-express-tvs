@@ -83,7 +83,7 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 			<DialogContent className="max-w-[800px] max-h-[700px] overflow-auto">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
-						<StickyNote />
+						<StickyNote className="text-secondary" />
 						Create Memorandum
 					</DialogHeader>
 				</DialogTitle>

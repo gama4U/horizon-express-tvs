@@ -38,8 +38,7 @@ export default function Suppliers() {
         <div className="flex items-center justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              searchBar
-              placeholder="Search by name or email"
+              placeholder="Search by name"
               containerProps={{
                 className: "max-w-[500px]"
               }}

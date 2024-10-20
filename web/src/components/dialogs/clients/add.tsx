@@ -117,7 +117,7 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 			<DialogContent className="max-w-[700px] max-h-[520px] overflow-auto">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
-						<UserCircle />
+						<UserCircle className="text-secondary" />
 						Create Client
 					</DialogHeader>
 				</DialogTitle>

@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { PermissionType, UserType } from "@/interfaces/user.interface";
 import placeholder from "../../assets/placeholder.png"
 import logo from "../../assets/logo.png"
+import skeletonLoader from "../../assets/loaders/skeleton.json"
+import Lottie from "lottie-react"
 import { useQuery } from "@tanstack/react-query";
 import { fetchProfile } from "@/api/queries/user.query";
 
@@ -51,7 +53,7 @@ const SideBar = React.memo(() => {
 		return parentRoutes.includes(link) ? pathname === link : pathname.startsWith(link);
 	};
 
-	const { data: profile } = useQuery({
+	const { data: profile, isLoading } = useQuery({
 		queryKey: ['profile'],
 		queryFn: async () => await fetchProfile(),
 	});
@@ -80,11 +82,17 @@ const SideBar = React.memo(() => {
 					</Button>
 				</div>
 				<div className="justify-start flex flex-row items-center gap-x-2">
-					<img
-						src={profile?.avatar ?? placeholder}
-						alt="user-avatar"
-						className={`w-[60px] h-[60px] object-contain ${isOpen ? 'border-[#F98948] border-[2px] rounded-full' : 'border-none'}`}
-					/>
+					{isLoading ? (
+						<div className="flex flex-col items-center">
+							<Lottie animationData={skeletonLoader} loop={true} className="w-[200px] h-[200px]" />
+							<p className="text-white font-semibold text-[14px]"></p>
+						</div>
+					) :
+						<img
+							src={profile?.avatar ?? placeholder}
+							alt="user-avatar"
+							className={`w-[60px] h-[60px] object-contain ${isOpen ? 'border-[#F98948] border-[2px] rounded-full' : 'border-none'}`}
+						/>}
 					{isOpen && <div className="text-[10px]">
 						<p className="text-primary font-semibold mb-[0.5px] text-[12px]">{profile?.firstName} {profile?.lastName}</p>
 						{profile?.permission &&
