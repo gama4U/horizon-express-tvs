@@ -14,7 +14,7 @@ purchaseRequestRouter.post('/', validate(createPurchaseRequestSchema), async (re
 
     const created = await createPurchaseRequest({ creatorId: userId, ...req.body });
     if (!created) {
-      throw new Error('Failed to create sales agreement')
+      throw new Error('Failed to create purchase request')
     }
 
     return res.status(200).json({

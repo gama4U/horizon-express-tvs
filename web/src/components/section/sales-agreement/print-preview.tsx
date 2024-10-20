@@ -239,11 +239,6 @@ export default function PrintPreview({ data }: Props) {
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
-                  <h1>VAT: </h1>
-                  <span>{formatCurrency(data.currency, vat)}</span>
-                </div>
-                <Separator className='bg-gray-100'/>
-                <div className='flex items-center justify-between'>
                   <h1>Net of VAT: </h1>
                   <span>{formatCurrency(data.currency, netOfVat)}</span>
                 </div>
@@ -260,11 +255,6 @@ export default function PrintPreview({ data }: Props) {
                 <div className='flex items-center justify-between'>
                   <h1>Total service fee: </h1>
                   <span>{formatCurrency(data.currency, totalServiceFee)}</span>
-                </div>
-                <Separator className='bg-gray-100'/>
-                <div className='flex items-center justify-between'>
-                  <h1>VAT: </h1>
-                  <span>{formatCurrency(data.currency, vat)}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>

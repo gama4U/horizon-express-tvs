@@ -1,7 +1,6 @@
 import { Currency } from "@/interfaces/sales-agreement-item.interface"
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface"
 import ClientTypeBadge from "../../badges/client-type"
-import { formatCurrency } from "@/utils/currency.utils"
 
 interface Props {
   data: ISalesAgreement
