@@ -52,10 +52,26 @@ export default function PurchaseRequestInfo({ data }: Props) {
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-muted-foreground text-[10px]">
-            Expenses
+            Disbursement type
           </span>
           <h3 className="text-[12px]">
-            {data.expenses}
+            {data.disbursementType}
+          </h3>
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-muted-foreground text-[10px]">
+            Classification
+          </span>
+          <h3 className="text-[12px]">
+            {data.classification}
+          </h3>
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-muted-foreground text-[10px]">
+          Classification type
+          </span>
+          <h3 className="text-[12px]">
+            {data.classificationType}
           </h3>
         </div>
         <div className="flex flex-col gap-1">
@@ -74,9 +90,6 @@ export default function PurchaseRequestInfo({ data }: Props) {
             {data.other}
           </h3>
         </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4 px-4">
         <div className="flex flex-col gap-1">
           <span className="text-muted-foreground text-[10px]">
             Prepared by

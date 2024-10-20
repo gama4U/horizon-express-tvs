@@ -6,18 +6,22 @@ export interface ICreatePurchaseRequest {
   serialNumber: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;
-  expenses: string;
+  disbursementType: string;
+  classification: string;
+  classificationType: string;
   nos: string;
   other?: string;
 }
 
 export interface IUpdatePurchaseRequest {
   id: string;
-  suppliersName: string;
+  supplierId: string;
   serialNumber: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;
-  expenses: string;
+  disbursementType: string;
+  classification: string;
+  classificationType: string;
   nos: string;
   other?: string;
 }
