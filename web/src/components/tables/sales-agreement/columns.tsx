@@ -1,8 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
-import { NotepadText } from "lucide-react";
+import ClientTypeBadge from "../../badges/client-type";
+import { CircleUser, NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import EditSalesAgreementDialog from "../../dialogs/sales-agreement/edit";
 import DeleteSalesAgreement from "../../alert/sales-agreement/delete";
@@ -15,6 +15,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     id: 'select',
     header: ({ table }) => (
       <Checkbox
+        className="border-white"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -23,7 +24,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
         aria-label="Select all"
       />
     ),
-     cell: ({ row }) => (
+    cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -34,27 +35,11 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     enableHiding: false,
   },
   {
-    id: "creator ",
-    header: "Creator",
-    cell: ({ row }) => {
-      if(!row.original.creator) return;
-      const {firstName, lastName, avatar} = row.original.creator;
-      return (
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src={avatar} className="object-cover"/>
-            <AvatarFallback>
-              {firstName[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <span>{`${firstName} ${lastName}`}</span>
-        </div>
-      )
-    }
-  },
-  {
     id: "clientName",
-    header: "Client",
+    header: () => <div className="flex items-center gap-x-2">
+      <p>Client</p>
+      <CircleUser color="white" size={16} />
+    </div>,
     cell: ({ row }) => (
       <span className="capitalize">
         {row.original.client.name}
@@ -68,6 +53,15 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
       <span className="capitalize">
         {row.original.serialNumber}
       </span>
+    )
+  },
+  {
+    id: "typeOfClient",
+    header: "Client type",
+    cell: ({ row }) => (
+      <ClientTypeBadge
+        value={row.original.client.clientType}
+      />
     )
   },
   {
@@ -90,7 +84,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
       const approvedBy = `${approver?.firstName || ''} ${approver?.lastName || ''}`
       return (
         <span className="capitalize">
-          {approvedBy} 
+          {approvedBy}
         </span>
       )
     }
@@ -99,23 +93,23 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
-      const {session: {user}} = useAuth();
+      const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
+      const { session: { user } } = useAuth();
       return (
         <div className="flex items-center justify-center gap-4">
           <Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/sales-agreements/${row.original.id}`}>
-            <NotepadText 
+            <NotepadText
               size={16}
               className="cursor-pointer hover:text-primary"
             />
           </Link>
           {user?.permission && PermissionsCanEdit.includes(user?.permission) && (
-            <EditSalesAgreementDialog 
+            <EditSalesAgreementDialog
               data={row.original}
             />
           )}
           {user?.permission && PermissionsCanDelete.includes(user?.permission) && (
-            <DeleteSalesAgreement 
+            <DeleteSalesAgreement
               salesAgreementId={row.original.id}
             />
           )}

@@ -1,8 +1,8 @@
 import { Separator } from "../../ui/separator";
 import { Button } from "../../ui/button";
-import { Pencil } from "lucide-react";
 import { IClient } from "@/api/mutations/client.mutation";
 import ClientTypeBadge from "@/components/badges/client-type";
+import EditClientDialog from "@/components/dialogs/clients/edit";
 
 interface ClientDetailsProps {
   clientData: IClient;
@@ -12,23 +12,20 @@ interface ClientDetailsProps {
 export default function ClientDetails({ clientData, forSelection }: ClientDetailsProps) {
 
   return (
-    <div className="flex flex-col gap-y-6 p-4 sm:p-6 lg:p-0 mt-2 bg-white rounded-lg">
-      <div className="border-2 border-dotted p-4 mb-2">
+    <div className="flex flex-col gap-y-6 p-2 m-2 sm:p-6 lg:p-0 mt-2 bg-white ">
+      <div className="mb-2 p-2">
         <div className="flex flex-row justify-between items-center">
           <p className="text-sm font-semibold">Client Information</p>
           {!forSelection &&
-            <div className="flex flex-row gap-x-2 items-center ">
-              <Button size="icon" variant="ghost" className="text-xs gap-x-2" onClick={() => { }}>
-                <Pencil size={14} />
-              </Button>
-            </div>}
+            <EditClientDialog clientData={clientData} />
+          }
         </div>
 
         <Separator className="my-2" />
 
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-            <p className="text-xs font-medium">First Name:</p>
+            <p className="text-xs font-medium">Name:</p>
             <p className="text-xs text-gray-700">{clientData.name}</p>
           </div>
 

@@ -36,7 +36,7 @@ export default function Transactions() {
   });
 
   const navigate = useNavigate();
-  const {session: {user}} = useAuth();
+  const { session: { user } } = useAuth();
 
   const handleVoucherFilterToggle = (type: VoucherTypes) => {
     setVoucherFilters((prevFilters) => ({
@@ -60,14 +60,15 @@ export default function Transactions() {
         <div className="flex items-center justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              placeholder="Search by transaction id or lead name"
+              searchBar
+              placeholder="Search by transaction id or client name"
               containerProps={{
                 className: "max-w-[500px]"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <div className="flex flex-row gap-x-1 bg-slate-100 rounded-sm p-2">
+            <div className="flex flex-row gap-x-1 bg-slate-100 rounded-sm p-[7.2px] border-primary border-[0.5px]">
               {Object.values(VoucherTypes).map((type) => (
                 <VoucherTypeFilter
                   key={type}
@@ -97,12 +98,12 @@ export default function Transactions() {
           pagination={pagination}
         />
       </div>
-      <CreateTransactionDialog 
-        openDialog={openCreateTransaction} 
-        setOpenDialog={setOpenCreateTransaction} 
-        successNavigate={(data) => {
-          navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/transactions/${data.id}/`);
-        }} 
+      <CreateTransactionDialog
+        openDialog={openCreateTransaction}
+        setOpenDialog={setOpenCreateTransaction}
+        successNavigate={(id) => {
+          navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/transactions/${id}/`);
+        }}
       />
     </div>
   )

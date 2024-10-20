@@ -45,6 +45,7 @@ export default function Users() {
         <div className="flex gap-2 justify-between">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
+              searchBar
               placeholder="Search by name or email"
               containerProps={{
                 className: "max-w-[500px]"

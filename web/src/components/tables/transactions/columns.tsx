@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { NotepadText } from "lucide-react";
+import { CircleUser, ListTodo, NotepadText, TicketCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ITransaction, VoucherTypes } from "@/interfaces/transaction.interface";
 import { VoucherBadge } from "@/components/badges/voucher-type";
@@ -14,6 +14,7 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		id: 'select',
 		header: ({ table }) => (
 			<Checkbox
+				className="border-white"
 				checked={
 					table.getIsAllPageRowsSelected() ||
 					(table.getIsSomePageRowsSelected() && "indeterminate")
@@ -33,14 +34,17 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		enableHiding: false,
 	},
 	{
-		id: "lead",
-		header: "Lead",
+		id: "client",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Client</p>
+			<CircleUser color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
-			if (!row.original.lead) return;
-			const { firstName, middleName, lastName } = row.original.lead;
+			if (!row.original.client) return;
+			const { name } = row.original.client;
 			return (
 				<div className="flex items-cetter gap-2">
-					<span>{`${firstName} ${middleName} ${lastName}`}</span>
+					<span>{name}</span>
 				</div>
 			)
 		}
@@ -74,7 +78,10 @@ export const Columns: ColumnDef<ITransaction>[] = [
 	},
 	{
 		id: "voucherCount",
-		header: "Vouchers",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Vouchers</p>
+			<TicketCheck color="white" size={16} />
+		</div>,
 		cell: ({ row }) => {
 			const { voucherCounts } = row.original;
 			const totalVouchers = Object.values(voucherCounts).reduce((sum, count) => sum + count, 0);
@@ -96,11 +103,14 @@ export const Columns: ColumnDef<ITransaction>[] = [
 	},
 	{
 		id: "actions",
-		header: "Actions",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Actions</p>
+			<ListTodo color="white" size={16} />
+		</div>,
 		enableHiding: false,
 		cell: ({ row }) => {
-      const {session: {user}} = useAuth();
-			const {PermissionsCanDelete} = Constants;
+			const { session: { user } } = useAuth();
+			const { PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
 					<Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/transactions/${row.original.id}`}>

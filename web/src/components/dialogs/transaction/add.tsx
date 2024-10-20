@@ -29,7 +29,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface ICreateTransactionDialog {
 	openDialog: boolean;
 	setOpenDialog: (open: boolean) => void;
-	successNavigate: (data: any) => void
+	successNavigate: (id: string) => void
 }
 const cardOptions = [
 	{
@@ -100,7 +100,6 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	const [search, setSearch] = useState('');
 	const debouncedSearch = useDebounce(search, 500);
 	const [selectedClient, setSelectedClient] = useState<IClient | null>(null);
-	const [withDepartment, setWithDepartment] = useState<boolean>(false)
 	const { session } = useAuth()
 
 	const { data, isLoading } = useQuery({
@@ -140,7 +139,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 			), {
 				position: "bottom-right",
 			})
-			successNavigate(data)
+			successNavigate(data.id)
 		}
 	});
 	const { mutate: createClientMutate, isPending: creatingClient } = useMutation({
@@ -227,7 +226,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 					{(selection.step === 1 && selection.type === 'add') &&
 						<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
 							<Form {...form}>
-								<p className="text-sm font-medium my-2">Create new lead for transaction</p>
+								<p className="text-sm font-medium my-2">Create new client for transaction</p>
 								<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 									<FormField
 										control={form.control}
@@ -391,7 +390,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 					}
 					{(selection.step === 1 && selection.type === 'select') &&
 						<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
-							<p className="text-sm font-medium my-2">
+							<p className="text-sm font-medium">
 								Select a Client
 							</p>
 							<div className="flex flex-row justify-center">
@@ -414,13 +413,13 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 									) : (
 										data?.clientsData?.slice(0, 3).map((client, index) => (
 											<div
-												className={`relative rounded-lg p-2 border-[1px] my-2 cursor-pointer hover:bg-green-100 
+												className={`my-2 relative border-[1px]  cursor-pointer hover:bg-green-100 
 												${selectedClient?.id === client.id ? 'border-green-500 bg-green-100' : 'border-dotted'}`}
 												key={index}
 												onClick={() => handleSelectClient(client)}
 											>
 												{selectedClient?.id === client.id && (
-													<div className="absolute top-2 right-2 text-green-500">
+													<div className="absolute top-4 right-4 text-green-500">
 														<AnimatedDiv animationType="Glowing" repeatDelay={0.5}>
 															<CircleCheck size={24} />
 														</AnimatedDiv>
@@ -428,7 +427,6 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 												)}
 												<ClientDetails clientData={client} forSelection={true} />
 											</div>
-
 										))
 									)}
 								</div>

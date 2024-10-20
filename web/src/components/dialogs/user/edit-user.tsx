@@ -79,7 +79,7 @@ const selectUserMap: Record<UserType, string> = {
   EMPLOYEE: 'Employee'
 }
 
-const userPermissionMap: Record<UserType, Record<PermissionType , string>> = {
+const userPermissionMap: Record<UserType, Record<PermissionType, string>> = {
   ADMIN: {
     SUPER_ADMIN: 'Super Admin',
     SUPERVISOR: 'Supervisor',
@@ -182,7 +182,7 @@ export default function EditUserDialog({ data }: Props) {
           <Pencil size={16} />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[600px] max-h-[560px] overflow-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <UserPlus size={24} />

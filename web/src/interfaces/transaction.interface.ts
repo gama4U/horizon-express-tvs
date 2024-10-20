@@ -1,4 +1,3 @@
-import { ILead } from "@/api/mutations/lead.mutation";
 import { IAccommodationVoucher } from "./accommodation.interface";
 import { IPurchaseRequestOrder } from "./purchase-request.interface";
 import { ISalesAgreement } from "./sales-agreement.interface";
@@ -6,6 +5,7 @@ import { ITourVoucher } from "./tour.interface";
 import { ITransportVoucher } from "./transport.interface";
 import { ITravelVoucher } from "./travel.interface";
 import { IUser } from "./user.interface";
+import { IClient } from "@/api/mutations/client.mutation";
 
 export interface ICreatedTransaction {
   id: string;
@@ -28,7 +28,7 @@ export interface IVoucherCounts {
 
 export interface ITransaction {
   id: string;
-  lead: ILead;
+  client: IClient;
   preparedBy: IUser;
   approver: IUser;
   travelVoucher?: ITravelVoucher[]
