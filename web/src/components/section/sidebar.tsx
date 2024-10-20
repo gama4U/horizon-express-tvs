@@ -101,7 +101,7 @@ const SideBar = React.memo(() => {
 							<AnimatedDiv className="" animationType="Bubble" delay={0} key={index}>
 								<div
 									onClick={() => handleRedirect(item.link)}
-									className={`my-[2px] cursor-pointer items-center py-2 hover:bg-[#F79151]  rounded-xl ${isSelected ? "bg-primary" : ""} ${isOpen ? "px-5 flex flex-row" : "px-2"}`}
+									className={`my-[2px] cursor-pointer items-center py-2 hover:bg-[#F79151]  rounded-xl ${isSelected ? "bg-primary" : ""} ${isOpen ? "px-2 flex flex-row" : "px-2"}`}
 								>
 									<SidebarIcons icon={item.icon} isSelected={isSelected} />
 									{isOpen && (

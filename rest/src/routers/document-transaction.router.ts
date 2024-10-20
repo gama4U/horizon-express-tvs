@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
 import { getDocumentTransactionSchema } from '../schemas/document-transaction.schema';
-import { createDocumentTransaction, deleteDocumentTransaction, fetchDocumentTransactions, findDocumentTransactionById, updateDocumentTransaction } from '../services/document-transaction.service';
+import { createDocumentTransaction, deleteDocumentTransaction, fetchDocumentTransactions, findDocumentTransactionById, transmitDocument, updateDocumentTransaction } from '../services/document-transaction.service';
 
 const documentTransactionRouter = express.Router();
 
@@ -16,30 +16,32 @@ documentTransactionRouter.post('/', async (req: Request, res: Response) => {
   }
 });
 
+
 documentTransactionRouter.get('/', validate(getDocumentTransactionSchema), async (req: Request, res: Response) => {
   try {
-
-    const { skip, take, search } = req.query;
+    const { skip, take, search, RECIEVE, TRANSMITTAL, RETURN } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      RECIEVE: RECIEVE === 'true',
+      TRANSMITTAL: TRANSMITTAL === 'true',
+      RETURN: RETURN === 'true',
     };
 
     const documentTransactions = await fetchDocumentTransactions(filters);
 
     if (!documentTransactions) {
-      throw new Error('Failed to get document transactions')
+      throw new Error('Failed to get document transactions');
     }
     return res.status(200).json(documentTransactions);
-
   } catch (error) {
     return res.status(500).json({
-      message: 'Internal server error'
-    })
+      message: 'Internal server error',
+    });
   }
-})
+});
 
 documentTransactionRouter.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -82,6 +84,27 @@ documentTransactionRouter.delete('/:id', async (req: Request, res: Response) => 
     res.status(500).json(error)
   }
 });
+documentTransactionRouter.patch('/:id/transmit', async (req: Request, res: Response) => {
+  try {
+    const transmittedById = String(req.user?.id);
+    const { id } = req.params;
+
+    const updated = await transmitDocument({ id, transmittedById })
+    if (!updated) {
+      throw new Error("Failed to transmit document transaction");
+    }
+
+    return res.status(200).json({
+      message: 'Transmitted successfully'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error"
+    })
+  }
+})
+
 
 
 export default documentTransactionRouter;

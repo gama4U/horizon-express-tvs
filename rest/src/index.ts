@@ -74,7 +74,7 @@ mainRouter.use('/clients', clientRouter);
 mainRouter.use('/profile', profileRouter);
 mainRouter.use('/memorandums', memorandumRouter);
 mainRouter.use('/suppliers', supplierRouter);
-mainRouter.use('/document-transaction', documentTransactionRouter);
+mainRouter.use('/document-transactions', documentTransactionRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)

@@ -13,6 +13,8 @@ import ManageTransaction from "@/pages/admin/transactions/details";
 import Users from "@/pages/admin/users";
 import { RouteObject } from "react-router-dom";
 import Suppliers from "@/pages/admin/suppliers";
+import DocumentTransactions from "@/pages/admin/document-transactions";
+import DocumentTransactionDetails from "@/pages/admin/document-transactions/details";
 
 const adminRouter: RouteObject = {
   path: '/admin',
@@ -58,6 +60,15 @@ const adminRouter: RouteObject = {
       path: 'memorandum/:id',
       element: <MemorandumDetails />
     },
+    {
+      path: 'document-transactions',
+      element: <DocumentTransactions />
+    },
+    {
+      path: 'document-transactions/:id',
+      element: <DocumentTransactionDetails />
+    },
+
     {
       path: 'sales-agreements',
       element: <SalesAgreements />

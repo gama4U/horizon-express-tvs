@@ -10,6 +10,7 @@ import {
 	CircleUser,
 	UserCog,
 	ContactRound,
+	Layers3,
 } from "lucide-react"
 import { Button } from "../ui/button"
 
@@ -47,9 +48,11 @@ export const SidebarIcons = ({ icon, isSelected }: SidebarIconsType) => {
 			return <UserCog size={size} className={className} color={color} />;
 		case "Suppliers":
 			return <ContactRound size={size} className={className} color={color} />;
+		case "Documents":
+			return <Layers3 size={size} className={className} color={color} />;
+
 		default:
 			return <FileQuestion className="mr-2" size={size} />;
-
 	}
 };
 

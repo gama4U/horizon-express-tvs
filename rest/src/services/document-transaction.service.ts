@@ -29,6 +29,21 @@ export async function deleteDocumentTransaction(id: string) {
     }
   })
 }
+export interface ITransmitDocument {
+  id: string
+  transmittedById: string
+}
+
+export async function transmitDocument({ id, transmittedById }: ITransmitDocument) {
+  return await prisma.documentTransaction.update({
+    where: {
+      id
+    },
+    data: {
+      transmittedById
+    }
+  })
+}
 export interface IUpdateDocumentTransaction {
   id: string
   documents: string[]
@@ -52,48 +67,77 @@ export interface IFindDocumentTransaction {
   skip?: number;
   take?: number;
   search?: string;
+  RECIEVE?: boolean
+  TRANSMITTAL?: boolean;
+  RETURN?: boolean
 }
 
-export async function fetchDocumentTransactions({ skip, take, search }: IFindDocumentTransaction) {
+
+
+
+export async function fetchDocumentTransactions({
+  skip,
+  take,
+  search,
+  RECIEVE,
+  TRANSMITTAL,
+  RETURN
+}: IFindDocumentTransaction & { RECIEVE?: boolean; TRANSMITTAL?: boolean; RETURN?: boolean }) {
   let whereInput: Prisma.DocumentTransactionWhereInput = {};
 
   if (search) {
-    whereInput = {
-      OR: [
-        {
-          client: {
-            name: { contains: search, mode: "insensitive" }
-          }
+    whereInput.OR = [
+      {
+        client: {
+          name: { contains: search, mode: "insensitive" },
         },
-        { dtsNumber: { contains: search, mode: "insensitive" } },
-      ],
-    }
+      },
+      { dtsNumber: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  const types: DocumentTransactionType[] = [];
+
+  if (RECIEVE) types.push(DocumentTransactionType.RECIEVE);
+  if (TRANSMITTAL) types.push(DocumentTransactionType.TRANSMITTAL);
+  if (RETURN) types.push(DocumentTransactionType.RETURN);
+
+  if (types.length > 0) {
+    whereInput.type = {
+      in: types,
+    };
   }
 
   const documentTransactions = prisma.documentTransaction.findMany({
-    where: {
-      ...whereInput,
-    },
+    where: whereInput,
     skip: skip ?? 0,
     take: take ?? 10,
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: 'desc',
+    },
+    include: {
+      client: true,
+      preparedBy: true,
+      recievedBy: true,
+      returnedBy: true,
+      transmittedBy: true,
+    },
   });
 
   const countDocumentTransactions = prisma.documentTransaction.count({
-    where: {
-      ...whereInput
-    },
+    where: whereInput,
   });
 
   const [documentTransactionData, total] = await prisma.$transaction([
     documentTransactions,
-    countDocumentTransactions
+    countDocumentTransactions,
   ]);
 
   return { documentTransactionData, total };
 }
+
+
+
 export async function findDocumentTransactionById(id: string) {
   return await prisma.documentTransaction.findUnique({
     where: { id },
@@ -102,13 +146,35 @@ export async function findDocumentTransactionById(id: string) {
         select: {
           firstName: true,
           lastName: true,
-          avatar: true
+          avatar: true,
+          signature: true
         }
       },
       client: true,
-      recievedBy: true,
-      returnedBy: true,
-      transmittedBy: true
+      recievedBy: {
+        select: {
+          firstName: true,
+          lastName: true,
+          avatar: true,
+          signature: true
+        }
+      },
+      returnedBy: {
+        select: {
+          firstName: true,
+          lastName: true,
+          avatar: true,
+          signature: true
+        }
+      },
+      transmittedBy: {
+        select: {
+          firstName: true,
+          lastName: true,
+          avatar: true,
+          signature: true
+        }
+      }
     }
   });
 }
