@@ -188,7 +188,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 			<DialogContent className="max-w-[520px] max-h-[90vh] overflow-y-auto rounded-[25px] p-6">
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
-						<SquareMenu />
+						<SquareMenu className="text-secondary" />
 						Create Transaction
 					</DialogHeader>
 				</DialogTitle>

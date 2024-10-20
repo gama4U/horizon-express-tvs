@@ -92,15 +92,6 @@ export default function Dashboard() {
           <AnimatedDiv className="h-auto w-[30%] rounded-lg p-2 border border-gray-200 flex flex-col" animationType="SlideInFromRight">
             <div className="flex flex-row justify-between items-center mb-2">
               <p className="font-medium text-md leading-none mb-2">Recent Activities</p>
-              <div className="flex flex-row gap-x-2">
-                <Button variant="outline" size="icon" onClick={handleRefetchRecentActivities}>
-                  <Maximize2 className="h-4 w-4" />
-                </Button>
-
-                <Button variant="outline" size="icon" onClick={handleRefetchRecentActivities}>
-                  <RefreshCw className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
             {recentLoading ? (
               <div className="flex-1 flex justify-center items-center w-full">

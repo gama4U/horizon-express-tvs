@@ -37,7 +37,7 @@ interface Props {
   purchaseRequestId: string;
 }
 
-export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props) {
+export default function AddPurchaseRequestItemDialog({ purchaseRequestId }: Props) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
@@ -57,19 +57,19 @@ export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props)
   }, [quantity, unitPrice])
 
 
-  const {mutate: createMutate, isPending} = useMutation({
+  const { mutate: createMutate, isPending } = useMutation({
     mutationFn: async (data: IAddPurchaseRequestItem) => await addPurchaseRequestItem(data),
     onSuccess: (data) => {
-      queryClient.refetchQueries({queryKey: ['purchase-request-details']})
+      queryClient.refetchQueries({ queryKey: ['purchase-request-details'] })
       form.reset();
       setOpen(false);
-      toast.success(data.message, { 
-        position: 'top-center', 
+      toast.success(data.message, {
+        position: 'top-center',
         className: 'text-primary'
       });
     },
     onError: (error) => {
-      toast.error(error.message, { 
+      toast.error(error.message, {
         position: 'top-center',
         className: 'text-destructive'
       })
@@ -90,13 +90,13 @@ export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props)
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button size={'icon'} variant={'ghost'} className="text-primary">
-          <Plus size={18}/>
+          <Plus size={18} />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[700px] max-h-[560px] overflow-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FilePlus size={24} className="text-secondary"/>
+            <FilePlus size={24} className="text-secondary" />
             <span>
               Add purchase request item
             </span>
@@ -110,9 +110,9 @@ export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props)
                   <FormItem>
                     <FormLabel>Particulars:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Particulars"/>
+                      <CommonInput inputProps={{ ...field }} placeholder="Particulars" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -123,9 +123,9 @@ export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props)
                   <FormItem>
                     <FormLabel>Quantity:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} type="number" placeholder="Quantity"/>
+                      <CommonInput inputProps={{ ...field }} type="number" placeholder="Quantity" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -136,9 +136,9 @@ export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props)
                   <FormItem>
                     <FormLabel>Unit price:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} type="number" placeholder="Unit price"/>
+                      <CommonInput inputProps={{ ...field }} type="number" placeholder="Unit price" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
@@ -149,16 +149,16 @@ export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props)
                   <FormItem>
                     <FormLabel>Total:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field, readOnly: true }} type="number" placeholder="Total"/>
+                      <CommonInput inputProps={{ ...field, readOnly: true }} type="number" placeholder="Total" />
                     </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
               <div className="flex gap-2 justify-end">
                 <DialogClose>
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     variant={'outline'}
                     className="flex gap-2 mt-4"
                     disabled={isPending}
@@ -166,13 +166,13 @@ export default function AddPurchaseRequestItemDialog({purchaseRequestId}: Props)
                     <span>Cancel</span>
                   </Button>
                 </DialogClose>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="flex gap-2 mt-4"
                   disabled={isPending}
                 >
-                  {isPending && 
-                    <Loader2 size={20} className="animate-spin"/>
+                  {isPending &&
+                    <Loader2 size={20} className="animate-spin" />
                   }
                   <span>Create</span>
                 </Button>

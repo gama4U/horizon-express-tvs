@@ -44,11 +44,10 @@ export default function Memorandum() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex gap-2 justify-between">
+        <div className="flex gap-2 justify-between items-center">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              searchBar
-              placeholder="Search by memo no. or addressee name"
+              placeholder="Search by memo no. or subject"
               containerProps={{
                 className: "max-w-[500px]"
               }}

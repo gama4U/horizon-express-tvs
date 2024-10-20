@@ -87,12 +87,12 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
     }
   });
 
-  const selectedDisbursementType =  form.watch('disbursementType');
-  const selectedClassification =  form.watch('classification');
+  const selectedDisbursementType = form.watch('disbursementType');
+  const selectedClassification = form.watch('classification');
 
-  const {data: suppliers} = useQuery({
+  const { data: suppliers } = useQuery({
     queryKey: ['suppliers', debouncedSearch],
-    queryFn: async() => await fetchSuppliers({search: debouncedSearch}),
+    queryFn: async () => await fetchSuppliers({ search: debouncedSearch }),
   })
 
   const { mutate: updateMutate, isPending } = useMutation({
@@ -153,7 +153,7 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
           <Pencil size={16} />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[600px]">
+      <DialogContent className="max-w-[700px] max-h-[560px] overflow-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileEdit size={24} className="text-secondary" />
@@ -188,7 +188,7 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
                           <CommandInput
                             className="text-[12px]"
                             onValueChange={(value) => setSupplierSearch(value)}
-                            placeholder="Search language..." 
+                            placeholder="Search language..."
                           />
                           <CommandList className="w-full">
                             <CommandEmpty>No supplier found.</CommandEmpty>
