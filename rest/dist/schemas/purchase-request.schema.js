@@ -5,8 +5,8 @@ const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 exports.createPurchaseRequestSchema = zod_1.z.object({
     body: zod_1.z.object({
-        suppliersName: zod_1.z.string().min(1, {
-            message: 'Supplier name is required'
+        supplierId: zod_1.z.string().min(1, {
+            message: 'Supplier id is required'
         }),
         serialNumber: zod_1.z.string().min(1, {
             message: 'Serial number is required'
@@ -23,8 +23,14 @@ exports.createPurchaseRequestSchema = zod_1.z.object({
             client_1.PaymentType.CASH,
             client_1.PaymentType.CHECK,
         ]),
-        expenses: zod_1.z.string().min(1, {
-            message: 'Expense is required'
+        disbursementType: zod_1.z.string().min(1, {
+            message: 'Disbursement type is required'
+        }),
+        classification: zod_1.z.string().min(1, {
+            message: 'Classification is required'
+        }),
+        classificationType: zod_1.z.string().min(1, {
+            message: 'Classification type is required'
         }),
         other: zod_1.z.string().optional(),
         nos: zod_1.z.string().min(1, {
@@ -34,8 +40,8 @@ exports.createPurchaseRequestSchema = zod_1.z.object({
 });
 exports.updatePurchaseRequestSchema = zod_1.z.object({
     body: zod_1.z.object({
-        suppliersName: zod_1.z.string().min(1, {
-            message: 'Supplier name is required'
+        supplierId: zod_1.z.string().min(1, {
+            message: 'Supplier id is required'
         }),
         serialNumber: zod_1.z.string().min(1, {
             message: 'Serial number is required'
@@ -52,8 +58,14 @@ exports.updatePurchaseRequestSchema = zod_1.z.object({
             client_1.PaymentType.CASH,
             client_1.PaymentType.CHECK,
         ]),
-        expenses: zod_1.z.string().min(1, {
-            message: 'Expense is required'
+        disbursementType: zod_1.z.string().min(1, {
+            message: 'Disbursement type is required'
+        }),
+        classification: zod_1.z.string().min(1, {
+            message: 'Classification is required'
+        }),
+        classificationType: zod_1.z.string().min(1, {
+            message: 'Classification type is required'
         }),
         other: zod_1.z.string().optional(),
         nos: zod_1.z.string().min(1, {

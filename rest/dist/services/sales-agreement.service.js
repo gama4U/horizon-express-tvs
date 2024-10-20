@@ -91,6 +91,7 @@ function findSalesAgreements(_a) {
                         signature: true
                     }
                 },
+                client: true,
                 _count: {
                     select: {
                         salesAgreementItems: true
@@ -140,6 +141,7 @@ function findSalesAgreementById(id) {
                         signature: true
                     }
                 },
+                client: true,
                 purchaseOrder: true,
                 transaction: true,
                 salesAgreementItems: {

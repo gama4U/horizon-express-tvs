@@ -16,6 +16,7 @@ exports.createSalesAgreementItemSchema = zod_1.z.object({
         total: zod_1.z.number().refine(value => value > 0, {
             message: 'Invalid total'
         }),
+        serviceFee: zod_1.z.number().nonnegative().optional()
     })
 });
 exports.updateSalesAgreementItemSchema = zod_1.z.object({
@@ -32,5 +33,6 @@ exports.updateSalesAgreementItemSchema = zod_1.z.object({
         total: zod_1.z.number().refine(value => value > 0, {
             message: 'Invalid total'
         }),
+        serviceFee: zod_1.z.number().nonnegative().optional()
     })
 });
