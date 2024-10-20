@@ -45,18 +45,10 @@ export default function PrintPreview({ data }: Props) {
     },
   });
 
-  const grandTotal = data.salesAgreementItems.reduce((acc, item) => acc + item.total, 0);
-
-  const renderGrandTotal = () => {
-    if (selectedTemplate === 'template1') {
-      return formatCurrency(data.currency, grandTotal);
-    }
-    const grandTotalWithServiceFees = data.salesAgreementItems.reduce((acc, item) => 
-      (acc + (item.total + (item.serviceFee || 0))),
-      0
-    );
-    return formatCurrency(data.currency, grandTotalWithServiceFees);
-  }
+  const grandTotalWithServiceFees = data.salesAgreementItems.reduce((acc, item) => 
+    (acc + (item.total + (item.serviceFee || 0))),
+    0
+  );
 
   const renderUnitPrice = (item: ISalesAgreementItem) => {
     const unitPriceWithServiceFee = item.unitPrice + (item.serviceFee || 0);
@@ -74,7 +66,7 @@ export default function PrintPreview({ data }: Props) {
   const totalServiceFee = data.salesAgreementItems.reduce((acc, item) => (acc + (item.serviceFee || 0)), 0);
   // const vat = totalServiceFee * 0.12 // (12% of Service Fee);
   const netOfVat = totalServiceFee / 1.12;
-  const totalDue = netOfVat + grandTotal;
+  const totalDue = netOfVat + grandTotalWithServiceFees;
   const netDue = totalDue * 0.12
 
   return (
@@ -211,7 +203,7 @@ export default function PrintPreview({ data }: Props) {
           <div className='mt-2 text-[12px] text-muted-foreground border border-dashed p-2 space-y-1'>
             <div className='flex items-center justify-between'>
               <h1>Grand Total: </h1>
-              <span>{renderGrandTotal()}</span>
+              <span>{formatCurrency(data.currency, grandTotalWithServiceFees)}</span>
             </div>
             {selectedTemplate === 'template2' && (
               <>
@@ -237,7 +229,7 @@ export default function PrintPreview({ data }: Props) {
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
-                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotal)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
+                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotalWithServiceFees)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
                 </div>
               </>
             )}
@@ -256,7 +248,7 @@ export default function PrintPreview({ data }: Props) {
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
-                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotal)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
+                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotalWithServiceFees)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
