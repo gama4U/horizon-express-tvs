@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, FileEdit, FilePlus, Loader2, Pencil } from "lucide-react";
+import { Check, ChevronsUpDown, FileEdit, Loader2, Pencil } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";

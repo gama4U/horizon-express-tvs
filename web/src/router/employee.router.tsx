@@ -1,5 +1,7 @@
 import Layout from "@/components/layout";
 import Clients from "@/pages/employee/clients";
+import DocumentTransactions from "@/pages/employee/document-transactions";
+import DocumentTransactionDetails from "@/pages/employee/document-transactions/details";
 import Memorandum from "@/pages/employee/memorandum";
 import MemorandumDetails from "@/pages/employee/memorandum/details";
 import Profile from "@/pages/employee/profile";
@@ -55,6 +57,14 @@ const employeeRouter: RouteObject = {
     {
       path: 'memorandum/:id',
       element: <MemorandumDetails />
+    },
+    {
+      path: 'document-transactions',
+      element: <DocumentTransactions />
+    },
+    {
+      path: 'document-transactions/:id',
+      element: <DocumentTransactionDetails />
     },
     {
       path: 'profile',
