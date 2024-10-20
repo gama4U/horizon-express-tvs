@@ -14,6 +14,7 @@ export const createSalesAgreementItemSchema = z.object({
     total: z.number().refine(value => value > 0, {
       message: 'Invalid total'
     }),
+    serviceFee: z.number().nonnegative().optional()
   })
 });
 
@@ -31,5 +32,6 @@ export const updateSalesAgreementItemSchema = z.object({
     total: z.number().refine(value => value > 0, {
       message: 'Invalid total'
     }),
+    serviceFee: z.number().nonnegative().optional()
   })
 });

@@ -1,9 +1,9 @@
-import { FilePlus, Loader2, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, FilePlus, Loader2, Plus } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import CommonInput from "../../common/input";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,11 @@ import { ICreatePurchaseRequest, PaymentType, PurchaseRequestOrderType } from "@
 import { createPurchaseRequest } from "@/api/mutations/purchase-request..mutation";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import useDebounce from "@/hooks/useDebounce";
+import { fetchSuppliers } from "@/api/queries/suppliers.query";
 
 const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
   ACCOMMODATION: 'Accommodation',
@@ -31,8 +36,8 @@ const paymentTypeLabelMap: Record<PaymentType, string> = {
 }
 
 const formSchema = z.object({
-  suppliersName: z.string().min(1, {
-    message: 'Supplier name is required'
+  supplierId: z.string().min(1, {
+    message: 'Supplier id is required'
   }),
   serialNumber: z.string().min(1, {
     message: 'Serial number is required'
@@ -62,11 +67,12 @@ export default function CreatePurchaseRequestDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { session: { user } } = useAuth();
+  const [supplierSearch, setSupplierSearch] = useState('');
+  const debouncedSearch = useDebounce(supplierSearch, 200);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      suppliersName: '',
       serialNumber: '',
       type: PurchaseRequestOrderType.VISA,
       paymentType: PaymentType.CASH,
@@ -74,6 +80,11 @@ export default function CreatePurchaseRequestDialog() {
       nos: '',
     }
   });
+
+  const {data: suppliers} = useQuery({
+    queryKey: ['suppliers', debouncedSearch],
+    queryFn: async() => await fetchSuppliers({search: debouncedSearch}),
+  })
 
   const { mutate: createMutate, isPending } = useMutation({
     mutationFn: async (data: ICreatePurchaseRequest) => await createPurchaseRequest(data),
@@ -100,6 +111,15 @@ export default function CreatePurchaseRequestDialog() {
     })
   }
 
+  function renderSelectedCompany(supplierId?: string) {
+    if (!supplierId) return "Select language";
+
+    const supplier = suppliers?.suppliersData.find((supplier) => supplier.id === supplierId);
+    if (!supplier) return "Select language";
+
+    return supplier?.name;
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -118,14 +138,62 @@ export default function CreatePurchaseRequestDialog() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
               <FormField
                 control={form.control}
-                name="suppliersName"
+                name="supplierId"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Supplier's name:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Name of supplier" />
-                    </FormControl>
-                    <FormMessage className="text-[10px]" />
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Supplier</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between text-[12px]",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {renderSelectedCompany(field.value)}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[450px] p-0">
+                        <Command shouldFilter={false}>
+                          <CommandInput
+                            className="text-[12px]"
+                            onValueChange={(value) => setSupplierSearch(value)}
+                            placeholder="Search language..." 
+                          />
+                          <CommandList className="w-full">
+                            <CommandEmpty>No supplier found.</CommandEmpty>
+                            <CommandGroup>
+                              {suppliers?.suppliersData.map((supplier, index) => (
+                                <CommandItem
+                                  value={supplier.id}
+                                  key={index}
+                                  onSelect={() => {
+                                    form.setValue("supplierId", supplier.id)
+                                  }}
+                                  className="text-[12px]"
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      supplier.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  <span>{supplier.name}</span>
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

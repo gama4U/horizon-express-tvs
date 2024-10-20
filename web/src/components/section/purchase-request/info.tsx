@@ -31,7 +31,7 @@ export default function PurchaseRequestInfo({ data }: Props) {
             Supplier's name
           </span>
           <h3 className="text-[12px]">
-            {data.suppliersName}
+            {data.supplier?.name}
           </h3>
         </div>
         <div className="flex flex-col gap-1">

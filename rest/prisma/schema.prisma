@@ -56,14 +56,13 @@ model SalesAgreement {
   id                  String                @id @default(cuid())
   creatorId           String
   approverId          String?
+  clientId            String
   serialNumber        String
   currency            Currency?
   salesAgreementItems SalesAgreementItem[]
   purchaseOrder       PurchaseRequestOrder?
   transaction         Transaction?
-  clientId            String
   client              Client                @relation(fields: [clientId], references: [id])
-
   creator   User      @relation("CreateSalesAgreements", fields: [creatorId], references: [id])
   approver  User?     @relation("ApproveSalesAgreements", fields: [approverId], references: [id])
   createdAt DateTime? @default(now())
@@ -77,6 +76,7 @@ model SalesAgreementItem {
   quantity         Int?
   unitPrice        Float?
   total            Float?
+  serviceFee       Float?
   salesAgreement   SalesAgreement @relation(fields: [salesAgreementId], references: [id])
   createdAt        DateTime?      @default(now())
   updatedAt        DateTime?      @updatedAt

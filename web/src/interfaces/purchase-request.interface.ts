@@ -1,14 +1,14 @@
+import { ISupplier } from "@/api/mutations/supplier.mutation";
 import { IPurchaseRequestOrderItem } from "./purchase-request-item.interface";
 import { ISalesAgreement } from "./sales-agreement.interface";
 import { IUser } from "./user.interface";
 
 export interface IPurchaseRequestOrder {
   id: string;
-  transactionId: string;
   creatorId: string;
   approverId: string;
   salesAgreementId: string;
-  suppliersName: string;
+  supplierId: string;
   serialNumber: string;
   expenses: string;
   other: string;
@@ -20,6 +20,7 @@ export interface IPurchaseRequestOrder {
   creator?: IUser;
   approver?: IUser;
   salesAgreement?: ISalesAgreement;
+  supplier?: ISupplier;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,7 +51,7 @@ export interface IFetchPurchaseRequestData {
 }
 
 export interface ICreatePurchaseRequest {
-  suppliersName: string;
+  supplierId: string;
   serialNumber: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;
@@ -61,7 +62,7 @@ export interface ICreatePurchaseRequest {
 
 export interface IUpdatePurchaseRequest {
   purchaseRequestId: string;
-  suppliersName: string;
+  supplierId: string;
   serialNumber: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;

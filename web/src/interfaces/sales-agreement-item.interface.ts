@@ -7,6 +7,7 @@ export interface ISalesAgreementItem {
   quantity: number;
   unitPrice: number;
   total: number;
+  serviceFee?: number;
   salesAgreement?: ISalesAgreement;
   createdAt: Date;
   updatedAt: Date;
@@ -18,6 +19,7 @@ export interface IAddSalesAgreementItem {
   quantity: number;
   unitPrice: number;
   total: number;
+  serviceFee?: number;
 }
 
 export interface IUpdateSalesAgreementItem {
@@ -26,6 +28,7 @@ export interface IUpdateSalesAgreementItem {
   quantity: number;
   unitPrice: number;
   total: number;
+  serviceFee?: number;
 }
 
 export enum Currency {
