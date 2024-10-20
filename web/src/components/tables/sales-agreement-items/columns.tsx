@@ -29,7 +29,16 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     header: "Unit price",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.unitPrice}
+        {row.original.unitPrice.toLocaleString()}
+      </span>
+    )
+  },
+  {
+    id: "serviceFee",
+    header: "Service fee",
+    cell: ({ row }) => (
+      <span className="capitalize">
+        {(row.original.serviceFee || 0).toLocaleString()}
       </span>
     )
   },
@@ -38,7 +47,7 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     header: "Total",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.total}
+        {(row.original.total + (row.original.serviceFee ?? 0)).toLocaleString()}
       </span>
     )
   },

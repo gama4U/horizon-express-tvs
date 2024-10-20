@@ -4,6 +4,7 @@ export interface ICreateSalesAgreementItem {
   quantity: number;
   unitPrice: number;
   total: number;
+  serviceFee?: number;
 }
 
 export interface IUpdateSalesAgreementItem {
@@ -12,4 +13,5 @@ export interface IUpdateSalesAgreementItem {
   quantity: number;
   unitPrice: number;
   total: number;
+  serviceFee?: number;
 }

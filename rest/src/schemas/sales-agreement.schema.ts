@@ -10,6 +10,7 @@ export const createSalesAgreementSchema = z.object({
       message: 'Serial number is required'
     }),
     currency: z.enum([Currency.PHP, Currency.USD]),
+    serviceFee: z.number().optional()
   })
 });
 
@@ -22,6 +23,7 @@ export const updateSalesAgreementSchema = z.object({
       message: 'Serial number is required'
     }),
     currency: z.enum([Currency.PHP, Currency.USD]),
+    serviceFee: z.number().optional()
   })
 });
 

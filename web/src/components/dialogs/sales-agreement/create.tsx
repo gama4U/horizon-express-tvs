@@ -42,7 +42,7 @@ export default function CreateSalesAgreementDialog() {
   const [open, setOpen] = useState(false);
   const {session: {user}} = useAuth();
   const [clientSearch, setClientSearch] = useState('');
-  const debouncedSearch = useDebounce(clientSearch, 300);
+  const debouncedSearch = useDebounce(clientSearch, 200);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,6 +81,16 @@ export default function CreateSalesAgreementDialog() {
     })
   }
 
+  function renderSelectedCompany(clientId?: string) {
+    if (!clientId) return "Select language";
+
+    const client = clients?.clientsData.find((client) => client.id === clientId);
+    if (!client) return "Select language";
+
+    const department = client?.department ? ` - ${client.department}` : '';
+    return `${client?.name} ${department}`;
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -110,18 +120,19 @@ export default function CreateSalesAgreementDialog() {
                             variant="outline"
                             role="combobox"
                             className={cn(
-                              "w-full justify-between",
+                              "w-full justify-between text-[12px]",
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            {clients?.clientsData.find((client) => client.id === field.value)?.name || "Select language"}
+                            {renderSelectedCompany(field.value)}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-[450px] p-0">
                         <Command shouldFilter={false}>
-                          <CommandInput 
+                          <CommandInput
+                            className="text-[12px]"
                             onValueChange={(value) => setClientSearch(value)}
                             placeholder="Search language..." 
                           />
@@ -135,6 +146,7 @@ export default function CreateSalesAgreementDialog() {
                                   onSelect={() => {
                                     form.setValue("clientId", client.id)
                                   }}
+                                  className="text-[12px]"
                                 >
                                   <Check
                                     className={cn(
@@ -146,7 +158,7 @@ export default function CreateSalesAgreementDialog() {
                                   />
                                   <span>{client.name}</span>
                                   {client.department && 
-                                    <span className="ml-1 text-muted-foreground text-[12px]"> - {client.department}</span> 
+                                    <span className="ml-1 text-muted-foreground"> - {client.department}</span> 
                                   }
                                 </CommandItem>
                               ))}

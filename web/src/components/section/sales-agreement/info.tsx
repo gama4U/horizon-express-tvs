@@ -1,6 +1,7 @@
 import { Currency } from "@/interfaces/sales-agreement-item.interface"
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface"
 import ClientTypeBadge from "../../badges/client-type"
+import { formatCurrency } from "@/utils/currency.utils"
 
 interface Props {
   data: ISalesAgreement
@@ -62,14 +63,6 @@ export default function SalesAgreementInfo({ data }: Props) {
           {`${data.approver?.firstName || ''} ${data.approver?.lastName || ''}`}
         </h3>
       </div>
-      <div className="flex flex-col gap-1">
-        <span className="text-muted-foreground text-[10px]">
-          Currency
-        </span>
-        <h3 className="text-[12px]">
-          {currencyMap[data.currency]}
-        </h3>
-      </div>
       {data.client.department && (
         <div className="flex flex-col gap-1">
           <span className="text-muted-foreground text-[10px]">
@@ -80,6 +73,14 @@ export default function SalesAgreementInfo({ data }: Props) {
           </h3>
         </div>
       )}
+      <div className="flex flex-col gap-1">
+        <span className="text-muted-foreground text-[10px]">
+          Currency
+        </span>
+        <h3 className="text-[12px]">
+          {currencyMap[data.currency]}
+        </h3>
+      </div>
     </div>
   )
 }

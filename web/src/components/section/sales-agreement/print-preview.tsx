@@ -3,7 +3,7 @@ import Constants from '../../../constants'
 import { ISalesAgreement } from '../../../interfaces/sales-agreement.interface'
 import { Button } from '../../ui/button'
 import { Separator } from '../../ui/separator'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useReactToPrint } from 'react-to-print';
 import { useAuth } from '@/providers/auth-provider'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -11,6 +11,8 @@ import { toast } from 'sonner'
 import { approveSalesAgreement } from '@/api/mutations/sales-agreement.mutation'
 import { formatCurrency } from '@/utils/currency.utils'
 import logo from "../../../assets/logo.png"
+import SelectSalesAgreementTemplate, { SalesAgreementTemplateType } from '@/components/select/sales-agreement/print-template'
+import { ISalesAgreementItem } from '@/interfaces/sales-agreement-item.interface'
 
 interface Props {
   data: ISalesAgreement
@@ -22,6 +24,7 @@ export default function PrintPreview({ data }: Props) {
   const reactToPrintFn = useReactToPrint({ contentRef });
   const { session: { user } } = useAuth();
   const { PermissionsCanApprove } = Constants;
+  const [selectedTemplate, setSelectedTemplate] = useState<SalesAgreementTemplateType>('template1');
 
   const { mutate: approveMutate, isPending: approving } = useMutation({
     mutationFn: async (id: string) => await approveSalesAgreement(id),
@@ -40,11 +43,49 @@ export default function PrintPreview({ data }: Props) {
     },
   });
 
+  const grandTotal = data.salesAgreementItems.reduce((acc, item) => acc + item.total, 0);
+
+  const renderGrandTotal = () => {
+    if (selectedTemplate === 'template1') {
+      return formatCurrency(data.currency, grandTotal);
+    }
+    const grandTotalWithServiceFees = data.salesAgreementItems.reduce((acc, item) => 
+      (acc + (item.total + (item.serviceFee || 0))),
+      0
+    );
+    return formatCurrency(data.currency, grandTotalWithServiceFees);
+  }
+
+  const renderUnitPrice = (item: ISalesAgreementItem) => {
+    if (selectedTemplate === 'template1') {
+      return formatCurrency(data.currency, item.unitPrice);
+    }
+    const unitPriceWithServiceFee = item.unitPrice + (item.serviceFee || 0);
+    return formatCurrency(data.currency, unitPriceWithServiceFee);
+  }
+
+  const renderTotalPrice = (item: ISalesAgreementItem) => {
+    if (selectedTemplate === 'template1') {
+      return formatCurrency(data.currency, item.total);
+    }
+    const totalPriceWithServiceFee = item.total + (item.serviceFee || 0);
+    return formatCurrency(data.currency, totalPriceWithServiceFee);
+  }
+
+  const totalServiceFee = data.salesAgreementItems.reduce((acc, item) => (acc + (item.serviceFee || 0)), 0);
+  const vat = totalServiceFee * 0.12 // (12% of Service Fee);
+  const netOfVat = totalServiceFee - vat;
+  const totalDue = netOfVat + grandTotal;
+
   return (
     <div className="w-full bg-white rounded-lg">
       <div className='h-[50px] px-4 flex items-center justify-between'>
         <h1 className='text-[12px] text-muted-foreground italic'>Print preview</h1>
         <div className='flex items-center gap-1'>
+          <SelectSalesAgreementTemplate 
+            value={selectedTemplate}
+            onValueChange={(value) => setSelectedTemplate(value)}
+          />
           {(!data?.approver && (user?.permission && PermissionsCanApprove.includes(user?.permission))) && (
             <Button
               size={'sm'}
@@ -74,29 +115,16 @@ export default function PrintPreview({ data }: Props) {
       <Separator />
       <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
         <div>
-          {/* <div className='text-center text-muted-foreground'>
-            <h1 className='text-[22px] font-semibold'>
-              HORIZON EXPRESS TRAVEL AND TOURS INC.
-            </h1>
-            <h3 className='text-[12px] font-semibold'>
-              Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000
-            </h3>
-            <div className='flex flex-col text-[12px]'>
-              <span>Email: accounting.cebu@horizonexpress.ph</span>
-              <span>Contact Number: 09171871163</span>
-            </div>
-          </div> */}
-
-<div className='flex justify-center items-center gap-x-4 flex-3'>
-          <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
-            <img src={logo} className='object-contain w-[180px] h-[110px]' />
-            <h3 className="text-xs font-semibold">Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000</h3>
-            <div className="flex flex-col text-xs">
-              <span>Email: accounting.cebu@horizonexpress.ph</span>
-              <span>Contact Number: 09171871163</span>
+          <div className='flex justify-center items-center gap-x-4 flex-3'>
+            <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
+              <img src={logo} className='object-contain w-[180px] h-[110px]' />
+              <h3 className="text-xs font-semibold">Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000</h3>
+              <div className="flex flex-col text-xs">
+                <span>Email: accounting.cebu@horizonexpress.ph</span>
+                <span>Contact Number: 09171871163</span>
+              </div>
             </div>
           </div>
-        </div>
 
           <div className='p-2 text-muted-foreground space-y-4'>
             <div className='flex items-center gap-4'>
@@ -169,8 +197,12 @@ export default function PrintPreview({ data }: Props) {
                     <tr key={index}>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString() }</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{formatCurrency(data.currency, item.unitPrice)}</td>
-                      <td className="px-4 py-2 text-center">{formatCurrency(data.currency, item.total)}</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">
+                        {renderUnitPrice(item)}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {renderTotalPrice(item)}
+                      </td>
                     </tr>
                   ))}
                 </>
@@ -184,6 +216,79 @@ export default function PrintPreview({ data }: Props) {
               )}
             </tbody>
           </table>
+          <div className='mt-2 text-[12px] text-muted-foreground border border-dashed p-2 space-y-1'>
+            <div className='flex items-center justify-between'>
+              <h1>Grand Total: </h1>
+              <span>{renderGrandTotal()}</span>
+            </div>
+            {selectedTemplate === 'template2' && (
+              <>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Total service fee: </h1>
+                  <span>{formatCurrency(data.currency, totalServiceFee)}</span>
+                </div>
+              </>
+            )}
+            {(selectedTemplate === 'template3') && (
+              <>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Total service fee: </h1>
+                  <span>{formatCurrency(data.currency, totalServiceFee)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>VAT: </h1>
+                  <span>{formatCurrency(data.currency, vat)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Net of VAT: </h1>
+                  <span>{formatCurrency(data.currency, netOfVat)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Total Due: </h1>
+                  <span>{formatCurrency(data.currency, totalDue)}</span>
+                </div>
+              </>
+            )}
+            {(selectedTemplate === 'template4') && (
+              <>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Total service fee: </h1>
+                  <span>{formatCurrency(data.currency, totalServiceFee)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>VAT: </h1>
+                  <span>{formatCurrency(data.currency, vat)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Net of VAT: </h1>
+                  <span>{formatCurrency(data.currency, netOfVat)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Total Due: </h1>
+                  <span>{formatCurrency(data.currency, totalDue)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Less: </h1>
+                  <span>{formatCurrency(data.currency, 0)}</span>
+                </div>
+                <Separator className='bg-gray-100'/>
+                <div className='flex items-center justify-between'>
+                  <h1>Net Due: </h1>
+                  <span>{formatCurrency(data.currency, 0)}</span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         <div>
@@ -302,7 +407,6 @@ export default function PrintPreview({ data }: Props) {
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </div>

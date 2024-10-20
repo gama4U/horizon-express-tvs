@@ -7,12 +7,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ISalesAgreement, IUpdateSalesAgreement, TypeOfClient } from "../../../interfaces/sales-agreement.interface";
+import { ISalesAgreement, IUpdateSalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import { updateSalesAgreement } from "../../../api/mutations/sales-agreement.mutation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
-import Constants from "../../../constants";
 import { Currency } from "@/interfaces/sales-agreement-item.interface";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -30,23 +29,9 @@ const formSchema = z.object({
   currency: z.enum([Currency.PHP, Currency.USD]),
 })
 
-const clientTypesMap: Record<TypeOfClient, string> = {
-  WALK_IN: 'Walk in',
-  CORPORATE: 'Corporate',
-  GOVERNMENT: 'Government',
-  GROUP: 'Group',
-  INDIVIDUAL: 'Individual',
-}
-
 const currencyMap: Record<Currency, string> = {
   PHP: 'Philippine Peso (PHP)',
   USD: 'US Dollar (USD)'
-}
-
-type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
-const departmentMap: Record<ClientWithDepartment, string[]> = {
-  CORPORATE: Constants.CorporateDepartments,
-  GOVERNMENT: Constants.GovernmentDepartments,
 }
 
 interface Props {
@@ -109,6 +94,16 @@ export default function EditSalesAgreementDialog({data}: Props) {
     })
   }
 
+  function renderSelectedCompany(clientId?: string) {
+    if (!clientId) return "Select language";
+
+    const client = clients?.clientsData.find((client) => client.id === clientId);
+    if (!client) return "Select language";
+
+    const department = client?.department ? ` - ${client.department}` : '';
+    return `${client?.name} ${department}`;
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -137,11 +132,11 @@ export default function EditSalesAgreementDialog({data}: Props) {
                             variant="outline"
                             role="combobox"
                             className={cn(
-                              "w-full justify-between",
+                              "w-full justify-between text-[12px]",
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            {clients?.clientsData.find((client) => client.id === field.value)?.name || "Select language"}
+                            {renderSelectedCompany(field.value)}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
@@ -149,6 +144,7 @@ export default function EditSalesAgreementDialog({data}: Props) {
                       <PopoverContent className="w-[450px] p-0">
                         <Command shouldFilter={false}>
                           <CommandInput 
+                            className="text-[12px]"
                             onValueChange={(value) => setClientSearch(value)}
                             placeholder="Search language..." 
                           />
@@ -162,6 +158,7 @@ export default function EditSalesAgreementDialog({data}: Props) {
                                   onSelect={() => {
                                     form.setValue("clientId", client.id)
                                   }}
+                                  className="text-[12px]"
                                 >
                                   <Check
                                     className={cn(
