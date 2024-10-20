@@ -75,6 +75,132 @@ const PermissionsCanApprove = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUN
 const GovernmentDepartments = ['Security', 'Education'];
 const CorporateDepartments = ['Information Technology', 'Tourism', 'Accounting', 'Human Resource'];
 
+const Disbursements = [
+  {
+    type: "Cost of Sales",
+    classifications: [
+      {
+        label: "Ticketing",
+        types: [
+          { label: "Domestic", code: "DOMTKT" },
+          { label: "International", code: "INTTKT" }
+        ]
+      },
+      {
+        label: "Tour Packages",
+        types: [
+          { label: "Local", code: "LCLPKG" },
+          { label: "International", code: "INTPKG" }
+        ]
+      },
+			{
+        label: "Documentation",
+        types: [
+          { label: "VISA", code: "VISDOC" },
+          { label: "Passport", code: "PPTDOC" },
+          { label: "Immigration", code: "IMGDOC" }
+        ]
+      },
+			{
+        label: "Accommodation",
+        types: [
+          { label: "Hotel", code: "ACCHTL" },
+          { label: "Resorts", code: "ACCRST" },
+          { label: "Online", code: "ACCONL" }
+        ]
+      },
+			{
+        label: "Transportation",
+        types: [
+          { label: "Transpo Rental", code: "TRNSPO" },
+        ]
+      },
+			{
+        label: "Others",
+        types: [
+          { label: "Documentation", code: "OTHDOC" },
+          { label: "Restaurant", code: "OTHRES" },
+          { label: "Entertainment", code: "OTHENT" },
+          { label: "Professional Fees", code: "OTHPRO" },
+          { label: "Miscellaneous", code: "OTHMIS" },
+          { label: "Other's Not Listed", code: "OTHNON" },
+        ]
+      },
+    ]
+  },
+  {
+    type: "Expenses",
+    classifications: [
+      {
+        label: "Operating Expenses",
+        types: [
+          { label: "Employee Salaries", code: "SALOPX" },
+          { label: "Rental", code: "RENTOPX" },
+          { label: "Communication and Data", code: "COMPOPX" },
+          { label: "Condo Dues", code: "CDOOPX" },
+          { label: "Electricity", code: "ELCOPX" },
+          { label: "Gasoline", code: "GASOPX" },
+          { label: "Repairs and Maintainance", code: "RPROPX" },
+        ]
+      },
+			{
+        label: "MKT and Advertising",
+        types: [
+          { label: "Print", code: "MKTPRT" },
+          { label: "Digital / Social Med", code: "MKTDGT" },
+          { label: "Professional Fees and Training", code: "MKTPRO" },
+          { label: "Events", code: "MKTEVE" },
+        ]
+      },
+			{
+        label: "Administrative Exp",
+        types: [
+          { label: "Travel", code: "ADMTRV" },
+          { label: "Representation", code: "ADMREP" },
+          { label: "Trainings", code: "ADMTRN" },
+          { label: "Professional Services", code: "ADMPRO" },
+        ]
+      },
+			{
+        label: "Depreciation",
+        types: [
+          { label: "Furniture", code: "DEPFUR" },
+          { label: "Equipment", code: "DEPEQP" },
+          { label: "Improvements", code: "DEPIMP" },
+        ]
+      },
+			{
+        label: "Taxes",
+        types: [
+          { label: "Permits", code: "TXSCTY" },
+          { label: "BIR", code: "TXSBIR" },
+        ]
+      },
+			{
+        label: "Travel",
+        types: [
+          { label: "Ticket", code: "TVLTKT" },
+          { label: "Accommodation", code: "TVLHTL" },
+          { label: "Meals", code: "TVLMLS" },
+          { label: "Miscellaneous", code: "TVLMLS" },
+        ]
+      },
+			{
+        label: "Employee Benefits",
+        types: [
+          { label: "SSS", code: "BENSSS" },
+          { label: "Phil Health", code: "BENPHL" },
+          { label: "Pag Ibig", code: "BENPAG" },
+          { label: "Insurance", code: "BENINS" },
+          { label: "13 Months", code: "BEN13M" },
+          { label: "Commissions/Incentives", code: "BENCOM" },
+        ]
+      },
+    ]
+  }
+];
+
+
 const CommonDocuments = [
 	{ value: "Passport", label: "Passport" },
 	{ value: "NBI Clearance", label: "NBI Clearance" },
@@ -106,6 +232,7 @@ const Constants = {
 	PermissionsCanApprove,
 	GovernmentDepartments,
 	CorporateDepartments,
+	Disbursements,
 	CommonDocuments
 }
 

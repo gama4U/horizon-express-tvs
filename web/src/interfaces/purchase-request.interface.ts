@@ -10,7 +10,9 @@ export interface IPurchaseRequestOrder {
   salesAgreementId: string;
   supplierId: string;
   serialNumber: string;
-  expenses: string;
+  disbursementType: string;
+  classification: string;
+  classificationType: string;
   other: string;
   nos: string;
   type: PurchaseRequestOrderType;
@@ -55,7 +57,9 @@ export interface ICreatePurchaseRequest {
   serialNumber: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;
-  expenses: string;
+  disbursementType: string;
+  classification: string;
+  classificationType: string;
   nos: string;
   other?: string;
 }
@@ -66,7 +70,9 @@ export interface IUpdatePurchaseRequest {
   serialNumber: string;
   type: PurchaseRequestOrderType;
   paymentType: PaymentType;
-  expenses: string;
+  disbursementType: string;
+  classification: string;
+  classificationType: string;
   nos: string;
   other?: string;
 }

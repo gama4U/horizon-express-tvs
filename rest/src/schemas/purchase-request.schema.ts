@@ -21,8 +21,14 @@ export const createPurchaseRequestSchema = z.object({
       PaymentType.CASH,
       PaymentType.CHECK,
     ]),
-    expenses: z.string().min(1, {
-      message: 'Expense is required'
+    disbursementType: z.string().min(1, {
+      message: 'Disbursement type is required'
+    }),
+    classification: z.string().min(1, {
+      message: 'Classification is required'
+    }),
+    classificationType: z.string().min(1, {
+      message: 'Classification type is required'
     }),
     other: z.string().optional(),
     nos: z.string().min(1, {
@@ -51,8 +57,14 @@ export const updatePurchaseRequestSchema = z.object({
       PaymentType.CASH,
       PaymentType.CHECK,
     ]),
-    expenses: z.string().min(1, {
-      message: 'Expense is required'
+    disbursementType: z.string().min(1, {
+      message: 'Disbursement type is required'
+    }),
+    classification: z.string().min(1, {
+      message: 'Classification is required'
+    }),
+    classificationType: z.string().min(1, {
+      message: 'Classification type is required'
     }),
     other: z.string().optional(),
     nos: z.string().min(1, {

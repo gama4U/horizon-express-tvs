@@ -97,10 +97,10 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
   },
   {
     id: "expenses",
-    header: "Expenses",
+    header: "Disbursement Type",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.expenses}
+        {row.original.disbursementType}
       </span>
     )
   },

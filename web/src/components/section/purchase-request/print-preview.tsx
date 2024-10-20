@@ -8,7 +8,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { approvePurchaseRequestOrder } from '@/api/mutations/purchase-request..mutation';
 import { useAuth } from '@/providers/auth-provider';
-import { UserType } from '@/interfaces/user.interface';
+import { OfficeBranch, UserType } from '@/interfaces/user.interface';
+import { formatCurrency } from '@/utils/currency.utils';
+import logo from "../../../assets/logo.png"
+import { RenderHeaderText } from '@/components/common/header';
 
 interface Props {
   data: IPurchaseRequestOrder
@@ -51,6 +54,8 @@ export default function PrintPreview({ data }: Props) {
     },
   });
 
+  const grandTotal = data.purchaseOrderItems.reduce((acc, item) => (acc + item.total), 0);
+
   return (
     <div className="w-full bg-white rounded-lg">
       <div className='h-[50px] px-4 flex items-center justify-between'>
@@ -87,18 +92,10 @@ export default function PrintPreview({ data }: Props) {
       <Separator />
       <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
         <div>
-          <div className='text-center text-muted-foreground'>
-            <h1 className='text-[22px] font-semibold'>
-              HORIZON EXPRESS TRAVEL AND TOURS INC.
-            </h1>
-            <h3 className='text-[12px] font-semibold'>
-              Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000
-            </h3>
-            <div className='flex flex-col text-[12px]'>
-              <span>Email: accounting.cebu@horizonexpress.ph</span>
-              <span>Contact Number: 09171871163</span>
-            </div>
-          </div>
+          <div className='text-center text-black flex flex-col items-center'>
+						<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
+						{RenderHeaderText(data.supplier?.officeBranch as OfficeBranch)}
+					</div>
 
           <div className='p-2 text-muted-foreground space-y-4'>
             <div className='flex items-center gap-4'>
@@ -132,14 +129,13 @@ export default function PrintPreview({ data }: Props) {
                   </span>
                 </div>
               </div>
-
-              <div className='flex w-[200px] items-end gap-1 text-[12px]'>
+              <div className='flex w-full items-end gap-1 text-[12px]'>
                 <span className='leading-[16px] font-semibold'>
-                  S.A. Number:
+                  Disbursement:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
                   <span>
-                    {data.salesAgreement?.serialNumber ?? ''}
+                    {data.disbursementType}
                   </span>
                 </div>
               </div>
@@ -148,22 +144,21 @@ export default function PrintPreview({ data }: Props) {
             <div className='flex items-center gap-4'>
               <div className='flex w-full items-end gap-1 text-[12px]'>
                 <span className='leading-[16px] font-semibold'>
-                  Expenses:
+                  Classification:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
                   <span>
-                    {data.expenses}
+                    {data.classification}
                   </span>
                 </div>
               </div>
-
               <div className='flex w-full items-end gap-1 text-[12px]'>
                 <span className='leading-[16px] font-semibold'>
-                  Others:
+                  Classification type:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
                   <span>
-                    {data.other ?? ''}
+                    {data.classificationType}
                   </span>
                 </div>
               </div>
@@ -194,10 +189,21 @@ export default function PrintPreview({ data }: Props) {
                     <tr key={index}>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.unitPrice.toLocaleString()}</td>
-                      <td className="px-4 py-2 text-center">{item.total.toLocaleString()}</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{formatCurrency('PHP', item.unitPrice)}</td>
+                      <td className="px-4 py-2 text-center">{formatCurrency('PHP', item.total)}</td>
                     </tr>
                   ))}
+                  <tr className='border'>
+                    <td 
+                      className="px-4 py-2 border-r border-gray-300 text-center col-span-2"
+                      colSpan={3}
+                    >
+                      Grand Total
+                    </td>
+                    <td className="px-4 py-2 text-center">
+                      {formatCurrency('PHP', grandTotal)}
+                    </td>
+                  </tr>
                 </>
               ) : (
                 <tr className='h-[200px]'>
@@ -229,6 +235,17 @@ export default function PrintPreview({ data }: Props) {
               <div className='flex-1 border-b leading-[16px]'>
                 <span>
                   {data.nos}
+                </span>
+              </div>
+            </div>
+
+            <div className='flex w-full items-end gap-1 text-[12px]'>
+              <span className='leading-[16px] font-semibold'>
+                Others:
+              </span>
+              <div className='flex-1 border-b leading-[16px]'>
+                <span>
+                  {data.other}
                 </span>
               </div>
             </div>

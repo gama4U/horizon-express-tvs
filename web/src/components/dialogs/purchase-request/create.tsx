@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import useDebounce from "@/hooks/useDebounce";
 import { fetchSuppliers } from "@/api/queries/suppliers.query";
+import Constants from "@/constants";
 
 const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
   ACCOMMODATION: 'Accommodation',
@@ -54,8 +55,14 @@ const formSchema = z.object({
     PaymentType.CASH,
     PaymentType.CHECK,
   ]),
-  expenses: z.string().min(1, {
-    message: 'Expense is required'
+  disbursementType: z.string().min(1, {
+    message: 'Disbursement type is required'
+  }),
+  classification: z.string().min(1, {
+    message: 'Classification is required'
+  }),
+  classificationType: z.string().min(1, {
+    message: 'Classification type is required'
   }),
   other: z.string().optional(),
   nos: z.string().min(1, {
@@ -76,10 +83,12 @@ export default function CreatePurchaseRequestDialog() {
       serialNumber: '',
       type: PurchaseRequestOrderType.VISA,
       paymentType: PaymentType.CASH,
-      expenses: '',
       nos: '',
     }
   });
+
+  const selectedDisbursementType =  form.watch('disbursementType');
+  const selectedClassification =  form.watch('classification');
 
   const {data: suppliers} = useQuery({
     queryKey: ['suppliers', debouncedSearch],
@@ -120,6 +129,9 @@ export default function CreatePurchaseRequestDialog() {
     return supplier?.name;
   }
 
+  const classifications = Constants.Disbursements.find(item => item.type === selectedDisbursementType)?.classifications || [];
+  const classificationTypes = classifications.find(item => item.label === selectedClassification)?.types || [];
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -128,7 +140,7 @@ export default function CreatePurchaseRequestDialog() {
           <span>Create</span>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FilePlus size={24} className="text-secondary" />
@@ -141,7 +153,7 @@ export default function CreatePurchaseRequestDialog() {
                 name="supplierId"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Supplier</FormLabel>
+                    <FormLabel className="text-[12px]">Supplier</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -158,7 +170,7 @@ export default function CreatePurchaseRequestDialog() {
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-[450px] p-0">
+                      <PopoverContent className="w-[550px] p-0">
                         <Command shouldFilter={false}>
                           <CommandInput
                             className="text-[12px]"
@@ -202,7 +214,7 @@ export default function CreatePurchaseRequestDialog() {
                 name="serialNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ser. No.:</FormLabel>
+                    <FormLabel className="text-[12px]">Ser. No.:</FormLabel>
                     <FormControl>
                       <CommonInput inputProps={{ ...field }} placeholder="Serial number" />
                     </FormControl>
@@ -216,7 +228,7 @@ export default function CreatePurchaseRequestDialog() {
                   name="type"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Type:</FormLabel>
+                      <FormLabel className="text-[12px]">Type:</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="bg-slate-100 border-none text-[12px]">
@@ -244,7 +256,7 @@ export default function CreatePurchaseRequestDialog() {
                   name="paymentType"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>Payment:</FormLabel>
+                      <FormLabel className="text-[12px]">Payment:</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="bg-slate-100 border-none text-[12px]">
@@ -270,23 +282,106 @@ export default function CreatePurchaseRequestDialog() {
               </div>
               <FormField
                 control={form.control}
-                name="expenses"
+                name="disbursementType"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Expenses:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Expenses" />
-                    </FormControl>
+                  <FormItem className="w-full">
+                    <FormLabel className="text-[12px]">Disbursement Type:</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select disbursement type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Constants.Disbursements.map((item, index) => (
+                          <SelectItem
+                            key={index}
+                            value={item.type}
+                            className="text-[12px]"
+                          >
+                            {item.type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name="classification"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-[12px]">Classification:</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                            <SelectValue placeholder="Select classification" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {classifications.length <= 0 && (
+                            <div className="text-[12px] text-muted-foreground p-1">
+                              <span>Empty</span>
+                            </div>
+                          )}
+                          {classifications.map((item, index) => (
+                            <SelectItem
+                              key={index}
+                              value={item.label}
+                              className="text-[12px]"
+                            >
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="classificationType"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-[12px]">Classification Type:</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                            <SelectValue placeholder="Select classification type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {classificationTypes.length <= 0 && (
+                            <div className="text-[12px] text-muted-foreground p-1">
+                              <span>Empty</span>
+                            </div>
+                          )}
+                          {classificationTypes.map((item, index) => (
+                            <SelectItem
+                              key={index}
+                              value={item.label}
+                              className="text-[12px]"
+                            >
+                              {item.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage className="text-[10px]" />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="nos"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nos:</FormLabel>
+                    <FormLabel className="text-[12px]">Nos:</FormLabel>
                     <FormControl>
                       <CommonInput inputProps={{ ...field }} placeholder="Nos" />
                     </FormControl>
@@ -299,7 +394,7 @@ export default function CreatePurchaseRequestDialog() {
                 name="other"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Others:</FormLabel>
+                    <FormLabel className="text-[12px]">Others:</FormLabel>
                     <FormControl>
                       <CommonInput inputProps={{ ...field }} placeholder="Others" />
                     </FormControl>

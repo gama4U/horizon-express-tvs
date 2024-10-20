@@ -89,7 +89,9 @@ model PurchaseRequestOrder {
   creatorId          String?
   serialNumber       String
   salesAgreementId   String?                    @unique
-  expenses           String?
+  disbursementType   String?
+  classification     String?
+  classificationType String?
   other              String?
   nos                String?
   approverId         String?
