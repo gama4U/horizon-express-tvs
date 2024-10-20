@@ -42,7 +42,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     </div>,
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.clientName}
+        {row.original.client.name}
       </span>
     ),
   },
@@ -60,7 +60,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     header: "Client type",
     cell: ({ row }) => (
       <ClientTypeBadge
-        value={row.original.typeOfClient}
+        value={row.original.client.clientType}
       />
     )
   },

@@ -3,8 +3,8 @@ import { z } from "zod";
 
 export const createPurchaseRequestSchema = z.object({
   body: z.object({
-    suppliersName: z.string().min(1, {
-      message: 'Supplier name is required'
+    supplierId: z.string().min(1, {
+      message: 'Supplier id is required'
     }),
     serialNumber: z.string().min(1, {
       message: 'Serial number is required'
@@ -33,8 +33,8 @@ export const createPurchaseRequestSchema = z.object({
 
 export const updatePurchaseRequestSchema = z.object({
   body: z.object({
-    suppliersName: z.string().min(1, {
-      message: 'Supplier name is required'
+    supplierId: z.string().min(1, {
+      message: 'Supplier id is required'
     }),
     serialNumber: z.string().min(1, {
       message: 'Serial number is required'

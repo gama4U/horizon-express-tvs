@@ -1,40 +1,31 @@
-import { ClientType, Currency } from "@prisma/client";
+import { Currency } from "@prisma/client";
 import { z } from "zod";
 
 export const createSalesAgreementSchema = z.object({
   body: z.object({
-    clientName: z.string().min(1, {
-      message: 'Client name is required'
+    clientId: z.string().min(1, {
+      message: 'Client id is required'
     }),
     serialNumber: z.string().min(1, {
       message: 'Serial number is required'
     }),
-    typeOfClient: z.enum([
-      ClientType.WALK_IN,
-      ClientType.CORPORATE,
-      ClientType.GOVERNMENT,
-    ]),
     currency: z.enum([Currency.PHP, Currency.USD]),
-    department: z.string().optional()
+    serviceFee: z.number().optional()
   })
 });
 
 export const updateSalesAgreementSchema = z.object({
   body: z.object({
-    clientName: z.string().min(1, {
-      message: 'Client name is required'
+    clientId: z.string().min(1, {
+      message: 'Client id is required'
     }),
     serialNumber: z.string().min(1, {
       message: 'Serial number is required'
     }),
-    typeOfClient: z.enum([
-      ClientType.WALK_IN,
-      ClientType.CORPORATE,
-      ClientType.GOVERNMENT,
-    ]),
+    currency: z.enum([Currency.PHP, Currency.USD]),
+    serviceFee: z.number().optional()
   })
 });
-
 
 export const getSalesAgreementsSchema = z.object({
   query: z.object({
@@ -45,10 +36,5 @@ export const getSalesAgreementsSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
-    typeOfClient: z.enum([
-      ClientType.WALK_IN,
-      ClientType.CORPORATE,
-      ClientType.GOVERNMENT,
-    ]).optional(),
   })
 });

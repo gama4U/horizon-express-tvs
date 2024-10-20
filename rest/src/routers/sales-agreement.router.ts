@@ -94,7 +94,6 @@ salesAgreementRouter.get('/:id', async (req: Request, res: Response) => {
   }
 })
 
-
 salesAgreementRouter.delete('/:id', async (req: Request, res: Response) => {
   try {
     const salesAgreementId = req.params.id;

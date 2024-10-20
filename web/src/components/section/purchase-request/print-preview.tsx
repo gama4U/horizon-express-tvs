@@ -107,7 +107,7 @@ export default function PrintPreview({ data }: Props) {
                   Supplier's name:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
-                  <span>{data.suppliersName}</span>
+                  <span>{data.supplier?.name}</span>
                 </div>
               </div>
 

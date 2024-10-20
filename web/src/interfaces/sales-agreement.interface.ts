@@ -1,3 +1,4 @@
+import { IClient } from "@/api/mutations/client.mutation";
 import { Currency, ISalesAgreementItem } from "./sales-agreement-item.interface";
 import { IUser } from "./user.interface";
 
@@ -5,14 +6,13 @@ export interface ISalesAgreement {
   id: string;
   creatorId: string;
   approverId: string;
-  clientName: string;
-  typeOfClient: TypeOfClient;
+  clientId: string;
   serialNumber: string;
   currency: Currency;
-  department?: string;
   salesAgreementItems: ISalesAgreementItem[];
   purchaseOrder: any;
   transaction: any;
+  client: IClient;
   creator?: IUser;
   approver?: IUser;
   updatedAt: Date;
@@ -27,25 +27,22 @@ export enum TypeOfClient {
 }
 
 export interface ICreateSalesAgreement {
-  clientName: string;
+  clientId: string;
   serialNumber: string;
-  typeOfClient: TypeOfClient;
-  department?: string;
   currency: Currency;
 }
 
 export interface IUpdateSalesAgreement {
   salesAgreementId: string;
-  clientName: string;
+  clientId: string;
   serialNumber: string;
-  typeOfClient: TypeOfClient;
+  currency: Currency;
 }
 
 export interface IFetchSalesAgreements {
   skip?: number;
   take?: number;
   search?: string;
-  typeOfClient?: ClientTypeFilter;
 }
 
 export interface IFetchSalesAgreementsData {

@@ -65,6 +65,7 @@ export async function findPurchaseRequests({ skip, take, search, type, paymentTy
           userType: true
         }
       },
+      supplier: true,
       _count: {
         select: {
           purchaseOrderItems: true
@@ -125,6 +126,7 @@ export async function findPurchaseRequestById(id: string) {
           signature: true
         }
       },
+      supplier: true,
       _count: {
         select: {
           purchaseOrderItems: true

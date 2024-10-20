@@ -31,6 +31,7 @@ const formSchema = z.object({
   total: z.number().refine(value => value > 0, {
     message: 'Invalid total'
   }),
+  serviceFee: z.number().nonnegative().optional()
 });
 
 interface Props {
@@ -59,10 +60,9 @@ export default function EditSalesAgreementItemDialog({data}: Props) {
   useEffect(() => {
     if (data) {
       form.reset({
-        particulars: data.particulars,
+        ...data,
         quantity: String(data.quantity),
         unitPrice: String(data.unitPrice),
-        total: data.total,
       })
     }
   }, [data]);
@@ -158,6 +158,23 @@ export default function EditSalesAgreementItemDialog({data}: Props) {
                     <FormLabel>Total:</FormLabel>
                     <FormControl>
                       <CommonInput inputProps={{ ...field, readOnly: true }} type="number" placeholder="Total"/>
+                    </FormControl>
+                    <FormMessage className="text-[10px]"/>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="serviceFee"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Service fee:</FormLabel>
+                    <FormControl>
+                      <CommonInput 
+                        inputProps={{ ...field, onChange: (e) => field.onChange(Number((e.target as any).value))}} 
+                        type="number"  
+                        placeholder="Service fee"
+                      />
                     </FormControl>
                     <FormMessage className="text-[10px]"/>
                   </FormItem>
