@@ -30,7 +30,6 @@ export async function findSalesAgreements({ skip, take, search, typeOfClient }: 
           { email: { contains: part, mode: "insensitive" } },
           { serialNumber: { contains: search, mode: "insensitive" } },
         ],
-
       })),
     }
   }
@@ -66,6 +65,7 @@ export async function findSalesAgreements({ skip, take, search, typeOfClient }: 
           signature: true
         }
       },
+      client: true,
       _count: {
         select: {
           salesAgreementItems: true
@@ -119,6 +119,7 @@ export async function findSalesAgreementById(id: string) {
           signature: true
         }
       },
+      client: true,
       purchaseOrder: true,
       transaction: true,
       salesAgreementItems: {

@@ -1,75 +1,60 @@
-import { FilePlus, Loader2, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, FilePlus, Loader2, Plus } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import CommonInput from "../../common/input";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ICreateSalesAgreement, TypeOfClient } from "../../../interfaces/sales-agreement.interface";
+import { ICreateSalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import { createSalesAgreement } from "../../../api/mutations/sales-agreement.mutation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
-import Constants from "../../../constants";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 import { Currency } from "@/interfaces/sales-agreement-item.interface";
+import { fetchClients } from "@/api/queries/clients.query";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { cn } from "@/lib/utils";
+import useDebounce from "@/hooks/useDebounce";
 
 const formSchema = z.object({
-  clientName: z.string().min(1, {
-    message: 'Client name is required'
+  clientId: z.string().min(1, {
+    message: 'Client is required'
   }),
   serialNumber: z.string().min(1, {
     message: 'Serial number is required'
   }),
-  typeOfClient: z.enum([
-    TypeOfClient.WALK_IN,
-    TypeOfClient.CORPORATE,
-    TypeOfClient.GOVERNMENT,
-    TypeOfClient.GROUP,
-    TypeOfClient.INDIVIDUAL,
-  ]),
-  department: z.string().optional(),
   currency: z.enum([Currency.PHP, Currency.USD]),
 });
-
-const clientTypesMap: Record<TypeOfClient, string> = {
-  WALK_IN: 'Walk in',
-  CORPORATE: 'Corporate',
-  GOVERNMENT: 'Government',
-  GROUP: 'Group',
-  INDIVIDUAL: 'Individual',
-}
 
 const currencyMap: Record<Currency, string> = {
   PHP: 'Philippine Peso (PHP)',
   USD: 'US Dollar (USD)'
 }
 
-type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
-const departmentMap: Record<ClientWithDepartment, string[]> = {
-  CORPORATE: Constants.CorporateDepartments,
-  GOVERNMENT: Constants.GovernmentDepartments,
-}
-
 export default function CreateSalesAgreementDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const {session: {user}} = useAuth();
+  const [clientSearch, setClientSearch] = useState('');
+  const debouncedSearch = useDebounce(clientSearch, 300);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      typeOfClient: TypeOfClient.WALK_IN,
       serialNumber: '',
-      clientName: '',
     }
   });
 
-  const selectedClientType = form.watch('typeOfClient');
+  const {data: clients} = useQuery({
+    queryKey: ['clients', debouncedSearch],
+    queryFn: async() => await fetchClients({search: debouncedSearch}),
+  })
 
   const {mutate: createMutate, isPending} = useMutation({
     mutationFn: async (data: ICreateSalesAgreement) => await createSalesAgreement(data),
@@ -89,12 +74,6 @@ export default function CreateSalesAgreementDialog() {
       })
     },
   });
-
-  useEffect(() => {
-    if (selectedClientType) {
-      form.resetField('department');
-    }
-  }, [selectedClientType])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createMutate({
@@ -120,14 +99,63 @@ export default function CreateSalesAgreementDialog() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
               <FormField
                 control={form.control}
-                name="clientName"
+                name="clientId"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Client name"/>
-                    </FormControl>
-                    <FormMessage className="text-[10px]"/>
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Client</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {clients?.clientsData.find((client) => client.id === field.value)?.name || "Select language"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[450px] p-0">
+                        <Command shouldFilter={false}>
+                          <CommandInput 
+                            onValueChange={(value) => setClientSearch(value)}
+                            placeholder="Search language..." 
+                          />
+                          <CommandList className="w-full">
+                            <CommandEmpty>No client found.</CommandEmpty>
+                            <CommandGroup>
+                              {clients?.clientsData.map((client, index) => (
+                                <CommandItem
+                                  value={client.id}
+                                  key={index}
+                                  onSelect={() => {
+                                    form.setValue("clientId", client.id)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      client.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  <span>{client.name}</span>
+                                  {client.department && 
+                                    <span className="ml-1 text-muted-foreground text-[12px]"> - {client.department}</span> 
+                                  }
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -144,64 +172,6 @@ export default function CreateSalesAgreementDialog() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="typeOfClient"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type:</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                          <SelectValue placeholder="Select a client type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(clientTypesMap).map(([value, label], index) => (
-                          <SelectItem
-                            key={index}
-                            value={value}
-                            className="text-[12px]"
-                          >
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-[10px]"/>
-                  </FormItem>
-                )}
-              />
-              {(selectedClientType === TypeOfClient.CORPORATE || selectedClientType === TypeOfClient.GOVERNMENT) && (
-                <FormField
-                  control={form.control}
-                  name="department"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Department:</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value || ''}>
-                        <FormControl>
-                          <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                            <SelectValue placeholder="Select a department" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(departmentMap[selectedClientType as ClientWithDepartment]).map(([index, value]) => (
-                            <SelectItem
-                              key={index}
-                              value={value}
-                              className="text-[12px]"
-                            >
-                              {value}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className="text-[10px]"/>
-                    </FormItem>
-                  )}
-                />
-              )}
               <FormField
                 control={form.control}
                 name="currency"

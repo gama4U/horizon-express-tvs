@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { approveSalesAgreement } from '@/api/mutations/sales-agreement.mutation'
 import { formatCurrency } from '@/utils/currency.utils'
+import logo from "../../../assets/logo.png"
 
 interface Props {
   data: ISalesAgreement
@@ -73,7 +74,7 @@ export default function PrintPreview({ data }: Props) {
       <Separator />
       <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
         <div>
-          <div className='text-center text-muted-foreground'>
+          {/* <div className='text-center text-muted-foreground'>
             <h1 className='text-[22px] font-semibold'>
               HORIZON EXPRESS TRAVEL AND TOURS INC.
             </h1>
@@ -84,7 +85,18 @@ export default function PrintPreview({ data }: Props) {
               <span>Email: accounting.cebu@horizonexpress.ph</span>
               <span>Contact Number: 09171871163</span>
             </div>
+          </div> */}
+
+<div className='flex justify-center items-center gap-x-4 flex-3'>
+          <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
+            <img src={logo} className='object-contain w-[180px] h-[110px]' />
+            <h3 className="text-xs font-semibold">Unit 601 The Meridian, Golam Drive Kasambagan, Cebu City 6000</h3>
+            <div className="flex flex-col text-xs">
+              <span>Email: accounting.cebu@horizonexpress.ph</span>
+              <span>Contact Number: 09171871163</span>
+            </div>
           </div>
+        </div>
 
           <div className='p-2 text-muted-foreground space-y-4'>
             <div className='flex items-center gap-4'>
@@ -93,7 +105,7 @@ export default function PrintPreview({ data }: Props) {
                   Client name:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
-                  <span>{data.clientName}</span>
+                  <span>{data.client.name}</span>
                 </div>
               </div>
 
@@ -114,7 +126,7 @@ export default function PrintPreview({ data }: Props) {
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
                   <span>
-                    {Constants.ClientTypesMap[data.typeOfClient]}
+                    {Constants.ClientTypesMap[data.client.clientType]}
                   </span>
                 </div>
               </div>

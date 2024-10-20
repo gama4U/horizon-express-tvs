@@ -35,7 +35,7 @@ export default function SalesAgreementInfo({ data }: Props) {
           Type of client
         </span>
         <ClientTypeBadge
-          value={data.typeOfClient}
+          value={data.client?.clientType}
         />
       </div>
       <div>
@@ -43,7 +43,7 @@ export default function SalesAgreementInfo({ data }: Props) {
           Client name
         </span>
         <h3 className="text-[12px]">
-          {data.clientName}
+          {data.client.name}
         </h3>
       </div>
       <div className="flex flex-col gap-1">
@@ -70,13 +70,13 @@ export default function SalesAgreementInfo({ data }: Props) {
           {currencyMap[data.currency]}
         </h3>
       </div>
-      {data.department && (
+      {data.client.department && (
         <div className="flex flex-col gap-1">
           <span className="text-muted-foreground text-[10px]">
             Department
           </span>
           <h3 className="text-[12px]">
-            {data.department}
+            {data.client.department}
           </h3>
         </div>
       )}

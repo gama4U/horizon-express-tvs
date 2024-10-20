@@ -2,7 +2,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
-import ClientTypeBadge from "../../badges/client-type";
 import { NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import EditSalesAgreementDialog from "../../dialogs/sales-agreement/edit";
@@ -58,7 +57,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     header: "Client",
     cell: ({ row }) => (
       <span className="capitalize">
-        {row.original.clientName}
+        {row.original.client.name}
       </span>
     ),
   },
@@ -69,15 +68,6 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
       <span className="capitalize">
         {row.original.serialNumber}
       </span>
-    )
-  },
-  {
-    id: "typeOfClient",
-    header: "Client type",
-    cell: ({ row }) => (
-      <ClientTypeBadge 
-        value={row.original.typeOfClient}
-      />
     )
   },
   {

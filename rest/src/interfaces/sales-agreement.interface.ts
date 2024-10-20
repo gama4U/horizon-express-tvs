@@ -9,10 +9,9 @@ export interface ICreateSalesAgreement {
 
 export interface IUpdateSalesAgreement {
   id: string;
-  creatorId: string;
-  typeOfClient: ClientType;
-  clientName: string;
+  clientId: string;
   serialNumber: string;
+  currency: Currency;
 }
 
 export interface IFindSalesAgreements {
