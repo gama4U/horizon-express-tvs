@@ -8,28 +8,30 @@ datasource db {
 }
 
 model User {
-  id                            String                 @id @default(cuid())
-  firstName                     String
-  lastName                      String
-  email                         String                 @unique
-  password                      String
-  avatar                        String?
-  userType                      UserType
-  permission                    PermissionType?
-  signature                     String?
-  officeBranch                  OfficeBranch?
-  createdAt                     DateTime               @default(now())
-  updatedAt                     DateTime               @updatedAt
-  createdSalesAgreements        SalesAgreement[]       @relation("CreateSalesAgreements")
-  approvedSalesAgreements       SalesAgreement[]       @relation("ApproveSalesAgreements")
-  createdPurchaseRequestOrders  PurchaseRequestOrder[] @relation("CreatePurchaseRequestOrders")
-  approvedPurchaseRequestOrders PurchaseRequestOrder[] @relation("ApprovePurchaseRequestOrders")
-  preparedTransactions          Transaction[]          @relation("PreparedTransactions")
-  approvedTransactions          Transaction[]          @relation("ApprovedTransactions")
-  memorandums                   Memorandum[]           @relation("PreparedMemorandums")
-  approvedMemorandums           Memorandum[]           @relation("ApprovedMemorandums")
-  transmittal                   Transmittal[]          @relation("PreparedTransmittals")
-  approvedTransmittals          Transmittal[]          @relation("ApprovedTransmittals")
+  id                              String                 @id @default(cuid())
+  firstName                       String
+  lastName                        String
+  email                           String                 @unique
+  password                        String
+  avatar                          String?
+  userType                        UserType
+  permission                      PermissionType?
+  signature                       String?
+  officeBranch                    OfficeBranch?
+  createdAt                       DateTime               @default(now())
+  updatedAt                       DateTime               @updatedAt
+  createdSalesAgreements          SalesAgreement[]       @relation("CreateSalesAgreements")
+  approvedSalesAgreements         SalesAgreement[]       @relation("ApproveSalesAgreements")
+  createdPurchaseRequestOrders    PurchaseRequestOrder[] @relation("CreatePurchaseRequestOrders")
+  approvedPurchaseRequestOrders   PurchaseRequestOrder[] @relation("ApprovePurchaseRequestOrders")
+  preparedTransactions            Transaction[]          @relation("PreparedTransactions")
+  approvedTransactions            Transaction[]          @relation("ApprovedTransactions")
+  memorandums                     Memorandum[]           @relation("PreparedMemorandums")
+  approvedMemorandums             Memorandum[]           @relation("ApprovedMemorandums")
+  preparedDocumentTransactions    DocumentTransaction[]  @relation("PreparedDocumentTransactions")
+  transmittedDocumentTransactions DocumentTransaction[]  @relation("TransmittedDocumentTransactions")
+  recievedDocumentTransactions    DocumentTransaction[]  @relation("RecievedDocumentTransactions")
+  returnedDocumentTransactions    DocumentTransaction[]  @relation("ReturnedDocumentTransactions")
 }
 
 model Transaction {
@@ -56,18 +58,17 @@ model SalesAgreement {
   id                  String                @id @default(cuid())
   creatorId           String
   approverId          String?
+  clientId            String
   serialNumber        String
   currency            Currency?
   salesAgreementItems SalesAgreementItem[]
   purchaseOrder       PurchaseRequestOrder?
   transaction         Transaction?
-  clientId            String
   client              Client                @relation(fields: [clientId], references: [id])
-
-  creator   User      @relation("CreateSalesAgreements", fields: [creatorId], references: [id])
-  approver  User?     @relation("ApproveSalesAgreements", fields: [approverId], references: [id])
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  creator             User                  @relation("CreateSalesAgreements", fields: [creatorId], references: [id])
+  approver            User?                 @relation("ApproveSalesAgreements", fields: [approverId], references: [id])
+  createdAt           DateTime?             @default(now())
+  updatedAt           DateTime?             @updatedAt
 }
 
 model SalesAgreementItem {
@@ -77,6 +78,7 @@ model SalesAgreementItem {
   quantity         Int?
   unitPrice        Float?
   total            Float?
+  serviceFee       Float?
   salesAgreement   SalesAgreement @relation(fields: [salesAgreementId], references: [id])
   createdAt        DateTime?      @default(now())
   updatedAt        DateTime?      @updatedAt
@@ -106,25 +108,6 @@ model PurchaseRequestOrder {
   updatedAt      DateTime?       @updatedAt
 }
 
-model Transmittal {
-  id               String   @id @default(cuid())
-  memorandumNumber String
-  clientId         String
-  client           Client   @relation(fields: [clientId], references: [id])
-  documents        String[]
-
-  recievedBy    String?
-  returnedBy    String?
-  transmittedBy String?
-  creatorId     String
-  creator       User    @relation("PreparedTransmittals", fields: [creatorId], references: [id])
-  approverId    String?
-  approver      User?   @relation("ApprovedTransmittals", fields: [approverId], references: [id])
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-}
-
 model Memorandum {
   id               String  @id @default(cuid())
   memorandumNumber String
@@ -141,19 +124,19 @@ model Memorandum {
 }
 
 model Client {
-  id              String           @id @default(cuid())
-  name            String
-  email           String
-  contactNumber   String
-  documents       String[]
-  clientType      ClientType
-  department      String?
-  officeBranch    OfficeBranch
-  transactions    Transaction[]
-  transmittals    Transmittal[]
-  salesAgreements SalesAgreement[]
-  createdAt       DateTime?        @default(now())
-  updatedAt       DateTime?        @updatedAt
+  id                   String                @id @default(cuid())
+  name                 String
+  email                String
+  contactNumber        String
+  documents            String[]
+  clientType           ClientType
+  department           String?
+  officeBranch         OfficeBranch
+  transactions         Transaction[]
+  salesAgreements      SalesAgreement[]
+  documentTransactions DocumentTransaction[]
+  createdAt            DateTime?             @default(now())
+  updatedAt            DateTime?             @updatedAt
 }
 
 model Supplier {
@@ -215,6 +198,36 @@ model Shipping {
   origin       String
   destination  String
   travel       Travel?  @relation(fields: [travelId], references: [id], onDelete: Cascade)
+}
+
+model DocumentTransaction {
+  id        String                  @id @default(cuid())
+  dtsNumber String
+  documents String[]
+  type      DocumentTransactionType
+  clientId  String
+  client    Client                  @relation(fields: [clientId], references: [id])
+
+  preparedById    String
+  preparedBy      User    @relation("PreparedDocumentTransactions", fields: [preparedById], references: [id])
+  transmittedById String?
+  transmittedBy   User?   @relation("TransmittedDocumentTransactions", fields: [transmittedById], references: [id])
+  recievedById    String?
+  recievedBy      User?   @relation("RecievedDocumentTransactions", fields: [recievedById], references: [id])
+  returnedById    String?
+  returnedBy      User?   @relation("ReturnedDocumentTransactions", fields: [returnedById], references: [id])
+
+  recievedByOutsider   String?
+  recievedFromOutsider String?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+enum DocumentTransactionType {
+  TRANSMITTAL
+  RETURN
+  RECIEVE
 }
 
 model Accommodation {
