@@ -12,21 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClient = createClient;
-exports.updateClient = updateClient;
-exports.deleteClient = deleteClient;
-exports.fetchClients = fetchClients;
+exports.createSupplier = createSupplier;
+exports.updateSupplier = updateSupplier;
+exports.deleteSupplier = deleteSupplier;
+exports.fetchSuppliers = fetchSuppliers;
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
-function createClient(data) {
+function createSupplier(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield db_utils_1.default.client.create({
+        return yield db_utils_1.default.supplier.create({
             data
         });
     });
 }
-function updateClient(id, data) {
+function updateSupplier(id, data) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield db_utils_1.default.client.update({
+        return yield db_utils_1.default.supplier.update({
             where: {
                 id: id
             },
@@ -34,16 +34,16 @@ function updateClient(id, data) {
         });
     });
 }
-function deleteClient(id) {
+function deleteSupplier(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield db_utils_1.default.client.delete({
+        return yield db_utils_1.default.supplier.delete({
             where: {
                 id: id
             }
         });
     });
 }
-function fetchClients(_a) {
+function fetchSuppliers(_a) {
     return __awaiter(this, arguments, void 0, function* ({ skip, take, search }) {
         let whereInput = {};
         if (search) {
@@ -56,13 +56,13 @@ function fetchClients(_a) {
                 })),
             };
         }
-        const client = db_utils_1.default.client.findMany({
+        const suppliers = db_utils_1.default.supplier.findMany({
             where: Object.assign({}, whereInput),
             include: {
-                transactions: true,
+                purchaseOrders: true,
                 _count: {
                     select: {
-                        transactions: true
+                        purchaseOrders: true
                     }
                 }
             },
@@ -72,13 +72,13 @@ function fetchClients(_a) {
                 createdAt: 'desc'
             }
         });
-        const countClients = db_utils_1.default.client.count({
+        const countSuppliers = db_utils_1.default.supplier.count({
             where: Object.assign({}, whereInput),
         });
-        const [clientsData, total] = yield db_utils_1.default.$transaction([
-            client,
-            countClients
+        const [suppliersData, total] = yield db_utils_1.default.$transaction([
+            suppliers,
+            countSuppliers
         ]);
-        return { clientsData, total };
+        return { suppliersData, total };
     });
 }

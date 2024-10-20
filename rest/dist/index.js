@@ -49,6 +49,8 @@ const purchase_request_items_router_1 = __importDefault(require("./routers/purch
 const profile_router_1 = __importDefault(require("./routers/profile.router"));
 const memorandum_router_1 = __importDefault(require("./routers/memorandum.router"));
 const client_router_1 = __importDefault(require("./routers/client.router"));
+const suppliers_router_1 = __importDefault(require("./routers/suppliers.router"));
+const document_transaction_router_1 = __importDefault(require("./routers/document-transaction.router"));
 dotenv.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 5001;
@@ -86,6 +88,8 @@ main_router_middleware_1.default.use('/purchase-request-items', purchase_request
 main_router_middleware_1.default.use('/clients', client_router_1.default);
 main_router_middleware_1.default.use('/profile', profile_router_1.default);
 main_router_middleware_1.default.use('/memorandums', memorandum_router_1.default);
+main_router_middleware_1.default.use('/suppliers', suppliers_router_1.default);
+main_router_middleware_1.default.use('/document-transactions', document_transaction_router_1.default);
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });

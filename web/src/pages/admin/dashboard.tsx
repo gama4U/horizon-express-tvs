@@ -8,10 +8,9 @@ import { DashboardCard, RecentActivityCard } from "@/components/cards/admin";
 import { TransactionChart } from "@/components/charts/bar-chart";
 import { DatePickerWithRange } from "@/components/common/date-range-picker";
 import TopBar from "@/components/section/topbar";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/auth-provider";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Maximize2, RefreshCw } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 
@@ -42,7 +41,7 @@ export default function Dashboard() {
     queryFn: async () => await fetchMemorandumSummary(),
   });
 
-  const { data: recent, isLoading: recentLoading, refetch } = useQuery({
+  const { data: recent, isLoading: recentLoading } = useQuery({
     queryKey: ['recent'],
     queryFn: async () => await fetchRecentAcitvities(),
   });
@@ -51,9 +50,9 @@ export default function Dashboard() {
     setSelectedDateRange(range);
   };
 
-  const handleRefetchRecentActivities = () => {
-    refetch();
-  };
+  // const handleRefetchRecentActivities = () => {
+  //   refetch();
+  // };
 
   const isLoading = transactionsLoading || salesLoading || purchaseLoading || memorandumsLoading || recentLoading;
 

@@ -130,8 +130,7 @@ function fetchTransactions(_a) {
         if (search) {
             whereInput = {
                 OR: [
-                    { client: { firstName: { contains: search, mode: 'insensitive' } } },
-                    { client: { lastName: { contains: search, mode: 'insensitive' } } },
+                    { client: { name: { contains: search, mode: 'insensitive' } } },
                     { id: { contains: search, mode: "insensitive" } },
                 ],
             };
@@ -158,9 +157,7 @@ function fetchTransactions(_a) {
                 client: {
                     select: {
                         id: true,
-                        firstName: true,
-                        middleName: true,
-                        lastName: true,
+                        name: true,
                         email: true,
                         officeBranch: true,
                     },

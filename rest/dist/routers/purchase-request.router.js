@@ -26,7 +26,7 @@ purchaseRequestRouter.post('/', (0, validate_middleware_1.validate)(purchase_req
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         const created = yield (0, purchase_request_service_1.createPurchaseRequest)(Object.assign({ creatorId: userId }, req.body));
         if (!created) {
-            throw new Error('Failed to create sales agreement');
+            throw new Error('Failed to create purchase request');
         }
         return res.status(200).json(Object.assign(Object.assign({}, created), { message: 'Purchase request created successfully' }));
     }

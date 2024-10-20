@@ -86,6 +86,7 @@ function findPurchaseRequests(_a) {
                         userType: true
                     }
                 },
+                supplier: true,
                 _count: {
                     select: {
                         purchaseOrderItems: true
@@ -142,6 +143,7 @@ function findPurchaseRequestById(id) {
                         signature: true
                     }
                 },
+                supplier: true,
                 _count: {
                     select: {
                         purchaseOrderItems: true
