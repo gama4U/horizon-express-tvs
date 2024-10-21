@@ -13,16 +13,21 @@ export interface ISupplier {
 }
 
 export interface ICreateSupplier {
-  name: string
-  address?: string
-  contact?: string
-  officeBranch: OfficeBranch
+  name: string;
+  address?: string;
+  contact?: string;
+  emailAddress?: string;
+  notes?: string;
+  officeBranch: OfficeBranch;
 }
+
 export interface IUpdateSupplier {
   id: string
   name?: string
   address?: string
   contact?: string
+  emailAddress?: string;
+  notes?: string;
   officeBranch?: OfficeBranch
 }
 
