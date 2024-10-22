@@ -35,6 +35,7 @@ export default function TransactDocumentDialog({ id, type, openDialog, setOpenDi
 			queryClient.refetchQueries({ queryKey: ["document-transaction-details"] });
 			toast.custom(() => <CommonToast message="Successfully updated document" />, {
 				position: "bottom-right",
+				duration: 2500,
 			});
 			setOpenDialog(false)
 		},

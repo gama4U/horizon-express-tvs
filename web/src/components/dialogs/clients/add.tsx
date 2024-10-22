@@ -86,6 +86,7 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 				<CommonToast message="Successfully created client" />
 			), {
 				position: "bottom-right",
+				duration: 2500,
 			})
 		}
 	});

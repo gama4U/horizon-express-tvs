@@ -133,6 +133,7 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 				<CommonToast message="Successfully created transaction" />
 			), {
 				position: "bottom-right",
+				duration: 2500,
 			})
 			successNavigate(data.id)
 		}

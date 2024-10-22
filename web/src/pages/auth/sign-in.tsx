@@ -46,6 +46,7 @@ export default function SignIn() {
       setLoading(true);
       setTimeout(() => {
         toast.success("Signed in successfully", {
+          duration: 2000,
           className: 'text-primary',
           position: 'top-center',
         });
@@ -64,9 +65,9 @@ export default function SignIn() {
     signInMutate(data);
   }
 
-	if (session?.token && session?.user) {
-		return <Navigate to={Constants.UserRedirectRoute[session.user.userType]} />;
-	}
+  if (session?.token && session?.user) {
+    return <Navigate to={Constants.UserRedirectRoute[session.user.userType]} />;
+  }
 
   return (
     <div className="relative h-screen w-full flex items-center justify-center">

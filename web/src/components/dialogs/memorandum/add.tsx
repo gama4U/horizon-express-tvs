@@ -63,6 +63,7 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 			form.reset();
 			toast.custom(() => <CommonToast message="Successfully created memorandum" />, {
 				position: "bottom-right",
+				duration: 2500,
 			});
 			successNavigate(data)
 		},

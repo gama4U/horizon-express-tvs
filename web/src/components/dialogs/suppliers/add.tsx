@@ -70,6 +70,7 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 				<CommonToast message="Successfully created supplier" />
 			), {
 				position: "bottom-right",
+				duration: 2500,
 			})
 		}
 	});

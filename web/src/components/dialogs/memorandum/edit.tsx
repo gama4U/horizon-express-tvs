@@ -66,6 +66,7 @@ export default function UpdateMemorandumDialog({ openDialog, setOpenDialog, memo
 			form.reset();
 			toast.custom(() => <CommonToast message="Successfully updated memorandum" />, {
 				position: "bottom-right",
+				duration: 2500
 			});
 		},
 	});

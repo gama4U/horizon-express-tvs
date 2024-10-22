@@ -8,16 +8,14 @@ import { ITransaction } from '@/interfaces/transaction.interface';
 import { AccommodationType } from '@/interfaces/accommodation.interface';
 import { TransportServiceType, VehicleType } from '@/interfaces/transport.interface';
 import logo from '../../../assets/logo.png'
-import stamp from '../../../assets/approved.png';
 import { TravelVoucherType } from '@/interfaces/travel.interface';
 import { useAuth } from '@/providers/auth-provider';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { approveTransaction } from '@/api/mutations/transaction.mutation';
 import Constants from '@/constants';
-import { OfficeBranch, UserType } from '@/interfaces/user.interface';
+import { OfficeBranch } from '@/interfaces/user.interface';
 import { RenderHeaderText } from '@/components/common/header';
-import AnimatedDiv from '@/components/animated/Div';
 
 interface Props {
   data: ITransaction;
@@ -79,17 +77,7 @@ export default function PrintPreview({ data }: Props) {
       </div>
       <Separator />
 
-      <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between relative">
-        {(data.approver || data.preparedBy.userType === UserType.ADMIN) &&
-          <AnimatedDiv
-            animationType='Approve'
-            className='absolute right-[-40px] top-15'
-          >
-            <img src={stamp}
-              className='object-contain w-[240px] h-[150px] rotate-90 approved-stamp'
-            />
-          </AnimatedDiv>
-        }
+      <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
         <div className='flex justify-center items-center gap-x-4 flex-3'>
           <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
             <img src={logo} className='object-contain w-[180px] h-[110px]' />

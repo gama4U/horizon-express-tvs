@@ -50,7 +50,7 @@ const formSchema = z.object({
 
 export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProps) {
 	const queryClient = useQueryClient()
-	const {SupplierCategories} = Constants
+	const { SupplierCategories } = Constants
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -73,6 +73,7 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 				<CommonToast message="Successfully updated supplier" />
 			), {
 				position: "bottom-right",
+				duration: 2500,
 			})
 		}
 	});
@@ -233,10 +234,10 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Notes:</p>
 												<FormControl className="w-2/3">
-													<Textarea 
-														{ ...field } 
-														placeholder="Start writing notes..." 
-														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0" 
+													<Textarea
+														{...field}
+														placeholder="Start writing notes..."
+														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
 													/>
 												</FormControl>
 											</div>

@@ -79,6 +79,7 @@ export default function CreateDocumentTransactionDialog({ openDialog, setOpenDia
 				<CommonToast message="Successfully created document transaction" />
 			), {
 				position: "bottom-right",
+				duration: 2500
 			})
 			successNavigate(data.id);
 		},

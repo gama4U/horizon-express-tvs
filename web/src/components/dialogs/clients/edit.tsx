@@ -101,6 +101,7 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 				<CommonToast message="Successfully updated client" />
 			), {
 				position: "bottom-right",
+				duration: 2500
 			})
 		}
 	});

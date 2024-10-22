@@ -41,6 +41,7 @@ export default function DocumentDetails({ documentTransactionData: data }: Docum
 			queryClient.refetchQueries({ queryKey: ["document-transaction-details"] });
 			toast.custom(() => <CommonToast message="Successfully updated document" />, {
 				position: "bottom-right",
+				duration: 2500
 			});
 		},
 	});

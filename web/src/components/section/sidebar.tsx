@@ -77,41 +77,43 @@ const SideBar = React.memo(() => {
 		>
 			<div>
 				<div className={`flex flex-row items-center justify-between ${isOpen ? "items-end" : "items-center"} mb-2`}>
-					{isOpen &&
-						<div className="flex flex-row items-center gap-x-2 w-full justify-between">
-							<img src={logo} className="object-contain w-[36px] h-[36px]" />
-							{profile?.userType === UserType.EMPLOYEE &&
-								<Badge variant="outline" className="w-full text-center border-primary flex justify-center bg-primary-foreground text-primary">{profile?.officeBranch}</Badge>
-							}
-							{profile?.userType === UserType.ADMIN && (
-								<div className="flex flex-row justify-between  items-center">
-									<Button
-										className="text-[8px] py-0 h-[18px]  rounded-r-[0px]"
-										variant={branch === "CEBU" ? "default" : "outline"}
-										onClick={() => handleToggleBranch("CEBU")}
-									>
-										Cebu
-									</Button>
-									<Button
-										className="text-[8px] py-0 h-[18px] rounded-l-[0px]"
-										variant={branch === "CALBAYOG" ? "default" : "outline"}
-										onClick={() => handleToggleBranch("CALBAYOG")}
-									>
-										Calbayog
-									</Button>
-								</div>
-							)}
-
-						</div>
-					}
-					<Button variant="ghost" size="icon" onClick={handleOpenClose}>
-						{isOpen ? (
-							<PanelRightOpen size={20} />
-						) : (
-							<PanelRightClose size={20} />
+					<div className="flex flex-row items-center  w-full justify-between gap-x-3">
+						{isOpen && (
+							<>
+								<img src={logo} className="object-contain w-[36px] h-[36px]" />
+								{profile?.userType === UserType.EMPLOYEE && (
+									<Badge variant="outline" className="w-full text-center border-primary flex justify-center bg-primary-foreground text-primary">
+										{profile?.officeBranch}
+									</Badge>
+								)}
+								{profile?.userType === UserType.ADMIN && (
+									<div className="flex flex-row justify-between items-center">
+										<Button
+											className="text-[9px] py-0 h-[22px] rounded-r-[0px]"
+											variant={branch === "CEBU" ? "default" : "outline"}
+											onClick={() => handleToggleBranch("CEBU")}
+										>
+											Cebu
+										</Button>
+										<Button
+											className="text-[9px] py-0 h-[22px] rounded-l-[0px]"
+											variant={branch === "CALBAYOG" ? "default" : "outline"}
+											onClick={() => handleToggleBranch("CALBAYOG")}
+										>
+											Calbayog
+										</Button>
+									</div>
+								)}
+							</>
 						)}
-					</Button>
-
+						<Button variant="ghost" size="icon" onClick={handleOpenClose}>
+							{isOpen ? (
+								<PanelRightOpen size={20} />
+							) : (
+								<PanelRightClose size={20} />
+							)}
+						</Button>
+					</div>
 				</div>
 				{!isOpen &&
 					<div>
