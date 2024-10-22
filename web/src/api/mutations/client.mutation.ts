@@ -20,7 +20,6 @@ export interface IUpdateClient {
   contactNumber?: string
   documents?: string[]
   department?: string
-  officeBranch?: OfficeBranch
 }
 
 export enum TypeOfClient {

@@ -5,6 +5,7 @@ export interface IFindUsers {
   take?: number;
   search?: string;
   type?: UserType;
+  branch?: string | null;
 }
 
 export interface IUpdateUser {

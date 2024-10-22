@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import Constants from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { OfficeBranch } from "@/interfaces/user.interface";
+import { useAuth } from "@/providers/auth-provider";
 
 interface ICreateClientProps {
 	openDialog: boolean;
@@ -29,11 +30,6 @@ const clientTypesMap: Record<TypeOfClient, string> = {
 	GOVERNMENT: 'Government',
 	GROUP: 'Group',
 	INDIVIDUAL: 'Individual',
-}
-
-const userOfficeBranch: Record<OfficeBranch, string> = {
-	CEBU: 'Cebu',
-	CALBAYOG: 'Calbayog'
 }
 
 type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
@@ -59,10 +55,6 @@ const formSchema = z.object({
 		TypeOfClient.GROUP,
 		TypeOfClient.INDIVIDUAL,
 	]),
-	officeBranch: z.enum([
-		OfficeBranch.CEBU,
-		OfficeBranch.CALBAYOG
-	]),
 	department: z.string().optional(),
 });
 
@@ -74,6 +66,7 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 	})
 	const selectedClientType = form.watch('clientType');
 	const selectedDepartment = form.watch('department')
+	const { branch } = useAuth()
 
 	const { mutate: createClientMutate, isPending: creatingClient } = useMutation({
 		mutationFn: async (data: ICreateClient) => await createClient(data),
@@ -102,7 +95,10 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 	}
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		createClientMutate(values)
+		createClientMutate({
+			...values,
+			officeBranch: branch as OfficeBranch
+		})
 	}
 
 	useEffect(() => {
@@ -118,7 +114,7 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
 						<UserCircle className="text-secondary" />
-						Create Client
+						Create Client from {branch}
 					</DialogHeader>
 				</DialogTitle>
 				<Separator />
@@ -193,33 +189,6 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 										)}
 									/>
 								)}
-								<FormField
-									control={form.control}
-									name="officeBranch"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Office branch</FormLabel>
-											<Select onValueChange={field.onChange} defaultValue={field.value}>
-												<FormControl>
-													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-														<SelectValue placeholder="Select branch" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{Object.entries(userOfficeBranch)?.map(([value, label]) => {
-														return (
-															<SelectItem value={value} className="text-[12px] text-muted-foreground">
-																{label}
-															</SelectItem>
-														);
-													})}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
 								<FormField
 									control={form.control}
 									name="name"

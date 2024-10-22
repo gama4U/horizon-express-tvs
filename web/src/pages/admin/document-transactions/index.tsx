@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react"
 import { useAuth } from "@/providers/auth-provider";
 import { useNavigate } from "react-router-dom";
-import { UserType } from "@/interfaces/user.interface";
+import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 import { fetchDocumentTransactions } from "@/api/queries/document-transaction.query";
 import { DataTable } from "@/components/tables/document-transactions/data-table";
 import { Columns } from "@/components/tables/document-transactions/columns";
@@ -18,7 +18,7 @@ import { DocumentTransactionFilters, DocumentTransactionType } from "@/api/mutat
 
 export default function DocumentTransactions() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
-  const { session } = useAuth()
+  const { session, branch } = useAuth()
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateDocument, setOpenCreateDocument] = useState(false)
@@ -31,11 +31,12 @@ export default function DocumentTransactions() {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['document-transactions', pagination, debouncedSearch, documentFilters],
+    queryKey: ['document-transactions', pagination, debouncedSearch, documentFilters, branch],
     queryFn: async () => await fetchDocumentTransactions({
       skip,
       take,
       search,
+      branch,
       ...documentFilters
     })
   });

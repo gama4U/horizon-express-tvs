@@ -10,16 +10,19 @@ import { Columns } from "@/components/tables/suppliers/columns";
 import { DataTable } from "@/components/tables/suppliers/data-table";
 import { fetchSuppliers } from "@/api/queries/suppliers.query";
 import CreateSupplierDialog from "@/components/dialogs/suppliers/add";
+import { useAuth } from "@/providers/auth-provider";
+import { OfficeBranch } from "@/interfaces/user.interface";
 
 export default function Suppliers() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateSupplier, setOpenCreateSupplier] = useState(false)
+  const { branch } = useAuth()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['suppliers', pagination, debouncedSearch],
-    queryFn: async () => await fetchSuppliers({ skip, take, search: debouncedSearch })
+    queryKey: ['suppliers', pagination, debouncedSearch, branch],
+    queryFn: async () => await fetchSuppliers({ skip, take, search: debouncedSearch, branch: branch as OfficeBranch })
   });
 
   return (

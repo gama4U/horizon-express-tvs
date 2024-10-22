@@ -100,11 +100,11 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	const [search, setSearch] = useState('');
 	const debouncedSearch = useDebounce(search, 500);
 	const [selectedClient, setSelectedClient] = useState<IClient | null>(null);
-	const { session } = useAuth()
+	const { session, branch } = useAuth()
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['clients', pagination, debouncedSearch],
-		queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch }),
+		queryKey: ['clients', pagination, debouncedSearch, branch],
+		queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch, branch }),
 		enabled: (selection.type === 'select' && selection.step === 1)
 	});
 

@@ -23,12 +23,13 @@ clientRouter.post('/', async (req: Request, res: Response) => {
 clientRouter.get('/', validate(getClientsSchema), async (req: Request, res: Response) => {
   try {
 
-    const { skip, take, search } = req.query;
+    const { skip, take, search, branch } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      branch: branch ? String(branch) : undefined,
     };
 
     const clients = await fetchClients(filters);

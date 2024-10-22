@@ -18,7 +18,7 @@ import { DocumentTransactionFilters, DocumentTransactionType } from "@/api/mutat
 
 export default function DocumentTransactions() {
 	const { skip, take, pagination, onPaginationChange } = usePagination();
-	const { session } = useAuth()
+	const { session, branch } = useAuth()
 	const [search, setSearch] = useState('');
 	const debouncedSearch = useDebounce(search, 500);
 	const [openCreateDocument, setOpenCreateDocument] = useState(false)
@@ -36,6 +36,7 @@ export default function DocumentTransactions() {
 			skip,
 			take,
 			search,
+			branch,
 			...documentFilters
 		})
 	});

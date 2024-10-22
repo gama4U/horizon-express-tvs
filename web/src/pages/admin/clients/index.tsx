@@ -10,16 +10,18 @@ import { Columns } from "@/components/tables/clients/columns";
 import { fetchClients } from "@/api/queries/clients.query";
 import CreateClientDialog from "@/components/dialogs/clients/add";
 import { DataTable } from "@/components/tables/clients/data-table";
+import { useAuth } from "@/providers/auth-provider";
 
 export default function Clients() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateClient, setOpenCreateClient] = useState(false)
+  const { branch } = useAuth()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['clients', pagination, debouncedSearch],
-    queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch })
+    queryKey: ['clients', pagination, debouncedSearch, branch],
+    queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch, branch })
   });
 
   return (

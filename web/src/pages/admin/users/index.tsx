@@ -10,19 +10,22 @@ import { Columns } from "@/components/tables/users/columns";
 import UserTypeFilter from "@/components/select/user/user-type-filter";
 import { UserType } from "@/interfaces/user.interface";
 import CreateUserDialog from "@/components/dialogs/user/create-user";
+import { useAuth } from "@/providers/auth-provider";
 
 export default function Users() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const [userType, setUserType] = useState<UserType | 'ALL'>('ALL');
   const debouncedSearch = useDebounce(search, 500);
+  const { branch } = useAuth()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['users', pagination, debouncedSearch, userType],
+    queryKey: ['users', pagination, debouncedSearch, userType, branch],
     queryFn: async () => await fetchUsers({
       skip,
       take,
       search,
+      branch,
       ...(userType !== 'ALL' && {
         type: userType
       })

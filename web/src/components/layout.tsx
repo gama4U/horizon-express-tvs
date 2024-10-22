@@ -4,10 +4,12 @@ import { useAuth } from "../providers/auth-provider";
 import SideBar from "./section/sidebar";
 import logo from "../assets/logo.png"
 import Constants from "@/constants";
+import { UserType } from "@/interfaces/user.interface";
 
 const Layout: React.FC = () => {
 	const { session, loading } = useAuth();
 	const currentPath = location.pathname;
+	const isAdmin = session.user?.userType === UserType.ADMIN
 
 	if (loading) return null;
 
@@ -16,12 +18,12 @@ const Layout: React.FC = () => {
 	}
 
 	const redirectRoute = Constants.UserRedirectRoute[session.user.userType];
-  if (redirectRoute && currentPath !== redirectRoute && !currentPath.startsWith(redirectRoute)) {
-    return <Navigate to={redirectRoute} />;
-  }
+	if (redirectRoute && currentPath !== redirectRoute && !currentPath.startsWith(redirectRoute)) {
+		return <Navigate to={redirectRoute} />;
+	}
 
 	return (
-		<div className="h-screen flex overflow-auto gap-x-2 bg-sidebar-gradient 100 p-2">
+		<div className={`h-screen flex overflow-auto gap-x-2  p-2 ${isAdmin ? 'bg-white' : 'bg-'}`}>
 			<SideBar />
 			<div className="w-full rounded-xl  z-50">
 				<Outlet />

@@ -16,6 +16,7 @@ interface MultiSelectProps {
   options: Option[];
   selectedOptions: string[];
   onSelect: (selected: string[]) => void;
+  setOptions: (options: Option[]) => void;
   placeholder?: string;
 }
 
@@ -23,6 +24,7 @@ export function MultiSelect({
   options,
   selectedOptions,
   onSelect,
+  setOptions,
   placeholder = "Select items...",
 }: MultiSelectProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -52,9 +54,21 @@ export function MultiSelect({
         if (e.key === "Escape") {
           input.blur();
         }
+        if (e.key === "Enter" && inputValue.trim()) {
+          const newOption: Option = {
+            value: inputValue.trim(),
+            label: inputValue.trim(),
+          };
+          if (!options.find((option) => option.value === newOption.value)) {
+            setOptions([...options, newOption]);
+          }
+          onSelect([...selectedOptions, newOption.value]);
+          setInputValue("");
+          setOpen(false);
+        }
       }
     },
-    [selectedOptions, onSelect]
+    [inputValue, options, selectedOptions, onSelect, setOptions]
   );
 
   const selectables = options.filter(

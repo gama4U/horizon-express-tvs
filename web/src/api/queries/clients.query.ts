@@ -6,6 +6,7 @@ interface IFetchClients {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string | null
 }
 
 interface IClients {

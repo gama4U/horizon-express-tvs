@@ -16,7 +16,6 @@ import { IClient, IUpdateClient, updateClient } from "@/api/mutations/client.mut
 import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import Constants from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { OfficeBranch } from "@/interfaces/user.interface";
 
 interface IUpdateClientProps {
 	clientData: IClient
@@ -36,11 +35,6 @@ const departmentMap: Record<ClientWithDepartment, string[]> = {
 	GOVERNMENT: Constants.GovernmentDepartments,
 }
 
-const userOfficeBranch: Record<OfficeBranch, string> = {
-	CEBU: 'Cebu',
-	CALBAYOG: 'Calbayog'
-}
-
 const formSchema = z.object({
 	name: z.string().trim().min(1, {
 		message: "Name is required."
@@ -57,10 +51,6 @@ const formSchema = z.object({
 		TypeOfClient.GOVERNMENT,
 		TypeOfClient.GROUP,
 		TypeOfClient.INDIVIDUAL,
-	]).optional(),
-	officeBranch: z.enum([
-		OfficeBranch.CEBU,
-		OfficeBranch.CALBAYOG
 	]).optional(),
 	department: z.string().optional(),
 });
@@ -204,33 +194,6 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 										)}
 									/>
 								)}
-								<FormField
-									control={form.control}
-									name="officeBranch"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Office branch</FormLabel>
-											<Select onValueChange={field.onChange} defaultValue={field.value}>
-												<FormControl>
-													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-														<SelectValue placeholder="Select branch" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{Object.entries(userOfficeBranch)?.map(([value, label]) => {
-														return (
-															<SelectItem value={value} className="text-[12px] text-muted-foreground">
-																{label}
-															</SelectItem>
-														);
-													})}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
 								<FormField
 									control={form.control}
 									name="name"

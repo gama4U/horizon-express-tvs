@@ -1,4 +1,4 @@
-import { DocumentTransactionType, Prisma } from "@prisma/client";
+import { DocumentTransactionType, OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { getNextDtsNumber } from "../utils/generate-number";
 
@@ -67,13 +67,11 @@ export interface IFindDocumentTransaction {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
   RECIEVE?: boolean
   TRANSMITTAL?: boolean;
   RETURN?: boolean
 }
-
-
-
 
 export async function fetchDocumentTransactions({
   skip,
@@ -81,7 +79,8 @@ export async function fetchDocumentTransactions({
   search,
   RECIEVE,
   TRANSMITTAL,
-  RETURN
+  RETURN,
+  branch
 }: IFindDocumentTransaction & { RECIEVE?: boolean; TRANSMITTAL?: boolean; RETURN?: boolean }) {
   let whereInput: Prisma.DocumentTransactionWhereInput = {};
 
@@ -109,7 +108,12 @@ export async function fetchDocumentTransactions({
   }
 
   const documentTransactions = prisma.documentTransaction.findMany({
-    where: whereInput,
+    where: {
+      ...whereInput,
+      client: {
+        officeBranch: branch as OfficeBranch
+      }
+    },
     skip: skip ?? 0,
     take: take ?? 10,
     orderBy: {
@@ -125,7 +129,12 @@ export async function fetchDocumentTransactions({
   });
 
   const countDocumentTransactions = prisma.documentTransaction.count({
-    where: whereInput,
+    where: {
+      ...whereInput,
+      client: {
+        officeBranch: branch as OfficeBranch
+      }
+    },
   });
 
   const [documentTransactionData, total] = await prisma.$transaction([

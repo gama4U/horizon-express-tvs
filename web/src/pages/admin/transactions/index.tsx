@@ -28,15 +28,13 @@ export default function Transactions() {
     tour: false,
     transport: false
   });
-
-
+  const { session: { user }, branch } = useAuth();
   const { data, isLoading } = useQuery({
-    queryKey: ['transactions', pagination, debouncedSearch, voucherFilters],
-    queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, ...voucherFilters })
+    queryKey: ['transactions', pagination, debouncedSearch, voucherFilters, branch],
+    queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, branch, ...voucherFilters })
   });
 
   const navigate = useNavigate();
-  const { session: { user } } = useAuth();
 
   const handleVoucherFilterToggle = (type: VoucherTypes) => {
     setVoucherFilters((prevFilters) => ({

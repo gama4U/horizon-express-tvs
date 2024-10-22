@@ -9,5 +9,6 @@ export const getClientsSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
+    branch: z.string().optional(),
   })
 });
