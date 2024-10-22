@@ -120,7 +120,7 @@ export async function findSalesAgreementById(id: string) {
         }
       },
       client: true,
-      purchaseOrder: true,
+      purchaseRequestOrders: true,
       transaction: true,
       salesAgreementItems: {
         orderBy: {

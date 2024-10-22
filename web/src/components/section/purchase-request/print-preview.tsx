@@ -3,7 +3,7 @@ import { Button } from '../../ui/button'
 import { Separator } from '../../ui/separator'
 import { useRef } from 'react'
 import { useReactToPrint } from 'react-to-print';
-import { IPurchaseRequestOrder, PaymentType, PurchaseRequestOrderType } from '@/interfaces/purchase-request.interface'
+import { IPurchaseRequestOrder } from '@/interfaces/purchase-request.interface'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { approvePurchaseRequestOrder } from '@/api/mutations/purchase-request..mutation';
@@ -15,20 +15,6 @@ import { RenderHeaderText } from '@/components/common/header';
 
 interface Props {
   data: IPurchaseRequestOrder
-}
-
-const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
-  ACCOMMODATION: 'Accommodation',
-  VISA: 'Visa',
-  SHIPPING: 'Shipping',
-  TRANSPORTATION_RENTAL: 'Transportation Rental',
-  DOMESTIC_AIRLINE_TICKETING: 'Domestic Airline Ticketing',
-  INTERNATIONAL_AIRLINE_TICKETING: 'International Airline Ticketing',
-}
-
-const paymentTypeLabelMap: Record<PaymentType, string> = {
-  CASH: 'Cash',
-  CHECK: 'Check',
 }
 
 export default function PrintPreview({ data }: Props) {
@@ -121,16 +107,6 @@ export default function PrintPreview({ data }: Props) {
             <div className='flex items-center gap-4'>
               <div className='flex w-full items-end gap-1 text-[12px]'>
                 <span className='leading-[16px] font-semibold'>
-                  Type:
-                </span>
-                <div className='flex-1 border-b leading-[16px]'>
-                  <span>
-                    {typeLabelMap[data.type]}
-                  </span>
-                </div>
-              </div>
-              <div className='flex w-full items-end gap-1 text-[12px]'>
-                <span className='leading-[16px] font-semibold'>
                   Disbursement:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
@@ -217,28 +193,6 @@ export default function PrintPreview({ data }: Props) {
           </table>
 
           <div className='flex items-center gap-4 text-muted-foreground mt-2'>
-            <div className='flex w-full items-end gap-1 text-[12px]'>
-              <span className='leading-[16px] font-semibold'>
-                Payment type:
-              </span>
-              <div className='flex-1 border-b leading-[16px]'>
-                <span>
-                  {paymentTypeLabelMap[data.paymentType]}
-                </span>
-              </div>
-            </div>
-
-            <div className='flex w-full items-end gap-1 text-[12px]'>
-              <span className='leading-[16px] font-semibold'>
-                Nos:
-              </span>
-              <div className='flex-1 border-b leading-[16px]'>
-                <span>
-                  {data.nos}
-                </span>
-              </div>
-            </div>
-
             <div className='flex w-full items-end gap-1 text-[12px]'>
               <span className='leading-[16px] font-semibold'>
                 Others:

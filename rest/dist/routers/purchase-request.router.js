@@ -53,13 +53,11 @@ purchaseRequestRouter.put('/:id', (0, validate_middleware_1.validate)(purchase_r
 }));
 purchaseRequestRouter.get('/', (0, validate_middleware_1.validate)(purchase_request_schema_1.findPurchaseRequestsSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { skip, take, search, type, paymentType } = req.query;
+        const { skip, take, search, category } = req.query;
         const filters = {
             skip: skip ? Number(skip) : undefined,
             take: take ? Number(take) : undefined,
             search: search ? String(search) : undefined,
-            type: type ? type : undefined,
-            paymentType: paymentType ? paymentType : undefined,
         };
         const purchaseRequests = yield (0, purchase_request_service_1.findPurchaseRequests)(filters);
         if (!purchaseRequests) {

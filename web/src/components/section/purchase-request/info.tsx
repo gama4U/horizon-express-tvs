@@ -1,6 +1,4 @@
 import { IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface"
-import PurchaseRequestTypeBadge from "@/components/badges/purchase-request-type"
-import PaymentTypeBadge from "@/components/badges/payment-type"
 
 interface Props {
   data: IPurchaseRequestOrder
@@ -20,7 +18,7 @@ export default function PurchaseRequestInfo({ data }: Props) {
         </div>
         <div>
           <span className="text-muted-foreground text-[10px]">
-            Ser. no.
+            Purchase request no.
           </span>
           <h3 className="text-[12px]">
             {data.serialNumber}
@@ -33,22 +31,6 @@ export default function PurchaseRequestInfo({ data }: Props) {
           <h3 className="text-[12px]">
             {data.supplier?.name}
           </h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-[10px]">
-            Type
-          </span>
-          <PurchaseRequestTypeBadge
-            value={data.type}
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-[10px]">
-            Payment type
-          </span>
-          <PaymentTypeBadge
-            value={data.paymentType}
-          />
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-muted-foreground text-[10px]">
@@ -72,14 +54,6 @@ export default function PurchaseRequestInfo({ data }: Props) {
           </span>
           <h3 className="text-[12px]">
             {data.classificationType}
-          </h3>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-muted-foreground text-[10px]">
-            Nos.
-          </span>
-          <h3 className="text-[12px]">
-            {data.nos}
           </h3>
         </div>
         <div className="flex flex-col gap-1">

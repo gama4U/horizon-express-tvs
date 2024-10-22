@@ -8,6 +8,7 @@ export interface ISupplier {
   name: string
   address: string
   contact: string
+  category: string;
   officeBranch: OfficeBranch
   purchaseOrders: IPurchaseRequestOrder[]
 }
@@ -17,6 +18,7 @@ export interface ICreateSupplier {
   address?: string;
   contact?: string;
   emailAddress?: string;
+  category: string;
   notes?: string;
   officeBranch: OfficeBranch;
 }

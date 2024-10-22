@@ -1,4 +1,3 @@
-import { PaymentType, PurchaseRequestOrderType } from "@prisma/client";
 import { z } from "zod";
 
 export const createPurchaseRequestSchema = z.object({
@@ -6,21 +5,12 @@ export const createPurchaseRequestSchema = z.object({
     supplierId: z.string().min(1, {
       message: 'Supplier id is required'
     }),
+    salesAgreementId: z.string().min(1, {
+      message: 'Sales agreement id is required'
+    }),
     serialNumber: z.string().min(1, {
       message: 'Serial number is required'
     }),
-    type: z.enum([
-      PurchaseRequestOrderType.VISA,
-      PurchaseRequestOrderType.SHIPPING,
-      PurchaseRequestOrderType.ACCOMMODATION,
-      PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
-      PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
-      PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
-    ]),
-    paymentType: z.enum([
-      PaymentType.CASH,
-      PaymentType.CHECK,
-    ]),
     disbursementType: z.string().min(1, {
       message: 'Disbursement type is required'
     }),
@@ -31,9 +21,6 @@ export const createPurchaseRequestSchema = z.object({
       message: 'Classification type is required'
     }),
     other: z.string().optional(),
-    nos: z.string().min(1, {
-      message: 'NOS is required'
-    }),
   })
 });
 
@@ -42,21 +29,12 @@ export const updatePurchaseRequestSchema = z.object({
     supplierId: z.string().min(1, {
       message: 'Supplier id is required'
     }),
+    salesAgreementId: z.string().min(1, {
+      message: 'Sales agreement id is required'
+    }),
     serialNumber: z.string().min(1, {
       message: 'Serial number is required'
     }),
-    type: z.enum([
-      PurchaseRequestOrderType.VISA,
-      PurchaseRequestOrderType.SHIPPING,
-      PurchaseRequestOrderType.ACCOMMODATION,
-      PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
-      PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
-      PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
-    ]),
-    paymentType: z.enum([
-      PaymentType.CASH,
-      PaymentType.CHECK,
-    ]),
     disbursementType: z.string().min(1, {
       message: 'Disbursement type is required'
     }),
@@ -67,9 +45,6 @@ export const updatePurchaseRequestSchema = z.object({
       message: 'Classification type is required'
     }),
     other: z.string().optional(),
-    nos: z.string().min(1, {
-      message: 'NOS is required'
-    }),
   })
 });
 
@@ -83,17 +58,5 @@ export const findPurchaseRequestsSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
-    type: z.enum([
-      PurchaseRequestOrderType.VISA,
-      PurchaseRequestOrderType.SHIPPING,
-      PurchaseRequestOrderType.ACCOMMODATION,
-      PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
-      PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
-      PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
-    ]).optional(),
-    paymentType: z.enum([
-      PaymentType.CASH,
-      PaymentType.CHECK,
-    ]).optional(),
   })
 });

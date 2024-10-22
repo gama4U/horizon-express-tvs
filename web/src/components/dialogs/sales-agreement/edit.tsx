@@ -146,7 +146,7 @@ export default function EditSalesAgreementDialog({data}: Props) {
                           <CommandInput 
                             className="text-[12px]"
                             onValueChange={(value) => setClientSearch(value)}
-                            placeholder="Search language..." 
+                            placeholder="Search client..." 
                           />
                           <CommandList className="w-full">
                             <CommandEmpty>No client found.</CommandEmpty>

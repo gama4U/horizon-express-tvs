@@ -142,7 +142,7 @@ function findSalesAgreementById(id) {
                     }
                 },
                 client: true,
-                purchaseOrder: true,
+                purchaseRequestOrders: true,
                 transaction: true,
                 salesAgreementItems: {
                     orderBy: {

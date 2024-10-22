@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { OfficeBranch } from "@/interfaces/user.interface";
 import { createSupplier, ICreateSupplier } from "@/api/mutations/supplier.mutation";
 import { Textarea } from "@/components/ui/textarea";
+import Constants from "@/constants";
 
 interface ICreateSupplierProps {
 	openDialog: boolean;
@@ -36,6 +37,9 @@ const formSchema = z.object({
 	address: z.string().trim().min(1, {
 		message: "Email is required."
 	}).optional(),
+	category: z.string().min(1, {
+		message: 'Category is required'
+	}),
 	emailAddress: z.string().email(),
 	notes: z.string().optional(),
 	officeBranch: z.enum([
@@ -46,6 +50,8 @@ const formSchema = z.object({
 
 export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICreateSupplierProps) {
 	const queryClient = useQueryClient()
+	const {SupplierCategories} = Constants
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	})
@@ -74,7 +80,6 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		createSupplierMutate(values)
 	}
-
 
 	return (
 		<Dialog open={openDialog} onOpenChange={() => { setOpenDialog(false) }}>
@@ -107,6 +112,32 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 														return (
 															<SelectItem value={value} className="text-[12px] text-muted-foreground">
 																{label}
+															</SelectItem>
+														);
+													})}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="category"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Category</FormLabel>
+											<Select onValueChange={field.onChange} defaultValue={field.value}>
+												<FormControl>
+													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
+														<SelectValue placeholder="Select category" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{SupplierCategories.map((item, index) => {
+														return (
+															<SelectItem key={index} value={item} className="text-[12px] text-muted-foreground">
+																{item}
 															</SelectItem>
 														);
 													})}

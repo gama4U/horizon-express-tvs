@@ -14,9 +14,6 @@ export interface IPurchaseRequestOrder {
   classification: string;
   classificationType: string;
   other: string;
-  nos: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
   purchaseOrderItems: IPurchaseRequestOrderItem[],
   transaction?: any;
   creator?: IUser;
@@ -54,25 +51,21 @@ export interface IFetchPurchaseRequestData {
 
 export interface ICreatePurchaseRequest {
   supplierId: string;
+  salesAgreementId: string;
   serialNumber: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
   disbursementType: string;
   classification: string;
   classificationType: string;
-  nos: string;
   other?: string;
 }
 
 export interface IUpdatePurchaseRequest {
   purchaseRequestId: string;
   supplierId: string;
+  salesAgreementId: string;
   serialNumber: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
   disbursementType: string;
   classification: string;
   classificationType: string;
-  nos: string;
   other?: string;
 }

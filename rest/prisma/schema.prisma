@@ -62,7 +62,7 @@ model SalesAgreement {
   serialNumber        String
   currency            Currency?
   salesAgreementItems SalesAgreementItem[]
-  purchaseOrder       PurchaseRequestOrder?
+  purchaseRequestOrders       PurchaseRequestOrder[]
   transaction         Transaction?
   client              Client                @relation(fields: [clientId], references: [id])
   creator             User                  @relation("CreateSalesAgreements", fields: [creatorId], references: [id])
@@ -88,26 +88,21 @@ model PurchaseRequestOrder {
   id                 String                     @id @default(cuid())
   creatorId          String?
   serialNumber       String
-  salesAgreementId   String?                    @unique
+  salesAgreementId   String?
   disbursementType   String?
   classification     String?
   classificationType String?
   other              String?
-  nos                String?
   approverId         String?
-  type               PurchaseRequestOrderType?
-  paymentType        PaymentType?
   purchaseOrderItems PurchaseRequestOrderItem[]
   transaction        Transaction?
-
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
-
-  creator        User?           @relation("CreatePurchaseRequestOrders", fields: [creatorId], references: [id])
-  salesAgreement SalesAgreement? @relation(fields: [salesAgreementId], references: [id])
-  approver       User?           @relation("ApprovePurchaseRequestOrders", fields: [approverId], references: [id])
-  createdAt      DateTime?       @default(now())
-  updatedAt      DateTime?       @updatedAt
+  supplierId         String
+  supplier           Supplier                   @relation(fields: [supplierId], references: [id])
+  creator            User?                      @relation("CreatePurchaseRequestOrders", fields: [creatorId], references: [id])
+  salesAgreement     SalesAgreement?            @relation(fields: [salesAgreementId], references: [id])
+  approver           User?                      @relation("ApprovePurchaseRequestOrders", fields: [approverId], references: [id])
+  createdAt          DateTime?                  @default(now())
+  updatedAt          DateTime?                  @updatedAt
 }
 
 model Memorandum {
@@ -133,6 +128,7 @@ model Client {
   documents            String[]
   clientType           ClientType
   department           String?
+  notes                String?
   officeBranch         OfficeBranch
   transactions         Transaction[]
   salesAgreements      SalesAgreement[]
@@ -147,11 +143,10 @@ model Supplier {
   address      String?
   contact      String?
   emailAddress String?
-  notes         String?
+  category     String?
+  notes        String?
   officeBranch OfficeBranch
-
   purchaseOrders PurchaseRequestOrder[]
-
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }
@@ -205,27 +200,24 @@ model Shipping {
 }
 
 model DocumentTransaction {
-  id        String                  @id @default(cuid())
-  dtsNumber String
-  documents String[]
-  type      DocumentTransactionType
-  clientId  String
-  client    Client                  @relation(fields: [clientId], references: [id])
-
-  preparedById    String
-  preparedBy      User    @relation("PreparedDocumentTransactions", fields: [preparedById], references: [id])
-  transmittedById String?
-  transmittedBy   User?   @relation("TransmittedDocumentTransactions", fields: [transmittedById], references: [id])
-  recievedById    String?
-  recievedBy      User?   @relation("RecievedDocumentTransactions", fields: [recievedById], references: [id])
-  returnedById    String?
-  returnedBy      User?   @relation("ReturnedDocumentTransactions", fields: [returnedById], references: [id])
-
+  id                   String                  @id @default(cuid())
+  dtsNumber            String
+  documents            String[]
+  type                 DocumentTransactionType
+  clientId             String
+  client               Client                  @relation(fields: [clientId], references: [id])
+  preparedById         String
+  preparedBy           User                    @relation("PreparedDocumentTransactions", fields: [preparedById], references: [id])
+  transmittedById      String?
+  transmittedBy        User?                   @relation("TransmittedDocumentTransactions", fields: [transmittedById], references: [id])
+  recievedById         String?
+  recievedBy           User?                   @relation("RecievedDocumentTransactions", fields: [recievedById], references: [id])
+  returnedById         String?
+  returnedBy           User?                   @relation("ReturnedDocumentTransactions", fields: [returnedById], references: [id])
   recievedByOutsider   String?
   recievedFromOutsider String?
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  createdAt            DateTime?               @default(now())
+  updatedAt            DateTime?               @updatedAt
 }
 
 enum DocumentTransactionType {

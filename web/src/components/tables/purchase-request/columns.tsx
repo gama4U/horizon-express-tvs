@@ -4,8 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface";
-import PaymentTypeBadge from "@/components/badges/payment-type";
-import PurchaseRequestTypeBadge from "@/components/badges/purchase-request-type";
 import EditPurchaseRequestDialog from "@/components/dialogs/purchase-request/edit";
 import DeletePurchaseRequest from "@/components/alert/purchse-request/delete";
 import { useAuth } from "@/providers/auth-provider";
@@ -70,28 +68,6 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     cell: ({ row }) => (
       <span className="capitalize">
         {row.original.serialNumber}
-      </span>
-    )
-  },
-  {
-    id: "type",
-    header: "Type",
-    cell: ({ row }) => (
-      <span className="capitalize">
-        <PurchaseRequestTypeBadge
-          value={row.original.type}
-        />
-      </span>
-    )
-  },
-  {
-    id: "payment",
-    header: "Payment type",
-    cell: ({ row }) => (
-      <span className="capitalize">
-        <PaymentTypeBadge
-          value={row.original.paymentType}
-        />
       </span>
     )
   },

@@ -18,7 +18,7 @@ export async function updatePurchaseRequest({ id, ...data }: IUpdatePurchaseRequ
   })
 }
 
-export async function findPurchaseRequests({ skip, take, search, type, paymentType }: IFindPurchaseRequests) {
+export async function findPurchaseRequests({ skip, take, search }: IFindPurchaseRequests) {
   let whereInput: Prisma.PurchaseRequestOrderWhereInput = {};
 
   if (search) {
@@ -33,20 +33,6 @@ export async function findPurchaseRequests({ skip, take, search, type, paymentTy
         },
         { serialNumber: { contains: search, mode: "insensitive" } },
       ],
-    }
-  }
-
-  if (type) {
-    whereInput = {
-      ...whereInput,
-      type,
-    }
-  }
-
-  if (paymentType) {
-    whereInput = {
-      ...whereInput,
-      paymentType,
     }
   }
 

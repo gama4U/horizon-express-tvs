@@ -134,7 +134,7 @@ export default function CreateSalesAgreementDialog() {
                           <CommandInput
                             className="text-[12px]"
                             onValueChange={(value) => setClientSearch(value)}
-                            placeholder="Search language..." 
+                            placeholder="Search client..." 
                           />
                           <CommandList className="w-full">
                             <CommandEmpty>No client found.</CommandEmpty>
