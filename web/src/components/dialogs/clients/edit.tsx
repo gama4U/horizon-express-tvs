@@ -37,11 +37,6 @@ const departmentMap: Record<ClientWithDepartment, string[]> = {
 	GOVERNMENT: Constants.GovernmentDepartments,
 }
 
-const userOfficeBranch: Record<OfficeBranch, string> = {
-	CEBU: 'Cebu',
-	CALBAYOG: 'Calbayog'
-}
-
 const formSchema = z.object({
 	name: z.string().trim().min(1, {
 		message: "Name is required."
@@ -58,10 +53,6 @@ const formSchema = z.object({
 		TypeOfClient.GOVERNMENT,
 		TypeOfClient.GROUP,
 		TypeOfClient.INDIVIDUAL,
-	]).optional(),
-	officeBranch: z.enum([
-		OfficeBranch.CEBU,
-		OfficeBranch.CALBAYOG
 	]).optional(),
 	department: z.string().optional(),
 	notes: z.string().optional()
@@ -208,33 +199,6 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 								)}
 								<FormField
 									control={form.control}
-									name="officeBranch"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Office branch</FormLabel>
-											<Select onValueChange={field.onChange} defaultValue={field.value}>
-												<FormControl>
-													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-														<SelectValue placeholder="Select branch" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{Object.entries(userOfficeBranch)?.map(([value, label]) => {
-														return (
-															<SelectItem value={value} className="text-[12px] text-muted-foreground">
-																{label}
-															</SelectItem>
-														);
-													})}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
 									name="name"
 									render={({ field }) => (
 										<FormItem>
@@ -286,10 +250,10 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Notes:</p>
 												<FormControl className="w-2/3">
-													<Textarea 
-														{ ...field } 
-														placeholder="Start writing notes..." 
-														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0" 
+													<Textarea
+														{...field}
+														placeholder="Start writing notes..."
+														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
 													/>
 												</FormControl>
 											</div>

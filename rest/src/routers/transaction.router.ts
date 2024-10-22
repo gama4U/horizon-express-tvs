@@ -10,12 +10,13 @@ const transactionRouter = express.Router();
 transactionRouter.get('/', validate(getTransactionsSchema), async (req: Request, res: Response) => {
   try {
 
-    const { skip, take, search, travel, accommodation, tour, transport } = req.query;
+    const { skip, take, search, travel, accommodation, tour, transport, branch } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      branch: branch ? String(branch) : undefined,
       travel: travel === 'true' ? true : undefined,
       accommodation: accommodation === 'true' ? true : undefined,
       tour: tour === 'true' ? true : undefined,
@@ -147,12 +148,12 @@ transactionRouter.post('/recent-activities', async (req: Request, res: Response)
   }
 });
 
-transactionRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(req: Request, res: Response) => {
+transactionRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: Request, res: Response) => {
   try {
     const approverId = String(req.user?.id);
-    const {id} = req.params;
+    const { id } = req.params;
 
-    const updated = await updateTransactionApprover({id, approverId})
+    const updated = await updateTransactionApprover({ id, approverId })
     if (!updated) {
       throw new Error("Failed to update transaction approver");
     }
@@ -161,7 +162,7 @@ transactionRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(req:
       message: 'Approved successfully'
     });
 
-  } catch(error) {
+  } catch (error) {
     return res.status(500).json({
       message: "Internal server error"
     })

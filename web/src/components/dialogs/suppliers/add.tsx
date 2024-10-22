@@ -16,6 +16,7 @@ import { OfficeBranch } from "@/interfaces/user.interface";
 import { createSupplier, ICreateSupplier } from "@/api/mutations/supplier.mutation";
 import { Textarea } from "@/components/ui/textarea";
 import Constants from "@/constants";
+import { useAuth } from "@/providers/auth-provider";
 
 interface ICreateSupplierProps {
 	openDialog: boolean;
@@ -42,15 +43,12 @@ const formSchema = z.object({
 	}),
 	emailAddress: z.string().email(),
 	notes: z.string().optional(),
-	officeBranch: z.enum([
-		OfficeBranch.CEBU,
-		OfficeBranch.CALBAYOG
-	]),
 });
 
 export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICreateSupplierProps) {
 	const queryClient = useQueryClient()
-	const {SupplierCategories} = Constants
+	const { SupplierCategories } = Constants
+	const { branch } = useAuth()
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -78,7 +76,10 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		createSupplierMutate(values)
+		createSupplierMutate({
+			...values,
+			officeBranch: branch as OfficeBranch
+		})
 	}
 
 	return (
@@ -87,7 +88,7 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 				<DialogTitle>
 					<DialogHeader className="flex flex-row items-center gap-x-2">
 						<ContactRound className="text-secondary" />
-						Create Supplier
+						Create Supplier from {branch}
 					</DialogHeader>
 				</DialogTitle>
 				<Separator />
@@ -95,32 +96,6 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 					<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
 						<Form {...form}>
 							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-								<FormField
-									control={form.control}
-									name="officeBranch"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Office branch</FormLabel>
-											<Select onValueChange={field.onChange} defaultValue={field.value}>
-												<FormControl>
-													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-														<SelectValue placeholder="Select branch" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{Object.entries(userOfficeBranch)?.map(([value, label]) => {
-														return (
-															<SelectItem value={value} className="text-[12px] text-muted-foreground">
-																{label}
-															</SelectItem>
-														);
-													})}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
 								<FormField
 									control={form.control}
 									name="category"
@@ -215,10 +190,10 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Notes:</p>
 												<FormControl className="w-2/3">
-													<Textarea 
-														{ ...field } 
-														placeholder="Start writing notes..." 
-														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0" 
+													<Textarea
+														{...field}
+														placeholder="Start writing notes..."
+														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
 													/>
 												</FormControl>
 											</div>

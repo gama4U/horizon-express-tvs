@@ -14,6 +14,7 @@ import skeletonLoader from "../../assets/loaders/skeleton.json"
 import Lottie from "lottie-react"
 import { useQuery } from "@tanstack/react-query";
 import { fetchProfile } from "@/api/queries/user.query";
+import { Badge } from "../ui/badge";
 
 const sidebarItemsMap: Record<UserType, SidebarItemsType[]> = {
 	ADMIN: Constants.AdminSidebarItems,
@@ -25,15 +26,21 @@ const PermissionsRecord: Record<PermissionType, string> = {
 	SUPERVISOR: 'Supervisor',
 	RESERVATION: 'Reservation',
 	ACCOUNTING: 'Accounting',
-}
+};
 
 const SideBar = React.memo(() => {
 	SideBar.displayName = 'SideBar';
-	const { session: { user }, logout } = useAuth();
+	const { session: { user }, logout, branch, setBranch } = useAuth();
 	const navigate = useNavigate();
 	const [isOpen, setIsOpen] = useState(false);
 	const containerControls = useAnimationControls();
 	const handleOpenClose = () => setIsOpen(!isOpen);
+
+
+	const handleToggleBranch = (branch: string) => {
+		setBranch(branch);
+	};
+
 
 	const pathname = location.pathname;
 
@@ -65,13 +72,37 @@ const SideBar = React.memo(() => {
 			variants={Constants.ContainerVariants}
 			animate={containerControls}
 			initial="open"
-			className={`bg-[#FFFFFF] overflow-y-auto z-50  p-3 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col`}
+			className={`bg-white overflow-y-auto z-50  p-2 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col shadow-lg`}
 			style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
 		>
 			<div>
-				<div className={`flex flex-row items-center justify-between ${isOpen ? "items-end" : "items-center"}`}>
+				<div className={`flex flex-row items-center justify-between ${isOpen ? "items-end" : "items-center"} mb-2`}>
 					{isOpen &&
-						<img src={logo} className="object-contain w-[40px] h-[40px]" />
+						<div className="flex flex-row items-center gap-x-2 w-full justify-between">
+							<img src={logo} className="object-contain w-[36px] h-[36px]" />
+							{profile?.userType === UserType.EMPLOYEE &&
+								<Badge variant="outline" className="w-full text-center border-primary flex justify-center bg-primary-foreground text-primary">{profile?.officeBranch}</Badge>
+							}
+							{profile?.userType === UserType.ADMIN && (
+								<div className="flex flex-row justify-between  items-center">
+									<Button
+										className="text-[8px] py-0 h-[18px]  rounded-r-[0px]"
+										variant={branch === "CEBU" ? "default" : "outline"}
+										onClick={() => handleToggleBranch("CEBU")}
+									>
+										Cebu
+									</Button>
+									<Button
+										className="text-[8px] py-0 h-[18px] rounded-l-[0px]"
+										variant={branch === "CALBAYOG" ? "default" : "outline"}
+										onClick={() => handleToggleBranch("CALBAYOG")}
+									>
+										Calbayog
+									</Button>
+								</div>
+							)}
+
+						</div>
 					}
 					<Button variant="ghost" size="icon" onClick={handleOpenClose}>
 						{isOpen ? (
@@ -80,7 +111,12 @@ const SideBar = React.memo(() => {
 							<PanelRightClose size={20} />
 						)}
 					</Button>
+
 				</div>
+				{!isOpen &&
+					<div>
+						<img src={logo} className="object-contain w-[40px] h-[40px]" />
+					</div>}
 				<div className="justify-start flex flex-row items-center gap-x-2">
 					{isLoading ? (
 						<div className="flex flex-col items-center">
@@ -96,7 +132,7 @@ const SideBar = React.memo(() => {
 					{isOpen && <div className="text-[10px]">
 						<p className="text-primary font-semibold mb-[0.5px] text-[12px]">{profile?.firstName} {profile?.lastName}</p>
 						{profile?.permission &&
-							<p className="text-muted-foreground">{PermissionsRecord[profile?.permission]}, {profile.officeBranch}</p>
+							<p className="text-muted-foreground">{PermissionsRecord[profile?.permission]}</p>
 						}
 					</div>
 					}

@@ -34,7 +34,7 @@ const CommonInput = forwardRef<HTMLInputElement, Props>((props, ref) => {
 				placeholder={placeholder}
 				type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
 				{...inputProps}
-				className={`flex-1 border-none shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-none h-fit p-0 text-[12px]  placeholder:text-[#888888] ${inputProps?.className}`}
+				className={`flex-1 border-none shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-none h-fit px-1 text-[12px]  placeholder:text-[#888888] ${inputProps?.className}`}
 			/>
 			{type === 'password' &&
 				<Button variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} type='button'>

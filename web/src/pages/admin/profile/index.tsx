@@ -19,7 +19,7 @@ export default function Profile() {
         LeftSideHeader={<p className="text-sm">Profile</p>}
         LeftSideSubHeader={<p className="text-primary text-xs">Manage your profile here.</p>}
       />
-      <div className="space-y-4 bg-white p-4 pb-8 rounded-lg">
+      <div className="space-y-4 p-4 pb-8 rounded-lg">
         {isLoading ? (
           <Loader isLoading={true} />
         ) : (

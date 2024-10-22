@@ -197,7 +197,7 @@ export default function ManageTransaction() {
                 </TabsContent>
               </Tabs>
             </div>
-            <div className="w-full md:w-1/2 h-full bg-white rounded-lg overflow-hidden">
+            <div className="w-full md:w-1/2 h-full bg-white overflow-hidden">
               {transaction && <PrintPreview data={transaction} />}
             </div>
           </>

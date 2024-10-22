@@ -20,7 +20,7 @@ export default function DocumentTransactionPreview({ data }: Props) {
 	const { firstName, lastName } = data.preparedBy;
 
 	return (
-		<div className="w-full bg-white rounded-lg">
+		<div className="w-full bg-white border-[1px]">
 			<div className='h-[50px] px-4 flex items-center justify-between'>
 				<div>
 					<h1 className='text-[12px] text-black italic'>Document Transaction preview</h1>

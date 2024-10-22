@@ -9,6 +9,7 @@ export default {
                 extend: {
                         backgroundImage: {
                                 'sidebar-gradient': 'linear-gradient(to bottom right, #045C2B, #FFFFFF)',
+                                'secondary-gradient': 'linear-gradient(to bottom right, #F15C01, #FFFFFF)',
                         },
                         borderRadius: {
                                 lg: 'var(--radius)',

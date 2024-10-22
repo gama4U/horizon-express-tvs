@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { OfficeBranch, Prisma } from "@prisma/client";
 import moment from 'moment';
 import prisma from "../utils/db.utils";
 import { ICreatePurchaseRequest, IFindPurchaseRequests, IUpdatePurchaseRequest, IUpdatePurchaseRequestApprover } from "../interfaces/purchase-request.interface";
@@ -18,7 +18,7 @@ export async function updatePurchaseRequest({ id, ...data }: IUpdatePurchaseRequ
   })
 }
 
-export async function findPurchaseRequests({ skip, take, search }: IFindPurchaseRequests) {
+export async function findPurchaseRequests({ skip, take, search, branch }: IFindPurchaseRequests) {
   let whereInput: Prisma.PurchaseRequestOrderWhereInput = {};
 
   if (search) {
@@ -38,6 +38,7 @@ export async function findPurchaseRequests({ skip, take, search }: IFindPurchase
   const findPurchaseRequests = prisma.purchaseRequestOrder.findMany({
     where: {
       ...whereInput,
+      supplier: { officeBranch: branch as OfficeBranch }
     },
     include: {
       creator: {
@@ -66,7 +67,10 @@ export async function findPurchaseRequests({ skip, take, search }: IFindPurchase
 
   const countPurchaseRequests = prisma.purchaseRequestOrder.count({
     where: {
-      ...whereInput
+      ...whereInput,
+      supplier: {
+        officeBranch: branch as OfficeBranch
+      }
     },
   });
 

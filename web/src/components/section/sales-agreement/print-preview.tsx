@@ -44,7 +44,7 @@ export default function PrintPreview({ data }: Props) {
     },
   });
 
-  const grandTotalWithServiceFees = data.salesAgreementItems.reduce((acc, item) => 
+  const grandTotalWithServiceFees = data.salesAgreementItems.reduce((acc, item) =>
     (acc + (item.total + (item.serviceFee || 0))),
     0
   );
@@ -60,7 +60,7 @@ export default function PrintPreview({ data }: Props) {
       <div className='h-[50px] px-4 flex items-center justify-between'>
         <h1 className='text-[12px] text-muted-foreground italic'>Print preview</h1>
         <div className='flex items-center gap-1'>
-          <SelectSalesAgreementTemplate 
+          <SelectSalesAgreementTemplate
             value={selectedTemplate}
             onValueChange={(value) => setSelectedTemplate(value)}
           />
@@ -94,9 +94,9 @@ export default function PrintPreview({ data }: Props) {
       <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
         <div>
           <div className='text-center text-black flex flex-col items-center'>
-						<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
-						{RenderHeaderText(data.client.officeBranch as OfficeBranch)}
-					</div>
+            <img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
+            {RenderHeaderText(data.client.officeBranch as OfficeBranch)}
+          </div>
           <div className='p-2 text-muted-foreground space-y-4'>
             <div className='flex items-center gap-4'>
               <div className='w-full flex items-end gap-1 text-[12px]'>
@@ -171,7 +171,7 @@ export default function PrintPreview({ data }: Props) {
                   {data.salesAgreementItems.map((item, index) => (
                     <tr key={index}>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString() }</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">
                         {formatCurrency(data.currency, item.unitPrice)}
                       </td>
@@ -203,7 +203,7 @@ export default function PrintPreview({ data }: Props) {
             </div>
             {selectedTemplate === 'template2' && (
               <>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Total service fee: </h1>
                   <span>{formatCurrency(data.currency, totalServiceFee)}</span>
@@ -212,17 +212,17 @@ export default function PrintPreview({ data }: Props) {
             )}
             {(selectedTemplate === 'template3') && (
               <>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Total service fee: </h1>
                   <span>{formatCurrency(data.currency, totalServiceFee)}</span>
                 </div>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Net of VAT: </h1>
                   <span>{`${formatCurrency(data.currency, netOfVat)}`}</span>
                 </div>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
                   <span>{`${formatCurrency(data.currency, totalDue)}`}</span>
@@ -231,22 +231,22 @@ export default function PrintPreview({ data }: Props) {
             )}
             {(selectedTemplate === 'template4') && (
               <>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Total service fee: </h1>
                   <span>{formatCurrency(data.currency, totalServiceFee)}</span>
                 </div>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Net of VAT: </h1>
                   <span>{`${formatCurrency(data.currency, netOfVat)}`}</span>
                 </div>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
                   <span>{`${formatCurrency(data.currency, totalDue)}`}</span>
                 </div>
-                <Separator className='bg-gray-100'/>
+                <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Net Due: </h1>
                   <span>{`${formatCurrency(data.currency, netDue)}`}</span>
@@ -356,7 +356,7 @@ export default function PrintPreview({ data }: Props) {
                         <h3 className='font-bold'>PHP Account No:</h3>
                         <span>00076821747</span>
                       </div>
-                      <Separator orientation='horizontal'/>
+                      <Separator orientation='horizontal' />
                       <div className='p-2'>
                         <h3 className='font-bold'>USD Account No:</h3>
                         <span>_</span>
@@ -380,7 +380,7 @@ export default function PrintPreview({ data }: Props) {
                         <h3 className='font-bold'>PHP Account No:</h3>
                         <span>636110036035</span>
                       </div>
-                      <Separator orientation='horizontal'/>
+                      <Separator orientation='horizontal' />
                       <div className='p-2'>
                         <h3 className='font-bold'>USD Account No:</h3>
                         <span>_</span>
@@ -412,7 +412,7 @@ export default function PrintPreview({ data }: Props) {
                         <h3 className='font-bold'>PHP Account No:</h3>
                         <span>312970004640</span>
                       </div>
-                      <Separator orientation='horizontal'/>
+                      <Separator orientation='horizontal' />
                       <div className='p-2'>
                         <h3 className='font-bold'>USD Account No:</h3>
                         <span>_</span>

@@ -18,7 +18,7 @@ import { DocumentTransactionFilters, DocumentTransactionType } from "@/api/mutat
 
 export default function DocumentTransactions() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
-  const { session } = useAuth()
+  const { session, branch } = useAuth()
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateDocument, setOpenCreateDocument] = useState(false)
@@ -31,11 +31,12 @@ export default function DocumentTransactions() {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['document-transactions', pagination, debouncedSearch, documentFilters],
+    queryKey: ['document-transactions', pagination, debouncedSearch, documentFilters, branch],
     queryFn: async () => await fetchDocumentTransactions({
       skip,
       take,
       search,
+      branch,
       ...documentFilters
     })
   });
@@ -63,11 +64,11 @@ export default function DocumentTransactions() {
       <div className="space-y-4 bg-white p-4 rounded-lg">
         <div className="flex gap-2 justify-between">
           <div className="flex flex-1 gap-2 items-center p-[1px] justify-between">
-            <div className="flex flex-row gap-x-2 items-center w-[60%]">
+            <div className="flex flex-row gap-x-2 items-center w-full">
               <CommonInput
                 placeholder="Search by dts no. or client name"
                 containerProps={{
-                  className: "max-w-[500px]"
+                  className: "w-full"
                 }}
                 defaultValue={search}
                 onChange={(event) => setSearch(event.target.value)}

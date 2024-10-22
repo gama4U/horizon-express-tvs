@@ -8,6 +8,7 @@ export interface IFetchdDocumentTransactions {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string | null;
   TRANSMITTAL?: boolean;
   RETURN?: boolean;
   RECIEVE?: boolean;

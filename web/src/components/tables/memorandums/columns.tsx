@@ -51,7 +51,7 @@ export const Columns: ColumnDef<IMemorandum>[] = [
 	{
 		id: "to",
 		header: () => <div className="flex items-center gap-x-2">
-			<p>Subject</p>
+			<p>To</p>
 			<CircleUser color="white" size={16} />
 		</div>,
 		cell: ({ row }) => {

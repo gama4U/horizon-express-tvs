@@ -6,6 +6,7 @@ interface IFetchSuppliers {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
   category?: string;
 }
 

@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import moment from "moment";
 import { IUpdateTransactionApprover } from "../interfaces/transaction.interface";
@@ -114,6 +114,7 @@ export interface IFetchTransactions {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
   travel?: boolean;
   accommodation?: boolean;
   tour?: boolean;
@@ -121,7 +122,7 @@ export interface IFetchTransactions {
 }
 
 
-export async function fetchTransactions({ skip, take, search, travel, accommodation, tour, transport }: IFetchTransactions) {
+export async function fetchTransactions({ skip, take, search, travel, accommodation, tour, transport, branch }: IFetchTransactions) {
   let whereInput: Prisma.TransactionWhereInput = {};
 
   if (search) {
@@ -158,6 +159,9 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
   const findTransaction = prisma.transaction.findMany({
     where: {
       ...whereInput,
+      client: {
+        officeBranch: branch as OfficeBranch
+      }
     },
     include: {
       client: {
@@ -187,6 +191,9 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
   const countTransactions = prisma.transaction.count({
     where: {
       ...whereInput,
+      client: {
+        officeBranch: branch as OfficeBranch
+      }
     },
   });
 

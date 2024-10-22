@@ -78,7 +78,7 @@ export default function MemorandumPreview({ data }: Props) {
 	const { PermissionsCanEdit } = Constants;
 
 	return (
-		<div className="w-[750px] bg-white rounded-lg">
+		<div className="w-[750px] bg-white border-[1px]">
 			<div className='h-[50px] px-4 flex items-center justify-between'>
 				<div>
 					<h1 className='text-[12px] text-black italic'>Memorandum preview</h1>

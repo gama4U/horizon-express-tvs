@@ -28,15 +28,13 @@ export default function Transactions() {
     tour: false,
     transport: false
   });
-
-
+  const { session: { user }, branch } = useAuth();
   const { data, isLoading } = useQuery({
-    queryKey: ['transactions', pagination, debouncedSearch, voucherFilters],
-    queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, ...voucherFilters })
+    queryKey: ['transactions', pagination, debouncedSearch, voucherFilters, branch],
+    queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, branch, ...voucherFilters })
   });
 
   const navigate = useNavigate();
-  const { session: { user } } = useAuth();
 
   const handleVoucherFilterToggle = (type: VoucherTypes) => {
     setVoucherFilters((prevFilters) => ({
@@ -57,12 +55,12 @@ export default function Transactions() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex items-center justify-between py-1">
+        <div className="flex items-center justify-between py-1 gap-x-2">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
               placeholder="Search by transaction id or client name"
               containerProps={{
-                className: "max-w-[500px]"
+                className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}

@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { ICreatePurchaseRequest } from "@/interfaces/purchase-request.interface";
 import { createPurchaseRequest } from "@/api/mutations/purchase-request..mutation";
 import { useAuth } from "@/providers/auth-provider";
-import { UserType } from "@/interfaces/user.interface";
+import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -54,7 +54,7 @@ const clientTypesMap: Record<TypeOfClient, string> = {
 export default function CreatePurchaseRequestDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const { session: { user } } = useAuth();
+  const { session: { user }, branch } = useAuth();
   const [supplierSearch, setSupplierSearch] = useState('');
   const debouncedSearch = useDebounce(supplierSearch, 200);
   const [salesAgreementSearch, setSalesAgreementSearch] = useState('');
@@ -68,13 +68,13 @@ export default function CreatePurchaseRequestDialog() {
   const selectedClassification = form.watch('classification');
 
   const { data: suppliers } = useQuery({
-    queryKey: ['suppliers', debouncedSearch],
-    queryFn: async () => await fetchSuppliers({ search: debouncedSearch }),
+    queryKey: ['suppliers', debouncedSearch, branch],
+    queryFn: async () => await fetchSuppliers({ search: debouncedSearch, branch: branch as OfficeBranch }),
   })
 
   const { data: salesAgreementsData } = useQuery({
     queryKey: ['sales-agreements', debouncedSalesAgreementSearch],
-    queryFn: async () => await fetchSalesAgreements({ search: debouncedSalesAgreementSearch }),
+    queryFn: async () => await fetchSalesAgreements({ search: debouncedSalesAgreementSearch, branch: branch as OfficeBranch }),
   });
 
   const { mutate: createMutate, isPending } = useMutation({
@@ -144,7 +144,7 @@ export default function CreatePurchaseRequestDialog() {
                 name="supplierId"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-[12px]">Supplier</FormLabel>
+                    <FormLabel className="text-[12px]">Selecct supplier from {branch}</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>

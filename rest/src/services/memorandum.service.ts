@@ -59,6 +59,7 @@ export async function fetchMemorandums({ skip, take, search }: IFindMemorandums)
     whereInput = {
       OR: [
         { subject: { contains: search, mode: "insensitive" } },
+        { to: { contains: search, mode: "insensitive" } },
         { memorandumNumber: { contains: search, mode: "insensitive" } },
       ],
     }

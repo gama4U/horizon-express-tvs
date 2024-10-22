@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { ICreateSupplier, IUpdateSupplier } from "../interfaces/supplier.interface";
 
@@ -30,9 +30,10 @@ export interface IFindSupplier {
   take?: number;
   search?: string;
   category?: string;
+  branch?: string;
 }
 
-export async function fetchSuppliers({ skip, take, search, category }: IFindSupplier) {
+export async function fetchSuppliers({ skip, take, search, category, branch }: IFindSupplier) {
   let whereInput: Prisma.SupplierWhereInput = {};
 
   if (search) {
@@ -59,6 +60,7 @@ export async function fetchSuppliers({ skip, take, search, category }: IFindSupp
   const suppliers = prisma.supplier.findMany({
     where: {
       ...whereInput,
+      officeBranch: branch as OfficeBranch,
     },
     include: {
       purchaseOrders: true,
@@ -77,7 +79,8 @@ export async function fetchSuppliers({ skip, take, search, category }: IFindSupp
 
   const countSuppliers = prisma.supplier.count({
     where: {
-      ...whereInput
+      ...whereInput,
+      officeBranch: branch as OfficeBranch,
     },
   });
 

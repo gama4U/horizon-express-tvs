@@ -46,6 +46,7 @@ export interface IFetchUsers {
   take?: number;
   search?: string;
   userType?: string;
+  branch?: string | null;
 }
 
 export interface IFetchUsersData {

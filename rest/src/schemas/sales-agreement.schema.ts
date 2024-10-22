@@ -28,5 +28,6 @@ export const getSalesAgreementsSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
+    branch: z.string().optional(),
   })
 });

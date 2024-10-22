@@ -10,6 +10,7 @@ export const getUsersSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
+    branch: z.string().optional(),
     type: z.enum([UserType.ADMIN, UserType.EMPLOYEE]).optional()
   })
 });
@@ -20,11 +21,11 @@ export const createUserSchema = z.object({
     lastName: z.string(),
     email: z.string().email(),
     userType: z.enum([
-      UserType.ADMIN, 
+      UserType.ADMIN,
       UserType.EMPLOYEE,
     ]),
     permission: z.enum([
-      PermissionType.SUPER_ADMIN, 
+      PermissionType.SUPER_ADMIN,
       PermissionType.SUPERVISOR,
       PermissionType.ACCOUNTING,
       PermissionType.RESERVATION
@@ -49,7 +50,7 @@ export const updateUserSchema = z.object({
     email: z.string().email(),
     userType: z.enum([UserType.ADMIN, UserType.EMPLOYEE]),
     permission: z.enum([
-      PermissionType.SUPER_ADMIN, 
+      PermissionType.SUPER_ADMIN,
       PermissionType.SUPERVISOR,
       PermissionType.ACCOUNTING,
       PermissionType.RESERVATION

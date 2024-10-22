@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { ICreateClient, IUpdateClient } from "../interfaces/client.interface";
 
@@ -29,9 +29,10 @@ export interface IFindClient {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
 }
 
-export async function fetchClients({ skip, take, search }: IFindClient) {
+export async function fetchClients({ skip, take, search, branch }: IFindClient) {
   let whereInput: Prisma.ClientWhereInput = {};
 
   if (search) {
@@ -48,6 +49,7 @@ export async function fetchClients({ skip, take, search }: IFindClient) {
   const client = prisma.client.findMany({
     where: {
       ...whereInput,
+      officeBranch: branch as OfficeBranch
     },
     include: {
       transactions: true,
@@ -66,7 +68,8 @@ export async function fetchClients({ skip, take, search }: IFindClient) {
 
   const countClients = prisma.client.count({
     where: {
-      ...whereInput
+      ...whereInput,
+      officeBranch: branch as OfficeBranch
     },
   });
 

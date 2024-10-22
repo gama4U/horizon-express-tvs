@@ -10,16 +10,31 @@ import { Columns } from "@/components/tables/suppliers/columns";
 import { DataTable } from "@/components/tables/suppliers/data-table";
 import { fetchSuppliers } from "@/api/queries/suppliers.query";
 import CreateSupplierDialog from "@/components/dialogs/suppliers/add";
+import { useAuth } from "@/providers/auth-provider";
+import { OfficeBranch } from "@/interfaces/user.interface";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Constants from "@/constants";
 
 export default function Suppliers() {
 	const { skip, take, pagination, onPaginationChange } = usePagination();
 	const [search, setSearch] = useState('');
 	const debouncedSearch = useDebounce(search, 500);
 	const [openCreateSupplier, setOpenCreateSupplier] = useState(false)
+	const { branch } = useAuth()
+
+	const [categoryFilter, setCategoryFilter] = useState('');
+
+	const { SupplierCategories } = Constants;
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['suppliers', pagination, debouncedSearch],
-		queryFn: async () => await fetchSuppliers({ skip, take, search: debouncedSearch })
+		queryKey: ['suppliers', pagination, debouncedSearch, categoryFilter, branch],
+		queryFn: async () => await fetchSuppliers({
+			skip,
+			take,
+			search: debouncedSearch,
+			branch: branch as OfficeBranch,
+			...(categoryFilter !== 'All' ? { category: categoryFilter } : null)
+		})
 	});
 
 	return (
@@ -36,24 +51,47 @@ export default function Suppliers() {
 			/>
 			<div className="space-y-4 bg-white p-4 rounded-lg">
 				<div className="flex items-center justify-between py-1">
-					<div className="flex flex-1 gap-2 items-center p-[1px]">
+					<div className="flex flex-1 gap-2 items-center p-[1px] gap-x-2">
 						<CommonInput
-							placeholder="Search by name or email"
+							placeholder="Search by name or address or category"
 							containerProps={{
-								className: "max-w-[500px]"
+								className: "w-full"
 							}}
 							defaultValue={search}
 							onChange={(event) => setSearch(event.target.value)}
 						/>
+						<Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value)}>
+							<SelectTrigger className="max-w-[250px] bg-slate-100 border-none text-[12px]">
+								<SelectValue placeholder="Filter by category" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem
+									value={'All'}
+									className="text-[12px]"
+								>
+									All categories
+								</SelectItem>
+								{SupplierCategories.map((item, index) => (
+									<SelectItem
+										key={index}
+										value={item}
+										className="text-[12px]"
+									>
+										{item}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+						<Button
+							size={"sm"}
+							onClick={() => setOpenCreateSupplier(true)}
+							className="flex gap-x-2"
+						>
+							<Plus size={14} />
+							<span>Create</span>
+						</Button>
+
 					</div>
-					<Button
-						size={"sm"}
-						onClick={() => setOpenCreateSupplier(true)}
-						className="flex gap-x-2"
-					>
-						<Plus size={14} />
-						<span>Create</span>
-					</Button>
 				</div>
 				<DataTable
 					columns={Columns}

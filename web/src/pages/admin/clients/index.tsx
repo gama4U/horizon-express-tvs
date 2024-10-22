@@ -10,16 +10,18 @@ import { Columns } from "@/components/tables/clients/columns";
 import { fetchClients } from "@/api/queries/clients.query";
 import CreateClientDialog from "@/components/dialogs/clients/add";
 import { DataTable } from "@/components/tables/clients/data-table";
+import { useAuth } from "@/providers/auth-provider";
 
 export default function Clients() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateClient, setOpenCreateClient] = useState(false)
+  const { branch } = useAuth()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['clients', pagination, debouncedSearch],
-    queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch })
+    queryKey: ['clients', pagination, debouncedSearch, branch],
+    queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch, branch })
   });
 
   return (
@@ -35,13 +37,12 @@ export default function Clients() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex items-center justify-between py-1">
+        <div className="flex items-center justify-between py-1 gap-x-2">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              searchBar
-              placeholder="Search by name or email"
+              placeholder="Search by client name or email"
               containerProps={{
-                className: "max-w-[500px]"
+                className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}

@@ -23,6 +23,7 @@ export interface IFetchTransactions {
 	accommodation?: boolean;
 	tour?: boolean;
 	transport?: boolean;
+	branch?: string | null
 }
 export interface ITransactions {
 	transactions: ITransaction[],

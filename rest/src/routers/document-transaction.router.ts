@@ -19,12 +19,13 @@ documentTransactionRouter.post('/', async (req: Request, res: Response) => {
 
 documentTransactionRouter.get('/', validate(getDocumentTransactionSchema), async (req: Request, res: Response) => {
   try {
-    const { skip, take, search, RECIEVE, TRANSMITTAL, RETURN } = req.query;
+    const { skip, take, search, RECIEVE, TRANSMITTAL, RETURN, branch } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      branch: branch ? String(branch) : undefined,
       RECIEVE: RECIEVE === 'true',
       TRANSMITTAL: TRANSMITTAL === 'true',
       RETURN: RETURN === 'true',

@@ -9,6 +9,7 @@ export const getSuppliersSchema = z.object({
       message: 'Invalid take value'
     }).optional(),
     search: z.string().optional(),
+    branch: z.string().optional(),
     category: z.string().optional(),
   })
 });

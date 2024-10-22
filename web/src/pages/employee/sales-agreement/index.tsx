@@ -10,18 +10,22 @@ import { ClientTypeFilter } from "../../../interfaces/sales-agreement.interface"
 import CommonInput from "../../../components/common/input";
 import ClientTypeFilterSelect from "../../../components/select/sales-agreement/client-type-filter";
 import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
+import { useAuth } from "@/providers/auth-provider";
+import { OfficeBranch } from "@/interfaces/user.interface";
 
 export default function SalesAgreements() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const [clientTypeFilter, setClientTypeFilter] = useState<ClientTypeFilter>('ALL');
   const debouncedSearch = useDebounce(search, 500);
+  const { branch } = useAuth()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['sales-agreements', pagination, debouncedSearch, clientTypeFilter],
+    queryKey: ['sales-agreements', pagination, debouncedSearch, clientTypeFilter, branch],
     queryFn: async () => await fetchSalesAgreements({
       skip,
       take,
+      branch: branch as OfficeBranch,
       search,
       ...(clientTypeFilter && {
         typeOfClient: clientTypeFilter
@@ -43,11 +47,11 @@ export default function SalesAgreements() {
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
         <div className="flex gap-2 justify-between">
-          <div className="flex flex-1 gap-2 items-center p-[1px]">
+          <div className="flex flex-1 gap-2 items-center p-[1px] gap-x-2">
             <CommonInput
               placeholder="Search by client name or serial no."
               containerProps={{
-                className: "max-w-[500px]"
+                className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
