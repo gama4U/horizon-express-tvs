@@ -1,11 +1,8 @@
-import { PaymentType, PurchaseRequestOrderType } from "@prisma/client";
 
 export interface ICreatePurchaseRequest {
   creatorId: string;
   supplierId: string;
-  serialNumber: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
+  salesAgreementId: string;
   disbursementType: string;
   classification: string;
   classificationType: string;
@@ -16,9 +13,7 @@ export interface ICreatePurchaseRequest {
 export interface IUpdatePurchaseRequest {
   id: string;
   supplierId: string;
-  serialNumber: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
+  salesAgreementId: string;
   disbursementType: string;
   classification: string;
   classificationType: string;
@@ -30,8 +25,6 @@ export interface IFindPurchaseRequests {
   skip?: number;
   take?: number;
   search?: string;
-  type?: PurchaseRequestOrderType;
-  paymentType?: PaymentType;
 }
 
 export interface IUpdatePurchaseRequestApprover {

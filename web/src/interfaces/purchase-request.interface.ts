@@ -9,14 +9,11 @@ export interface IPurchaseRequestOrder {
   approverId: string;
   salesAgreementId: string;
   supplierId: string;
-  serialNumber: string;
+  serialNumber: number;
   disbursementType: string;
   classification: string;
   classificationType: string;
   other: string;
-  nos: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
   purchaseOrderItems: IPurchaseRequestOrderItem[],
   transaction?: any;
   creator?: IUser;
@@ -54,25 +51,19 @@ export interface IFetchPurchaseRequestData {
 
 export interface ICreatePurchaseRequest {
   supplierId: string;
-  serialNumber: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
+  salesAgreementId: string;
   disbursementType: string;
   classification: string;
   classificationType: string;
-  nos: string;
   other?: string;
 }
 
 export interface IUpdatePurchaseRequest {
   purchaseRequestId: string;
   supplierId: string;
-  serialNumber: string;
-  type: PurchaseRequestOrderType;
-  paymentType: PaymentType;
+  salesAgreementId: string;
   disbursementType: string;
   classification: string;
   classificationType: string;
-  nos: string;
   other?: string;
 }

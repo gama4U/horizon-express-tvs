@@ -16,6 +16,8 @@ import { IClient, IUpdateClient, updateClient } from "@/api/mutations/client.mut
 import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import Constants from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { OfficeBranch } from "@/interfaces/user.interface";
+import { Textarea } from "@/components/ui/textarea";
 
 interface IUpdateClientProps {
 	clientData: IClient
@@ -53,6 +55,7 @@ const formSchema = z.object({
 		TypeOfClient.INDIVIDUAL,
 	]).optional(),
 	department: z.string().optional(),
+	notes: z.string().optional()
 });
 
 
@@ -233,6 +236,25 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 												<p className="text-xs w-1/3">Email address:</p>
 												<FormControl className="w-2/3">
 													<CommonInput inputProps={{ ...field }} placeholder="john@sampleemail.com" containerProps={{ className: 'text-xs' }} />
+												</FormControl>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="notes"
+									render={({ field }) => (
+										<FormItem>
+											<div className="flex flex-row items-center justify-between gap-x-2">
+												<p className="text-xs w-1/3">Notes:</p>
+												<FormControl className="w-2/3">
+													<Textarea
+														{...field}
+														placeholder="Start writing notes..."
+														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />

@@ -3,17 +3,13 @@ import { ClientType, Currency } from "@prisma/client";
 export interface ICreateSalesAgreement {
   creatorId: string;
   clientId: string;
-  serialNumber: string;
   currency: Currency;
-  serviceFee?: number;
 }
 
 export interface IUpdateSalesAgreement {
   id: string;
   clientId: string;
-  serialNumber: string;
   currency: Currency;
-  serviceFee?: number;
 }
 
 export interface IFindSalesAgreements {

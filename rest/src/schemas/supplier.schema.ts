@@ -10,5 +10,6 @@ export const getSuppliersSchema = z.object({
     }).optional(),
     search: z.string().optional(),
     branch: z.string().optional(),
+    category: z.string().optional(),
   })
 });

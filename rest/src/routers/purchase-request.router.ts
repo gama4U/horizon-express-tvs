@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
-import { PaymentType, PurchaseRequestOrderType, UserType } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import { createPurchaseRequestSchema, findPurchaseRequestsSchema, updatePurchaseRequestSchema } from '../schemas/purchase-request.schema';
 import { createPurchaseRequest, deletePurchaseRequestById, fetchPurchaseRequestSummary, findPurchaseRequestById, findPurchaseRequests, updatePurchaseRequest, updatePurchaseRequestOrderApprover } from '../services/purchase-request.service';
 import { deletePurchaseRequestItems } from '../services/purchase-request-item.service';
@@ -52,14 +52,12 @@ purchaseRequestRouter.put('/:id', validate(updatePurchaseRequestSchema), async (
 
 purchaseRequestRouter.get('/', validate(findPurchaseRequestsSchema), async (req: Request, res: Response) => {
   try {
-    const { skip, take, search, type, paymentType } = req.query;
+    const { skip, take, search, category } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
-      type: type ? type as PurchaseRequestOrderType : undefined,
-      paymentType: paymentType ? paymentType as PaymentType : undefined,
     };
 
     const purchaseRequests = await findPurchaseRequests(filters);

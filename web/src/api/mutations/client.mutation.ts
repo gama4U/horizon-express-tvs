@@ -11,7 +11,8 @@ export interface ICreateClient {
   clientType: TypeOfClient
   documents?: string[]
   department?: string
-  officeBranch?: OfficeBranch
+  officeBranch?: OfficeBranch;
+  notes?: string;
 }
 export interface IUpdateClient {
   id: string
@@ -20,6 +21,8 @@ export interface IUpdateClient {
   contactNumber?: string
   documents?: string[]
   department?: string
+  officeBranch?: OfficeBranch
+  notes?: string;
 }
 
 export enum TypeOfClient {

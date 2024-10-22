@@ -78,6 +78,21 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		}
 	},
 	{
+		id: "category",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Category</p>
+		</div>,
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.category}
+					</span>
+				</div>
+			)
+		}
+	},
+	{
 		id: "officeBranch",
 		header: () => <div className="flex items-center gap-x-2">
 			<p>Office Branch</p>

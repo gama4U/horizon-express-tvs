@@ -5,9 +5,6 @@ import { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import CommonInput from "../../../components/common/input";
 import { fetchPurchaseRequestOrders } from "@/api/queries/purchase-request.queries";
-import PaymentTypeFilterSelect from "@/components/select/purchase-request/payment-type-filter";
-import { PaymentType, PurchaseRequestOrderType } from "@/interfaces/purchase-request.interface";
-import PurchaseRequestTypeFilter from "@/components/select/purchase-request/type-filter";
 import CreatePurchaseRequestDialog from "@/components/dialogs/purchase-request/create";
 import { DataTable } from "@/components/tables/purchase-request/data-table";
 import { Columns } from "@/components/tables/purchase-request/columns";
@@ -15,22 +12,14 @@ import { Columns } from "@/components/tables/purchase-request/columns";
 export default function PurchaseRequests() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<PurchaseRequestOrderType | 'ALL'>('ALL');
-  const [paymentTypeFilter, setPaymentTypeFilter] = useState<PaymentType | 'ALL'>('ALL');
   const debouncedSearch = useDebounce(search, 500);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['purchase-requests', pagination, debouncedSearch, typeFilter, paymentTypeFilter],
+    queryKey: ['purchase-requests', pagination, debouncedSearch],
     queryFn: async () => await fetchPurchaseRequestOrders({
       skip,
       take,
       search,
-      ...(paymentTypeFilter !== 'ALL' && {
-        paymentType: paymentTypeFilter
-      }),
-      ...(typeFilter !== 'ALL' && {
-        type: typeFilter
-      })
     })
   });
 
@@ -56,14 +45,6 @@ export default function PurchaseRequests() {
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
-            />
-            <PurchaseRequestTypeFilter
-              value={typeFilter}
-              onValueChange={(value) => setTypeFilter(value)}
-            />
-            <PaymentTypeFilterSelect
-              value={paymentTypeFilter}
-              onValueChange={(value) => setPaymentTypeFilter(value)}
             />
           </div>
           <CreatePurchaseRequestDialog />

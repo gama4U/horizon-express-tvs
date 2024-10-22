@@ -12,6 +12,8 @@ import { fetchSuppliers } from "@/api/queries/suppliers.query";
 import CreateSupplierDialog from "@/components/dialogs/suppliers/add";
 import { useAuth } from "@/providers/auth-provider";
 import { OfficeBranch } from "@/interfaces/user.interface";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Constants from "@/constants";
 
 export default function Suppliers() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
@@ -20,9 +22,19 @@ export default function Suppliers() {
   const [openCreateSupplier, setOpenCreateSupplier] = useState(false)
   const { branch } = useAuth()
 
+  const [categoryFilter, setCategoryFilter] = useState('');
+
+  const { SupplierCategories } = Constants;
+
   const { data, isLoading } = useQuery({
-    queryKey: ['suppliers', pagination, debouncedSearch, branch],
-    queryFn: async () => await fetchSuppliers({ skip, take, search: debouncedSearch, branch: branch as OfficeBranch })
+    queryKey: ['suppliers', pagination, debouncedSearch, categoryFilter],
+    queryFn: async () => await fetchSuppliers({
+      skip,
+      take,
+      search: debouncedSearch,
+      branch: branch as OfficeBranch,
+      ...(categoryFilter !== 'All' ? { category: categoryFilter } : null)
+    })
   });
 
   return (
@@ -41,13 +53,35 @@ export default function Suppliers() {
         <div className="flex items-center justify-between py-1">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              placeholder="Search by name"
+              placeholder="Search by name or address or category"
               containerProps={{
                 className: "max-w-[500px]"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
+            <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value)}>
+              <SelectTrigger className="max-w-[250px] bg-slate-100 border-none text-[12px]">
+                <SelectValue placeholder="Filter by category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  value={'All'}
+                  className="text-[12px]"
+                >
+                  All categories
+                </SelectItem>
+                {SupplierCategories.map((item, index) => (
+                  <SelectItem
+                    key={index}
+                    value={item}
+                    className="text-[12px]"
+                  >
+                    {item}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <Button
             size={"sm"}

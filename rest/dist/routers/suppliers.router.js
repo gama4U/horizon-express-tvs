@@ -30,11 +30,12 @@ supplierRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 supplierRouter.get('/', (0, validate_middleware_1.validate)(supplier_schema_1.getSuppliersSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { skip, take, search } = req.query;
+        const { skip, take, search, category } = req.query;
         const filters = {
             skip: skip ? Number(skip) : undefined,
             take: take ? Number(take) : undefined,
             search: search ? String(search) : undefined,
+            category: category ? String(category) : undefined,
         };
         const clients = yield (0, supplier_service_1.fetchSuppliers)(filters);
         if (!clients) {

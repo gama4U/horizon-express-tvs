@@ -8,6 +8,7 @@ interface IFetchSuppliers {
   take?: number;
   search?: string;
   branch: OfficeBranch
+  category?: string;
 }
 
 interface ISuppliers {

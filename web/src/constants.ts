@@ -30,6 +30,19 @@ const EmployeeSidebarItems: Array<SidebarItemsType> = [
 	{ label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
 
+const SupplierCategories = [
+  'Power and Electricity Suppliers',
+  'Water Supply',
+  'Waste Management',
+  "Telecommunications",
+  'Internet Service Providers',
+  'Medical Supplies',
+  'Pharmaceuticals',
+  'Personal Protective Equipment (PPE)',
+  'Laboratory Equipment',
+  'Sterilization Products',
+]
+
 const ContainerVariants = {
 	close: {
 		width: "4rem",
@@ -232,7 +245,8 @@ const Constants = {
 	GovernmentDepartments,
 	CorporateDepartments,
 	Disbursements,
-	CommonDocuments
+	CommonDocuments,
+  SupplierCategories
 }
 
 export default Constants

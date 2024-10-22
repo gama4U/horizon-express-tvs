@@ -2,7 +2,6 @@ import { Check, ChevronsUpDown, FilePlus, Loader2, Plus } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
-import CommonInput from "../../common/input";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,9 +25,6 @@ const formSchema = z.object({
   clientId: z.string().min(1, {
     message: 'Client is required'
   }),
-  serialNumber: z.string().min(1, {
-    message: 'Serial number is required'
-  }),
   currency: z.enum([Currency.PHP, Currency.USD]),
 });
 
@@ -46,9 +42,6 @@ export default function CreateSalesAgreementDialog() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      serialNumber: '',
-    }
   });
 
   const {data: clients} = useQuery({
@@ -68,6 +61,7 @@ export default function CreateSalesAgreementDialog() {
       navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/sales-agreements/${data.id}`)
     },
     onError: (error) => {
+      console.log(error)
       toast.error(error.message, { 
         position: 'top-center',
         className: 'text-destructive'
@@ -134,7 +128,7 @@ export default function CreateSalesAgreementDialog() {
                           <CommandInput
                             className="text-[12px]"
                             onValueChange={(value) => setClientSearch(value)}
-                            placeholder="Search language..." 
+                            placeholder="Search client..." 
                           />
                           <CommandList className="w-full">
                             <CommandEmpty>No client found.</CommandEmpty>
@@ -168,19 +162,6 @@ export default function CreateSalesAgreementDialog() {
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="serialNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ser. No.:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }}  placeholder="Serial number"/>
-                    </FormControl>
-                    <FormMessage className="text-[10px]"/>
                   </FormItem>
                 )}
               />
