@@ -148,7 +148,7 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
     whereInput = {
       OR: [
         { client: { name: { contains: search, mode: 'insensitive' } } },
-        { id: { contains: search, mode: "insensitive" } },
+        { transactionNumber: { contains: search, mode: "insensitive" } },
       ],
     };
   }

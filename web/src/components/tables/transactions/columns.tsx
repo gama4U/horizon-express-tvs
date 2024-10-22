@@ -37,7 +37,6 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		id: "transactionNumber",
 		header: () => <div className="flex items-center gap-x-2">
 			<p>Transaction #</p>
-			<CircleUser color="white" size={16} />
 		</div>,
 		cell: ({ row }) => {
 			if (!row.original.client) return;
