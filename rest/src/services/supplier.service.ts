@@ -91,3 +91,9 @@ export async function fetchSuppliers({ skip, take, search, category, branch }: I
 
   return { suppliersData, total };
 }
+
+export const findSupplierById = async(id: string) => {
+  return await prisma.supplier.findFirst({
+    where: {id}
+  })
+}

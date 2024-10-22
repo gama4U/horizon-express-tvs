@@ -1,4 +1,4 @@
-import { Currency } from "@prisma/client";
+import { Currency, OfficeBranch } from "@prisma/client";
 import { z } from "zod";
 
 export const createSalesAgreementSchema = z.object({

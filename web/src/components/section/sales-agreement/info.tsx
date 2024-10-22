@@ -27,7 +27,7 @@ export default function SalesAgreementInfo({ data }: Props) {
           Ser. no.
         </span>
         <h3 className="text-[12px]">
-          {String(data.serialNumber).padStart(6, '0')}
+          {data.serialNumber}
         </h3>
       </div>
       <div className="flex flex-col gap-1">

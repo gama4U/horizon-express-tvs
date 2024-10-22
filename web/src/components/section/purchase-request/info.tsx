@@ -21,7 +21,7 @@ export default function PurchaseRequestInfo({ data }: Props) {
             Purchase request no.
           </span>
           <h3 className="text-[12px]">
-            {String(data.serialNumber).padStart(6, '0')}
+            {data.serialNumber}
           </h3>
         </div>
         <div>
@@ -29,7 +29,7 @@ export default function PurchaseRequestInfo({ data }: Props) {
             Sales agreement no.
           </span>
           <h3 className="text-[12px]">
-            {String(data.salesAgreement?.serialNumber).padStart(6, '0')}
+            {data.salesAgreement?.serialNumber}
           </h3>
         </div>
         <div>

@@ -1,4 +1,4 @@
-generator client {schema
+generator client {
   provider = "prisma-client-js"
 }
 
@@ -60,7 +60,8 @@ model SalesAgreement {
   creatorId             String
   approverId            String?
   clientId              String
-  serialNumber          Int                    @default(autoincrement())
+  sequenceNumber        Int                    @unique @default(autoincrement())
+  serialNumber          String?
   currency              Currency?
   salesAgreementItems   SalesAgreementItem[]
   purchaseRequestOrders PurchaseRequestOrder[]
@@ -88,7 +89,8 @@ model SalesAgreementItem {
 model PurchaseRequestOrder {
   id                 String                     @id @default(cuid())
   creatorId          String?
-  serialNumber       Int                        @default(autoincrement())
+  sequenceNumber     Int                        @unique @default(autoincrement())
+  serialNumber       String?
   salesAgreementId   String?
   disbursementType   String?
   classification     String?

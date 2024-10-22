@@ -10,7 +10,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 import Constants from "@/constants";
 
-export const olumns: ColumnDef<ISalesAgreement>[] = [
+export const Columns: ColumnDef<ISalesAgreement>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -51,7 +51,7 @@ export const olumns: ColumnDef<ISalesAgreement>[] = [
     header: "Ser. No.",
     cell: ({ row }) => (
       <span className="capitalize">
-        {String(row.original.serialNumber).padStart(6, '0')}
+        {row.original.serialNumber}
       </span>
     )
   },

@@ -5,6 +5,7 @@ import { createPurchaseRequestSchema, findPurchaseRequestsSchema, updatePurchase
 import { createPurchaseRequest, deletePurchaseRequestById, fetchPurchaseRequestSummary, findPurchaseRequestById, findPurchaseRequests, updatePurchaseRequest, updatePurchaseRequestOrderApprover } from '../services/purchase-request.service';
 import { deletePurchaseRequestItems } from '../services/purchase-request-item.service';
 import { authorize } from '../middlewares/authorize.middleware';
+import { findSupplierById } from '../services/supplier.service';
 
 const purchaseRequestRouter = express.Router();
 
@@ -12,7 +13,16 @@ purchaseRequestRouter.post('/', validate(createPurchaseRequestSchema), async (re
   try {
     const userId = req.user?.id;
 
-    const created = await createPurchaseRequest({ creatorId: userId, ...req.body });
+    const foundSupplier = await findSupplierById(req.body.clientId);
+    if (!foundSupplier) {
+      throw new Error('Failed to find supplier');
+    }
+
+    const created = await createPurchaseRequest({ 
+      creatorId: userId, 
+      ...req.body, 
+      officeBranch: foundSupplier.officeBranch 
+    });
     if (!created) {
       throw new Error('Failed to create purchase request')
     }

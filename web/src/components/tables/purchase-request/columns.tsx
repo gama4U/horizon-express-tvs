@@ -68,7 +68,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     header: "Ser. No.",
     cell: ({ row }) => (
       <span className="capitalize">
-        {String(row.original.serialNumber).padStart(6, '0')}
+        {row.original.serialNumber}
       </span>
     )
   },

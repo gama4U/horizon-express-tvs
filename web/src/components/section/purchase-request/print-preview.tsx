@@ -98,8 +98,8 @@ export default function PrintPreview({ data }: Props) {
                 <span className='leading-[16px] font-semibold text-nowrap'>
                   PO no:
                 </span>
-                <div className='flex-1 border-b leading-[16px]'>
-                  <span>{String(data.serialNumber).padStart(6, '0')}</span>
+                <div className='flex-1 border-b leading-[16px] text-nowrap'>
+                  <span>{data.serialNumber}</span>
                 </div>
               </div>
             </div>
