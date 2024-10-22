@@ -15,12 +15,14 @@ export interface ICreateClient {
   contactNumber: string
   documents: string[]
   officeBranch: OfficeBranch
-  clientType: ClientType
+  clientType: ClientType;
+  notes?: string;
 }
 export interface IUpdateClient {
   name?: string
   email?: string
   contactNumber?: string
-  officeBranch: OfficeBranch
+  officeBranch: OfficeBranch;
+  notes?: string;
 }
 

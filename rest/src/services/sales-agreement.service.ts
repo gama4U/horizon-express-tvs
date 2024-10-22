@@ -16,7 +16,7 @@ export async function updateSalesAgreement({ id, ...data }: IUpdateSalesAgreemen
   })
 }
 
-export async function findSalesAgreements({ skip, take, search, typeOfClient }: IFindSalesAgreements) {
+export async function findSalesAgreements({ skip, take, search }: IFindSalesAgreements) {
   let whereInput: Prisma.SalesAgreementWhereInput = {};
   let searchFilter = {}
 
@@ -120,7 +120,7 @@ export async function findSalesAgreementById(id: string) {
         }
       },
       client: true,
-      purchaseOrder: true,
+      purchaseRequestOrders: true,
       transaction: true,
       salesAgreementItems: {
         orderBy: {

@@ -29,9 +29,10 @@ export interface IFindSupplier {
   skip?: number;
   take?: number;
   search?: string;
+  category?: string;
 }
 
-export async function fetchSuppliers({ skip, take, search }: IFindSupplier) {
+export async function fetchSuppliers({ skip, take, search, category }: IFindSupplier) {
   let whereInput: Prisma.SupplierWhereInput = {};
 
   if (search) {
@@ -40,8 +41,18 @@ export async function fetchSuppliers({ skip, take, search }: IFindSupplier) {
       AND: searchParts.map((part) => ({
         OR: [
           { name: { contains: part, mode: "insensitive" } },
+          { address: { contains: part, mode: "insensitive" } },
+          { emailAddress: { contains: part, mode: "insensitive" } },
+          { category: { contains: part, mode: "insensitive" } },
         ],
       })),
+    }
+  }
+
+  if (category) {
+    whereInput = {
+      ...whereInput,
+      category
     }
   }
 

@@ -44,7 +44,7 @@ function deleteSupplier(id) {
     });
 }
 function fetchSuppliers(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search }) {
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, category }) {
         let whereInput = {};
         if (search) {
             const searchParts = search.split(/\s+/);
@@ -52,9 +52,15 @@ function fetchSuppliers(_a) {
                 AND: searchParts.map((part) => ({
                     OR: [
                         { name: { contains: part, mode: "insensitive" } },
+                        { address: { contains: part, mode: "insensitive" } },
+                        { emailAddress: { contains: part, mode: "insensitive" } },
+                        { category: { contains: part, mode: "insensitive" } },
                     ],
                 })),
             };
+        }
+        if (category) {
+            whereInput = Object.assign(Object.assign({}, whereInput), { category });
         }
         const suppliers = db_utils_1.default.supplier.findMany({
             where: Object.assign({}, whereInput),

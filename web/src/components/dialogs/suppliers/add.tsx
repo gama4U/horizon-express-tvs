@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { OfficeBranch } from "@/interfaces/user.interface";
 import { createSupplier, ICreateSupplier } from "@/api/mutations/supplier.mutation";
+import { Textarea } from "@/components/ui/textarea";
+import Constants from "@/constants";
 
 interface ICreateSupplierProps {
 	openDialog: boolean;
@@ -25,7 +27,6 @@ const userOfficeBranch: Record<OfficeBranch, string> = {
 	CALBAYOG: 'Calbayog'
 }
 
-
 const formSchema = z.object({
 	name: z.string().trim().min(1, {
 		message: "Name is required."
@@ -36,15 +37,21 @@ const formSchema = z.object({
 	address: z.string().trim().min(1, {
 		message: "Email is required."
 	}).optional(),
+	category: z.string().min(1, {
+		message: 'Category is required'
+	}),
+	emailAddress: z.string().email(),
+	notes: z.string().optional(),
 	officeBranch: z.enum([
 		OfficeBranch.CEBU,
 		OfficeBranch.CALBAYOG
 	]),
 });
 
-
 export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICreateSupplierProps) {
 	const queryClient = useQueryClient()
+	const {SupplierCategories} = Constants
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	})
@@ -73,7 +80,6 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		createSupplierMutate(values)
 	}
-
 
 	return (
 		<Dialog open={openDialog} onOpenChange={() => { setOpenDialog(false) }}>
@@ -117,6 +123,32 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 								/>
 								<FormField
 									control={form.control}
+									name="category"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Category</FormLabel>
+											<Select onValueChange={field.onChange} defaultValue={field.value}>
+												<FormControl>
+													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
+														<SelectValue placeholder="Select category" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{SupplierCategories.map((item, index) => {
+														return (
+															<SelectItem key={index} value={item} className="text-[12px] text-muted-foreground">
+																{item}
+															</SelectItem>
+														);
+													})}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
 									name="name"
 									render={({ field }) => (
 										<FormItem>
@@ -147,6 +179,21 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 								/>
 								<FormField
 									control={form.control}
+									name="emailAddress"
+									render={({ field }) => (
+										<FormItem>
+											<div className="flex flex-row items-center justify-between gap-x-2">
+												<p className="text-xs w-1/3">Email:</p>
+												<FormControl className="w-2/3">
+													<CommonInput inputProps={{ ...field }} placeholder="Email address" containerProps={{ className: 'text-xs' }} />
+												</FormControl>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
 									name="address"
 									render={({ field }) => (
 										<FormItem>
@@ -154,6 +201,25 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 												<p className="text-xs w-1/3">Address:</p>
 												<FormControl className="w-2/3">
 													<CommonInput inputProps={{ ...field }} placeholder="Supplier's Address" containerProps={{ className: 'text-xs' }} />
+												</FormControl>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="notes"
+									render={({ field }) => (
+										<FormItem>
+											<div className="flex flex-row items-center justify-between gap-x-2">
+												<p className="text-xs w-1/3">Notes:</p>
+												<FormControl className="w-2/3">
+													<Textarea 
+														{ ...field } 
+														placeholder="Start writing notes..." 
+														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0" 
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />

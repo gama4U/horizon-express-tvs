@@ -12,6 +12,9 @@ export interface ICreateSupplier {
   name: string
   address: string
   contact: string
+  emailAddress: string;
+  category: string;
+  notes: string;
   officeBranch: OfficeBranch
 }
 export interface IUpdateSupplier {
@@ -19,6 +22,9 @@ export interface IUpdateSupplier {
   name: string
   address: string
   contact: string
+  emailAddress: string;
+  category: string;
+  notes: string;
   officeBranch: OfficeBranch
 }
 

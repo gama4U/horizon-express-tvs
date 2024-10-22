@@ -51,7 +51,7 @@ function updatePurchaseRequest(_a) {
     });
 }
 function findPurchaseRequests(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, type, paymentType }) {
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search }) {
         let whereInput = {};
         if (search) {
             whereInput = {
@@ -63,15 +63,8 @@ function findPurchaseRequests(_a) {
                             contact: { contains: search, mode: "insensitive" },
                         }
                     },
-                    { serialNumber: { contains: search, mode: "insensitive" } },
                 ],
             };
-        }
-        if (type) {
-            whereInput = Object.assign(Object.assign({}, whereInput), { type });
-        }
-        if (paymentType) {
-            whereInput = Object.assign(Object.assign({}, whereInput), { paymentType });
         }
         const findPurchaseRequests = db_utils_1.default.purchaseRequestOrder.findMany({
             where: Object.assign({}, whereInput),

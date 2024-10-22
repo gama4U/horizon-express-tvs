@@ -11,7 +11,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { useNavigate } from "react-router-dom";
-import { ICreatePurchaseRequest, PaymentType, PurchaseRequestOrderType } from "@/interfaces/purchase-request.interface";
+import { ICreatePurchaseRequest } from "@/interfaces/purchase-request.interface";
 import { createPurchaseRequest } from "@/api/mutations/purchase-request..mutation";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
@@ -21,40 +21,16 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import useDebounce from "@/hooks/useDebounce";
 import { fetchSuppliers } from "@/api/queries/suppliers.query";
 import Constants from "@/constants";
-
-const typeLabelMap: Record<PurchaseRequestOrderType, string> = {
-  ACCOMMODATION: 'Accommodation',
-  VISA: 'Visa',
-  SHIPPING: 'Shipping',
-  TRANSPORTATION_RENTAL: 'Transportation Rental',
-  DOMESTIC_AIRLINE_TICKETING: 'Domestic Airline Ticketing',
-  INTERNATIONAL_AIRLINE_TICKETING: 'International Airline Ticketing',
-}
-
-const paymentTypeLabelMap: Record<PaymentType, string> = {
-  CASH: 'Cash',
-  CHECK: 'Check',
-}
+import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
+import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 
 const formSchema = z.object({
   supplierId: z.string().min(1, {
-    message: 'Supplier id is required'
+    message: 'Supplier is required'
   }),
-  serialNumber: z.string().min(1, {
-    message: 'Serial number is required'
+  salesAgreementId: z.string().min(1, {
+    message: 'Sales agreement is required'
   }),
-  type: z.enum([
-    PurchaseRequestOrderType.ACCOMMODATION,
-    PurchaseRequestOrderType.VISA,
-    PurchaseRequestOrderType.TRANSPORTATION_RENTAL,
-    PurchaseRequestOrderType.SHIPPING,
-    PurchaseRequestOrderType.INTERNATIONAL_AIRLINE_TICKETING,
-    PurchaseRequestOrderType.DOMESTIC_AIRLINE_TICKETING,
-  ]),
-  paymentType: z.enum([
-    PaymentType.CASH,
-    PaymentType.CHECK,
-  ]),
   disbursementType: z.string().min(1, {
     message: 'Disbursement type is required'
   }),
@@ -65,10 +41,15 @@ const formSchema = z.object({
     message: 'Classification type is required'
   }),
   other: z.string().optional(),
-  nos: z.string().min(1, {
-    message: 'NOS is required'
-  }),
 })
+
+const clientTypesMap: Record<TypeOfClient, string> = {
+  CORPORATE: 'Corporate',
+  GROUP: 'Group',
+  GOVERNMENT: 'Government',
+  INDIVIDUAL: 'Individual',
+  WALK_IN: 'Walk in',
+}
 
 export default function CreatePurchaseRequestDialog() {
   const navigate = useNavigate();
@@ -76,15 +57,11 @@ export default function CreatePurchaseRequestDialog() {
   const { session: { user } } = useAuth();
   const [supplierSearch, setSupplierSearch] = useState('');
   const debouncedSearch = useDebounce(supplierSearch, 200);
+  const [salesAgreementSearch, setSalesAgreementSearch] = useState('');
+  const debouncedSalesAgreementSearch = useDebounce(salesAgreementSearch, 200);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      serialNumber: '',
-      type: PurchaseRequestOrderType.VISA,
-      paymentType: PaymentType.CASH,
-      nos: '',
-    }
   });
 
   const selectedDisbursementType = form.watch('disbursementType');
@@ -94,6 +71,11 @@ export default function CreatePurchaseRequestDialog() {
     queryKey: ['suppliers', debouncedSearch],
     queryFn: async () => await fetchSuppliers({ search: debouncedSearch }),
   })
+
+  const { data: salesAgreementsData } = useQuery({
+    queryKey: ['sales-agreements', debouncedSalesAgreementSearch],
+    queryFn: async () => await fetchSalesAgreements({ search: debouncedSalesAgreementSearch }),
+  });
 
   const { mutate: createMutate, isPending } = useMutation({
     mutationFn: async (data: ICreatePurchaseRequest) => await createPurchaseRequest(data),
@@ -121,12 +103,21 @@ export default function CreatePurchaseRequestDialog() {
   }
 
   function renderSelectedCompany(supplierId?: string) {
-    if (!supplierId) return "Select language";
+    if (!supplierId) return "Select supplier";
 
     const supplier = suppliers?.suppliersData.find((supplier) => supplier.id === supplierId);
-    if (!supplier) return "Select language";
+    if (!supplier) return "Select supplier";
 
     return supplier?.name;
+  }
+
+  function renderSelectedSalesAgreement(salesAgreementId?: string) {
+    if (!salesAgreementId) return "Select sales agreement";
+
+    const salesAgreement = salesAgreementsData?.salesAgreements.find((salesAgreement) => salesAgreement.id === salesAgreementId);
+    if (!salesAgreement) return "Select sales agreement";
+
+    return `${String(salesAgreement.serialNumber).padStart(6, '0')} - ${salesAgreement?.client.name} (${clientTypesMap[salesAgreement.client.clientType]})`;
   }
 
   const classifications = Constants.Disbursements.find(item => item.type === selectedDisbursementType)?.classifications || [];
@@ -175,7 +166,7 @@ export default function CreatePurchaseRequestDialog() {
                           <CommandInput
                             className="text-[12px]"
                             onValueChange={(value) => setSupplierSearch(value)}
-                            placeholder="Search language..."
+                            placeholder="Search supplier..."
                           />
                           <CommandList className="w-full">
                             <CommandEmpty>No supplier found.</CommandEmpty>
@@ -211,75 +202,70 @@ export default function CreatePurchaseRequestDialog() {
               />
               <FormField
                 control={form.control}
-                name="serialNumber"
+                name="salesAgreementId"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[12px]">Ser. No.:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Serial number" />
-                    </FormControl>
-                    <FormMessage className="text-[10px]" />
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-[12px]">Sales agreement</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-full justify-between text-[12px]",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {renderSelectedSalesAgreement(field.value)}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[550px] p-0">
+                        <Command shouldFilter={false}>
+                          <CommandInput
+                            className="text-[12px]"
+                            onValueChange={(value) => setSalesAgreementSearch(value)}
+                            placeholder="Search sales agreement..."
+                          />
+                          <CommandList className="w-full">
+                            <CommandEmpty>No sales agreement found.</CommandEmpty>
+                            <CommandGroup>
+                              {salesAgreementsData?.salesAgreements.map((salesAgreement, index) => (
+                                <CommandItem
+                                  value={salesAgreement.id}
+                                  key={index}
+                                  onSelect={() => {
+                                    form.setValue("salesAgreementId", salesAgreement.id)
+                                  }}
+                                  className="text-[12px]"
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      salesAgreement.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold">{String(salesAgreement.serialNumber).padStart(6, '0')}</span>
+                                    <span> - </span>
+                                    <span>{salesAgreement.client.name}</span>
+                                    <span>{`(${clientTypesMap[salesAgreement.client.clientType]})`}</span>
+                                  </div>
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="flex gap-4">
-                <FormField
-                  control={form.control}
-                  name="type"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel className="text-[12px]">Type:</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                            <SelectValue placeholder="Select a type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(typeLabelMap).map(([value, label], index) => (
-                            <SelectItem
-                              key={index}
-                              value={value}
-                              className="text-[12px]"
-                            >
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="paymentType"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel className="text-[12px]">Payment:</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                            <SelectValue placeholder="Select a payment type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(paymentTypeLabelMap).map(([value, label], index) => (
-                            <SelectItem
-                              key={index}
-                              value={value}
-                              className="text-[12px]"
-                            >
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className="text-[10px]" />
-                    </FormItem>
-                  )}
-                />
-              </div>
               <FormField
                 control={form.control}
                 name="disbursementType"
@@ -376,19 +362,6 @@ export default function CreatePurchaseRequestDialog() {
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="nos"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[12px]">Nos:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Nos" />
-                    </FormControl>
-                    <FormMessage className="text-[10px]" />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="other"

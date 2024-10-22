@@ -6,11 +6,7 @@ export const createSalesAgreementSchema = z.object({
     clientId: z.string().min(1, {
       message: 'Client id is required'
     }),
-    serialNumber: z.string().min(1, {
-      message: 'Serial number is required'
-    }),
     currency: z.enum([Currency.PHP, Currency.USD]),
-    serviceFee: z.number().optional()
   })
 });
 
@@ -19,11 +15,7 @@ export const updateSalesAgreementSchema = z.object({
     clientId: z.string().min(1, {
       message: 'Client id is required'
     }),
-    serialNumber: z.string().min(1, {
-      message: 'Serial number is required'
-    }),
     currency: z.enum([Currency.PHP, Currency.USD]),
-    serviceFee: z.number().optional()
   })
 });
 

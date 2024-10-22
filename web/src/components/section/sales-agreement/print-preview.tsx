@@ -12,7 +12,6 @@ import { approveSalesAgreement } from '@/api/mutations/sales-agreement.mutation'
 import { formatCurrency } from '@/utils/currency.utils'
 import logo from "../../../assets/logo.png"
 import SelectSalesAgreementTemplate, { SalesAgreementTemplateType } from '@/components/select/sales-agreement/print-template'
-import { ISalesAgreementItem } from '@/interfaces/sales-agreement-item.interface'
 import { RenderHeaderText } from '@/components/common/header'
 import { OfficeBranch } from '@/interfaces/user.interface'
 
@@ -49,19 +48,6 @@ export default function PrintPreview({ data }: Props) {
     (acc + (item.total + (item.serviceFee || 0))),
     0
   );
-
-  const renderUnitPrice = (item: ISalesAgreementItem) => {
-    const unitPriceWithServiceFee = item.unitPrice + (item.serviceFee || 0);
-    if (selectedTemplate === 'template1') {
-      return formatCurrency(data.currency, unitPriceWithServiceFee);
-    }
-    return `${formatCurrency(data.currency, item.unitPrice)} + ${formatCurrency(data.currency, (item.serviceFee || 0))}`;
-  }
-
-  const renderTotalPrice = (item: ISalesAgreementItem) => {
-    const totalPriceWithServiceFee = item.total + (item.serviceFee || 0);
-    return formatCurrency(data.currency, totalPriceWithServiceFee);
-  }
 
   const totalServiceFee = data.salesAgreementItems.reduce((acc, item) => (acc + (item.serviceFee || 0)), 0);
   // const vat = totalServiceFee * 0.12 // (12% of Service Fee);
@@ -171,6 +157,11 @@ export default function PrintPreview({ data }: Props) {
                 <th className="px-4 py-2 border-r border-gray-300 border-b">PARTICULARS</th>
                 <th className="px-4 py-2 border-r border-gray-300 border-b">QTY.</th>
                 <th className="px-4 py-2 border-r border-gray-300 border-b">UNIT PRICE</th>
+                {selectedTemplate !== 'template1' && (
+                  <th className="px-4 py-2 border-r border-gray-300 border-b">
+                    UNIT PRICE + SERVICE FEE
+                  </th>
+                )}
                 <th className="px-4 py-2 border-b border-gray-300">TOTAL</th>
               </tr>
             </thead>
@@ -182,10 +173,15 @@ export default function PrintPreview({ data }: Props) {
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString() }</td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">
-                        {renderUnitPrice(item)}
+                        {formatCurrency(data.currency, item.unitPrice)}
                       </td>
+                      {selectedTemplate !== 'template1' && (
+                        <td className="px-4 py-2 border-r border-gray-300 text-center">
+                          {formatCurrency(data.currency, item.unitPrice + (item.serviceFee || 0))}
+                        </td>
+                      )}
                       <td className="px-4 py-2 text-center">
-                        {renderTotalPrice(item)}
+                        {formatCurrency(data.currency, (item.unitPrice * item.quantity) + (item.serviceFee || 0))}
                       </td>
                     </tr>
                   ))}
@@ -224,12 +220,12 @@ export default function PrintPreview({ data }: Props) {
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Net of VAT: </h1>
-                  <span>{`(${formatCurrency(data.currency, totalServiceFee)} / ${formatCurrency(data.currency, 1.12)}) - ${formatCurrency(data.currency, netOfVat)}`}</span>
+                  <span>{`${formatCurrency(data.currency, netOfVat)}`}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
-                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotalWithServiceFees)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
+                  <span>{`${formatCurrency(data.currency, totalDue)}`}</span>
                 </div>
               </>
             )}
@@ -243,17 +239,17 @@ export default function PrintPreview({ data }: Props) {
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Net of VAT: </h1>
-                  <span>{`(${formatCurrency(data.currency, totalServiceFee)} / ${formatCurrency(data.currency, 1.12)}) - ${formatCurrency(data.currency, netOfVat)}`}</span>
+                  <span>{`${formatCurrency(data.currency, netOfVat)}`}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Total Due: </h1>
-                  <span>{`(${formatCurrency(data.currency, netOfVat)} + ${formatCurrency(data.currency, grandTotalWithServiceFees)}) - ${formatCurrency(data.currency, totalDue)}`}</span>
+                  <span>{`${formatCurrency(data.currency, totalDue)}`}</span>
                 </div>
                 <Separator className='bg-gray-100'/>
                 <div className='flex items-center justify-between'>
                   <h1>Net Due: </h1>
-                  <span>{`(${formatCurrency(data.currency, totalDue)} * ${formatCurrency(data.currency, 0.12)}) - ${formatCurrency(data.currency, netDue)}`}</span>
+                  <span>{`${formatCurrency(data.currency, netDue)}`}</span>
                 </div>
               </>
             )}
@@ -337,47 +333,93 @@ export default function PrintPreview({ data }: Props) {
               </p>
             </div>
 
-            <div className='w-full flex justify-center text-[8px]'>
+            <div className='w-full text-[8px] space-y-2'>
               {data.client.officeBranch === OfficeBranch.CEBU && (
-                <div className='md:w-1/2 items-center text-center'>
-                  <p className='font-semibold'>For Cebu Branch:</p>
-                  <p className='mb-1'>
-                    <strong>Peso Account:</strong>
-                    <br />
-                    <strong>BDO</strong><br />
-                    <span>Account #: 00076821747</span><br />
-                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                    <br />
-                    <strong>PNB</strong><br />
-                    <span>Account #: 636110036035</span><br />
-                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                  </p>
-                  <p className='mb-1'>
-                    <strong>Dollar Account:</strong>
-                    <br />
-                    <span>Account #: 100760264937</span><br />
-                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                  </p>
-                </div>
+                <>
+                  <h1 className='font-semibold'>
+                    Cebu Branch Bank Information:
+                  </h1>
+
+                  <div className='flex border'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                      <div className='flex gap-2 items-center'>
+                        <span>Bank name: </span>
+                        <p className='font-semibold text-[10px]'>BDO - Banco De Oro</p>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <span>Account name: </span>
+                        <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div className='p-2'>
+                        <h3 className='font-bold'>PHP Account No:</h3>
+                        <span>00076821747</span>
+                      </div>
+                      <Separator orientation='horizontal'/>
+                      <div className='p-2'>
+                        <h3 className='font-bold'>USD Account No:</h3>
+                        <span>_</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='flex border'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                      <div className='flex gap-2 items-center'>
+                        <span>Bank name: </span>
+                        <p className='font-semibold text-[10px]'>PNB - Philippine National Bank</p>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <span>Account name: </span>
+                        <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div className='p-2'>
+                        <h3 className='font-bold'>PHP Account No:</h3>
+                        <span>636110036035</span>
+                      </div>
+                      <Separator orientation='horizontal'/>
+                      <div className='p-2'>
+                        <h3 className='font-bold'>USD Account No:</h3>
+                        <span>_</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
 
               {data.client.officeBranch === OfficeBranch.CALBAYOG && (
-                <div className='md:w-1/2 items-center text-center'>
-                  <p className='font-semibold'>For Calbayog Branch:</p>
-                  <p className='mb-1'>
-                    <strong>Peso Account:</strong>
-                    <br />
-                    <strong>PNB</strong><br />
-                    <span>Account #: 312970004640</span><br />
-                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                  </p>
-                  <p className='mb-1'>
-                    <strong>Dollar Account:</strong>
-                    <br />
-                    <span>Account #: 312960077243</span><br />
-                    <span>Account Name: HORIZON EXPRESS TRAVEL AND TOURS INC.</span>
-                  </p>
-                </div>
+                <>
+                  <h1 className='font-semibold'>
+                    Calbayog Branch Bank Information:
+                  </h1>
+
+                  <div className='flex border'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                      <div className='flex gap-2 items-center'>
+                        <span>Bank name: </span>
+                        <p className='font-semibold text-[10px]'>PNB - Philippine National Bank</p>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <span>Account name: </span>
+                        <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div className='p-2'>
+                        <h3 className='font-bold'>PHP Account No:</h3>
+                        <span>312970004640</span>
+                      </div>
+                      <Separator orientation='horizontal'/>
+                      <div className='p-2'>
+                        <h3 className='font-bold'>USD Account No:</h3>
+                        <span>_</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
