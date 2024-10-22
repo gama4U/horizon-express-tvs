@@ -60,7 +60,7 @@ export default function Transactions() {
         <div className="flex items-center justify-between py-1 gap-x-2">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              placeholder="Search by transaction id or client name"
+              placeholder="Search by transaction number or client name"
               containerProps={{
                 className: "w-full"
               }}
