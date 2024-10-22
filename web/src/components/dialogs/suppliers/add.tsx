@@ -1,4 +1,4 @@
-import { ContactRound, Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown, ContactRound, Loader2 } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
@@ -11,21 +11,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { OfficeBranch } from "@/interfaces/user.interface";
 import { createSupplier, ICreateSupplier } from "@/api/mutations/supplier.mutation";
 import { Textarea } from "@/components/ui/textarea";
 import Constants from "@/constants";
 import { useAuth } from "@/providers/auth-provider";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 interface ICreateSupplierProps {
 	openDialog: boolean;
 	setOpenDialog: (open: boolean) => void;
-}
-
-const userOfficeBranch: Record<OfficeBranch, string> = {
-	CEBU: 'Cebu',
-	CALBAYOG: 'Calbayog'
 }
 
 const formSchema = z.object({
@@ -101,24 +98,61 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 									control={form.control}
 									name="category"
 									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Category</FormLabel>
-											<Select onValueChange={field.onChange} defaultValue={field.value}>
-												<FormControl>
-													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-														<SelectValue placeholder="Select category" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{SupplierCategories.map((item, index) => {
-														return (
-															<SelectItem key={index} value={item} className="text-[12px] text-muted-foreground">
-																{item}
-															</SelectItem>
-														);
-													})}
-												</SelectContent>
-											</Select>
+										<FormItem className="flex flex-col">
+											<FormLabel className="text-[12px]">Select category</FormLabel>
+											<Popover>
+												<PopoverTrigger asChild>
+													<FormControl>
+														<Button
+															variant="outline"
+															role="combobox"
+															className={cn(
+																"w-full justify-between text-[12px]",
+																!field.value && "text-muted-foreground"
+															)}
+														>
+															{field.value
+																? SupplierCategories.find((item) => item === field.value)
+																: "Select category"
+															}
+															<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+														</Button>
+													</FormControl>
+												</PopoverTrigger>
+												<PopoverContent className="w-[550px] p-0">
+													<Command>
+														<CommandInput
+															className="text-[12px]"
+															placeholder="Search supplier..."
+														/>
+														<CommandList className="w-full">
+															<CommandEmpty>No category found.</CommandEmpty>
+															<CommandGroup>
+																{SupplierCategories.map((item, index) => (
+																	<CommandItem
+																		value={item}
+																		key={index}
+																		onSelect={() => {
+																			form.setValue("category", item)
+																		}}
+																		className="text-[12px]"
+																	>
+																		<Check
+																			className={cn(
+																				"mr-2 h-4 w-4",
+																				item === field.value
+																					? "opacity-100"
+																					: "opacity-0"
+																			)}
+																		/>
+																		<span>{item}</span>
+																	</CommandItem>
+																))}
+															</CommandGroup>
+														</CommandList>
+													</Command>
+												</PopoverContent>
+											</Popover>
 											<FormMessage />
 										</FormItem>
 									)}

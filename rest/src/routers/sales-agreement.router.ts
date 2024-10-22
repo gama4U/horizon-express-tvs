@@ -5,6 +5,7 @@ import { createSalesAgreement, deleteSalesAgreementById, fetchSalesAgreementSumm
 import { ClientType, UserType } from '@prisma/client';
 import { deleteSalesAgreementItems } from '../services/sales-agreement-item.service';
 import { authorize } from '../middlewares/authorize.middleware';
+import { findClientById } from '../services/client.service';
 
 const salesAgreementRouter = express.Router();
 
@@ -12,7 +13,16 @@ salesAgreementRouter.post('/', validate(createSalesAgreementSchema), async (req:
   try {
     const userId = req.user?.id;
 
-    const created = await createSalesAgreement({ creatorId: userId, ...req.body });
+    const foundClient = await findClientById(req.body.clientId);
+    if (!foundClient) {
+      throw new Error('Failed to find client');
+    }
+
+    const created = await createSalesAgreement({
+      creatorId: userId, 
+      ...req.body, 
+      officeBranch: foundClient.officeBranch 
+    });
     if (!created) {
       throw new Error('Failed to create sales agreement')
     }

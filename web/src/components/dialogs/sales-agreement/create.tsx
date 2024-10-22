@@ -70,7 +70,7 @@ export default function CreateSalesAgreementDialog() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     createMutate({
-      ...values
+      ...values,
     })
   }
 

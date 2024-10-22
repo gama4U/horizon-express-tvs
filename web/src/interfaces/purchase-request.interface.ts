@@ -9,7 +9,7 @@ export interface IPurchaseRequestOrder {
   approverId: string;
   salesAgreementId: string;
   supplierId: string;
-  serialNumber: number;
+  serialNumber: string;
   disbursementType: string;
   classification: string;
   classificationType: string;

@@ -1,4 +1,4 @@
-import { ContactRound, Loader2, Pencil } from "lucide-react";
+import { Check, ChevronsUpDown, ContactRound, Loader2, Pencil } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
@@ -17,6 +17,9 @@ import { ISupplier, IUpdateSupplier, updateSupplier } from "@/api/mutations/supp
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import Constants from "@/constants";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 interface IUpdateSupplierProps {
 	supplierData: ISupplier
@@ -144,24 +147,61 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 									control={form.control}
 									name="category"
 									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Category</FormLabel>
-											<Select onValueChange={field.onChange} defaultValue={field.value}>
-												<FormControl>
-													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-														<SelectValue placeholder="Select category" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{SupplierCategories.map((item, index) => {
-														return (
-															<SelectItem key={index} value={item} className="text-[12px] text-muted-foreground">
-																{item}
-															</SelectItem>
-														);
-													})}
-												</SelectContent>
-											</Select>
+										<FormItem className="flex flex-col">
+											<FormLabel className="text-[12px]">Select category</FormLabel>
+											<Popover>
+												<PopoverTrigger asChild>
+													<FormControl>
+														<Button
+															variant="outline"
+															role="combobox"
+															className={cn(
+																"w-full justify-between text-[12px]",
+																!field.value && "text-muted-foreground"
+															)}
+														>
+															{field.value
+																? SupplierCategories.find((item) => item === field.value)
+																: "Select category"
+															}
+															<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+														</Button>
+													</FormControl>
+												</PopoverTrigger>
+												<PopoverContent className="w-[550px] p-0">
+													<Command>
+														<CommandInput
+															className="text-[12px]"
+															placeholder="Search supplier..."
+														/>
+														<CommandList	 className="w-full">
+															<CommandEmpty>No category found.</CommandEmpty>
+															<CommandGroup>
+																{SupplierCategories.map((item, index) => (
+																	<CommandItem
+																		value={item}
+																		key={index}
+																		onSelect={() => {
+																			form.setValue("category", item)
+																		}}
+																		className="text-[12px]"
+																	>
+																		<Check
+																			className={cn(
+																				"mr-2 h-4 w-4",
+																				item === field.value
+																					? "opacity-100"
+																					: "opacity-0"
+																			)}
+																		/>
+																		<span>{item}</span>
+																	</CommandItem>
+																))}
+															</CommandGroup>
+														</CommandList>
+													</Command>
+												</PopoverContent>
+											</Popover>
 											<FormMessage />
 										</FormItem>
 									)}

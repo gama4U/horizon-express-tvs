@@ -134,7 +134,7 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
     const salesAgreement = salesAgreementsData?.salesAgreements.find((salesAgreement) => salesAgreement.id === salesAgreementId);
     if (!salesAgreement) return "Select sales agreement";
 
-    return `${String(salesAgreement.serialNumber).padStart(6, '0')} - ${salesAgreement?.client.name} (${clientTypesMap[salesAgreement.client.clientType]})`;
+    return `${salesAgreement.serialNumber} - ${salesAgreement?.client.name} (${clientTypesMap[salesAgreement.client.clientType]})`;
   }
 
   const classifications = Constants.Disbursements.find(item => item.type === selectedDisbursementType)?.classifications || [];
@@ -266,7 +266,7 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
                                     )}
                                   />
                                   <div className="flex items-center gap-2">
-                                    <span className="font-semibold">{String(salesAgreement.serialNumber).padStart(6, '0')}</span>
+                                    <span className="font-semibold">{salesAgreement.serialNumber}</span>
                                     <span> - </span>
                                     <span>{salesAgreement.client.name}</span>
                                     <span>{`(${clientTypesMap[salesAgreement.client.clientType]})`}</span>

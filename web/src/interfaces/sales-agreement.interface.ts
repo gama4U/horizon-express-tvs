@@ -7,7 +7,7 @@ export interface ISalesAgreement {
   creatorId: string;
   approverId: string;
   clientId: string;
-  serialNumber: number;
+  serialNumber: string;
   currency: Currency;
   salesAgreementItems: ISalesAgreementItem[];
   purchaseOrder: any;

@@ -80,3 +80,9 @@ export async function fetchClients({ skip, take, search, branch }: IFindClient) 
 
   return { clientsData, total };
 }
+
+export const findClientById = async(id: string) => {
+  return await prisma.client.findUnique({
+    where: {id}
+  })
+}

@@ -1,3 +1,4 @@
+import { OfficeBranch } from "@prisma/client";
 
 export interface ICreatePurchaseRequest {
   creatorId: string;
@@ -8,6 +9,7 @@ export interface ICreatePurchaseRequest {
   classificationType: string;
   nos: string;
   other?: string;
+  officeBranch: OfficeBranch;
 }
 
 export interface IUpdatePurchaseRequest {

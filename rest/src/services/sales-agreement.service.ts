@@ -2,9 +2,27 @@ import { OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { ICreateSalesAgreement, IFindSalesAgreements, IUpdateSalesAgreement, IUpdateSalesAgreementApprover } from "../interfaces/sales-agreement.interface";
 import moment from "moment";
+import { generateSerialNumber } from "../utils/generate-number";
 
-export async function createSalesAgreement(data: ICreateSalesAgreement) {
-  return prisma.salesAgreement.create({ data });
+export async function createSalesAgreement({officeBranch, ...data}: ICreateSalesAgreement) {
+  const latestSalesAgreement = await prisma.salesAgreement.findFirst({
+    where: {
+      client: {
+        officeBranch
+      },
+    },
+    orderBy: {
+      sequenceNumber: 'desc'
+    }
+  });
+
+  const serialNumber = generateSerialNumber({
+    prefix: 'SA',
+    uniqueNumber: latestSalesAgreement ? latestSalesAgreement.sequenceNumber + 1 : 1,
+    postfix: officeBranch.slice(0, 3)
+  });
+
+  return prisma.salesAgreement.create({ data: {...data, serialNumber} });
 }
 
 export async function updateSalesAgreement({ id, ...data }: IUpdateSalesAgreement) {

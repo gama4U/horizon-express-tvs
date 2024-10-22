@@ -31,3 +31,15 @@ export function getNextTransactionNumber(lastTransactionNumber: string | null, b
   const branchCode = branch === OfficeBranch.CALBAYOG ? 'CLB' : 'CEB';
   return `T${newTransactionNumber}-${today}-${branchCode}`;
 }
+
+interface GenerateSerialNumberParams {
+  uniqueNumber: number;
+  prefix: string;
+  postfix: string;
+}
+export function generateSerialNumber({uniqueNumber, prefix, postfix}: GenerateSerialNumberParams) {
+  console.log({uniqueNumber, prefix, postfix})
+  const today = dayjs().format('MMDDYYYY');
+  const paddedNumber = String(uniqueNumber).toString().padStart(3, '0');
+  return `${prefix}${paddedNumber}-${today}-${postfix}`
+}
