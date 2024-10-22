@@ -16,6 +16,7 @@ export interface IFindSalesAgreements {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
   typeOfClient?: ClientType;
 }
 

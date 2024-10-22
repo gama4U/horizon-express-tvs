@@ -1,13 +1,12 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
 import { ISupplier } from "../mutations/supplier.mutation";
-import { OfficeBranch } from "@/interfaces/user.interface";
 
 interface IFetchSuppliers {
   skip?: number;
   take?: number;
   search?: string;
-  branch: OfficeBranch
+  branch?: string;
   category?: string;
 }
 

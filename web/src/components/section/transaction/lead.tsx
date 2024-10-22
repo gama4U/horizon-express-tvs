@@ -1,5 +1,4 @@
 import { Separator } from "../../ui/separator";
-import { Button } from "../../ui/button";
 import { IClient } from "@/api/mutations/client.mutation";
 import ClientTypeBadge from "@/components/badges/client-type";
 import EditClientDialog from "@/components/dialogs/clients/edit";
@@ -53,29 +52,6 @@ export default function ClientDetails({ clientData, forSelection }: ClientDetail
             <p className="text-xs text-gray-700">{clientData.email}</p>
           </div>
         </div>
-
-        {!forSelection &&
-          <>
-            <Separator className="my-6" />
-
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-sm font-semibold">Documents</h2>
-                <Button variant="outline" className="text-xs" onClick={() => { }}>
-                  Add Documents
-                </Button>
-              </div>
-
-              <div className="space-y-4 border-2 rounded-xl p-4">
-                <div className="flex flex-row justify-between items-center">
-                  <p className="text-xs text-primary font-semibold">Document # 1</p>
-                </div>
-                <div>
-                </div>
-              </div>
-            </div>
-          </>
-        }
       </div>
     </div>
   );

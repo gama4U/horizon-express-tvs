@@ -52,12 +52,14 @@ purchaseRequestRouter.put('/:id', validate(updatePurchaseRequestSchema), async (
 
 purchaseRequestRouter.get('/', validate(findPurchaseRequestsSchema), async (req: Request, res: Response) => {
   try {
-    const { skip, take, search, category } = req.query;
+    const { skip, take, search, category, branch } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      category: category ? String(category) : undefined,
+      branch: branch ? String(branch) : undefined
     };
 
     const purchaseRequests = await findPurchaseRequests(filters);
@@ -131,12 +133,12 @@ purchaseRequestRouter.post('/summary', async (req: Request, res: Response) => {
   }
 });
 
-purchaseRequestRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(req: Request, res: Response) => {
+purchaseRequestRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: Request, res: Response) => {
   try {
     const approverId = String(req.user?.id);
-    const {id} = req.params;
+    const { id } = req.params;
 
-    const updated = await updatePurchaseRequestOrderApprover({id, approverId});
+    const updated = await updatePurchaseRequestOrderApprover({ id, approverId });
     if (!updated) {
       throw new Error('Failed to update purchase request approver');
     }

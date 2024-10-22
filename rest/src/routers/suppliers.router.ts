@@ -20,12 +20,13 @@ supplierRouter.post('/', async (req: Request, res: Response) => {
 
 supplierRouter.get('/', validate(getSuppliersSchema), async (req: Request, res: Response) => {
   try {
-    const { skip, take, search, category } = req.query;
+    const { skip, take, search, category, branch } = req.query;
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
       category: category ? String(category) : undefined,
+      branch: branch ? String(branch) : undefined,
     };
 
     const clients = await fetchSuppliers(filters);

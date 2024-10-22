@@ -55,12 +55,12 @@ export default function Transactions() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex items-center justify-between py-1">
+        <div className="flex items-center justify-between py-1 gap-x-2">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
               placeholder="Search by transaction id or client name"
               containerProps={{
-                className: "max-w-[500px]"
+                className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}

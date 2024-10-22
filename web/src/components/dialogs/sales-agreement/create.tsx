@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/providers/auth-provider";
-import { UserType } from "@/interfaces/user.interface";
+import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 import { Currency } from "@/interfaces/sales-agreement-item.interface";
 import { fetchClients } from "@/api/queries/clients.query";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -36,7 +36,7 @@ const currencyMap: Record<Currency, string> = {
 export default function CreateSalesAgreementDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const {session: {user}} = useAuth();
+  const { session: { user }, branch } = useAuth();
   const [clientSearch, setClientSearch] = useState('');
   const debouncedSearch = useDebounce(clientSearch, 200);
 
@@ -44,25 +44,25 @@ export default function CreateSalesAgreementDialog() {
     resolver: zodResolver(formSchema),
   });
 
-  const {data: clients} = useQuery({
-    queryKey: ['clients', debouncedSearch],
-    queryFn: async() => await fetchClients({search: debouncedSearch}),
+  const { data: clients } = useQuery({
+    queryKey: ['clients', debouncedSearch, branch],
+    queryFn: async () => await fetchClients({ search: debouncedSearch, branch: branch as OfficeBranch }),
   })
 
-  const {mutate: createMutate, isPending} = useMutation({
+  const { mutate: createMutate, isPending } = useMutation({
     mutationFn: async (data: ICreateSalesAgreement) => await createSalesAgreement(data),
     onSuccess: (data) => {
       form.reset();
       setOpen(false);
-      toast.success(data.message, { 
-        position: 'top-center', 
+      toast.success(data.message, {
+        position: 'top-center',
         className: 'text-primary'
       });
       navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/sales-agreements/${data.id}`)
     },
     onError: (error) => {
       console.log(error)
-      toast.error(error.message, { 
+      toast.error(error.message, {
         position: 'top-center',
         className: 'text-destructive'
       })
@@ -76,10 +76,10 @@ export default function CreateSalesAgreementDialog() {
   }
 
   function renderSelectedCompany(clientId?: string) {
-    if (!clientId) return "Select language";
+    if (!clientId) return "Select client";
 
     const client = clients?.clientsData.find((client) => client.id === clientId);
-    if (!client) return "Select language";
+    if (!client) return "Select client";
 
     const department = client?.department ? ` - ${client.department}` : '';
     return `${client?.name} ${department}`;
@@ -89,14 +89,14 @@ export default function CreateSalesAgreementDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button size={'sm'} className="gap-1">
-          <Plus size={16}/>
+          <Plus size={16} />
           <span>Create</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FilePlus size={24} className="text-secondary"/>
+            <FilePlus size={24} className="text-secondary" />
             Create sales agreement
           </DialogTitle>
           <Form {...form}>
@@ -106,7 +106,7 @@ export default function CreateSalesAgreementDialog() {
                 name="clientId"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Client</FormLabel>
+                    <FormLabel>Select Client from {branch}</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -128,7 +128,7 @@ export default function CreateSalesAgreementDialog() {
                           <CommandInput
                             className="text-[12px]"
                             onValueChange={(value) => setClientSearch(value)}
-                            placeholder="Search client..." 
+                            placeholder="Search client..."
                           />
                           <CommandList className="w-full">
                             <CommandEmpty>No client found.</CommandEmpty>
@@ -151,8 +151,8 @@ export default function CreateSalesAgreementDialog() {
                                     )}
                                   />
                                   <span>{client.name}</span>
-                                  {client.department && 
-                                    <span className="ml-1 text-muted-foreground"> - {client.department}</span> 
+                                  {client.department &&
+                                    <span className="ml-1 text-muted-foreground"> - {client.department}</span>
                                   }
                                 </CommandItem>
                               ))}
@@ -189,14 +189,14 @@ export default function CreateSalesAgreementDialog() {
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage className="text-[10px]"/>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />
               <div className="flex gap-2 justify-end">
                 <DialogClose>
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     variant={'outline'}
                     className="flex gap-2 mt-4"
                     disabled={isPending}
@@ -204,13 +204,13 @@ export default function CreateSalesAgreementDialog() {
                     <span>Cancel</span>
                   </Button>
                 </DialogClose>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="flex gap-2 mt-4"
                   disabled={isPending}
                 >
-                  {isPending && 
-                    <Loader2 size={20} className="animate-spin"/>
+                  {isPending &&
+                    <Loader2 size={20} className="animate-spin" />
                   }
                   <span>Create</span>
                 </Button>

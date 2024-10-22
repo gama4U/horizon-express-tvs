@@ -27,7 +27,7 @@ export default function Suppliers() {
   const { SupplierCategories } = Constants;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['suppliers', pagination, debouncedSearch, categoryFilter],
+    queryKey: ['suppliers', pagination, debouncedSearch, categoryFilter, branch],
     queryFn: async () => await fetchSuppliers({
       skip,
       take,
@@ -50,18 +50,18 @@ export default function Suppliers() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex items-center justify-between py-1">
+        <div className="flex items-center justify-between py-1 gap-x-2">
           <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
               placeholder="Search by name or address or category"
               containerProps={{
-                className: "max-w-[500px]"
+                className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
             <Select value={categoryFilter} onValueChange={(value) => setCategoryFilter(value)}>
-              <SelectTrigger className="max-w-[250px] bg-slate-100 border-none text-[12px]">
+              <SelectTrigger className="max-w-[250px] h-[40px] bg-slate-100 border-none text-[12px]">
                 <SelectValue placeholder="Filter by category" />
               </SelectTrigger>
               <SelectContent>

@@ -72,21 +72,21 @@ const SideBar = React.memo(() => {
 			variants={Constants.ContainerVariants}
 			animate={containerControls}
 			initial="open"
-			className={`bg-white overflow-y-auto z-50  p-3 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col shadow-lg`}
+			className={`bg-white overflow-y-auto z-50  p-2 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col shadow-lg`}
 			style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
 		>
 			<div>
 				<div className={`flex flex-row items-center justify-between ${isOpen ? "items-end" : "items-center"} mb-2`}>
 					{isOpen &&
-						<div className="flex flex-row items-center gap-x-2 w-[40%]">
-							<img src={logo} className="object-contain w-[40px] h-[40px]" />
+						<div className="flex flex-row items-center gap-x-2 w-full justify-between">
+							<img src={logo} className="object-contain w-[36px] h-[36px]" />
 							{profile?.userType === UserType.EMPLOYEE &&
 								<Badge variant="outline" className="w-full text-center border-primary flex justify-center bg-primary-foreground text-primary">{profile?.officeBranch}</Badge>
 							}
 							{profile?.userType === UserType.ADMIN && (
 								<div className="flex flex-row justify-between  items-center">
 									<Button
-										className="text-[8px] py-0 h-[18px] w-[34px] rounded-r-[0px]"
+										className="text-[8px] py-0 h-[18px]  rounded-r-[0px]"
 										variant={branch === "CEBU" ? "default" : "outline"}
 										onClick={() => handleToggleBranch("CEBU")}
 									>
@@ -101,6 +101,7 @@ const SideBar = React.memo(() => {
 									</Button>
 								</div>
 							)}
+
 						</div>
 					}
 					<Button variant="ghost" size="icon" onClick={handleOpenClose}>
@@ -110,7 +111,12 @@ const SideBar = React.memo(() => {
 							<PanelRightClose size={20} />
 						)}
 					</Button>
+
 				</div>
+				{!isOpen &&
+					<div>
+						<img src={logo} className="object-contain w-[40px] h-[40px]" />
+					</div>}
 				<div className="justify-start flex flex-row items-center gap-x-2">
 					{isLoading ? (
 						<div className="flex flex-col items-center">

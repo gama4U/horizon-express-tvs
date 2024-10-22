@@ -35,6 +35,16 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     enableHiding: false,
   },
   {
+    id: "supplier",
+    header: "Supplier",
+    cell: ({ row }) => (
+      <span className="capitalize">
+        {row.original.supplier?.name}
+      </span>
+    ),
+  },
+
+  {
     id: "creator",
     header: "Creator",
     cell: ({ row }) => {
@@ -54,20 +64,11 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     }
   },
   {
-    id: "supplier",
-    header: "Supplier",
-    cell: ({ row }) => (
-      <span className="capitalize">
-        {row.original.supplier?.name}
-      </span>
-    ),
-  },
-  {
     id: "serialNumber ",
     header: "Ser. No.",
     cell: ({ row }) => (
       <span className="capitalize">
-        {String(row.original.serialNumber).padStart(6 , '0')}
+        {String(row.original.serialNumber).padStart(6, '0')}
       </span>
     )
   },

@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../providers/auth-provider";
 import SideBar from "./section/sidebar";
 import logo from "../assets/logo.png"
 import Constants from "@/constants";
-import { UserType } from "@/interfaces/user.interface";
+import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 
 const Layout: React.FC = () => {
-	const { session, loading } = useAuth();
+	const { session, loading, branch, setBranch } = useAuth();
 	const currentPath = location.pathname;
 	const isAdmin = session.user?.userType === UserType.ADMIN
 
 	if (loading) return null;
+
+	useEffect(() => {
+		if (session.user?.userType === UserType.EMPLOYEE) {
+			setBranch(session.user.officeBranch as OfficeBranch)
+		}
+	}, [])
 
 	if (!session || !session.user) {
 		return <Navigate to="/auth/sign-in" />;

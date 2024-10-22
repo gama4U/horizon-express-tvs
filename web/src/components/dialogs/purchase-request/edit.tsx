@@ -20,6 +20,8 @@ import { fetchSuppliers } from "@/api/queries/suppliers.query";
 import useDebounce from "@/hooks/useDebounce";
 import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
+import { useAuth } from "@/providers/auth-provider";
+import { OfficeBranch } from "@/interfaces/user.interface";
 
 const formSchema = z.object({
   supplierId: z.string().min(1, {
@@ -59,6 +61,7 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
   const debouncedSearch = useDebounce(supplierSearch, 200);
   const [salesAgreementSearch, setSalesAgreementSearch] = useState('');
   const debouncedSalesAgreementSearch = useDebounce(salesAgreementSearch, 200);
+  const { branch } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,13 +71,13 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
   const selectedClassification = form.watch('classification');
 
   const { data: suppliers } = useQuery({
-    queryKey: ['suppliers', debouncedSearch],
-    queryFn: async () => await fetchSuppliers({ search: debouncedSearch }),
+    queryKey: ['suppliers', debouncedSearch, branch],
+    queryFn: async () => await fetchSuppliers({ search: debouncedSearch, branch: branch as OfficeBranch }),
   })
 
   const { data: salesAgreementsData } = useQuery({
-    queryKey: ['sales-agreements', debouncedSalesAgreementSearch],
-    queryFn: async () => await fetchSalesAgreements({ search: debouncedSalesAgreementSearch }),
+    queryKey: ['sales-agreements', debouncedSalesAgreementSearch, branch],
+    queryFn: async () => await fetchSalesAgreements({ search: debouncedSalesAgreementSearch, branch: branch as OfficeBranch }),
   })
 
   const { mutate: updateMutate, isPending } = useMutation({

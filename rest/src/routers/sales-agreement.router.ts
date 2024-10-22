@@ -52,19 +52,20 @@ salesAgreementRouter.put('/:id', validate(updateSalesAgreementSchema), async (re
 
 salesAgreementRouter.get('/', validate(getSalesAgreementsSchema), async (req: Request, res: Response) => {
   try {
-    const { skip, take, search, typeOfClient } = req.query;
+    const { skip, take, search, typeOfClient, branch } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      branch: branch ? String(branch) : undefined,
       typeOfClient: typeOfClient ? typeOfClient as ClientType : undefined,
     };
 
     const salesAgreements = await findSalesAgreements(filters);
 
     if (!salesAgreements) {
-      throw new Error('Failed to create sales agreements')
+      throw new Error('Failed to get sales agreements')
     }
 
     return res.status(200).json(salesAgreements);
@@ -132,12 +133,12 @@ salesAgreementRouter.post('/summary', async (req: Request, res: Response) => {
   }
 });
 
-salesAgreementRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(req:Request, res: Response) => {
+salesAgreementRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: Request, res: Response) => {
   try {
     const approverId = String(req.user?.id);
     const id = req.params.id;
 
-    const update = await updateSalesAgreementApprover({id, approverId});
+    const update = await updateSalesAgreementApprover({ id, approverId });
     if (!update) {
       throw new Error('Failed to approve sales agreement');
     }
@@ -146,7 +147,7 @@ salesAgreementRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async(r
       message: 'Sales agreement approved successfully'
     });
 
-  } catch(error) {
+  } catch (error) {
     return res.status(500).json({
       message: 'Internal server error'
     });

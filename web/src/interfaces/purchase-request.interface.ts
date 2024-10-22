@@ -42,6 +42,7 @@ export interface IFetchPurchaseRequestOrders {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
 }
 
 export interface IFetchPurchaseRequestData {

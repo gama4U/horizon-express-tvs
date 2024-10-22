@@ -11,6 +11,8 @@ import PurchaseRequestTypeFilter from "@/components/select/purchase-request/type
 import CreatePurchaseRequestDialog from "@/components/dialogs/purchase-request/create";
 import { DataTable } from "@/components/tables/purchase-request/data-table";
 import { Columns } from "@/components/tables/purchase-request/columns";
+import { useAuth } from "@/providers/auth-provider";
+import { OfficeBranch } from "@/interfaces/user.interface";
 
 export default function PurchaseRequests() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
@@ -18,19 +20,15 @@ export default function PurchaseRequests() {
   const [typeFilter, setTypeFilter] = useState<PurchaseRequestOrderType | 'ALL'>('ALL');
   const [paymentTypeFilter, setPaymentTypeFilter] = useState<PaymentType | 'ALL'>('ALL');
   const debouncedSearch = useDebounce(search, 500);
+  const { branch } = useAuth()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['purchase-requests', pagination, debouncedSearch, typeFilter, paymentTypeFilter],
+    queryKey: ['purchase-requests', pagination, debouncedSearch, branch],
     queryFn: async () => await fetchPurchaseRequestOrders({
       skip,
       take,
       search,
-      ...(paymentTypeFilter !== 'ALL' && {
-        paymentType: paymentTypeFilter
-      }),
-      ...(typeFilter !== 'ALL' && {
-        type: typeFilter
-      })
+      branch: branch as OfficeBranch,
     })
   });
 
@@ -48,11 +46,11 @@ export default function PurchaseRequests() {
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
         <div className="flex gap-2 justify-between">
-          <div className="flex flex-1 gap-2 items-center p-[1px]">
+          <div className="flex flex-1 gap-2 items-center p-[1px] gap-x-2">
             <CommonInput
               placeholder="Search by client name or serial no."
               containerProps={{
-                className: "max-w-[500px]"
+                className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}

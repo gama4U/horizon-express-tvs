@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react"
 import { useAuth } from "@/providers/auth-provider";
 import { useNavigate } from "react-router-dom";
-import { OfficeBranch, UserType } from "@/interfaces/user.interface";
+import { UserType } from "@/interfaces/user.interface";
 import { fetchDocumentTransactions } from "@/api/queries/document-transaction.query";
 import { DataTable } from "@/components/tables/document-transactions/data-table";
 import { Columns } from "@/components/tables/document-transactions/columns";
@@ -64,11 +64,11 @@ export default function DocumentTransactions() {
       <div className="space-y-4 bg-white p-4 rounded-lg">
         <div className="flex gap-2 justify-between">
           <div className="flex flex-1 gap-2 items-center p-[1px] justify-between">
-            <div className="flex flex-row gap-x-2 items-center w-[60%]">
+            <div className="flex flex-row gap-x-2 items-center w-full">
               <CommonInput
                 placeholder="Search by dts no. or client name"
                 containerProps={{
-                  className: "max-w-[500px]"
+                  className: "w-full"
                 }}
                 defaultValue={search}
                 onChange={(event) => setSearch(event.target.value)}

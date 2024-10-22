@@ -82,10 +82,6 @@ const formSchema = z.object({
 		TypeOfClient.GROUP,
 		TypeOfClient.INDIVIDUAL,
 	]),
-	officeBranch: z.enum([
-		OfficeBranch.CEBU,
-		OfficeBranch.CALBAYOG
-	]),
 	department: z.string().optional(),
 });
 
@@ -118,7 +114,6 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	};
 
 	const queryClient = useQueryClient()
-
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -173,7 +168,10 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		if (selection.type === 'add') {
-			createClientMutate(values)
+			createClientMutate({
+				...values,
+				officeBranch: branch as OfficeBranch
+			})
 		}
 	}
 
@@ -226,14 +224,13 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 					{(selection.step === 1 && selection.type === 'add') &&
 						<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
 							<Form {...form}>
-								<p className="text-sm font-medium my-2">Create new client for transaction</p>
 								<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+									<p className="text-xs">Create new client</p>
 									<FormField
 										control={form.control}
 										name="clientType"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>Type:</FormLabel>
 												<Select onValueChange={field.onChange} value={field.value}>
 													<FormControl>
 														<SelectTrigger className="bg-slate-100 border-none text-[12px]">
@@ -295,33 +292,6 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 											)}
 										/>
 									)}
-									<FormField
-										control={form.control}
-										name="officeBranch"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Office branch</FormLabel>
-												<Select onValueChange={field.onChange} defaultValue={field.value}>
-													<FormControl>
-														<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-															<SelectValue placeholder="Select branch" />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														{Object.entries(userOfficeBranch)?.map(([value, label]) => {
-															return (
-																<SelectItem value={value} className="text-[12px] text-muted-foreground">
-																	{label}
-																</SelectItem>
-															);
-														})}
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-
 									<FormField
 										control={form.control}
 										name="name"

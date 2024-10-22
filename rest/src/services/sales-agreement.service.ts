@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { ICreateSalesAgreement, IFindSalesAgreements, IUpdateSalesAgreement, IUpdateSalesAgreementApprover } from "../interfaces/sales-agreement.interface";
 import moment from "moment";
@@ -16,7 +16,7 @@ export async function updateSalesAgreement({ id, ...data }: IUpdateSalesAgreemen
   })
 }
 
-export async function findSalesAgreements({ skip, take, search }: IFindSalesAgreements) {
+export async function findSalesAgreements({ skip, take, search, branch }: IFindSalesAgreements) {
   let whereInput: Prisma.SalesAgreementWhereInput = {};
   let searchFilter = {}
 
@@ -41,6 +41,9 @@ export async function findSalesAgreements({ skip, take, search }: IFindSalesAgre
   const findSalesAgreements = prisma.salesAgreement.findMany({
     where: {
       ...where,
+      client: {
+        officeBranch: branch as OfficeBranch
+      }
     },
     include: {
       creator: {
@@ -81,7 +84,10 @@ export async function findSalesAgreements({ skip, take, search }: IFindSalesAgre
 
   const countSalesAgreements = prisma.salesAgreement.count({
     where: {
-      ...whereInput
+      ...whereInput,
+      client: {
+        officeBranch: branch as OfficeBranch
+      }
     },
   });
 

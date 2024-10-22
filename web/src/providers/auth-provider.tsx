@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { SessionData } from '../interfaces/auth.interface';
-import { IUser } from '../interfaces/user.interface';
+import { IUser, OfficeBranch, UserType } from '../interfaces/user.interface';
 
 const AuthContext = createContext<{
   session: SessionData,
@@ -36,6 +36,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       token: storedToken,
       user: storedUser ? JSON.parse(storedUser) : null
     })
+    if (session.user?.userType === UserType.EMPLOYEE) {
+      setBranch(session.user.officeBranch as OfficeBranch)
+    }
     setLoading(false)
   }, []);
 

@@ -41,6 +41,7 @@ export interface IFetchSalesAgreements {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
 }
 
 export interface IFetchSalesAgreementsData {

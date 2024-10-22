@@ -38,24 +38,24 @@ export default function Clients() {
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
         <div className="flex items-center justify-between py-1">
-          <div className="flex flex-1 gap-2 items-center p-[1px]">
+          <div className="flex flex-1 gap-2 items-center p-[1px] gap-x-2">
             <CommonInput
-              placeholder="Search by client name "
+              placeholder="Search by client name"
               containerProps={{
-                className: "max-w-[500px]"
+                className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
+            <Button
+              size={"sm"}
+              onClick={() => setOpenCreateClient(true)}
+              className="flex gap-x-2"
+            >
+              <Plus size={14} />
+              <span>Create</span>
+            </Button>
           </div>
-          <Button
-            size={"sm"}
-            onClick={() => setOpenCreateClient(true)}
-            className="flex gap-x-2"
-          >
-            <Plus size={14} />
-            <span>Create</span>
-          </Button>
         </div>
         <DataTable
           columns={Columns}

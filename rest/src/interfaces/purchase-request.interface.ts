@@ -25,6 +25,7 @@ export interface IFindPurchaseRequests {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string;
 }
 
 export interface IUpdatePurchaseRequestApprover {

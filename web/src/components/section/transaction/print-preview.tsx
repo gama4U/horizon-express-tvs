@@ -8,14 +8,16 @@ import { ITransaction } from '@/interfaces/transaction.interface';
 import { AccommodationType } from '@/interfaces/accommodation.interface';
 import { TransportServiceType, VehicleType } from '@/interfaces/transport.interface';
 import logo from '../../../assets/logo.png'
+import stamp from '../../../assets/approved.png';
 import { TravelVoucherType } from '@/interfaces/travel.interface';
 import { useAuth } from '@/providers/auth-provider';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { approveTransaction } from '@/api/mutations/transaction.mutation';
 import Constants from '@/constants';
-import { OfficeBranch } from '@/interfaces/user.interface';
+import { OfficeBranch, UserType } from '@/interfaces/user.interface';
 import { RenderHeaderText } from '@/components/common/header';
+import AnimatedDiv from '@/components/animated/Div';
 
 interface Props {
   data: ITransaction;
@@ -45,7 +47,7 @@ export default function PrintPreview({ data }: Props) {
   });
 
   return (
-    <div className="w-full bg-white rounded-lg p-4">
+    <div className="w-full bg-white  p-4 border-[1px] shadow-md">
       <div className="h-[50px] px-4 flex items-center justify-between">
         <h1 className="text-xs text-muted-foreground italic">Print preview</h1>
         <div className='flex items-center gap-1'>
@@ -77,8 +79,17 @@ export default function PrintPreview({ data }: Props) {
       </div>
       <Separator />
 
-      <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
-
+      <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between relative">
+        {(data.approver || data.preparedBy.userType === UserType.ADMIN) &&
+          <AnimatedDiv
+            animationType='Approve'
+            className='absolute right-[-40px] top-15'
+          >
+            <img src={stamp}
+              className='object-contain w-[240px] h-[150px] rotate-90 approved-stamp'
+            />
+          </AnimatedDiv>
+        }
         <div className='flex justify-center items-center gap-x-4 flex-3'>
           <div className="text-center text-muted-foreground flex flex-col justify-center items-center">
             <img src={logo} className='object-contain w-[180px] h-[110px]' />
