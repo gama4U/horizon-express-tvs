@@ -7,7 +7,7 @@ export interface ISalesAgreement {
   creatorId: string;
   approverId: string;
   clientId: string;
-  serialNumber: string;
+  serialNumber: number;
   currency: Currency;
   salesAgreementItems: ISalesAgreementItem[];
   purchaseOrder: any;
@@ -28,14 +28,12 @@ export enum TypeOfClient {
 
 export interface ICreateSalesAgreement {
   clientId: string;
-  serialNumber: string;
   currency: Currency;
 }
 
 export interface IUpdateSalesAgreement {
   salesAgreementId: string;
   clientId: string;
-  serialNumber: string;
   currency: Currency;
 }
 

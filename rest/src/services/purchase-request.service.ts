@@ -31,7 +31,6 @@ export async function findPurchaseRequests({ skip, take, search }: IFindPurchase
             contact: { contains: search, mode: "insensitive" },
           }
         },
-        { serialNumber: { contains: search, mode: "insensitive" } },
       ],
     }
   }

@@ -95,11 +95,11 @@ export default function PrintPreview({ data }: Props) {
               </div>
 
               <div className='w-[200px] flex items-end gap-1 text-[12px]'>
-                <span className='leading-[16px] font-semibold'>
-                  Ser. No.:
+                <span className='leading-[16px] font-semibold text-nowrap'>
+                  PO no:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
-                  <span>{data.serialNumber}</span>
+                  <span>{String(data.serialNumber).padStart(6, '0')}</span>
                 </div>
               </div>
             </div>

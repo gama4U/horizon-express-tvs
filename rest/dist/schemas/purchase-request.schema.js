@@ -10,9 +10,6 @@ exports.createPurchaseRequestSchema = zod_1.z.object({
         salesAgreementId: zod_1.z.string().min(1, {
             message: 'Sales agreement id is required'
         }),
-        serialNumber: zod_1.z.string().min(1, {
-            message: 'Serial number is required'
-        }),
         disbursementType: zod_1.z.string().min(1, {
             message: 'Disbursement type is required'
         }),
@@ -32,9 +29,6 @@ exports.updatePurchaseRequestSchema = zod_1.z.object({
         }),
         salesAgreementId: zod_1.z.string().min(1, {
             message: 'Sales agreement id is required'
-        }),
-        serialNumber: zod_1.z.string().min(1, {
-            message: 'Serial number is required'
         }),
         disbursementType: zod_1.z.string().min(1, {
             message: 'Disbursement type is required'

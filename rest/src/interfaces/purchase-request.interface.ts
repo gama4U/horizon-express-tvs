@@ -3,7 +3,6 @@ export interface ICreatePurchaseRequest {
   creatorId: string;
   supplierId: string;
   salesAgreementId: string;
-  serialNumber: string;
   disbursementType: string;
   classification: string;
   classificationType: string;
@@ -15,7 +14,6 @@ export interface IUpdatePurchaseRequest {
   id: string;
   supplierId: string;
   salesAgreementId: string;
-  serialNumber: string;
   disbursementType: string;
   classification: string;
   classificationType: string;

@@ -49,7 +49,7 @@ function updateSalesAgreement(_a) {
     });
 }
 function findSalesAgreements(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, typeOfClient }) {
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search }) {
         let whereInput = {};
         let searchFilter = {};
         if (search) {

@@ -8,11 +8,7 @@ exports.createSalesAgreementSchema = zod_1.z.object({
         clientId: zod_1.z.string().min(1, {
             message: 'Client id is required'
         }),
-        serialNumber: zod_1.z.string().min(1, {
-            message: 'Serial number is required'
-        }),
         currency: zod_1.z.enum([client_1.Currency.PHP, client_1.Currency.USD]),
-        serviceFee: zod_1.z.number().optional()
     })
 });
 exports.updateSalesAgreementSchema = zod_1.z.object({
@@ -20,11 +16,7 @@ exports.updateSalesAgreementSchema = zod_1.z.object({
         clientId: zod_1.z.string().min(1, {
             message: 'Client id is required'
         }),
-        serialNumber: zod_1.z.string().min(1, {
-            message: 'Serial number is required'
-        }),
         currency: zod_1.z.enum([client_1.Currency.PHP, client_1.Currency.USD]),
-        serviceFee: zod_1.z.number().optional()
     })
 });
 exports.getSalesAgreementsSchema = zod_1.z.object({

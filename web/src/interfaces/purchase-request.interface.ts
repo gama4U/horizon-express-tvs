@@ -9,7 +9,7 @@ export interface IPurchaseRequestOrder {
   approverId: string;
   salesAgreementId: string;
   supplierId: string;
-  serialNumber: string;
+  serialNumber: number;
   disbursementType: string;
   classification: string;
   classificationType: string;
@@ -52,7 +52,6 @@ export interface IFetchPurchaseRequestData {
 export interface ICreatePurchaseRequest {
   supplierId: string;
   salesAgreementId: string;
-  serialNumber: string;
   disbursementType: string;
   classification: string;
   classificationType: string;
@@ -63,7 +62,6 @@ export interface IUpdatePurchaseRequest {
   purchaseRequestId: string;
   supplierId: string;
   salesAgreementId: string;
-  serialNumber: string;
   disbursementType: string;
   classification: string;
   classificationType: string;

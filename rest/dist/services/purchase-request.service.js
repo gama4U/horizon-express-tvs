@@ -63,7 +63,6 @@ function findPurchaseRequests(_a) {
                             contact: { contains: search, mode: "insensitive" },
                         }
                     },
-                    { serialNumber: { contains: search, mode: "insensitive" } },
                 ],
             };
         }

@@ -28,9 +28,6 @@ const formSchema = z.object({
   salesAgreementId: z.string().min(1, {
     message: 'Sales agreement is required'
   }),
-  serialNumber: z.string().min(1, {
-    message: 'Serial number is required'
-  }),
   disbursementType: z.string().min(1, {
     message: 'Disbursement type is required'
   }),
@@ -65,9 +62,6 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      serialNumber: '',
-    }
   });
 
   const selectedDisbursementType = form.watch('disbursementType');
@@ -137,7 +131,7 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
     const salesAgreement = salesAgreementsData?.salesAgreements.find((salesAgreement) => salesAgreement.id === salesAgreementId);
     if (!salesAgreement) return "Select sales agreement";
 
-    return `${salesAgreement.serialNumber} - ${salesAgreement?.client.name} (${clientTypesMap[salesAgreement.client.clientType]})`;
+    return `${String(salesAgreement.serialNumber).padStart(6, '0')} - ${salesAgreement?.client.name} (${clientTypesMap[salesAgreement.client.clientType]})`;
   }
 
   const classifications = Constants.Disbursements.find(item => item.type === selectedDisbursementType)?.classifications || [];
@@ -269,7 +263,7 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
                                     )}
                                   />
                                   <div className="flex items-center gap-2">
-                                    <span className="font-semibold">{salesAgreement.serialNumber}</span>
+                                    <span className="font-semibold">{String(salesAgreement.serialNumber).padStart(6, '0')}</span>
                                     <span> - </span>
                                     <span>{salesAgreement.client.name}</span>
                                     <span>{`(${clientTypesMap[salesAgreement.client.clientType]})`}</span>
@@ -282,19 +276,6 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="serialNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[12px]">Ser. No.:</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Serial number" />
-                    </FormControl>
-                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />

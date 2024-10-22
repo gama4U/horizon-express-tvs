@@ -8,9 +8,6 @@ export const createPurchaseRequestSchema = z.object({
     salesAgreementId: z.string().min(1, {
       message: 'Sales agreement id is required'
     }),
-    serialNumber: z.string().min(1, {
-      message: 'Serial number is required'
-    }),
     disbursementType: z.string().min(1, {
       message: 'Disbursement type is required'
     }),
@@ -31,9 +28,6 @@ export const updatePurchaseRequestSchema = z.object({
     }),
     salesAgreementId: z.string().min(1, {
       message: 'Sales agreement id is required'
-    }),
-    serialNumber: z.string().min(1, {
-      message: 'Serial number is required'
     }),
     disbursementType: z.string().min(1, {
       message: 'Disbursement type is required'
