@@ -40,7 +40,6 @@ transactionRouter.get('/', validate(getTransactionsSchema), async (req: Request,
 
 transactionRouter.post('/', async (req: Request, res: Response) => {
   try {
-
     const created = await createTransaction(req.body);
     if (!created) {
       throw new Error('Failed to create transaction');

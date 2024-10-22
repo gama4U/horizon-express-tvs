@@ -4,10 +4,10 @@ import { ICreatedTransaction } from "../../interfaces/transaction.interface";
 import { TravelVoucherType } from "../../interfaces/travel.interface";
 import { TransportServiceType, VehicleType } from "../../interfaces/transport.interface";
 
-
 export interface ICreateTransaction {
   id: string
   creatorId: string
+  branch: string
 }
 export async function createTransaction(data: ICreateTransaction): Promise<ICreatedTransaction> {
   try {

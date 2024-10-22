@@ -10,7 +10,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 import Constants from "@/constants";
 
-export const Columns: ColumnDef<ISalesAgreement>[] = [
+export const olumns: ColumnDef<ISalesAgreement>[] = [
   {
     id: 'select',
     header: ({ table }) => (

@@ -2,18 +2,37 @@ import { OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import moment from "moment";
 import { IUpdateTransactionApprover } from "../interfaces/transaction.interface";
+import { getNextTransactionNumber } from "../utils/generate-number";
 
 interface ICreateTransaction {
   id: string;
   creatorId: string
+  branch: OfficeBranch
 }
-export async function createTransaction({ id, creatorId }: ICreateTransaction) {
+export async function createTransaction({ id, creatorId, branch }: ICreateTransaction) {
+  const lastTransaction = await prisma.transaction.findFirst({
+    where: {
+      client: {
+        officeBranch: branch,
+      },
+      transactionNumber: {
+        contains: branch === OfficeBranch.CEBU ? 'CEB' : 'CLB'
+      }
+    },
+    orderBy: {
+      transactionNumber: 'desc',
+    },
+  });
+
+  const nextTransactionNumber = getNextTransactionNumber(lastTransaction?.transactionNumber || null, branch);
+
   return await prisma.transaction.create({
     data: {
+      transactionNumber: nextTransactionNumber,
       clientId: id,
-      creatorId: creatorId
-    }
-  })
+      creatorId,
+    },
+  });
 }
 
 interface IFetchTransaction {

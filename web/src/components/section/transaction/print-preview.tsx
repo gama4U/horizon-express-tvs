@@ -98,7 +98,7 @@ export default function PrintPreview({ data }: Props) {
           </div>
           <div className="flex items-start gap-2 text-xs mb-2">
             <span className="font-semibold">Transaction Voucher #:</span>
-            <span>{data.id}</span>
+            <span>{data.transactionNumber}</span>
           </div>
           {data.travelVoucher && data.travelVoucher.length > 0 && (
             <div className="border-t pt-4">

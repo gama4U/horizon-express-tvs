@@ -28,6 +28,7 @@ export interface IVoucherCounts {
 
 export interface ITransaction {
   id: string;
+  transactionNumber: string;
   client: IClient;
   preparedBy: IUser;
   approver: IUser;

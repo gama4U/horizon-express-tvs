@@ -52,7 +52,7 @@ export default function ManageTransaction() {
       <TopBar
         showBackButton
         LeftSideHeader={<p className="text-sm">Manage transaction</p>}
-        LeftSideSubHeader={<p className="text-primary text-xs">Transaction ID: {id}</p>}
+        LeftSideSubHeader={<p className="text-primary text-xs">Transaction ID: {transaction?.transactionNumber}</p>}
       />
       <div className="flex-1 flex flex-col md:flex-row gap-2">
         {isLoading ? (

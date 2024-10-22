@@ -151,7 +151,8 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 			queryClient.refetchQueries({ queryKey: ['clients'] })
 			createTransactionMutate({
 				creatorId: String(session.user?.id),
-				id: data.id
+				id: data.id,
+				branch: branch as OfficeBranch
 			})
 		}
 	});
@@ -415,7 +416,8 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 										if (selectedClient) {
 											createTransactionMutate({
 												id: selectedClient.id,
-												creatorId: String(session?.user?.id)
+												creatorId: String(session?.user?.id),
+												branch: branch as OfficeBranch
 											})
 										}
 									}}>

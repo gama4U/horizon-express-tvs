@@ -61,7 +61,6 @@ export default function CreateSalesAgreementDialog() {
       navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/sales-agreements/${data.id}`)
     },
     onError: (error) => {
-      console.log(error)
       toast.error(error.message, {
         position: 'top-center',
         className: 'text-destructive'

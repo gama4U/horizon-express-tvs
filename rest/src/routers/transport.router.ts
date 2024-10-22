@@ -25,7 +25,6 @@ transportVoucherRouter.put('/:id', validate(updateTransportVoucherSchema), async
     if (!update) { throw new Error('Failed to update transport voucher') }
     res.status(200).json({ message: "Successfully updated tour voucher" })
   } catch (error) {
-    console.log('error', error)
     res.status(500).json(error)
   }
 });
@@ -37,7 +36,6 @@ transportVoucherRouter.delete('/:id', async (req: Request, res: Response) => {
     if (!deleted) { throw new Error('Failed to delete transport voucher') }
     res.status(200).json({ message: "Successfully deleted tour voucher" })
   } catch (error) {
-    console.log('error', error)
     res.status(500).json(error)
   }
 });

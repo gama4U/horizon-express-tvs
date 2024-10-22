@@ -7,7 +7,7 @@ import Constants from "@/constants";
 import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 
 const Layout: React.FC = () => {
-	const { session, loading, branch, setBranch } = useAuth();
+	const { session, loading, setBranch } = useAuth();
 	const currentPath = location.pathname;
 	const isAdmin = session.user?.userType === UserType.ADMIN
 

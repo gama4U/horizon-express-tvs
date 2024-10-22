@@ -1,4 +1,4 @@
-generator client {
+generator client {schema
   provider = "prisma-client-js"
 }
 
@@ -37,6 +37,7 @@ model User {
 model Transaction {
   id                   String                @id @default(cuid())
   travelVoucher        Travel[]
+  transactionNumber    String?
   accommodationVoucher Accommodation[]
   tourVoucher          Tour[]
   transportVoucher     Transportation[]

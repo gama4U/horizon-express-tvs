@@ -9,13 +9,14 @@ import logo from '../../../assets/logo.png';
 import stamp from '../../../assets/approved.png';
 import draftToHtml from 'draftjs-to-html';
 import { format } from 'date-fns';
-import { UserType } from '@/interfaces/user.interface';
+import { OfficeBranch, UserType } from '@/interfaces/user.interface';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { approveMemorandum } from '@/api/mutations/memorandum.mutation';
 import { useAuth } from '@/providers/auth-provider';
 import { toast } from 'sonner';
 import AnimatedDiv from '@/components/animated/Div';
 import Constants from '@/constants';
+import { RenderHeaderText } from '@/components/common/header';
 
 interface Props {
 	data: IMemorandum;
@@ -134,17 +135,7 @@ export default function MemorandumPreview({ data }: Props) {
 
 				<div className='text-center text-black flex flex-col items-center'>
 					<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
-					<h1 className='text-[14px] '>
-						262 Maharlika Highway Purok 2 Obrero Calbayog City 671
-					</h1>
-					<h3 className='text-[14px]'>
-						Email: info@horizonexpress.ph
-					</h3>
-					<div className='flex flex-col text-[14px]'>
-						<span className='text-[14px]'>
-							Contact #: 09530856053, 09171025584, 09171833216
-						</span>
-					</div>
+					{RenderHeaderText(data.creator.officeBranch as OfficeBranch)}
 				</div>
 
 				<div className='text-black space-y-4 my-5 w-full'>

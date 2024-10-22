@@ -14,13 +14,14 @@ import { VoucherTypeFilter } from "@/components/custom/voucher-type-filter";
 import { VoucherFilters, VoucherTypes } from "@/interfaces/transaction.interface";
 import CreateTransactionDialog from "@/components/dialogs/transaction/add";
 import { useAuth } from "@/providers/auth-provider";
-import { UserType } from "@/interfaces/user.interface";
+import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 
 export default function Transactions() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateTransaction, setOpenCreateTransaction] = useState(false)
+  const { branch } = useAuth()
 
   const [voucherFilters, setVoucherFilters] = useState<VoucherFilters>({
     travel: false,
@@ -30,8 +31,8 @@ export default function Transactions() {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['transactions', pagination, debouncedSearch, voucherFilters],
-    queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, ...voucherFilters })
+    queryKey: ['transactions', pagination, debouncedSearch, voucherFilters, branch],
+    queryFn: async () => await fetchTransactions({ skip, take, search: debouncedSearch, branch: branch as OfficeBranch, ...voucherFilters })
   });
 
   const navigate = useNavigate();
