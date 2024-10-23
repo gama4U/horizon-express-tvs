@@ -5,7 +5,7 @@ import Constants from "@/constants";
 import { ISupplier } from "@/api/mutations/supplier.mutation";
 import EditSupplierDialog from "@/components/dialogs/suppliers/edit";
 import DeleteSupplierDialog from "@/components/alert/supplier/delete";
-import { CircleUserRound, ListTodo, Map, MapPinHouse, NotepadText, Phone } from "lucide-react";
+import { CircleUserRound, ListTodo, Map, MapPinHouse, Phone } from "lucide-react";
 
 export const Columns: ColumnDef<ISupplier>[] = [
 	{
@@ -48,7 +48,7 @@ export const Columns: ColumnDef<ISupplier>[] = [
 	{
 		id: "contactNumber",
 		header: () => <div className="flex items-center gap-x-2">
-			<p>Contact Number</p>
+			<p>Contact</p>
 			<Phone color="white" size={16} />
 		</div>,
 		cell: ({ row }) => {
@@ -63,21 +63,22 @@ export const Columns: ColumnDef<ISupplier>[] = [
 	},
 	{
 		id: "address",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Address</p>
-			<Map color="white" size={16} />
-		</div>,
+		header: () => (
+			<div className="flex items-center gap-x-2 w-32 truncate">
+				<p className="truncate">Address</p>
+				<Map color="white" size={16} />
+			</div>
+		),
 		cell: ({ row }) => {
 			return (
 				<div className="flex items-center gap-2">
-					<span className="text-xs">
+					<span className="text-xs truncate">
 						{row.original.address}
 					</span>
 				</div>
 			)
 		}
-	},
-	{
+	}, {
 		id: "category",
 		header: () => <div className="flex items-center gap-x-2">
 			<p>Category</p>
@@ -106,26 +107,6 @@ export const Columns: ColumnDef<ISupplier>[] = [
 					</span>
 				</div>
 			)
-		}
-	},
-	{
-		id: "purchaseOrders",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Purchase Request Order Count</p>
-			<NotepadText color="white" size={16} />
-		</div>,
-
-		cell: ({ row }) => {
-			const purchaseOrders = row.original.purchaseOrders;
-			return (
-				<div className="flex items-center gap-x-1">
-					{purchaseOrders && purchaseOrders.length > 0 ? (
-						<span className="text-xs text-center">{purchaseOrders.length}</span>
-					) : (
-						<span className="italic text-gray-300">No purchase orders</span>
-					)}
-				</div>
-			);
 		}
 	},
 	{
