@@ -11,8 +11,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { OfficeBranch } from "@/interfaces/user.interface";
 import { ISupplier, IUpdateSupplier, updateSupplier } from "@/api/mutations/supplier.mutation";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,11 +21,6 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 
 interface IUpdateSupplierProps {
 	supplierData: ISupplier
-}
-
-const userOfficeBranch: Record<OfficeBranch, string> = {
-	CEBU: 'Cebu',
-	CALBAYOG: 'Calbayog'
 }
 
 const formSchema = z.object({
@@ -45,10 +38,6 @@ const formSchema = z.object({
 		message: 'Category is required'
 	}),
 	notes: z.string().optional(),
-	officeBranch: z.enum([
-		OfficeBranch.CEBU,
-		OfficeBranch.CALBAYOG
-	]),
 });
 
 export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProps) {
@@ -119,32 +108,6 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 								<FormField
 									control={form.control}
-									name="officeBranch"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Office branch</FormLabel>
-											<Select onValueChange={field.onChange} defaultValue={field.value}>
-												<FormControl>
-													<SelectTrigger className="w-full h-[40px] py-0 gap-[12px] text-muted-foreground bg-slate-100 border-none text-[12px]">
-														<SelectValue placeholder="Select branch" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{Object.entries(userOfficeBranch)?.map(([value, label]) => {
-														return (
-															<SelectItem value={value} className="text-[12px] text-muted-foreground">
-																{label}
-															</SelectItem>
-														);
-													})}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
 									name="category"
 									render={({ field }) => (
 										<FormItem className="flex flex-col">
@@ -174,7 +137,7 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 															className="text-[12px]"
 															placeholder="Search supplier..."
 														/>
-														<CommandList	 className="w-full">
+														<CommandList className="w-full">
 															<CommandEmpty>No category found.</CommandEmpty>
 															<CommandGroup>
 																{SupplierCategories.map((item, index) => (

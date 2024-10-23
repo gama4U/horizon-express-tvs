@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
 import { Button } from "@/components/ui/button";
-import { CheckCircleIcon, Loader2, Pencil } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MultiSelect } from "@/components/common/multi-select";
 import Constants from "@/constants";

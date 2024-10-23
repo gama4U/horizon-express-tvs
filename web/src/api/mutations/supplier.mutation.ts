@@ -29,7 +29,7 @@ export interface IUpdateSupplier {
   address?: string
   contact?: string
   emailAddress?: string;
-  notes?: string;
+  notes?: string | null;
   officeBranch?: OfficeBranch
 }
 

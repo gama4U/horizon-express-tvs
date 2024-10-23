@@ -44,16 +44,14 @@ export default function PrintPreview({ data }: Props) {
     },
   });
 
-  const grandTotalWithServiceFees = data.salesAgreementItems.reduce((acc, item) =>
-    (acc + (item.total + (item.serviceFee || 0))),
-    0
-  );
-
-  const totalServiceFee = data.salesAgreementItems.reduce((acc, item) => (acc + (item.serviceFee || 0)), 0);
-  // const vat = totalServiceFee * 0.12 // (12% of Service Fee);
-  const netOfVat = totalServiceFee / 1.12;
-  const totalDue = netOfVat + grandTotalWithServiceFees;
-  const netDue = totalDue * 0.12
+  const grandTotalUnitPrice = data.salesAgreementItems.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
+  const grandTotalServiceFee = data.salesAgreementItems.reduce((acc, item) => acc + ((item.serviceFee ?? 0) * item.quantity), 0);
+  const grandTotal = grandTotalUnitPrice + grandTotalServiceFee;
+  const netOfVat = grandTotalServiceFee / 1.12;
+  const lessVAT = netOfVat * 0.12; // 12% of VAT Sales
+  const totalDue = grandTotalServiceFee + grandTotal;
+  const lessEWT = netOfVat * 0.02; // 2% of VAT Sales
+  const totalAmountDue = totalDue - lessEWT;
 
   return (
     <div className="w-full bg-white rounded-lg">
@@ -159,7 +157,7 @@ export default function PrintPreview({ data }: Props) {
                 <th className="px-4 py-2 border-r border-gray-300 border-b">UNIT PRICE</th>
                 {selectedTemplate !== 'template1' && (
                   <th className="px-4 py-2 border-r border-gray-300 border-b">
-                    UNIT PRICE + SERVICE FEE
+                    SERVICE FEE
                   </th>
                 )}
                 <th className="px-4 py-2 border-b border-gray-300">TOTAL</th>
@@ -168,23 +166,28 @@ export default function PrintPreview({ data }: Props) {
             <tbody>
               {(data.salesAgreementItems.length > 0) ? (
                 <>
-                  {data.salesAgreementItems.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">
-                        {formatCurrency(data.currency, item.unitPrice)}
-                      </td>
-                      {selectedTemplate !== 'template1' && (
+                  {data.salesAgreementItems.map((item, index) => {
+                    const serviceFee = item.quantity *  (item.serviceFee ?? 0);
+                    const totalUnitPrice = item.unitPrice * item.quantity;
+                    const total = totalUnitPrice + serviceFee;
+                    return (
+                      <tr key={index}>
+                        <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
+                        <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
                         <td className="px-4 py-2 border-r border-gray-300 text-center">
-                          {formatCurrency(data.currency, item.unitPrice + (item.serviceFee || 0))}
+                          {formatCurrency(data.currency, item.unitPrice)}
                         </td>
-                      )}
-                      <td className="px-4 py-2 text-center">
-                        {formatCurrency(data.currency, (item.unitPrice * item.quantity) + (item.serviceFee || 0))}
-                      </td>
-                    </tr>
-                  ))}
+                        {selectedTemplate !== 'template1' && (
+                          <td className="px-4 py-2 border-r border-gray-300 text-center">
+                            {formatCurrency(data.currency, (item.serviceFee ?? 0))}
+                          </td>
+                        )}
+                        <td className="px-4 py-2 text-center">
+                          {formatCurrency(data.currency, total)}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </>
               ) : (
                 <tr className='h-[200px]'>
@@ -198,15 +201,20 @@ export default function PrintPreview({ data }: Props) {
           </table>
           <div className='mt-2 text-[12px] text-muted-foreground border border-dashed p-2 space-y-1'>
             <div className='flex items-center justify-between'>
-              <h1>Grand Total: </h1>
-              <span>{formatCurrency(data.currency, grandTotalWithServiceFees)}</span>
+              <h1>
+                {(selectedTemplate === 'template1' || selectedTemplate === 'template2') 
+                  ? 'Grand total: '
+                  : 'Cost of sales'
+                }
+              </h1>
+              <span>{formatCurrency(data.currency, grandTotal)}</span>
             </div>
             {selectedTemplate === 'template2' && (
               <>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
-                  <h1>Total service fee: </h1>
-                  <span>{formatCurrency(data.currency, totalServiceFee)}</span>
+                  <h1>Service fee: </h1>
+                  <span>{formatCurrency(data.currency, grandTotalServiceFee)}</span>
                 </div>
               </>
             )}
@@ -214,8 +222,13 @@ export default function PrintPreview({ data }: Props) {
               <>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
-                  <h1>Total service fee: </h1>
-                  <span>{formatCurrency(data.currency, totalServiceFee)}</span>
+                  <h1>Service fee: </h1>
+                  <span>{formatCurrency(data.currency, grandTotalServiceFee)}</span>
+                </div>
+                <Separator className='bg-gray-100' />
+                <div className='flex items-center justify-between'>
+                  <h1>Less(12% VAT): </h1>
+                  <span>{`${formatCurrency(data.currency, lessVAT)}`}</span>
                 </div>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
@@ -233,8 +246,13 @@ export default function PrintPreview({ data }: Props) {
               <>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
-                  <h1>Total service fee: </h1>
-                  <span>{formatCurrency(data.currency, totalServiceFee)}</span>
+                  <h1>Service fee: </h1>
+                  <span>{formatCurrency(data.currency, grandTotalServiceFee)}</span>
+                </div>
+                <Separator className='bg-gray-100' />
+                <div className='flex items-center justify-between'>
+                  <h1>Less(12% VAT): </h1>
+                  <span>{`${formatCurrency(data.currency, lessVAT)}`}</span>
                 </div>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
@@ -248,8 +266,13 @@ export default function PrintPreview({ data }: Props) {
                 </div>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
-                  <h1>Net Due: </h1>
-                  <span>{`${formatCurrency(data.currency, netDue)}`}</span>
+                  <h1>Less(EWT): </h1>
+                  <span>{`${formatCurrency(data.currency, lessEWT)}`}</span>
+                </div>
+                <Separator className='bg-gray-100' />
+                <div className='flex items-center justify-between'>
+                  <h1>Total Amount Due: </h1>
+                  <span>{`${formatCurrency(data.currency, totalAmountDue)}`}</span>
                 </div>
               </>
             )}

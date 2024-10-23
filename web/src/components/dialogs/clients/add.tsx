@@ -79,7 +79,7 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 			})
 		},
 		onSuccess: () => {
-			form.reset()
+			form.reset({})
 			queryClient.refetchQueries({ queryKey: ['clients'] })
 			setOpenDialog(false)
 			toast.custom(() => (

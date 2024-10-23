@@ -1,4 +1,4 @@
-import { CircleCheck, Layers3, Loader2, Users } from "lucide-react";
+import { CircleCheck, Loader2, Users } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
