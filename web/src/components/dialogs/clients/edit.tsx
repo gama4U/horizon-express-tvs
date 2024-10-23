@@ -16,7 +16,6 @@ import { IClient, IUpdateClient, updateClient } from "@/api/mutations/client.mut
 import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import Constants from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { OfficeBranch } from "@/interfaces/user.interface";
 import { Textarea } from "@/components/ui/textarea";
 
 interface IUpdateClientProps {

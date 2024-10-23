@@ -54,11 +54,6 @@ const clientTypesMap: Record<TypeOfClient, string> = {
 	INDIVIDUAL: 'Individual',
 }
 
-const userOfficeBranch: Record<OfficeBranch, string> = {
-	CEBU: 'Cebu',
-	CALBAYOG: 'Calbayog'
-}
-
 type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
 const departmentMap: Record<ClientWithDepartment, string[]> = {
 	CORPORATE: Constants.CorporateDepartments,
