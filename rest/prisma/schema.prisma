@@ -32,6 +32,8 @@ model User {
   transmittedDocumentTransactions DocumentTransaction[]  @relation("TransmittedDocumentTransactions")
   recievedDocumentTransactions    DocumentTransaction[]  @relation("RecievedDocumentTransactions")
   returnedDocumentTransactions    DocumentTransaction[]  @relation("ReturnedDocumentTransactions")
+  createdPackages                 Package[]              @relation("CreatedPackages")
+  approvedPackages                Package[]              @relation("ApprovedPackages")
 }
 
 model Transaction {
@@ -294,6 +296,47 @@ model TransportItinerary {
   transport   Transportation? @relation(fields: [transportId], references: [id], onDelete: Cascade)
   createdAt   DateTime?       @default(now())
   updatedAt   DateTime?       @updatedAt
+}
+
+model Package {
+  id             String               @id @default(cuid())
+  creatorId      String
+  approverId     String
+  packageNumber  String
+  sequenceNumber Int                  @unique @default(autoincrement())
+  name           String
+  inclusions     String[]
+  exclusions     String[]
+  remarks        String
+  officeBranch   OfficeBranch
+  accomodation   PackageAccomodation?
+  airfare        PackageAirfare?
+  creator        User                 @relation("CreatedPackages", fields: [creatorId], references: [id])
+  approver       User                 @relation("ApprovedPackages", fields: [approverId], references: [id])
+  createdAt      DateTime?            @default(now())
+  updatedAt      DateTime?            @updatedAt
+}
+
+model PackageAccomodation {
+  id            String    @id @default(cuid())
+  packageId     String    @unique
+  category      String
+  options       String[]
+  ratePerPerson Float
+  currency      Currency
+  package       Package   @relation(fields: [packageId], references: [id])
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+}
+
+model PackageAirfare {
+  id            String    @id @default(cuid())
+  packageId     String    @unique
+  airline       String
+  flightDetails String
+  package       Package   @relation(fields: [packageId], references: [id])
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
 }
 
 enum UserType {

@@ -15,6 +15,7 @@ import { RouteObject } from "react-router-dom";
 import Suppliers from "@/pages/admin/suppliers";
 import DocumentTransactions from "@/pages/admin/document-transactions";
 import DocumentTransactionDetails from "@/pages/admin/document-transactions/details";
+import Packages from "@/pages/admin/packages";
 
 const adminRouter: RouteObject = {
   path: '/admin',
@@ -76,6 +77,10 @@ const adminRouter: RouteObject = {
     {
       path: 'sales-agreements/:id',
       element: <SalesAgreementDetails />
+    },
+    {
+      path: 'packages',
+      element: <Packages />
     },
     {
       path: 'profile',
