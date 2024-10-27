@@ -6,6 +6,7 @@ import {
 	VisibilityState,
 	flexRender,
 	getCoreRowModel,
+	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
@@ -43,6 +44,7 @@ export function DataTable<TData, TValue>({
 		onPaginationChange: onPaginationChange,
 		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,
 		getRowId: row => (row as ISupplier).id,

@@ -1,4 +1,4 @@
-import { Currency, OfficeBranch } from "@prisma/client";
+import { ClientType, Currency, OfficeBranch } from "@prisma/client";
 import { z } from "zod";
 
 export const createSalesAgreementSchema = z.object({
@@ -29,5 +29,6 @@ export const getSalesAgreementsSchema = z.object({
     }).optional(),
     search: z.string().optional(),
     branch: z.string().optional(),
+    typeOfClient: z.enum([ClientType.GROUP, ClientType.WALK_IN, ClientType.CORPORATE, ClientType.GOVERNMENT, ClientType.INDIVIDUAL]).optional(),
   })
 });

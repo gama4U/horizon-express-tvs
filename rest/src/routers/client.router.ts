@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { createClient, deleteClient, fetchClients, updateClient } from '../services/client.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getClientsSchema } from '../schemas/client.schema';
+import { ClientType } from '@prisma/client';
 
 const clientRouter = express.Router();
 
@@ -23,13 +24,14 @@ clientRouter.post('/', async (req: Request, res: Response) => {
 clientRouter.get('/', validate(getClientsSchema), async (req: Request, res: Response) => {
   try {
 
-    const { skip, take, search, branch } = req.query;
+    const { skip, take, search, branch, typeOfClient } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
       branch: branch ? String(branch) : undefined,
+      typeOfClient: typeOfClient ? typeOfClient as ClientType : undefined,
     };
 
     const clients = await fetchClients(filters);

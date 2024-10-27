@@ -128,15 +128,18 @@ export default function PrintPreview({ data }: Props) {
                 </div>
               </div>
 
-              <div className='flex w-[200px] items-end gap-1 text-[12px]'>
-                <span className='leading-[16px] font-semibold'>
-                  P.O. Number:
+            </div>
+            <div className='flex text-[12px] gap-2'>
+              <span className='leading-[16px] font-semibold'>
+                P.O. Number:
+              </span>
+              <div className='flex-1 border-b leading-[16px]'>
+                <span className='whitespace-normal'>
+                  {data.purchaseRequestOrders
+                    .map((order) => order.serialNumber)
+                    .filter((serial) => serial)
+                    .join(', ') || ''}
                 </span>
-                <div className='flex-1 border-b leading-[16px]'>
-                  <span>
-                    {data.purchaseOrder?.serialNumber ?? ''}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
@@ -167,7 +170,7 @@ export default function PrintPreview({ data }: Props) {
               {(data.salesAgreementItems.length > 0) ? (
                 <>
                   {data.salesAgreementItems.map((item, index) => {
-                    const serviceFee = item.quantity *  (item.serviceFee ?? 0);
+                    const serviceFee = item.quantity * (item.serviceFee ?? 0);
                     const totalUnitPrice = item.unitPrice * item.quantity;
                     const total = totalUnitPrice + serviceFee;
                     return (
@@ -202,7 +205,7 @@ export default function PrintPreview({ data }: Props) {
           <div className='mt-2 text-[12px] text-muted-foreground border border-dashed p-2 space-y-1'>
             <div className='flex items-center justify-between'>
               <h1>
-                {(selectedTemplate === 'template1' || selectedTemplate === 'template2') 
+                {(selectedTemplate === 'template1' || selectedTemplate === 'template2')
                   ? 'Grand total: '
                   : 'Cost of sales'
                 }

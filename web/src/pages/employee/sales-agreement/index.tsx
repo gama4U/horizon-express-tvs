@@ -12,11 +12,13 @@ import ClientTypeFilterSelect from "../../../components/select/sales-agreement/c
 import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
 import { useAuth } from "@/providers/auth-provider";
 import { OfficeBranch } from "@/interfaces/user.interface";
+import AnimatedDiv from "@/components/animated/Div";
+import { Button } from "@/components/ui/button";
 
 export default function SalesAgreements() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
-  const [clientTypeFilter, setClientTypeFilter] = useState<ClientTypeFilter>('ALL');
+  const [clientTypeFilter, setClientTypeFilter] = useState<ClientTypeFilter | string>('');
   const debouncedSearch = useDebounce(search, 500);
   const { branch } = useAuth()
 
@@ -32,6 +34,10 @@ export default function SalesAgreements() {
       })
     })
   });
+
+  const handleClearFilters = () => {
+    setClientTypeFilter("")
+  }
 
   return (
     <div className="space-y-2">
@@ -60,6 +66,14 @@ export default function SalesAgreements() {
               value={clientTypeFilter}
               onValueChange={(value) => setClientTypeFilter(value)}
             />
+            {clientTypeFilter &&
+              <AnimatedDiv animationType="Shake">
+                <Button onClick={handleClearFilters}
+                  className="text-xs"
+                  variant={'destructive'}>Clear Filters
+                </Button>
+              </AnimatedDiv>
+            }
           </div>
           <CreateSalesAgreementDialog />
         </div>

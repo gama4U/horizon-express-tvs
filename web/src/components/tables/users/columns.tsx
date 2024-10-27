@@ -6,6 +6,8 @@ import UserTypeBadge from "@/components/badges/user-tye";
 import EditUserDialog from "@/components/dialogs/user/edit-user";
 import DeleteUserDialog from "@/components/alert/user/delete";
 import UserPermissionBadge from "@/components/badges/user-permission";
+import { Button } from "@/components/ui/button";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown } from "lucide-react";
 
 export const Columns: ColumnDef<IUser>[] = [
   {
@@ -32,8 +34,22 @@ export const Columns: ColumnDef<IUser>[] = [
     enableHiding: false,
   },
   {
-    id: "name",
-    header: "Name",
+    accessorKey: "firstName",
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
+      return (
+        <Button
+          variant="ghost"
+          className="text-xs"
+          onClick={() => { column.toggleSorting(column.getIsSorted() === "asc") }}
+        >
+          Name
+          {isSorted === "asc" && <ArrowUpAZ className="ml-2 h-4 w-4" />}
+          {isSorted === "desc" && <ArrowDownAZ className="ml-2 h-4 w-4" />}
+          {!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
@@ -46,7 +62,8 @@ export const Columns: ColumnDef<IUser>[] = [
           <span>{`${row.original.firstName} ${row.original.lastName}`}</span>
         </div>
       )
-    }
+    },
+    enableSorting: true,
   },
   {
     id: "email",

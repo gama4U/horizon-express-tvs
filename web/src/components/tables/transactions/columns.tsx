@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { CircleUser, ListTodo, NotepadText, TicketCheck } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, CircleUser, ListTodo, NotepadText, TicketCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ITransaction, VoucherTypes } from "@/interfaces/transaction.interface";
 import { VoucherBadge } from "@/components/badges/voucher-type";
@@ -8,6 +8,7 @@ import DeleteTransaction from "@/components/alert/transactions/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 import Constants from "@/constants";
+import { Button } from "@/components/ui/button";
 
 export const Columns: ColumnDef<ITransaction>[] = [
 	{
@@ -34,6 +35,25 @@ export const Columns: ColumnDef<ITransaction>[] = [
 		enableHiding: false,
 	},
 	{
+		accessorKey: "client.name",
+		header: ({ column }) => {
+			const isSorted = column.getIsSorted();
+			return (
+				<Button
+					variant="ghost"
+					className="text-xs"
+					onClick={() => { column.toggleSorting(column.getIsSorted() === "asc") }}
+				>
+					Name
+					{isSorted === "asc" && <ArrowUpAZ className="ml-2 h-4 w-4" />}
+					{isSorted === "desc" && <ArrowDownAZ className="ml-2 h-4 w-4" />}
+					{!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}				</Button>
+			)
+		},
+		enableSorting: true,
+	},
+
+	{
 		id: "transactionNumber",
 		header: () => <div className="flex items-center gap-x-2">
 			<p>Transaction #</p>
@@ -43,23 +63,6 @@ export const Columns: ColumnDef<ITransaction>[] = [
 			return (
 				<div className="flex items-cetter gap-2">
 					<span>{row.original.transactionNumber}</span>
-				</div>
-			)
-		}
-	},
-
-	{
-		id: "client",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Client</p>
-			<CircleUser color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
-			if (!row.original.client) return;
-			const { name } = row.original.client;
-			return (
-				<div className="flex items-cetter gap-2">
-					<span>{name}</span>
 				</div>
 			)
 		}

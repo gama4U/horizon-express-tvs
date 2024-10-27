@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { Calendar, CircleUser, File, Hash, LetterText, ListTodo, NotepadText } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, Calendar, CircleUser, File, Hash, LetterText, ListTodo, NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
@@ -9,6 +9,7 @@ import Constants from "@/constants";
 import { IDocumentTransaction } from "@/api/queries/document-transaction.query";
 import { DocumentTransactionBadge } from "@/components/badges/document-transaction-type";
 import DeleteDocumentTransaction from "@/components/alert/document-transactions/delete";
+import { Button } from "@/components/ui/button";
 
 export const Columns: ColumnDef<IDocumentTransaction>[] = [
 	{
@@ -35,6 +36,24 @@ export const Columns: ColumnDef<IDocumentTransaction>[] = [
 		enableHiding: false,
 	},
 	{
+		accessorKey: "client.name",
+		header: ({ column }) => {
+			const isSorted = column.getIsSorted();
+			return (
+				<Button
+					variant="ghost"
+					className="text-xs"
+					onClick={() => { column.toggleSorting(column.getIsSorted() === "asc") }}
+				>
+					Client Name
+					{isSorted === "asc" && <ArrowUpAZ className="ml-2 h-4 w-4" />}
+					{isSorted === "desc" && <ArrowDownAZ className="ml-2 h-4 w-4" />}
+					{!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}				</Button>
+			)
+		},
+		enableSorting: true,
+	},
+	{
 		id: "dtsNumber",
 		header: () => <div className="flex items-center gap-x-2">
 			<p>DTS</p>
@@ -48,18 +67,6 @@ export const Columns: ColumnDef<IDocumentTransaction>[] = [
 				</div>
 			)
 		}
-	},
-	{
-		id: "clientName",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Client</p>
-			<CircleUser color="white" size={16} />
-		</div>,
-		cell: ({ row }) => (
-			<span className="capitalize">
-				{row.original.client.name}
-			</span>
-		),
 	},
 	{
 		id: "type",

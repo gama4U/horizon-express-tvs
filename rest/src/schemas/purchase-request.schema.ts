@@ -53,5 +53,7 @@ export const findPurchaseRequestsSchema = z.object({
     }).optional(),
     search: z.string().optional(),
     branch: z.string().optional(),
+    type: z.string().optional(),
+    classification: z.string().optional(),
   })
 });

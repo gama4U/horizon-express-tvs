@@ -5,7 +5,8 @@ import Constants from "@/constants";
 import { ISupplier } from "@/api/mutations/supplier.mutation";
 import EditSupplierDialog from "@/components/dialogs/suppliers/edit";
 import DeleteSupplierDialog from "@/components/alert/supplier/delete";
-import { CircleUserRound, ListTodo, Map, MapPinHouse, Phone } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, ListTodo, Map, MapPinHouse, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Columns: ColumnDef<ISupplier>[] = [
 	{
@@ -32,18 +33,22 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		enableHiding: false,
 	},
 	{
-		id: "name",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Name</p>
-			<CircleUserRound color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
+		accessorKey: "name",
+		header: ({ column }) => {
+			const isSorted = column.getIsSorted();
 			return (
-				<div className="flex items-center gap-2">
-					<span>{row.original.name}</span>
-				</div>
+				<Button
+					variant="ghost"
+					className="text-xs"
+					onClick={() => { column.toggleSorting(column.getIsSorted() === "asc") }}
+				>
+					Name
+					{isSorted === "asc" && <ArrowUpAZ className="ml-2 h-4 w-4" />}
+					{isSorted === "desc" && <ArrowDownAZ className="ml-2 h-4 w-4" />}
+					{!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}				</Button>
 			)
-		}
+		},
+		enableSorting: true,
 	},
 	{
 		id: "contactNumber",

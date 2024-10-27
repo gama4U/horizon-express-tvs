@@ -37,8 +37,7 @@ interface GenerateSerialNumberParams {
   prefix: string;
   postfix: string;
 }
-export function generateSerialNumber({uniqueNumber, prefix, postfix}: GenerateSerialNumberParams) {
-  console.log({uniqueNumber, prefix, postfix})
+export function generateSerialNumber({ uniqueNumber, prefix, postfix }: GenerateSerialNumberParams) {
   const today = dayjs().format('MMDDYYYY');
   const paddedNumber = String(uniqueNumber).toString().padStart(3, '0');
   return `${prefix}${paddedNumber}-${today}-${postfix}`
