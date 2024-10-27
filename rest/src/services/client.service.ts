@@ -55,6 +55,8 @@ export async function fetchClients({ skip, take, search, branch, typeOfClient }:
     },
     include: {
       transactions: true,
+      creator: true,
+      approver: true,
       _count: {
         select: {
           transactions: true
@@ -88,4 +90,14 @@ export const findClientById = async (id: string) => {
   return await prisma.client.findUnique({
     where: { id }
   })
+}
+interface IUpdateClientApprover {
+  id: string,
+  approverId: string
+}
+export async function updateClientApprover({ id, approverId }: IUpdateClientApprover) {
+  return await prisma.client.update({
+    where: { id },
+    data: { approverId }
+  });
 }

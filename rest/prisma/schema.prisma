@@ -32,6 +32,12 @@ model User {
   transmittedDocumentTransactions DocumentTransaction[]  @relation("TransmittedDocumentTransactions")
   recievedDocumentTransactions    DocumentTransaction[]  @relation("RecievedDocumentTransactions")
   returnedDocumentTransactions    DocumentTransaction[]  @relation("ReturnedDocumentTransactions")
+  createdPackages                 Package[]              @relation("CreatedPackages")
+  approvedPackages                Package[]              @relation("ApprovedPackages")
+  createdSuppliers                Supplier[]             @relation("CreatedSuppliers")
+  approvedSuppliers               Supplier[]             @relation("ApprovedSuppliers")
+  createdClients                  Client[]               @relation("CreatedClients")
+  approvedClients                 Client[]               @relation("ApprovedClients")
 }
 
 model Transaction {
@@ -132,6 +138,10 @@ model Client {
   clientType           ClientType
   department           String?
   notes                String?
+  approverId           String?
+  approver             User?                 @relation("ApprovedClients", fields: [approverId], references: [id])
+  creatorId            String?
+  creator              User?                 @relation("CreatedClients", fields: [creatorId], references: [id])
   officeBranch         OfficeBranch
   transactions         Transaction[]
   salesAgreements      SalesAgreement[]
@@ -141,14 +151,19 @@ model Client {
 }
 
 model Supplier {
-  id             String                 @id @default(cuid())
-  name           String
-  address        String?
-  contact        String?
-  emailAddress   String?
-  category       String?
-  notes          String?
-  officeBranch   OfficeBranch
+  id           String       @id @default(cuid())
+  name         String
+  address      String?
+  contact      String?
+  emailAddress String?
+  category     String?
+  notes        String?
+  officeBranch OfficeBranch
+  approverId   String?
+  approver     User?        @relation("ApprovedSuppliers", fields: [approverId], references: [id])
+  creatorId    String?
+  creator      User?        @relation("CreatedSuppliers", fields: [creatorId], references: [id])
+
   purchaseOrders PurchaseRequestOrder[]
   createdAt      DateTime?              @default(now())
   updatedAt      DateTime?              @updatedAt
@@ -294,6 +309,47 @@ model TransportItinerary {
   transport   Transportation? @relation(fields: [transportId], references: [id], onDelete: Cascade)
   createdAt   DateTime?       @default(now())
   updatedAt   DateTime?       @updatedAt
+}
+
+model Package {
+  id             String                @id @default(cuid())
+  creatorId      String
+  approverId     String?
+  packageNumber  String
+  sequenceNumber Int                   @unique @default(autoincrement())
+  name           String
+  inclusions     String[]
+  exclusions     String[]
+  remarks        String
+  officeBranch   OfficeBranch
+  accomodation   PackageAccommodation?
+  airfare        PackageAirfare?
+  creator        User                  @relation("CreatedPackages", fields: [creatorId], references: [id])
+  approver       User?                 @relation("ApprovedPackages", fields: [approverId], references: [id])
+  createdAt      DateTime?             @default(now())
+  updatedAt      DateTime?             @updatedAt
+}
+
+model PackageAccommodation {
+  id            String    @id @default(cuid())
+  packageId     String    @unique
+  category      String
+  options       String[]
+  ratePerPerson Float
+  currency      Currency
+  package       Package   @relation(fields: [packageId], references: [id])
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
+}
+
+model PackageAirfare {
+  id            String    @id @default(cuid())
+  packageId     String    @unique
+  airline       String
+  flightDetails String
+  package       Package   @relation(fields: [packageId], references: [id])
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime? @updatedAt
 }
 
 enum UserType {

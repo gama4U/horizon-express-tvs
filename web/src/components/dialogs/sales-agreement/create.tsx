@@ -46,7 +46,7 @@ export default function CreateSalesAgreementDialog() {
 
   const { data: clients } = useQuery({
     queryKey: ['clients', debouncedSearch, branch],
-    queryFn: async () => await fetchClients({ search: debouncedSearch, branch: branch as OfficeBranch }),
+    queryFn: async () => await fetchClients({ search: debouncedSearch, branch: branch as OfficeBranch, isApproved: true }),
   })
 
   const { mutate: createMutate, isPending } = useMutation({

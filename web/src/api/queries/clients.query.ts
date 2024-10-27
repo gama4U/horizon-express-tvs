@@ -7,7 +7,7 @@ interface IFetchClients {
   take?: number;
   search?: string;
   branch?: string | null,
-  typeOfClient?: TypeOfClient | string
+  typeOfClient?: TypeOfClient | string,
 }
 
 interface IClients {

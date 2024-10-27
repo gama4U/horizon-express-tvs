@@ -28,8 +28,7 @@ export default function Clients() {
     queryFn: async () => await fetchClients({
       skip, take, search: debouncedSearch, branch, ...(clientTypeFilter && {
         typeOfClient: clientTypeFilter
-      })
-
+      }),
     })
   });
   const handleClearFilters = () => {

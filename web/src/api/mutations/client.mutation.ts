@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
 import { ITransaction } from "@/interfaces/transaction.interface";
-import { OfficeBranch } from "@/interfaces/user.interface";
+import { IUser, OfficeBranch } from "@/interfaces/user.interface";
 import { ISalesAgreement } from "@/interfaces/sales-agreement.interface";
 
 export interface ICreateClient {
@@ -13,6 +13,7 @@ export interface ICreateClient {
   department?: string
   officeBranch?: OfficeBranch;
   notes?: string;
+  creatorId: string;
 }
 export interface IUpdateClient {
   id: string
@@ -37,6 +38,8 @@ export interface IClient {
   id: string
   name?: string
   email?: string
+  creatorId: string;
+  approverId: string;
   contactNumber?: string
   documents?: string[]
   department?: string
@@ -44,6 +47,11 @@ export interface IClient {
   salesAgreements?: ISalesAgreement[]
   transactions?: ITransaction[]
   clientType: TypeOfClient
+  creator?: IUser
+  approver?: IUser
+
+  createdAt: Date
+  updatedAt: Date
 }
 
 export async function createClient(data: ICreateClient): Promise<IClient> {
@@ -82,6 +90,18 @@ export async function deleteClient(id: string) {
       message = error.response?.data.message;
     }
     throw new Error(message || "Something went wrong");
+  }
+}
+export async function approveClient(id: string) {
+  try {
+    const response = await api.patch(`/api/v1/clients/${id}/approver`);
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong')
   }
 }
 

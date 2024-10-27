@@ -17,6 +17,7 @@ export interface ICreateClient {
   officeBranch: OfficeBranch
   clientType: ClientType;
   notes?: string;
+  creatorId: string
 }
 export interface IUpdateClient {
   name?: string

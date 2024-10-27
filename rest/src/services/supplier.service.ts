@@ -68,7 +68,9 @@ export async function fetchSuppliers({ skip, take, search, category, branch }: I
         select: {
           purchaseOrders: true
         }
-      }
+      },
+      approver: true,
+      creator: true,
     },
     skip: skip ?? 0,
     take: take ?? 10,
@@ -92,8 +94,19 @@ export async function fetchSuppliers({ skip, take, search, category, branch }: I
   return { suppliersData, total };
 }
 
-export const findSupplierById = async(id: string) => {
+export const findSupplierById = async (id: string) => {
   return await prisma.supplier.findFirst({
-    where: {id}
+    where: { id }
   })
+}
+interface IUpdateSupplierApprover {
+  id: string,
+  approverId: string
+}
+
+export async function updateSupplierApprover({ id, approverId }: IUpdateSupplierApprover) {
+  return await prisma.supplier.update({
+    where: { id },
+    data: { approverId }
+  });
 }
