@@ -2,6 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { IPackage } from "@/interfaces/package.interface";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import EditPackageDialog from "@/components/dialogs/package/edit-package";
+import DeletePackageDialog from "@/components/alert/package/delete";
 
 export const Columns: ColumnDef<IPackage>[] = [
   {
@@ -70,8 +72,8 @@ export const Columns: ColumnDef<IPackage>[] = [
     cell: ({ row }) => (
       <span>
         {`
-          ${row.original.approver?.firstName}
-          ${row.original.approver?.lastName}
+          ${row.original.approver?.firstName ?? ''}
+          ${row.original.approver?.lastName ?? ''}
         `}
       </span>
     ),
@@ -82,12 +84,12 @@ export const Columns: ColumnDef<IPackage>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-center gap-4">
-          {/* <EditUserDialog
+          <EditPackageDialog
             data={row.original}
           />
-          <DeleteUserDialog
-            userId={row.original.id}
-          /> */}
+          <DeletePackageDialog
+            packageId={row.original.id}
+          />
         </div>
       )
     },

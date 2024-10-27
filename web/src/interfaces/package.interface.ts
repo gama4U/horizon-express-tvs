@@ -1,5 +1,5 @@
 import { Currency } from "./sales-agreement-item.interface";
-import { IUser } from "./user.interface";
+import { IUser, OfficeBranch } from "./user.interface";
 
 export interface IPackage {
   id: string;
@@ -12,6 +12,7 @@ export interface IPackage {
   remarks: string;
   accommodation?: IPackageAccommodation;
   airfare?: IPackageAirfare;
+  officeBranch: OfficeBranch;
   creator?: IUser;
   approver?: IUser;
   createdAt: Date;
@@ -51,4 +52,20 @@ export interface IPackageAirfare {
   package: IPackage;
   createdAt: Date;
   updateAt: Date;
+}
+
+export interface ICreatePackage {
+  name: string;
+  inclusions: string[];
+  exclusions: string[];
+  remarks: string;
+  officeBranch: OfficeBranch;
+}
+
+export interface IUpdatePackage {
+  id: string;
+  name: string;
+  inclusions: string[];
+  exclusions: string[];
+  remarks: string;
 }

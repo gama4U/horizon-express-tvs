@@ -301,7 +301,7 @@ model TransportItinerary {
 model Package {
   id             String               @id @default(cuid())
   creatorId      String
-  approverId     String
+  approverId     String?
   packageNumber  String
   sequenceNumber Int                  @unique @default(autoincrement())
   name           String
@@ -309,15 +309,15 @@ model Package {
   exclusions     String[]
   remarks        String
   officeBranch   OfficeBranch
-  accomodation   PackageAccomodation?
+  accomodation   PackageAccommodation?
   airfare        PackageAirfare?
   creator        User                 @relation("CreatedPackages", fields: [creatorId], references: [id])
-  approver       User                 @relation("ApprovedPackages", fields: [approverId], references: [id])
+  approver       User?                 @relation("ApprovedPackages", fields: [approverId], references: [id])
   createdAt      DateTime?            @default(now())
   updatedAt      DateTime?            @updatedAt
 }
 
-model PackageAccomodation {
+model PackageAccommodation {
   id            String    @id @default(cuid())
   packageId     String    @unique
   category      String

@@ -8,6 +8,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { fetchPackages } from "@/api/queries/package.query";
 import { Columns } from "@/components/tables/packages/columns";
 import { DataTable } from "@/components/tables/packages/data-table";
+import CreatePackageDialog from "@/components/dialogs/package/create-package";
 
 export default function Packages() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
@@ -43,6 +44,7 @@ export default function Packages() {
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
+            <CreatePackageDialog />
           </div>
         </div>
         <DataTable
