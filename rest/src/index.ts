@@ -26,6 +26,7 @@ import clientRouter from "./routers/client.router";
 import supplierRouter from "./routers/suppliers.router";
 import documentTransactionRouter from "./routers/document-transaction.router";
 import packageRouter from "./routers/package.router";
+import packageAccommodationRouter from "./routers/package-accommodation.router";
 
 declare module 'express' {
   interface Request {
@@ -77,6 +78,7 @@ mainRouter.use('/memorandums', memorandumRouter);
 mainRouter.use('/suppliers', supplierRouter);
 mainRouter.use('/document-transactions', documentTransactionRouter);
 mainRouter.use('/packages', packageRouter)
+mainRouter.use('/package-accommodations', packageAccommodationRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)

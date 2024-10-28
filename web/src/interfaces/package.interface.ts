@@ -10,7 +10,7 @@ export interface IPackage {
   inclusions: string[];
   exclusions: string[];
   remarks: string;
-  accommodation?: IPackageAccommodation;
+  accomodation?: IPackageAccommodation;
   airfare?: IPackageAirfare;
   officeBranch: OfficeBranch;
   creator?: IUser;
@@ -68,4 +68,20 @@ export interface IUpdatePackage {
   inclusions: string[];
   exclusions: string[];
   remarks: string;
+}
+
+export interface ICreatePackageAccommodation {
+  packageId: string;
+  category: string;
+  options: string[];
+  ratePerPerson: number;
+  currency: Currency;
+}
+
+export interface IUpdatePackageAccommodation {
+  id: string;
+  category: string;
+  options: string[];
+  ratePerPerson: number;
+  currency: Currency;
 }

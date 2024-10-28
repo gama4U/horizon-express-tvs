@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
 import { IFindPackages } from '../interfaces/package.interface';
 import { createPackageSchema, getPackagesSchema, updatePackageSchema } from '../schemas/package.schema';
-import { createPackage, deletePackage, findPackages, updatePackage } from '../services/package.service';
+import { createPackage, deletePackage, findPackageById, findPackages, updatePackage } from '../services/package.service';
 import { deletePackageAccommodationByPackageId } from '../services/package-accommodation.service';
 import { deletePackageAirfareByPackageId } from '../services/package-airfare.service';
 
@@ -22,6 +22,20 @@ packageRouter.get('/', validate(getPackagesSchema), async (req: Request, res: Re
     if (!packages) throw new Error('Failed to get packages');
 
     res.status(200).json(packages);
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+packageRouter.get('/:id', validate(getPackagesSchema), async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id
+
+    const foundPackage = await findPackageById(id);
+    if (!foundPackage) throw new Error('Failed to get package');
+
+    res.status(200).json(foundPackage);
 
   } catch (error) {
     res.status(500).json(error);

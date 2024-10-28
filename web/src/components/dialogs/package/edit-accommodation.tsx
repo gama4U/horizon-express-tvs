@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Loader2, PackageOpen, Pencil, } from "lucide-react";
+import { Loader2, Package, Pencil } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,67 +23,58 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import CommonInput from "@/components/common/input";
-import { IPackage, IUpdatePackage } from "@/interfaces/package.interface";
-import { updatePackage } from "@/api/mutations/package.mutation";
 import { MultiInput } from "@/components/common/multi-input";
-import { Textarea } from "@/components/ui/textarea";
+import { IPackageAccommodation, IUpdatePackageAccommodation } from "@/interfaces/package.interface";
+import { Currency } from "@/interfaces/sales-agreement-item.interface";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { updatePackageAccommodation } from "@/api/mutations/package.mutation";
 
 const formSchema = z.object({
-  name: z.string().trim().min(1, {
+  category: z.string().trim().min(1, {
     message: "Name is required"
   }),
-  inclusions: z.array(
+  options: z.array(
     z.string().trim().min(1, {
-      message: "Inclusion item must not be empty"
+      message: "Option item must not be empty"
     })
   ).refine(items => items.length > 0, {
-    message: 'Please add at least one inclusion'
+    message: 'Please add at least one option'
   }),
-  exclusions: z.array(
-    z.string().trim().min(1, {
-      message: "Exclusion item must not be empty"
-    })
-  ).refine(items => items.length > 0, {
-    message: 'Please add at least one exclusion'
+  ratePerPerson: z.string().refine(value => {
+    const numberValue = Number(value);
+    return !isNaN(numberValue) && numberValue > 0;
+  }, {
+    message: 'Invalid rate'
   }),
-  remarks: z.string().trim().min(1, {
-    message: "Remarks is required"
-  }),
+  currency: z.enum([Currency.PHP, Currency.USD]),
 });
 
-interface Props {
-  data: IPackage
+const currencyMap: Record<Currency, string> = {
+  PHP: 'Philippine Peso (PHP)',
+  USD: 'US Dollar (USD)'
 }
 
-export default function EditPackageDialog({ data }: Props) {
+interface Props {
+  packageAccommodation: IPackageAccommodation;
+}
+
+export default function UpdatePackageAccommodationDialog({packageAccommodation}: Props) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      inclusions: [],
-      exclusions: [],
-      remarks: '',
+      category: '',
+      options: [],
+      currency: Currency.PHP
     }
   });
 
-  useEffect(() => {
-    if (data) {
-      form.reset({
-        name: data.name,
-        inclusions: data.inclusions,
-        exclusions: data.exclusions,
-        remarks: data.remarks,
-      })
-    }
-  }, [data]);
-
-  const { mutate: updatePackageMutate, isPending } = useMutation({
-    mutationFn: async (data: IUpdatePackage) => await updatePackage(data),
+  const { mutate: updateMutate, isPending } = useMutation({
+    mutationFn: async (data: IUpdatePackageAccommodation) => await updatePackageAccommodation(data),
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ['packages'] })
+      queryClient.refetchQueries({ queryKey: ['package-details'] })
       form.reset();
       setOpen(false);
       toast.success("Package updated successfully", {
@@ -100,11 +91,23 @@ export default function EditPackageDialog({ data }: Props) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    updatePackageMutate({
-      id: data.id,
-      ...values
+    updateMutate({
+      id: packageAccommodation.id,
+      ...values,
+      ratePerPerson: Number(values.ratePerPerson)
     });
   }
+
+  useEffect(() => {
+    if (packageAccommodation) {
+      form.reset({
+        category: packageAccommodation.category,
+        currency: packageAccommodation.currency,
+        ratePerPerson: String(packageAccommodation.ratePerPerson),
+        options: packageAccommodation.options,
+      })
+    }
+  }, [packageAccommodation]);
 
   return (
     <Dialog open={open} onOpenChange={(value) => setOpen(value)}>
@@ -116,9 +119,9 @@ export default function EditPackageDialog({ data }: Props) {
       <DialogContent className="max-w-[600px] max-h-[560px] overflow-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <PackageOpen size={24} />
+            <Package size={24} />
             <p className="flex-1 truncate">
-              Update package
+              Update package accommodation
             </p>
           </DialogTitle>
         </DialogHeader>
@@ -127,12 +130,12 @@ export default function EditPackageDialog({ data }: Props) {
             <div className="w-full space-y-2">
               <FormField
                 control={form.control}
-                name="name"
+                name="category"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Package name" />
+                      <CommonInput inputProps={{ ...field }} placeholder="Category" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -140,12 +143,12 @@ export default function EditPackageDialog({ data }: Props) {
               />
               <FormField
                 control={form.control}
-                name="inclusions"
+                name="options"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Inclusions</FormLabel>
+                    <FormLabel>Options</FormLabel>
                     <FormControl>
-                      <MultiInput {...field} placeholder="Add inclusions (Enter to add) "/>
+                      <MultiInput {...field} placeholder="Add options (Enter to add) "/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -153,12 +156,12 @@ export default function EditPackageDialog({ data }: Props) {
               />
               <FormField
                 control={form.control}
-                name="exclusions"
+                name="ratePerPerson"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Exclusions</FormLabel>
+                    <FormLabel>Rate per person</FormLabel>
                     <FormControl>
-                      <MultiInput {...field} placeholder="Add exclusions (Enter to add)"/>
+                      <CommonInput inputProps={{ ...field }} type="number" placeholder="Rate per person" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -166,18 +169,29 @@ export default function EditPackageDialog({ data }: Props) {
               />
               <FormField
                 control={form.control}
-                name="remarks"
+                name="currency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Remarks</FormLabel>
-                    <FormControl className="w-2/3">
-                      <Textarea
-                        {...field}
-                        placeholder="Start writing remarks..."
-                        className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
-                      />
-                    </FormControl>
-                    <FormMessage />
+                    <FormLabel>Currency:</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select a currency" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(currencyMap).map(([value, label], index) => (
+                          <SelectItem
+                            key={index}
+                            value={value}
+                            className="text-[12px]"
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />

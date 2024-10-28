@@ -1,4 +1,4 @@
-import { ICreatePackage, IUpdatePackage } from "@/interfaces/package.interface";
+import { ICreatePackage, ICreatePackageAccommodation, IUpdatePackage, IUpdatePackageAccommodation } from "@/interfaces/package.interface";
 import api from "@/utils/api.util";
 import { AxiosError } from "axios";
 
@@ -40,3 +40,31 @@ export async function deletePackage(id: string) {
     throw new Error(message || 'Something went wrong')
   }
 }
+
+
+export const createPackageAccommodation = async(data: ICreatePackageAccommodation) => {
+	try {
+		const response = await api.post(`/api/v1/package-accommodations`, data);
+		return response.data;
+	} catch (error) {
+		let message;
+		if (error instanceof AxiosError) {
+			message = error.response?.data.message;
+		}
+		throw new Error(message || 'Something went wrong')
+	}
+}
+
+export async function updatePackageAccommodation({id, ...data}: IUpdatePackageAccommodation) {
+  try {
+    const response = await api.put(`/api/v1/package-accommodations/${id}`, data);
+    return response.data;
+  } catch(error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong')
+  }
+}
+

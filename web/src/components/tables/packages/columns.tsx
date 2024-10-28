@@ -2,8 +2,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { IPackage } from "@/interfaces/package.interface";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import EditPackageDialog from "@/components/dialogs/package/edit-package";
+import EditPackageDialog from "@/components/dialogs/package/edit";
 import DeletePackageDialog from "@/components/alert/package/delete";
+import { Link } from "react-router-dom";
+import { NotepadText } from "lucide-react";
+import { UserType } from "@/interfaces/user.interface";
+import Constants from "@/constants";
+import { useAuth } from "@/providers/auth-provider";
 
 export const Columns: ColumnDef<IPackage>[] = [
   {
@@ -82,14 +87,26 @@ export const Columns: ColumnDef<IPackage>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
+      const { session: { user } } = useAuth();
       return (
         <div className="flex items-center justify-center gap-4">
-          <EditPackageDialog
-            data={row.original}
-          />
-          <DeletePackageDialog
-            packageId={row.original.id}
-          />
+          <Link to={`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/packages/${row.original.id}`}>
+            <NotepadText
+              size={16}
+              className="cursor-pointer hover:text-primary"
+            />
+          </Link>
+          {user?.permission && PermissionsCanEdit.includes(user?.permission) && (
+            <EditPackageDialog
+              data={row.original}
+            />
+          )}
+          {user?.permission && PermissionsCanDelete.includes(user?.permission) && (
+            <DeletePackageDialog
+              packageId={row.original.id}
+            />
+          )}
         </div>
       )
     },

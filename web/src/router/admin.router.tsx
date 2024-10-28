@@ -16,6 +16,7 @@ import Suppliers from "@/pages/admin/suppliers";
 import DocumentTransactions from "@/pages/admin/document-transactions";
 import DocumentTransactionDetails from "@/pages/admin/document-transactions/details";
 import Packages from "@/pages/admin/packages";
+import PackageDetails from "@/pages/admin/packages/details";
 
 const adminRouter: RouteObject = {
   path: '/admin',
@@ -81,6 +82,10 @@ const adminRouter: RouteObject = {
     {
       path: 'packages',
       element: <Packages />
+    },
+    {
+      path: 'packages/:id',
+      element: <PackageDetails />
     },
     {
       path: 'profile',

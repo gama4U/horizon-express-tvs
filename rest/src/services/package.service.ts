@@ -76,3 +76,35 @@ export async function findPackages(params: IFindPackages) {
 
   return { packages, total }
 }
+
+export const findPackageById = async(id: string) => {
+  return await prisma.package.findUnique({
+    where: {id},
+    include: {
+      accomodation: true,
+      airfare: true,
+      creator: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          avatar: true,
+          userType: true,
+          signature: true
+        }
+      },
+      approver: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          avatar: true,
+          userType: true,
+          signature: true
+        }
+      },
+    }
+  });
+}
