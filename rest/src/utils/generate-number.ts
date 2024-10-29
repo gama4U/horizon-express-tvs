@@ -1,27 +1,44 @@
 import { OfficeBranch } from "@prisma/client";
 import dayjs from "dayjs";
 
-export function getNextMemorandumNumber(lastMemoNumber: string | null): string {
+export function getNextMemorandumNumber(lastMemoNumber: string | null, branch: string) {
+  const today = dayjs().format('MMDDYYYY');
+  let newNumber = 1;
+
   if (lastMemoNumber) {
-    return (parseInt(lastMemoNumber) + 1).toString().padStart(3, '0');
-  } else {
-    return '001';
+    const numericPart = parseInt(lastMemoNumber.split('-')[0]);
+    newNumber = numericPart + 1;
   }
+
+  const paddedNumber = String(newNumber).padStart(3, '0');
+  const branchCode = branch === 'CEBU' ? 'CEB' : 'CAL';
+
+  return `${paddedNumber}-${today}-${branchCode}`;
 }
-export function getNextDtsNumber(lastDtsNumber: string | null): string {
+
+
+export function getNextDtsNumber(lastDtsNumber: string | null, officeBranch: string) {
+  let newNumber = 1;
+
   if (lastDtsNumber) {
-    return (parseInt(lastDtsNumber) + 1).toString().padStart(3, '0');
-  } else {
-    return '001';
+    const numericPart = parseInt(lastDtsNumber.slice(3, 8));
+    newNumber = numericPart + 1;
   }
+  const paddedNumber = String(newNumber).padStart(5, '0');
+  const today = dayjs().format('MMDDYYYY');
+  const branchCode = officeBranch === 'CEBU' ? 'CEB' : 'CAL';
+
+  return `DTS${paddedNumber}-${today}-${branchCode}`;
 }
+
+
 
 export function getNextTransactionNumber(lastTransactionNumber: string | null, branch: OfficeBranch) {
   const today = dayjs().format('MMDDYYYY');
   let newTransactionNumber = '001';
 
   if (lastTransactionNumber) {
-    const numericPart = lastTransactionNumber.slice(1, 4); // Extract the 001 part from T001
+    const numericPart = lastTransactionNumber.slice(1, 4);
 
     if (numericPart) {
       newTransactionNumber = (parseInt(numericPart) + 1).toString().padStart(3, '0');
@@ -32,13 +49,33 @@ export function getNextTransactionNumber(lastTransactionNumber: string | null, b
   return `T${newTransactionNumber}-${today}-${branchCode}`;
 }
 
-interface GenerateSerialNumberParams {
-  uniqueNumber: number;
-  prefix: string;
-  postfix: string;
-}
-export function generateSerialNumber({ uniqueNumber, prefix, postfix }: GenerateSerialNumberParams) {
+
+export function getNextSerialNumber(lastSerialNumber: string | null, branch: string) {
   const today = dayjs().format('MMDDYYYY');
-  const paddedNumber = String(uniqueNumber).toString().padStart(3, '0');
-  return `${prefix}${paddedNumber}-${today}-${postfix}`
+  let newNumber = branch === 'CEBU' ? 251 : 1;
+
+  if (lastSerialNumber) {
+    const numericPart = parseInt(lastSerialNumber.slice(2, 7));
+    newNumber = numericPart + 1;
+  }
+
+  const paddedNumber = String(newNumber).padStart(5, '0');
+  const branchCode = branch === 'CEBU' ? 'CEB' : 'CAL';
+
+  return `SA${paddedNumber}-${today}-${branchCode}`;
 }
+
+export function getNextPurchaseRequestNumber(lastSerialNumber: string | null, officeBranch: string) {
+  const today = dayjs().format('MMDDYYYY');
+  let newNumber = officeBranch === 'CEBU' ? 501 : 1;
+  if (lastSerialNumber) {
+    const numericPart = parseInt(lastSerialNumber.slice(2, 7));
+    newNumber = numericPart + 1;
+  }
+
+  const paddedNumber = String(newNumber).padStart(5, '0');
+  const branchCode = officeBranch === 'CEBU' ? 'CEB' : 'CAL';
+
+  return `PO${paddedNumber}-${today}-${branchCode}`;
+}
+

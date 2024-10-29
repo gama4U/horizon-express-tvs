@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import ClientTypeBadge from "../../badges/client-type";
-import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, CircleUser, NotepadText } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import EditSalesAgreementDialog from "../../dialogs/sales-agreement/edit";
 import DeleteSalesAgreement from "../../alert/sales-agreement/delete";

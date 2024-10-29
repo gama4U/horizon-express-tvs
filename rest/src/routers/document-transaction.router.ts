@@ -2,12 +2,15 @@ import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
 import { getDocumentTransactionSchema } from '../schemas/document-transaction.schema';
 import { createDocumentTransaction, deleteDocumentTransaction, fetchDocumentTransactions, findDocumentTransactionById, transmitDocument, updateDocumentTransaction } from '../services/document-transaction.service';
+import { findClientById } from '../services/client.service';
 
 const documentTransactionRouter = express.Router();
 
 documentTransactionRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const created = await createDocumentTransaction(req.body)
+
+    const foundClient = await findClientById(req.body.clientId);
+    const created = await createDocumentTransaction(req.body, String(foundClient?.officeBranch))
     if (!created) { throw new Error('Failed to create  document transaction') }
 
     return res.status(200).json(created);

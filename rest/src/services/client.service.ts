@@ -30,10 +30,12 @@ export interface IFindClient {
   take?: number;
   search?: string;
   branch?: string;
+  isApproved?: boolean;
   typeOfClient?: ClientType
 }
 
-export async function fetchClients({ skip, take, search, branch, typeOfClient }: IFindClient) {
+
+export async function fetchClients({ skip, take, search, branch, typeOfClient, isApproved }: IFindClient) {
   let whereInput: Prisma.ClientWhereInput = {};
 
   if (search) {
@@ -44,14 +46,18 @@ export async function fetchClients({ skip, take, search, branch, typeOfClient }:
           { name: { contains: part, mode: "insensitive" } },
         ],
       })),
-    }
+    };
+  }
+
+  if (isApproved === true) {
+    whereInput.approverId = { not: null };
   }
 
   const client = prisma.client.findMany({
     where: {
       ...whereInput,
       clientType: typeOfClient,
-      officeBranch: branch as OfficeBranch
+      officeBranch: branch as OfficeBranch,
     },
     include: {
       transactions: true,
@@ -59,32 +65,30 @@ export async function fetchClients({ skip, take, search, branch, typeOfClient }:
       approver: true,
       _count: {
         select: {
-          transactions: true
-        }
-      }
+          transactions: true,
+        },
+      },
     },
     skip: skip ?? 0,
     take: take ?? 10,
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: 'desc',
+    },
   });
 
   const countClients = prisma.client.count({
     where: {
       ...whereInput,
       clientType: typeOfClient,
-      officeBranch: branch as OfficeBranch
+      officeBranch: branch as OfficeBranch,
     },
   });
 
-  const [clientsData, total] = await prisma.$transaction([
-    client,
-    countClients
-  ]);
+  const [clientsData, total] = await prisma.$transaction([client, countClients]);
 
   return { clientsData, total };
 }
+
 
 export const findClientById = async (id: string) => {
   return await prisma.client.findUnique({

@@ -115,15 +115,16 @@ model PurchaseRequestOrder {
 }
 
 model Memorandum {
-  id               String  @id @default(cuid())
+  id               String        @id @default(cuid())
   memorandumNumber String
   to               String
   subject          String
   contents         String
   creatorId        String
-  creator          User    @relation("PreparedMemorandums", fields: [creatorId], references: [id])
+  branch           OfficeBranch?
+  creator          User          @relation("PreparedMemorandums", fields: [creatorId], references: [id])
   approverId       String?
-  approver         User?   @relation("ApprovedMemorandums", fields: [approverId], references: [id])
+  approver         User?         @relation("ApprovedMemorandums", fields: [approverId], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

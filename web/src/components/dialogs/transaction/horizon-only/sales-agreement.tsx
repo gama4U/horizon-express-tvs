@@ -33,7 +33,7 @@ export default function SelectSalesAgreementDialog({
 	const queryClient = useQueryClient();
 	const { skip, take, pagination } = usePagination();
 	const [search, setSearch] = useState('');
-	const [clientTypeFilter, setClientTypeFilter] = useState<ClientTypeFilter>('ALL');
+	const [clientTypeFilter, setClientTypeFilter] = useState<ClientTypeFilter | string>('');
 	const debouncedSearch = useDebounce(search, 500);
 	const [selectedAgreement, setSelectedAgreement] = useState<ISalesAgreement | null>(null);
 

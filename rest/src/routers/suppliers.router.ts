@@ -29,7 +29,7 @@ supplierRouter.get('/', validate(getSuppliersSchema), async (req: Request, res: 
       search: search ? String(search) : undefined,
       category: category ? String(category) : undefined,
       branch: branch ? String(branch) : undefined,
-      isApproved: isApproved !== undefined ? isApproved === 'true' : undefined,
+      isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
     };
 
     const clients = await fetchSuppliers(filters);

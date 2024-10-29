@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, CircleUser, ListTodo, NotepadText, TicketCheck } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, ListTodo, NotepadText, TicketCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ITransaction, VoucherTypes } from "@/interfaces/transaction.interface";
 import { VoucherBadge } from "@/components/badges/voucher-type";

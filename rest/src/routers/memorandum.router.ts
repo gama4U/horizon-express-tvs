@@ -21,12 +21,13 @@ memorandumRouter.post('/', async (req: Request, res: Response) => {
 memorandumRouter.get('/', validate(getMemorandumsSchema), async (req: Request, res: Response) => {
   try {
 
-    const { skip, take, search } = req.query;
+    const { skip, take, search, branch } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
+      branch: branch ? String(branch) : undefined,
     };
 
     const memorandums = await fetchMemorandums(filters);

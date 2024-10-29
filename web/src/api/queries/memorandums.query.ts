@@ -6,6 +6,7 @@ interface IFetchMemorandums {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string | null,
 }
 
 export interface IMemorandum {

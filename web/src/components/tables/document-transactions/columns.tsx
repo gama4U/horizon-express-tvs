@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
-import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, Calendar, CircleUser, File, Hash, LetterText, ListTodo, NotepadText } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, Calendar, File, Hash, LetterText, ListTodo, NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";

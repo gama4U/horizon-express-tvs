@@ -8,6 +8,7 @@ interface IFetchClients {
   search?: string;
   branch?: string | null,
   typeOfClient?: TypeOfClient | string,
+  isApproved?: boolean
 }
 
 interface IClients {

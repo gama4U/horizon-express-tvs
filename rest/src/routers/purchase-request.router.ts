@@ -13,7 +13,7 @@ purchaseRequestRouter.post('/', validate(createPurchaseRequestSchema), async (re
   try {
     const userId = req.user?.id;
 
-    const foundSupplier = await findSupplierById(req.body.clientId);
+    const foundSupplier = await findSupplierById(req.body.supplierId);
     if (!foundSupplier) {
       throw new Error('Failed to find supplier');
     }

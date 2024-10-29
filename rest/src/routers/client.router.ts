@@ -25,13 +25,15 @@ clientRouter.post('/', async (req: Request, res: Response) => {
 clientRouter.get('/', validate(getClientsSchema), async (req: Request, res: Response) => {
   try {
 
-    const { skip, take, search, branch, typeOfClient } = req.query;
+    const { skip, take, search, branch, typeOfClient, isApproved } = req.query;
+
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
       branch: branch ? String(branch) : undefined,
+      isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
       typeOfClient: typeOfClient ? typeOfClient as ClientType : undefined,
     };
 

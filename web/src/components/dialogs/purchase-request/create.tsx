@@ -69,7 +69,7 @@ export default function CreatePurchaseRequestDialog() {
 
   const { data: suppliers } = useQuery({
     queryKey: ['suppliers', debouncedSearch, branch],
-    queryFn: async () => await fetchSuppliers({ search: debouncedSearch, branch: branch as OfficeBranch }),
+    queryFn: async () => await fetchSuppliers({ search: debouncedSearch, branch: branch as OfficeBranch, isApproved: true }),
   })
 
   const { data: salesAgreementsData } = useQuery({

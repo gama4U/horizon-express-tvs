@@ -2,31 +2,27 @@ import { OfficeBranch, Prisma } from "@prisma/client";
 import moment from 'moment';
 import prisma from "../utils/db.utils";
 import { ICreatePurchaseRequest, IFindPurchaseRequests, IUpdatePurchaseRequest, IUpdatePurchaseRequestApprover } from "../interfaces/purchase-request.interface";
-import { generateSerialNumber } from "../utils/generate-number";
+import { getNextPurchaseRequestNumber } from "../utils/generate-number";
 
 export async function createPurchaseRequest({ officeBranch, ...data }: ICreatePurchaseRequest) {
-  const latestSalesAgreement = await prisma.salesAgreement.findFirst({
+  const latestPurchaseRequest = await prisma.purchaseRequestOrder.findFirst({
     where: {
-      client: {
-        officeBranch
+      supplier: {
+        officeBranch,
       },
     },
     orderBy: {
-      sequenceNumber: 'desc'
-    }
+      sequenceNumber: 'desc',
+    },
   });
 
-  const serialNumber = generateSerialNumber({
-    prefix: 'PO',
-    uniqueNumber: latestSalesAgreement ? latestSalesAgreement.sequenceNumber + 1 : 1,
-    postfix: officeBranch.slice(0, 3)
-  });
+  const serialNumber = getNextPurchaseRequestNumber(latestPurchaseRequest?.serialNumber || null, officeBranch);
 
   return prisma.purchaseRequestOrder.create({
     data: {
       ...data,
-      serialNumber
-    }
+      serialNumber,
+    },
   });
 }
 
