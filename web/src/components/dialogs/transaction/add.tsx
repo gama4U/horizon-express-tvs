@@ -92,13 +92,13 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	const debouncedSearch = useDebounce(search, 500);
 	const [selectedClient, setSelectedClient] = useState<IClient | null>(null);
 	const { session, branch } = useAuth()
+	const isApproved = true
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['clients', pagination, debouncedSearch, branch],
-		queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch, branch }),
+		queryKey: ['clients', pagination, debouncedSearch, branch, isApproved],
+		queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch, branch, isApproved }),
 		enabled: (selection.type === 'select' && selection.step === 1)
 	});
-
 
 	const handleSelectCard = (option: string) => {
 		setSelectedCard(option);
@@ -167,7 +167,8 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 		if (selection.type === 'add') {
 			createClientMutate({
 				...values,
-				officeBranch: branch as OfficeBranch
+				officeBranch: branch as OfficeBranch,
+				creatorId: String(session?.user?.id)
 			})
 		}
 	}

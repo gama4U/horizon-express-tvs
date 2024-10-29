@@ -2,13 +2,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { ISalesAgreement } from "../../../interfaces/sales-agreement.interface";
 import ClientTypeBadge from "../../badges/client-type";
-import { CircleUser, NotepadText } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import EditSalesAgreementDialog from "../../dialogs/sales-agreement/edit";
 import DeleteSalesAgreement from "../../alert/sales-agreement/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 import Constants from "@/constants";
+import { Button } from "@/components/ui/button";
 
 export const Columns: ColumnDef<ISalesAgreement>[] = [
   {
@@ -35,16 +36,22 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
     enableHiding: false,
   },
   {
-    id: "clientName",
-    header: () => <div className="flex items-center gap-x-2">
-      <p>Client</p>
-      <CircleUser color="white" size={16} />
-    </div>,
-    cell: ({ row }) => (
-      <span className="capitalize">
-        {row.original.client.name}
-      </span>
-    ),
+    accessorKey: "client.name",
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
+      return (
+        <Button
+          variant="ghost"
+          className="text-xs"
+          onClick={() => { column.toggleSorting(column.getIsSorted() === "asc") }}
+        >
+          Client Name
+          {isSorted === "asc" && <ArrowUpAZ className="ml-2 h-4 w-4" />}
+          {isSorted === "desc" && <ArrowDownAZ className="ml-2 h-4 w-4" />}
+          {!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}				</Button>
+      )
+    },
+    enableSorting: true,
   },
   {
     id: "serialNumber ",

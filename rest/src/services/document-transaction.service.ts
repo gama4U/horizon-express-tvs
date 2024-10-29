@@ -8,12 +8,17 @@ export interface ICreateDocumentTransaction {
   clientId: string
 }
 
-export async function createDocumentTransaction(data: ICreateDocumentTransaction) {
+export async function createDocumentTransaction(data: ICreateDocumentTransaction, officeBranch: string) {
   const lastDts = await prisma.documentTransaction.findFirst({
+    where: {
+      client: {
+        officeBranch: officeBranch as OfficeBranch,
+      }
+    },
     orderBy: { dtsNumber: 'desc' },
   });
 
-  const nextDtsNumber = getNextDtsNumber(lastDts?.dtsNumber || null);
+  const nextDtsNumber = getNextDtsNumber(lastDts?.dtsNumber || null, officeBranch);
 
   return await prisma.documentTransaction.create({
     data: {

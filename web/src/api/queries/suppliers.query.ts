@@ -7,6 +7,7 @@ interface IFetchSuppliers {
   take?: number;
   search?: string;
   branch?: string;
+  isApproved?: boolean;
   category?: string;
 }
 

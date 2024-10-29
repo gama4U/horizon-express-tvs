@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { getNextMemorandumNumber } from "../utils/generate-number";
 import moment from "moment";
@@ -8,22 +8,29 @@ export interface ICreateMemorandum {
   subject: string
   contents: string
   creatorId: string
+  branch?: string
 }
 
-export async function createMemorandum(data: ICreateMemorandum) {
+
+export async function createMemorandum({ branch, ...data }: ICreateMemorandum) {
   const lastMemo = await prisma.memorandum.findFirst({
+    where: {
+      branch: branch as OfficeBranch,
+    },
     orderBy: { memorandumNumber: 'desc' },
   });
 
-  const nextMemoNumber = getNextMemorandumNumber(lastMemo?.memorandumNumber || null);
+  const nextMemoNumber = getNextMemorandumNumber(lastMemo?.memorandumNumber || null, String(branch));
 
   return await prisma.memorandum.create({
     data: {
       ...data,
+      branch: branch as OfficeBranch,
       memorandumNumber: nextMemoNumber,
     },
   });
 }
+
 export async function deleteMemorandum(id: string) {
   return await prisma.memorandum.delete({
     where: {
@@ -50,9 +57,10 @@ export interface IFindMemorandums {
   skip?: number;
   take?: number;
   search?: string;
+  branch?: string
 }
 
-export async function fetchMemorandums({ skip, take, search }: IFindMemorandums) {
+export async function fetchMemorandums({ skip, take, search, branch }: IFindMemorandums) {
   let whereInput: Prisma.MemorandumWhereInput = {};
 
   if (search) {
@@ -68,6 +76,7 @@ export async function fetchMemorandums({ skip, take, search }: IFindMemorandums)
   const memorandums = prisma.memorandum.findMany({
     where: {
       ...whereInput,
+      branch: branch as OfficeBranch
     },
     skip: skip ?? 0,
     take: take ?? 10,
@@ -78,7 +87,8 @@ export async function fetchMemorandums({ skip, take, search }: IFindMemorandums)
 
   const countMemorandums = prisma.memorandum.count({
     where: {
-      ...whereInput
+      ...whereInput,
+      branch: branch as OfficeBranch
     },
   });
 

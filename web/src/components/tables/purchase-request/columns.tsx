@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../../ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { NotepadText } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, NotepadText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface";
 import EditPurchaseRequestDialog from "@/components/dialogs/purchase-request/edit";
@@ -9,6 +9,7 @@ import DeletePurchaseRequest from "@/components/alert/purchse-request/delete";
 import { useAuth } from "@/providers/auth-provider";
 import { UserType } from "@/interfaces/user.interface";
 import Constants from "@/constants";
+import { Button } from "@/components/ui/button";
 
 export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
   {
@@ -35,15 +36,24 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     enableHiding: false,
   },
   {
-    id: "supplier",
-    header: "Supplier",
-    cell: ({ row }) => (
-      <span className="capitalize">
-        {row.original.supplier?.name}
-      </span>
-    ),
+    accessorKey: "supplier.name",
+    header: ({ column }) => {
+      const isSorted = column.getIsSorted();
+      return (
+        <Button
+          variant="ghost"
+          className="text-xs"
+          onClick={() => { column.toggleSorting(column.getIsSorted() === "asc") }}
+        >
+          Client Name
+          {isSorted === "asc" && <ArrowUpAZ className="ml-2 h-4 w-4" />}
+          {isSorted === "desc" && <ArrowDownAZ className="ml-2 h-4 w-4" />}
+          {!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}
+        </Button>
+      )
+    },
+    enableSorting: true,
   },
-
   {
     id: "creator",
     header: "Creator",
@@ -73,7 +83,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
     )
   },
   {
-    id: "expenses",
+    id: "disbursementType",
     header: "Disbursement Type",
     cell: ({ row }) => (
       <span className="capitalize">
@@ -81,6 +91,16 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
       </span>
     )
   },
+  {
+    id: "classification",
+    header: "Classification",
+    cell: ({ row }) => (
+      <span className="capitalize">
+        {row.original.classification}
+      </span>
+    )
+  },
+
   {
     id: "actions",
     enableHiding: false,

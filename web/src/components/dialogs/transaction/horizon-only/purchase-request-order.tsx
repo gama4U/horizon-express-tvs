@@ -10,13 +10,12 @@ import AnimatedDiv from "@/components/animated/Div";
 import { Button } from "@/components/ui/button";
 import { IUpdateTransaction, updateTransaction } from "@/api/mutations/transaction.mutation";
 import { toast } from "sonner";
-import { IPurchaseRequestOrder, PaymentType, PurchaseRequestOrderType } from "@/interfaces/purchase-request.interface";
+import { DisbursementType, IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface";
 import { fetchPurchaseRequestOrders } from "@/api/queries/purchase-request.queries";
-import PurchaseRequestTypeFilter from "@/components/select/purchase-request/type-filter";
-import PaymentTypeFilterSelect from "@/components/select/purchase-request/payment-type-filter";
 import PurchaseRequestInfo from "@/components/section/purchase-request/info";
 import Lottie from "lottie-react";
 import skeletonLoader from "../../../../assets/loaders/skeleton.json"
+import DisbursementTypeFilter from "@/components/select/purchase-request/disbursement-type-filter";
 
 interface SelectPurchaseRequestProps {
 	transactionId: string;
@@ -34,21 +33,17 @@ export default function SelectPurchaseRequestDialog({
 	const queryClient = useQueryClient();
 	const { skip, take, pagination } = usePagination();
 	const [search, setSearch] = useState('');
-	const [typeFilter, setTypeFilter] = useState<PurchaseRequestOrderType | 'ALL'>('ALL');
-	const [paymentTypeFilter, setPaymentTypeFilter] = useState<PaymentType | 'ALL'>('ALL');
+	const [typeFilter, setTypeFilter] = useState<DisbursementType | string>('');
 
 	const debouncedSearch = useDebounce(search, 500);
 	const [selectedPurchaseRequest, setSelectedPurchaseRequest] = useState<IPurchaseRequestOrder | null>(null);
 
 	const { data, isLoading } = useQuery({
-		queryKey: ['purchase-requests', pagination, debouncedSearch, typeFilter, paymentTypeFilter],
+		queryKey: ['purchase-requests', pagination, debouncedSearch, typeFilter],
 		queryFn: async () => await fetchPurchaseRequestOrders({
 			skip,
 			take,
 			search,
-			...(paymentTypeFilter !== 'ALL' && {
-				paymentType: paymentTypeFilter
-			}),
 			...(typeFilter !== 'ALL' && {
 				type: typeFilter
 			})
@@ -117,13 +112,9 @@ export default function SelectPurchaseRequestDialog({
 								defaultValue={search}
 								onChange={(event) => setSearch(event.target.value)}
 							/>
-							<PurchaseRequestTypeFilter
+							<DisbursementTypeFilter
 								value={typeFilter}
 								onValueChange={(value) => setTypeFilter(value)}
-							/>
-							<PaymentTypeFilterSelect
-								value={paymentTypeFilter}
-								onValueChange={(value) => setPaymentTypeFilter(value)}
 							/>
 						</div>
 						{isLoading ? (

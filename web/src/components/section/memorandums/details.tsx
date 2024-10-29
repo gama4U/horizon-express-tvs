@@ -132,7 +132,6 @@ export default function MemorandumPreview({ data }: Props) {
 						/>
 					</AnimatedDiv>
 				}
-
 				<div className='text-center text-black flex flex-col items-center'>
 					<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
 					{RenderHeaderText(data.creator.officeBranch as OfficeBranch)}

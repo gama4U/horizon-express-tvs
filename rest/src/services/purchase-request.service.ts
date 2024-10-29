@@ -2,31 +2,27 @@ import { OfficeBranch, Prisma } from "@prisma/client";
 import moment from 'moment';
 import prisma from "../utils/db.utils";
 import { ICreatePurchaseRequest, IFindPurchaseRequests, IUpdatePurchaseRequest, IUpdatePurchaseRequestApprover } from "../interfaces/purchase-request.interface";
-import { generateSerialNumber } from "../utils/generate-number";
+import { getNextPurchaseRequestNumber } from "../utils/generate-number";
 
-export async function createPurchaseRequest({officeBranch, ...data}: ICreatePurchaseRequest) {
-  const latestSalesAgreement = await prisma.salesAgreement.findFirst({
+export async function createPurchaseRequest({ officeBranch, ...data }: ICreatePurchaseRequest) {
+  const latestPurchaseRequest = await prisma.purchaseRequestOrder.findFirst({
     where: {
-      client: {
-        officeBranch
+      supplier: {
+        officeBranch,
       },
     },
     orderBy: {
-      sequenceNumber: 'desc'
-    }
+      sequenceNumber: 'desc',
+    },
   });
 
-  const serialNumber = generateSerialNumber({
-    prefix: 'PO',
-    uniqueNumber: latestSalesAgreement ? latestSalesAgreement.sequenceNumber + 1 : 1,
-    postfix: officeBranch.slice(0, 3)
-  });
+  const serialNumber = getNextPurchaseRequestNumber(latestPurchaseRequest?.serialNumber || null, officeBranch);
 
   return prisma.purchaseRequestOrder.create({
     data: {
       ...data,
-      serialNumber
-    }
+      serialNumber,
+    },
   });
 }
 
@@ -39,28 +35,43 @@ export async function updatePurchaseRequest({ id, ...data }: IUpdatePurchaseRequ
   })
 }
 
-export async function findPurchaseRequests({ skip, take, search, branch }: IFindPurchaseRequests) {
-  let whereInput: Prisma.PurchaseRequestOrderWhereInput = {};
+
+export async function findPurchaseRequests({ skip, take, search, branch, type, classification }: IFindPurchaseRequests) {
+  let whereInput: Prisma.PurchaseRequestOrderWhereInput = {
+    disbursementType: type,
+    classification,
+    supplier: {
+      officeBranch: branch as OfficeBranch,
+    },
+  };
+
 
   if (search) {
     whereInput = {
+      ...whereInput,
       OR: [
         {
           supplier: {
-            name: { contains: search, mode: "insensitive" },
-            address: { contains: search, mode: "insensitive" },
-            contact: { contains: search, mode: "insensitive" },
-          }
+            name: { contains: search, mode: "insensitive" }
+          },
+        },
+        {
+          supplier: {
+            address: { contains: search, mode: "insensitive" }
+          },
+        },
+        {
+          supplier: {
+            contact: { contains: search, mode: "insensitive" }
+          },
         },
       ],
-    }
+    };
   }
 
+
   const findPurchaseRequests = prisma.purchaseRequestOrder.findMany({
-    where: {
-      ...whereInput,
-      supplier: { officeBranch: branch as OfficeBranch }
-    },
+    where: whereInput,
     include: {
       creator: {
         select: {
@@ -87,12 +98,7 @@ export async function findPurchaseRequests({ skip, take, search, branch }: IFind
   });
 
   const countPurchaseRequests = prisma.purchaseRequestOrder.count({
-    where: {
-      ...whereInput,
-      supplier: {
-        officeBranch: branch as OfficeBranch
-      }
-    },
+    where: whereInput,
   });
 
   const [purchaseRequests, total] = await prisma.$transaction([
@@ -102,6 +108,7 @@ export async function findPurchaseRequests({ skip, take, search, branch }: IFind
 
   return { purchaseRequests, total };
 }
+
 
 export async function findPurchaseRequestById(id: string) {
   return await prisma.purchaseRequestOrder.findUnique({

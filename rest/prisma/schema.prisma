@@ -34,6 +34,10 @@ model User {
   returnedDocumentTransactions    DocumentTransaction[]  @relation("ReturnedDocumentTransactions")
   createdPackages                 Package[]              @relation("CreatedPackages")
   approvedPackages                Package[]              @relation("ApprovedPackages")
+  createdSuppliers                Supplier[]             @relation("CreatedSuppliers")
+  approvedSuppliers               Supplier[]             @relation("ApprovedSuppliers")
+  createdClients                  Client[]               @relation("CreatedClients")
+  approvedClients                 Client[]               @relation("ApprovedClients")
 }
 
 model Transaction {
@@ -111,15 +115,16 @@ model PurchaseRequestOrder {
 }
 
 model Memorandum {
-  id               String  @id @default(cuid())
+  id               String        @id @default(cuid())
   memorandumNumber String
   to               String
   subject          String
   contents         String
   creatorId        String
-  creator          User    @relation("PreparedMemorandums", fields: [creatorId], references: [id])
+  branch           OfficeBranch?
+  creator          User          @relation("PreparedMemorandums", fields: [creatorId], references: [id])
   approverId       String?
-  approver         User?   @relation("ApprovedMemorandums", fields: [approverId], references: [id])
+  approver         User?         @relation("ApprovedMemorandums", fields: [approverId], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -134,6 +139,10 @@ model Client {
   clientType           ClientType
   department           String?
   notes                String?
+  approverId           String?
+  approver             User?                 @relation("ApprovedClients", fields: [approverId], references: [id])
+  creatorId            String?
+  creator              User?                 @relation("CreatedClients", fields: [creatorId], references: [id])
   officeBranch         OfficeBranch
   transactions         Transaction[]
   salesAgreements      SalesAgreement[]
@@ -143,14 +152,19 @@ model Client {
 }
 
 model Supplier {
-  id             String                 @id @default(cuid())
-  name           String
-  address        String?
-  contact        String?
-  emailAddress   String?
-  category       String?
-  notes          String?
-  officeBranch   OfficeBranch
+  id           String       @id @default(cuid())
+  name         String
+  address      String?
+  contact      String?
+  emailAddress String?
+  category     String?
+  notes        String?
+  officeBranch OfficeBranch
+  approverId   String?
+  approver     User?        @relation("ApprovedSuppliers", fields: [approverId], references: [id])
+  creatorId    String?
+  creator      User?        @relation("CreatedSuppliers", fields: [creatorId], references: [id])
+
   purchaseOrders PurchaseRequestOrder[]
   createdAt      DateTime?              @default(now())
   updatedAt      DateTime?              @updatedAt
@@ -299,22 +313,22 @@ model TransportItinerary {
 }
 
 model Package {
-  id             String               @id @default(cuid())
+  id             String                @id @default(cuid())
   creatorId      String
   approverId     String?
   packageNumber  String
-  sequenceNumber Int                  @unique @default(autoincrement())
+  sequenceNumber Int                   @unique @default(autoincrement())
   name           String
   inclusions     String[]
   exclusions     String[]
   remarks        String
   officeBranch   OfficeBranch
-  accomodation   PackageAccommodation?
+  accommodation   PackageAccommodation?
   airfare        PackageAirfare?
-  creator        User                 @relation("CreatedPackages", fields: [creatorId], references: [id])
+  creator        User                  @relation("CreatedPackages", fields: [creatorId], references: [id])
   approver       User?                 @relation("ApprovedPackages", fields: [approverId], references: [id])
-  createdAt      DateTime?            @default(now())
-  updatedAt      DateTime?            @updatedAt
+  createdAt      DateTime?             @default(now())
+  updatedAt      DateTime?             @updatedAt
 }
 
 model PackageAccommodation {

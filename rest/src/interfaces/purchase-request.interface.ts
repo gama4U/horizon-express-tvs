@@ -28,6 +28,8 @@ export interface IFindPurchaseRequests {
   take?: number;
   search?: string;
   branch?: string;
+  type?: string;
+  classification?: string;
 }
 
 export interface IUpdatePurchaseRequestApprover {

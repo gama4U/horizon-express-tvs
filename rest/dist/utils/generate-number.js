@@ -1,5 +1,5 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+var __importDefault = (this && this.__importDefault) || function(mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -38,7 +38,6 @@ function getNextTransactionNumber(lastTransactionNumber, branch) {
     return `T${newTransactionNumber}-${today}-${branchCode}`;
 }
 function generateSerialNumber({ uniqueNumber, prefix, postfix }) {
-    console.log({ uniqueNumber, prefix, postfix });
     const today = (0, dayjs_1.default)().format('MMDDYYYY');
     const paddedNumber = String(uniqueNumber).toString().padStart(3, '0');
     return `${prefix}${paddedNumber}-${today}-${postfix}`;

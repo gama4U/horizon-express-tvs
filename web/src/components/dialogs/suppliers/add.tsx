@@ -45,7 +45,7 @@ const formSchema = z.object({
 export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICreateSupplierProps) {
 	const queryClient = useQueryClient()
 	const { SupplierCategories } = Constants
-	const { branch } = useAuth()
+	const { session, branch } = useAuth()
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -76,7 +76,8 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		createSupplierMutate({
 			...values,
-			officeBranch: branch as OfficeBranch
+			officeBranch: branch as OfficeBranch,
+			creatorId: String(session?.user?.id)
 		})
 	}
 

@@ -1,12 +1,14 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
-import { IClient } from "../mutations/client.mutation";
+import { IClient, TypeOfClient } from "../mutations/client.mutation";
 
 interface IFetchClients {
   skip?: number;
   take?: number;
   search?: string;
-  branch?: string | null
+  branch?: string | null,
+  typeOfClient?: TypeOfClient | string,
+  isApproved?: boolean
 }
 
 interface IClients {

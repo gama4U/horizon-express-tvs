@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
-import { createClient, deleteClient, fetchClients, updateClient } from '../services/client.service';
+import { createClient, deleteClient, fetchClients, updateClient, updateClientApprover } from '../services/client.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getClientsSchema } from '../schemas/client.schema';
+import { ClientType, UserType } from '@prisma/client';
+import { authorize } from '../middlewares/authorize.middleware';
 
 const clientRouter = express.Router();
 
@@ -23,13 +25,16 @@ clientRouter.post('/', async (req: Request, res: Response) => {
 clientRouter.get('/', validate(getClientsSchema), async (req: Request, res: Response) => {
   try {
 
-    const { skip, take, search, branch } = req.query;
+    const { skip, take, search, branch, typeOfClient, isApproved } = req.query;
+
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
       branch: branch ? String(branch) : undefined,
+      isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
+      typeOfClient: typeOfClient ? typeOfClient as ClientType : undefined,
     };
 
     const clients = await fetchClients(filters);
@@ -78,5 +83,29 @@ clientRouter.delete('/:id', async (req: Request, res: Response) => {
     });
   }
 })
+
+clientRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: Request, res: Response) => {
+  try {
+    const approverId = String(req.user?.id);
+    const id = req.params.id;
+
+    const update = await updateClientApprover({ id, approverId });
+    if (!update) {
+      throw new Error('Failed to approve client');
+    }
+
+    return res.status(200).json({
+      message: 'Client approved successfully'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error'
+    });
+  }
+});
+
+
+
 
 export default clientRouter;

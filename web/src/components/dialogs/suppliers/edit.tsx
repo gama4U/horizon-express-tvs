@@ -1,6 +1,7 @@
-import { Check, ChevronsUpDown, ContactRound, Loader2, Pencil } from "lucide-react";
+import { Check, ChevronsUpDown, ContactRound, Loader2, Pencil, ThumbsUp } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
+import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import AnimatedDiv from "@/components/animated/Div";
 import { Form, FormItem, FormControl, FormField, FormMessage, FormLabel } from "@/components/ui/form";
@@ -11,7 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
 import { Button } from "@/components/ui/button";
-import { ISupplier, IUpdateSupplier, updateSupplier } from "@/api/mutations/supplier.mutation";
+import { approveSupplier, ISupplier, IUpdateSupplier, updateSupplier } from "@/api/mutations/supplier.mutation";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import Constants from "@/constants";
@@ -48,6 +49,24 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 		resolver: zodResolver(formSchema),
 	})
 	const [openDialog, setOpenDialog] = useState(false)
+
+	const { mutate: approveMutate, isPending: approving } = useMutation({
+		mutationFn: async (id: string) => await approveSupplier(id),
+		onSuccess: (data) => {
+			queryClient.refetchQueries({ queryKey: ['suppliers'] })
+			toast.success(data.message, {
+				position: 'top-center',
+				className: 'text-primary'
+			});
+		},
+		onError: (error) => {
+			toast.error(error.message, {
+				position: 'top-center',
+				className: 'text-destructive'
+			})
+		},
+	});
+
 
 	const { mutate: updateSupplierMutate, isPending: updatingSupplier } = useMutation({
 		mutationFn: async (data: IUpdateSupplier) => await updateSupplier(data),
@@ -101,6 +120,35 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 						Update Supplier
 					</DialogHeader>
 				</DialogTitle>
+				<div className="flex flex-col gap-2  text-xs border rounded-lg p-2">
+					<div className="flex flex-row gap-x-2 justify-between">
+						<p className="italic">Created by : {supplierData.creator?.firstName} {supplierData.creator?.lastName}</p>
+						<p className="italic">
+							Created at: {format(new Date(supplierData.createdAt), 'MMMM d, h:mm a')}
+						</p>
+					</div>
+					{supplierData.approverId ?
+						<p className="italic text-primary">Approved by: {supplierData.approver?.firstName} {supplierData.approver?.lastName}</p>
+						:
+						<div className="flex flex-row gap-x-2 items-center">
+							<p className="text-xs italic text-muted-foreground">Not yet approved</p>
+							<Button
+								size={'sm'}
+								onClick={() => approveMutate(supplierData?.id)}
+								className='gap-1'
+								disabled={approving}
+							>
+								{approving ? (
+									<Loader2 size={16} className='animate-spin' />
+								) : (
+									<ThumbsUp size={16} />
+								)}
+								<span>Approve</span>
+							</Button>
+						</div>
+					}
+				</div>
+
 				<Separator />
 				<div className="space-y-8 p-4">
 					<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>

@@ -68,7 +68,7 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 	})
 	const selectedClientType = form.watch('clientType');
 	const selectedDepartment = form.watch('department')
-	const { branch } = useAuth()
+	const { session, branch } = useAuth()
 
 	const { mutate: createClientMutate, isPending: creatingClient } = useMutation({
 		mutationFn: async (data: ICreateClient) => await createClient(data),
@@ -100,7 +100,8 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		createClientMutate({
 			...values,
-			officeBranch: branch as OfficeBranch
+			officeBranch: branch as OfficeBranch,
+			creatorId: String(session?.user?.id)
 		})
 	}
 
