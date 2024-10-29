@@ -3,7 +3,6 @@ import cors from 'cors';
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import * as dotenv from 'dotenv';
-import path from "path";
 import { User } from "@prisma/client";
 import mainRouter from "./middlewares/main-router.middleware";
 import authRouter from "./routers/auth.router";
@@ -25,6 +24,9 @@ import memorandumRouter from "./routers/memorandum.router";
 import clientRouter from "./routers/client.router";
 import supplierRouter from "./routers/suppliers.router";
 import documentTransactionRouter from "./routers/document-transaction.router";
+import packageRouter from "./routers/package.router";
+import packageAccommodationRouter from "./routers/package-accommodation.router";
+import packageAirfareRouter from "./routers/package-airfare.router";
 
 declare module 'express' {
   interface Request {
@@ -75,6 +77,10 @@ mainRouter.use('/profile', profileRouter);
 mainRouter.use('/memorandums', memorandumRouter);
 mainRouter.use('/suppliers', supplierRouter);
 mainRouter.use('/document-transactions', documentTransactionRouter);
+mainRouter.use('/packages', packageRouter)
+mainRouter.use('/package-accommodations', packageAccommodationRouter);
+mainRouter.use('/package-airfares', packageAirfareRouter);
+
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`)

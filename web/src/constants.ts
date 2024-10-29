@@ -16,6 +16,7 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Suppliers", icon: "Suppliers", link: "/admin/suppliers" },
   { label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
   { label: "Document Transactions", icon: "Documents", link: "/admin/document-transactions" },
+  { label: "Packages", icon: "Packages", link: "/admin/packages"},
   { label: "Users", icon: "Users", link: "/admin/users" },
   { label: "Profile", icon: "Profile", link: "/admin/profile" },
 ]
@@ -27,6 +28,7 @@ const EmployeeSidebarItems: Array<SidebarItemsType> = [
   { label: "Clients", icon: "Leads", link: "/employee/clients" },
   { label: "Suppliers", icon: "Suppliers", link: "/employee/suppliers" },
   { label: "Document Transactions", icon: "Documents", link: "/employee/document-transactions" },
+  { label: "Packages", icon: "Packages", link: "/employee/packages"},
   { label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
 
@@ -212,7 +214,6 @@ const Disbursements = [
   }
 ];
 
-
 const CommonDocuments = [
   { value: "Passport", label: "Passport" },
   { value: "NBI Clearance", label: "NBI Clearance" },
@@ -231,6 +232,8 @@ const CommonDocuments = [
   { value: "Senior Citizen ID", label: "Senior Citizen ID" },
 ];
 
+const HotelCategories = ['5 Star', '4 Star', '3 Star', '2 Star'];
+
 const Constants = {
   VersionNumber,
   AdminSidebarItems,
@@ -246,7 +249,8 @@ const Constants = {
   CorporateDepartments,
   Disbursements,
   CommonDocuments,
-  SupplierCategories
+  SupplierCategories,
+  HotelCategories
 }
 
 export default Constants

@@ -79,3 +79,17 @@ export function getNextPurchaseRequestNumber(lastSerialNumber: string | null, of
   return `PO${paddedNumber}-${today}-${branchCode}`;
 }
 
+
+export function getNextPackageNumber(lastSerialNumber: string | null, officeBranch: string) {
+  const today = dayjs().format('MMDDYYYY');
+  let newNumber = officeBranch === 'CEBU' ? 501 : 1;
+  if (lastSerialNumber) {
+    const numericPart = parseInt(lastSerialNumber.slice(2, 7));
+    newNumber = numericPart + 1;
+  }
+
+  const paddedNumber = String(newNumber).padStart(5, '0');
+  const branchCode = officeBranch === 'CEBU' ? 'CEB' : 'CAL';
+
+  return `P${paddedNumber}-${today}-${branchCode}`;
+}

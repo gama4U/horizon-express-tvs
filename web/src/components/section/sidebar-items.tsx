@@ -11,6 +11,7 @@ import {
 	UserCog,
 	ContactRound,
 	Layers3,
+	Package,
 } from "lucide-react"
 import { Button } from "../ui/button"
 
@@ -50,7 +51,8 @@ export const SidebarIcons = ({ icon, isSelected }: SidebarIconsType) => {
 			return <ContactRound size={size} className={className} color={color} />;
 		case "Documents":
 			return <Layers3 size={size} className={className} color={color} />;
-
+		case "Packages":
+			return <Package size={size} className={className} color={color} />;
 		default:
 			return <FileQuestion className="mr-2" size={size} />;
 	}

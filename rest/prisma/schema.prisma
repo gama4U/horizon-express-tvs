@@ -323,7 +323,7 @@ model Package {
   exclusions     String[]
   remarks        String
   officeBranch   OfficeBranch
-  accomodation   PackageAccommodation?
+  accommodation   PackageAccommodation?
   airfare        PackageAirfare?
   creator        User                  @relation("CreatedPackages", fields: [creatorId], references: [id])
   approver       User?                 @relation("ApprovedPackages", fields: [approverId], references: [id])

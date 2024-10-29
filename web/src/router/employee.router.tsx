@@ -4,6 +4,8 @@ import DocumentTransactions from "@/pages/employee/document-transactions";
 import DocumentTransactionDetails from "@/pages/employee/document-transactions/details";
 import Memorandum from "@/pages/employee/memorandum";
 import MemorandumDetails from "@/pages/employee/memorandum/details";
+import Packages from "@/pages/employee/packages";
+import PackageDetails from "@/pages/employee/packages/details";
 import Profile from "@/pages/employee/profile";
 import PurchaseRequests from "@/pages/employee/purchase-request";
 import PurchaseRequestDetails from "@/pages/employee/purchase-request/details";
@@ -65,6 +67,14 @@ const employeeRouter: RouteObject = {
     {
       path: 'document-transactions/:id',
       element: <DocumentTransactionDetails />
+    },
+    {
+      path: 'packages',
+      element: <Packages />
+    },
+    {
+      path: 'packages/:id',
+      element: <PackageDetails />
     },
     {
       path: 'profile',
