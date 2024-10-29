@@ -377,15 +377,15 @@ export default function PrintPreview({ data }: Props) {
                         <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
                       </div>
                     </div>
-                    <div>
-                      <div className='p-2'>
-                        <h3 className='font-bold'>PHP Account No:</h3>
-                        <span>00076821747</span>
+                    <div className='w-fit min-w-[180px]'>
+                      <div className='p-2 flex items-center gap-2'>
+                        <h3 className='font-bold'>PHP account no.:</h3>
+                        <span>0007-6802-1747</span>
                       </div>
                       <Separator orientation='horizontal' />
-                      <div className='p-2'>
-                        <h3 className='font-bold'>USD Account No:</h3>
-                        <span>_</span>
+                      <div className='p-2 flex items-center gap-2'>
+                        <h3 className='font-bold'>USD account no.:</h3>
+                        <span>1007-6026-4937</span>
                       </div>
                     </div>
                   </div>
@@ -401,15 +401,29 @@ export default function PrintPreview({ data }: Props) {
                         <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
                       </div>
                     </div>
-                    <div>
-                      <div className='p-2'>
-                        <h3 className='font-bold'>PHP Account No:</h3>
-                        <span>636110036035</span>
+                    <div className='w-fit min-w-[180px] flex items-center'>
+                      <div className='p-2 flex items-center gap-2'>
+                        <h3 className='font-bold'>PHP account no.:</h3>
+                        <span>6361-1003-6035</span>
                       </div>
-                      <Separator orientation='horizontal' />
-                      <div className='p-2'>
-                        <h3 className='font-bold'>USD Account No:</h3>
-                        <span>_</span>
+                    </div>
+                  </div>
+
+                  <div className='flex border'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                      <div className='flex gap-2 items-center'>
+                        <span>Bank name: </span>
+                        <p className='font-semibold text-[10px]'>GCASH</p>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <span>Account name: </span>
+                        <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
+                      </div>
+                    </div>
+                    <div className='w-fit min-w-[180px] flex items-center'>
+                      <div className='p-2 flex items-center gap-2'>
+                        <h3 className='font-bold'>Account no.:</h3>
+                        <span>0995-013-2370</span>
                       </div>
                     </div>
                   </div>
@@ -433,15 +447,34 @@ export default function PrintPreview({ data }: Props) {
                         <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
                       </div>
                     </div>
-                    <div>
-                      <div className='p-2'>
-                        <h3 className='font-bold'>PHP Account No:</h3>
-                        <span>312970004640</span>
+                    <div className='w-fit min-w-[180px]'>
+                      <div className='p-2 flex items-center gap-2'>
+                        <h3 className='font-bold'>PHP account no.:</h3>
+                        <span>3129-7000-4640</span>
                       </div>
                       <Separator orientation='horizontal' />
-                      <div className='p-2'>
+                      <div className='p-2 flex items-center gap-2'>
                         <h3 className='font-bold'>USD Account No:</h3>
-                        <span>_</span>
+                        <span>3129-6007-7243</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='flex border'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                      <div className='flex gap-2 items-center'>
+                        <span>Bank name: </span>
+                        <p className='font-semibold text-[10px]'>GCASH</p>
+                      </div>
+                      <div className='flex gap-2 items-center'>
+                        <span>Account name: </span>
+                        <p className='font-semibold text-[10px]'>HORIZON EXPRESS TRAVEL AND TOURS INC.</p>
+                      </div>
+                    </div>
+                    <div className='w-fit min-w-[180px] flex items-center'>
+                      <div className='p-2 flex items-center gap-2'>
+                        <h3 className='font-bold'>Account no.:</h3>
+                        <span>0995-013-2375</span>
                       </div>
                     </div>
                   </div>
