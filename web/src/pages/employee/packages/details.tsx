@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator";
 import Constants from "@/constants";
 import EditPackageDialog from "@/components/dialogs/package/edit";
 import PackageInfo from "@/components/section/package/info";
-import PrintPreview from "@/components/section/package/print-preview";
 
 export default function PackageDetails() {
   const { id } = useParams();
@@ -55,7 +54,9 @@ export default function PackageDetails() {
               <PackageInfo data={data}/>
             </section>
 
-            <PrintPreview data={data}/>
+            <section className="w-full">
+
+            </section>
           </>
         ) : (
           <div className="h-[90vh] bg-white w-full rounded-lg" />

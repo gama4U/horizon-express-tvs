@@ -104,3 +104,14 @@ export const findPackageById = async(id: string) => {
     }
   });
 }
+
+type IUpdatePackageApprover = {
+  id: string;
+  approverId: string;
+}
+export async function updatePackageApprover({ id, approverId }: IUpdatePackageApprover) {
+  return await prisma.package.update({
+    where: { id },
+    data: { approverId }
+  });
+}

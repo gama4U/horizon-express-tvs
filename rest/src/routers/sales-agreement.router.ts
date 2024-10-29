@@ -143,7 +143,7 @@ salesAgreementRouter.post('/summary', async (req: Request, res: Response) => {
   }
 });
 
-salesAgreementRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: Request, res: Response) => {
+salesAgreementRouter.patch('/:id/approver', async (req: Request, res: Response) => {
   try {
     const approverId = String(req.user?.id);
     const id = req.params.id;

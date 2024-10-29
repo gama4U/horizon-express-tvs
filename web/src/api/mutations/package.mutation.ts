@@ -94,3 +94,16 @@ export async function updatePackageAirfare({id, ...data}: IUpdatePackageAirfare)
   }
 }
 
+export async function approvePackage(id: string) {
+  try {
+    const response = await api.patch(`/api/v1/packages/${id}/approver`);
+    return response.data;
+  } catch(error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong')
+  }
+}
+

@@ -2,9 +2,10 @@ import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
 import { IFindPackages } from '../interfaces/package.interface';
 import { createPackageSchema, getPackagesSchema, updatePackageSchema } from '../schemas/package.schema';
-import { createPackage, deletePackage, findPackageById, findPackages, updatePackage } from '../services/package.service';
+import { createPackage, deletePackage, findPackageById, findPackages, updatePackage, updatePackageApprover } from '../services/package.service';
 import { deletePackageAccommodationByPackageId } from '../services/package-accommodation.service';
 import { deletePackageAirfareByPackageId } from '../services/package-airfare.service';
+import { UserType } from '@prisma/client';
 
 const packageRouter = express.Router();
 
@@ -96,6 +97,27 @@ packageRouter.delete('/:id', async (req: Request, res: Response) => {
 
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+
+packageRouter.patch('/:id/approver', async (req: Request, res: Response) => {
+  try {
+    const approverId = String(req.user?.id);
+    const id = req.params.id;
+
+    const update = await updatePackageApprover({ id, approverId });
+    if (!update) {
+      throw new Error('Failed to approve package');
+    }
+
+    return res.status(200).json({
+      message: 'Package approved successfully'
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Internal server error'
+    });
   }
 });
 
