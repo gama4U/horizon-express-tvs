@@ -151,7 +151,7 @@ export default function UpdatePackageAirfareDialog({data}: Props) {
                 {isPending &&
                   <Loader2 size={20} className="animate-spin" />
                 }
-                <span>Create</span>
+                <span>Save</span>
               </Button>
             </div>
           </form>

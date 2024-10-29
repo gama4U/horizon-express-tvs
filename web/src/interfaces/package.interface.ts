@@ -10,7 +10,7 @@ export interface IPackage {
   inclusions: string[];
   exclusions: string[];
   remarks: string;
-  accomodation?: IPackageAccommodation;
+  accommodation?: IPackageAccommodation;
   airfare?: IPackageAirfare;
   officeBranch: OfficeBranch;
   creator?: IUser;

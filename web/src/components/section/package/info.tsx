@@ -97,21 +97,21 @@ export default function PackageInfo({data}: Props) {
           <h1 className="text-[12px] font-semibold">
             Accommodation
           </h1>
-          {!data?.accomodation ? (
+          {!data?.accommodation ? (
             <CreatePackageAccommodationDialog packageId={data.id ?? ''}/>
           ) : (
-            <UpdatePackageAccommodationDialog packageAccommodation={data.accomodation}/>
+            <UpdatePackageAccommodationDialog packageAccommodation={data.accommodation}/>
           )}
         </div>
         
-        {data?.accomodation && (
+        {data?.accommodation && (
           <div className="grid grid-cols-3 gap-4 mt-2">
             <div className="flex flex-col gap-1">
               <span className="text-muted-foreground text-[10px]">
                 Category
               </span>
               <h3 className="text-[12px]">
-                {`${data.accomodation.category}`}
+                {`${data.accommodation.category}`}
               </h3>
             </div>
             <div className="flex flex-col gap-1">
@@ -119,7 +119,7 @@ export default function PackageInfo({data}: Props) {
                 Rate per person
               </span>
               <h3 className="text-[12px]">
-                {`${data.accomodation.ratePerPerson}`}
+                {`${data.accommodation.ratePerPerson}`}
               </h3>
             </div>
             <div className="flex flex-col gap-1">
@@ -127,14 +127,14 @@ export default function PackageInfo({data}: Props) {
                 Currency
               </span>
               <h3 className="text-[12px]">
-                {`${currencyMap[data.accomodation.currency]}`}
+                {`${currencyMap[data.accommodation.currency]}`}
               </h3>
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-muted-foreground text-[10px]">
                 Options
               </span>
-              {data.accomodation.options.map((item, index) => (
+              {data.accommodation.options.map((item, index) => (
                 <h3 key={index} className="text-[12px]">
                   {`${index + 1}.) ${item}`}
                 </h3>

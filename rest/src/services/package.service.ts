@@ -1,6 +1,6 @@
 import prisma from "../utils/db.utils";
 import { ICreatePackage, IFindPackages, IUpdatePackage } from "../interfaces/package.interface";
-import { generateSerialNumber } from "../utils/generate-number";
+import { getNextPackageNumber } from "../utils/generate-number";
 
 export async function createPackage({officeBranch, ...data}: ICreatePackage) {
   const latestPackage = await prisma.package.findFirst({
@@ -12,11 +12,7 @@ export async function createPackage({officeBranch, ...data}: ICreatePackage) {
     }
   });
 
-  const packageNumber = generateSerialNumber({
-    prefix: 'P',
-    uniqueNumber: latestPackage ? latestPackage.sequenceNumber + 1 : 1,
-    postfix: officeBranch.slice(0, 3)
-  });
+  const packageNumber = getNextPackageNumber(latestPackage?.packageNumber || null, officeBranch);
 
   return await prisma.package.create({
     data: {packageNumber, officeBranch, ...data}
@@ -81,7 +77,7 @@ export const findPackageById = async(id: string) => {
   return await prisma.package.findUnique({
     where: {id},
     include: {
-      accomodation: true,
+      accommodation: true,
       airfare: true,
       creator: {
         select: {
