@@ -169,7 +169,11 @@ export default function PrintPreview({ data }: Props) {
               <div className='flex items-center gap-2'>
                 <h3>Rate per person: </h3>
                 <span>
-                  {formatCurrency(data.accommodation?.currency ?? '', data.accommodation?.ratePerPerson ?? 0)}
+                  {data.accommodation && (
+                    <>
+                      {formatCurrency(data.accommodation.currency, data.accommodation.ratePerPerson)}
+                    </>
+                  )}
                 </span>
               </div>
             </div>
@@ -206,8 +210,9 @@ export default function PrintPreview({ data }: Props) {
             </div>
           </div>
         </div>
+        <Separator className="bg-slate-200" />
 
-        <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-4 flex-3 pb-4'>
+        <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-8 flex-3 pb-4'>
           <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
             <div className='flex-1 border-b leading-[16px]'>
               {data.creator && (
