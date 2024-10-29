@@ -214,7 +214,6 @@ const Disbursements = [
   }
 ];
 
-
 const CommonDocuments = [
   { value: "Passport", label: "Passport" },
   { value: "NBI Clearance", label: "NBI Clearance" },
@@ -233,6 +232,8 @@ const CommonDocuments = [
   { value: "Senior Citizen ID", label: "Senior Citizen ID" },
 ];
 
+const HotelCategories = ['5 Star', '4 Star', '3 Star', '2 Star'];
+
 const Constants = {
   VersionNumber,
   AdminSidebarItems,
@@ -248,7 +249,8 @@ const Constants = {
   CorporateDepartments,
   Disbursements,
   CommonDocuments,
-  SupplierCategories
+  SupplierCategories,
+  HotelCategories
 }
 
 export default Constants

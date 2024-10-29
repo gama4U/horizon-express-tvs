@@ -28,6 +28,7 @@ import { ICreatePackageAccommodation } from "@/interfaces/package.interface";
 import { Currency } from "@/interfaces/sales-agreement-item.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createPackageAccommodation } from "@/api/mutations/package.mutation";
+import Constants from "@/constants";
 
 const formSchema = z.object({
   category: z.string().trim().min(1, {
@@ -61,6 +62,7 @@ interface Props {
 export default function CreatePackageAccommodationDialog({packageId}: Props) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
+  const {HotelCategories} = Constants;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,7 +79,7 @@ export default function CreatePackageAccommodationDialog({packageId}: Props) {
       queryClient.refetchQueries({ queryKey: ['package-details'] })
       form.reset();
       setOpen(false);
-      toast.success("Package created successfully", {
+      toast.success("Package accommodation created successfully", {
         position: 'top-center',
         className: 'text-primary'
       });
@@ -123,10 +125,25 @@ export default function CreatePackageAccommodationDialog({packageId}: Props) {
                 name="category"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Category</FormLabel>
-                    <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Category" />
-                    </FormControl>
+                    <FormLabel>Hotel category</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select a hotel category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {HotelCategories.map((item, index) => (
+                          <SelectItem
+                            key={index}
+                            value={item}
+                            className="text-[12px]"
+                          >
+                            {item}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -136,7 +153,7 @@ export default function CreatePackageAccommodationDialog({packageId}: Props) {
                 name="options"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Inclusions</FormLabel>
+                    <FormLabel>Hotel options</FormLabel>
                     <FormControl>
                       <MultiInput {...field} placeholder="Add options (Enter to add) "/>
                     </FormControl>

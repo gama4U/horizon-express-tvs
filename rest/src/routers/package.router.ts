@@ -45,12 +45,10 @@ packageRouter.get('/:id', validate(getPackagesSchema), async (req: Request, res:
 packageRouter.post('/', validate(createPackageSchema), async (req: Request, res: Response) => {
   try {
     const creatorId = req.user?.id;
-    const packages = await createPackage({creatorId, ...req.body});
-    if (!packages) throw new Error('Failed to create packages');
+    const created = await createPackage({creatorId, ...req.body});
+    if (!created) throw new Error('Failed to create packages');
 
-    res.status(200).json({
-      message: 'Created successfully'
-    });
+    res.status(200).json(created);
 
   } catch (error) {
     res.status(500).json(error);

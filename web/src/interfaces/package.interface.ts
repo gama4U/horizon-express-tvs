@@ -85,3 +85,15 @@ export interface IUpdatePackageAccommodation {
   ratePerPerson: number;
   currency: Currency;
 }
+
+export interface ICreatePackageAirfare {
+  packageId: string;
+  airline: string;
+  flightDetails: string;
+}
+
+export interface IUpdatePackageAirfare {
+  id: string;
+  airline: string;
+  flightDetails: string;
+}

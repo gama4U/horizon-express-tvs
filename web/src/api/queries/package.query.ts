@@ -1,4 +1,4 @@
-import { ICreatePackageAccommodation, IFetchPackages, IFetchPackagesData, IPackage } from "@/interfaces/package.interface";
+import { IFetchPackages, IFetchPackagesData, IPackage } from "@/interfaces/package.interface";
 import api from "@/utils/api.util";
 import { AxiosError } from "axios"
 

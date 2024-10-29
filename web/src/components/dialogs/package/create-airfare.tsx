@@ -21,71 +21,46 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 import { Button } from "@/components/ui/button";
 import CommonInput from "@/components/common/input";
-import { Textarea } from "@/components/ui/textarea";
-import { MultiInput } from "@/components/common/multi-input";
-import { createPackage } from "@/api/mutations/package.mutation";
-import { ICreatePackage } from "@/interfaces/package.interface";
-import { useAuth } from "@/providers/auth-provider";
-import { useNavigate } from "react-router-dom";
+import { ICreatePackageAirfare } from "@/interfaces/package.interface";
+import { createPackageAirfare } from "@/api/mutations/package.mutation";
 
 const formSchema = z.object({
-  name: z.string().trim().min(1, {
-    message: "Name is required"
+  airline: z.string().trim().min(1, {
+    message: "Airline is required"
   }),
-  inclusions: z.array(
-    z.string().trim().min(1, {
-      message: "Inclusion item must not be empty"
-    })
-  ).refine(items => items.length > 0, {
-    message: 'Please add at least one inclusion'
-  }),
-  exclusions: z.array(
-    z.string().trim().min(1, {
-      message: "Exclusion item must not be empty"
-    })
-  ).refine(items => items.length > 0, {
-    message: 'Please add at least one exclusion'
-  }),
-  remarks: z.string().trim().min(1, {
-    message: "Remarks is required"
-  }),
-  officeBranch: z.enum([
-    OfficeBranch.CEBU,
-    OfficeBranch.CALBAYOG
-  ]),
+  flightDetails: z.string().trim().min(1, {
+    message: "Flight details is required"
+  })
 });
 
-export default function CreatePackageDialog() {
+interface Props {
+  packageId: string;
+}
+
+export default function CreatePackageAirfareDialog({packageId}: Props) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-  const { session:{user}, branch } = useAuth()
-  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      inclusions: [],
-      exclusions: [],
-      remarks: '',
-      officeBranch: OfficeBranch.CEBU,
+      airline: '',
+      flightDetails: ''
     }
   });
 
-  const { mutate: createPackageMutate, isPending } = useMutation({
-    mutationFn: async (data: ICreatePackage) => await createPackage(data),
-    onSuccess: (data) => {
-      queryClient.refetchQueries({ queryKey: ['packages'] })
+  const { mutate: createMutate, isPending } = useMutation({
+    mutationFn: async (data: ICreatePackageAirfare) => await createPackageAirfare(data),
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ['package-details'] })
       form.reset();
       setOpen(false);
-      toast.success("Package created successfully", {
+      toast.success("Package airfare created successfully", {
         position: 'top-center',
         className: 'text-primary'
       });
-      navigate(`/${user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/packages/${data.id}`)
     },
     onError: (error) => {
       toast.success(error.message, {
@@ -96,7 +71,10 @@ export default function CreatePackageDialog() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createPackageMutate({...values, officeBranch: branch as OfficeBranch});
+    createMutate({
+      packageId,
+      ...values,
+    });
   }
 
   return (
@@ -112,7 +90,7 @@ export default function CreatePackageDialog() {
           <DialogTitle className="flex items-center gap-2">
             <PackagePlus size={24} />
             <p className="flex-1 truncate">
-              Create package
+              Add package airfare
             </p>
           </DialogTitle>
         </DialogHeader>
@@ -121,12 +99,12 @@ export default function CreatePackageDialog() {
             <div className="w-full space-y-2">
               <FormField
                 control={form.control}
-                name="name"
+                name="airline"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Airline</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Package name" />
+                      <CommonInput inputProps={{ ...field }} placeholder="Airline" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -134,42 +112,12 @@ export default function CreatePackageDialog() {
               />
               <FormField
                 control={form.control}
-                name="inclusions"
+                name="flightDetails"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Inclusions</FormLabel>
+                    <FormLabel>Flight Details</FormLabel>
                     <FormControl>
-                      <MultiInput {...field} placeholder="Add inclusions (Enter to add) "/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="exclusions"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Exclusions</FormLabel>
-                    <FormControl>
-                      <MultiInput {...field} placeholder="Add exclusions (Enter to add)"/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="remarks"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Remarks</FormLabel>
-                    <FormControl className="w-2/3">
-                      <Textarea
-                        {...field}
-                        placeholder="Start writing remarks..."
-                        className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
-                      />
+                      <CommonInput inputProps={{ ...field }} placeholder="Flight details" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
