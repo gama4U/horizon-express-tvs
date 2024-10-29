@@ -16,18 +16,19 @@ import { UserType } from "@/interfaces/user.interface";
 
 export default function Memorandum() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
-  const { session } = useAuth()
+  const { session, branch } = useAuth()
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateMemo, setOpenCreateMemo] = useState(false)
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['memorandums', pagination, debouncedSearch],
+    queryKey: ['memorandums', pagination, debouncedSearch, branch],
     queryFn: async () => await fetchMemorandums({
       skip,
       take,
       search,
+      branch,
     })
   });
 

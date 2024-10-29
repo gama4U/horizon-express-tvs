@@ -33,6 +33,29 @@ export enum PurchaseRequestOrderType {
   VISA = "VISA"
 }
 
+export enum DisbursementType {
+  "Cost of Sales" = "Cost of Sales",
+  "Expenses" = "Expenses"
+}
+
+export enum CostOfSalesClassificationsType {
+  "Ticketing" = "Ticketing",
+  "Tour Packages" = "Tour Packages",
+  "Documentation" = "Documentation",
+  "Accommodation" = "Accommodation",
+  "Transportation" = "Transportation",
+  "Others" = "Others",
+}
+export enum ExpensesClassificationsType {
+  "Operating Expenses" = "Operating Expenses",
+  "MKT and Advertising" = "MKT and Advertising",
+  "Administrative Exp" = "Administrative Exp",
+  "Depreciation" = "Depreciation",
+  "Taxes" = "Taxes",
+  "Travel" = "Travel",
+  "Employee Benefits" = "Employee Benefits",
+}
+
 export enum PaymentType {
   CASH = 'CASH',
   CHECK = 'CHECK'
@@ -43,6 +66,8 @@ export interface IFetchPurchaseRequestOrders {
   take?: number;
   search?: string;
   branch?: string;
+  type?: DisbursementType | string
+  classification?: CostOfSalesClassificationsType | ExpensesClassificationsType | string
 }
 
 export interface IFetchPurchaseRequestData {

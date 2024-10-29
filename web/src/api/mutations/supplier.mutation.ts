@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import api from "../../utils/api.util";
-import { OfficeBranch } from "@/interfaces/user.interface";
+import { IUser, OfficeBranch } from "@/interfaces/user.interface";
 import { IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface";
 
 export interface ISupplier {
@@ -11,6 +11,13 @@ export interface ISupplier {
   category: string;
   officeBranch: OfficeBranch
   purchaseOrders: IPurchaseRequestOrder[]
+  creator: IUser,
+  approver: IUser
+  approverId: String
+  creatorId: String
+
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface ICreateSupplier {
@@ -21,6 +28,7 @@ export interface ICreateSupplier {
   category: string;
   notes?: string;
   officeBranch: OfficeBranch;
+  creatorId: string;
 }
 
 export interface IUpdateSupplier {
@@ -72,4 +80,16 @@ export async function deleteSupplier(id: string) {
   }
 }
 
+export async function approveSupplier(id: string) {
+  try {
+    const response = await api.patch(`/api/v1/suppliers/${id}/approver`);
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong')
+  }
+}
 

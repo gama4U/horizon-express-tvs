@@ -1,16 +1,15 @@
 import { fetchMemorandumSummary } from "@/api/queries/memorandums.query";
 import { fetchPurchaseRequestSummary } from "@/api/queries/purchase-request.queries";
 import { fetchSalesAgreementSummary } from "@/api/queries/sales-agreements.queries";
-import { fetchRecentAcitvities, fetchTransactionsSummary } from "@/api/queries/transaction";
+import { fetchTransactionsSummary } from "@/api/queries/transaction";
 import AnimatedDiv from "@/components/animated/Div";
 import Loader from "@/components/animated/Loader";
-import { DashboardCard, RecentActivityCard } from "@/components/cards/admin";
+import { DashboardCard } from "@/components/cards/admin";
 import { TransactionChart } from "@/components/charts/bar-chart";
 import { DatePickerWithRange } from "@/components/common/date-range-picker";
 import TopBar from "@/components/section/topbar";
 import { useAuth } from "@/providers/auth-provider";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 
@@ -41,10 +40,10 @@ export default function Dashboard() {
     queryFn: async () => await fetchMemorandumSummary(),
   });
 
-  const { data: recent, isLoading: recentLoading } = useQuery({
-    queryKey: ['recent'],
-    queryFn: async () => await fetchRecentAcitvities(),
-  });
+  // const { data: recent, isLoading: recentLoading } = useQuery({
+  //   queryKey: ['recent'],
+  //   queryFn: async () => await fetchRecentAcitvities(),
+  // });
 
   const handleDateChange = (range: DateRange | undefined) => {
     setSelectedDateRange(range);
@@ -54,7 +53,7 @@ export default function Dashboard() {
   //   refetch();
   // };
 
-  const isLoading = transactionsLoading || salesLoading || purchaseLoading || memorandumsLoading || recentLoading;
+  const isLoading = transactionsLoading || salesLoading || purchaseLoading || memorandumsLoading;
 
   return (
     <div className="flex flex-col space-y-2 ">
@@ -88,22 +87,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <AnimatedDiv className="h-auto w-[30%] rounded-lg p-2 border border-gray-200 flex flex-col" animationType="SlideInFromRight">
-            <div className="flex flex-row justify-between items-center mb-2">
-              <p className="font-medium text-md leading-none mb-2">Recent Activities</p>
-            </div>
-            {recentLoading ? (
-              <div className="flex-1 flex justify-center items-center w-full">
-                <Loader2 className="animate-spin" />
-              </div>
-            ) : (
-              <div className="h-[320px] overflow-y-auto">
-                {recent?.map((item) => (
-                  <RecentActivityCard key={item.id} item={item} />
-                ))}
-              </div>
-            )}
-          </AnimatedDiv>
         </div>
       </div>
     </div>

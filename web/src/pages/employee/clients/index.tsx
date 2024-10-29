@@ -6,23 +6,36 @@ import usePagination from "@/hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import CommonInput from "@/components/common/input";
+import { Columns } from "@/components/tables/clients/columns";
 import { fetchClients } from "@/api/queries/clients.query";
 import CreateClientDialog from "@/components/dialogs/clients/add";
 import { DataTable } from "@/components/tables/clients/data-table";
-import { Columns } from "@/components/tables/clients/columns";
 import { useAuth } from "@/providers/auth-provider";
+import ClientTypeFilterSelect from "@/components/select/sales-agreement/client-type-filter";
+import AnimatedDiv from "@/components/animated/Div";
+import { ClientTypeFilter } from "@/interfaces/sales-agreement.interface";
 
 export default function Clients() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateClient, setOpenCreateClient] = useState(false)
+  const [clientTypeFilter, setClientTypeFilter] = useState<ClientTypeFilter | string>('');
   const { branch } = useAuth()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['clients', pagination, debouncedSearch, branch],
-    queryFn: async () => await fetchClients({ skip, take, search: debouncedSearch, branch })
+    queryKey: ['clients', pagination, debouncedSearch, branch, clientTypeFilter],
+    queryFn: async () => await fetchClients({
+      skip, take, search: debouncedSearch, branch, ...(clientTypeFilter && {
+        typeOfClient: clientTypeFilter
+      })
+
+    })
   });
+  const handleClearFilters = () => {
+    setClientTypeFilter("")
+  }
+
 
   return (
     <div className="space-y-2">
@@ -37,25 +50,37 @@ export default function Clients() {
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">
-        <div className="flex items-center justify-between py-1">
-          <div className="flex flex-1 gap-2 items-center p-[1px] gap-x-2">
+        <div className="flex items-center justify-between py-1 gap-x-2">
+          <div className="flex flex-1 gap-2 items-center p-[1px]">
             <CommonInput
-              placeholder="Search by client name"
+              placeholder="Search by client name or email"
               containerProps={{
                 className: "w-full"
               }}
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <Button
-              size={"sm"}
-              onClick={() => setOpenCreateClient(true)}
-              className="flex gap-x-2"
-            >
-              <Plus size={14} />
-              <span>Create</span>
-            </Button>
+            <ClientTypeFilterSelect
+              value={clientTypeFilter}
+              onValueChange={(value) => setClientTypeFilter(value)}
+            />
+            {clientTypeFilter &&
+              <AnimatedDiv animationType="Shake">
+                <Button onClick={handleClearFilters}
+                  className="text-xs"
+                  variant={'destructive'}>Clear Filters
+                </Button>
+              </AnimatedDiv>
+            }
           </div>
+          <Button
+            size={"sm"}
+            onClick={() => setOpenCreateClient(true)}
+            className="flex gap-x-2"
+          >
+            <Plus size={14} />
+            <span>Create</span>
+          </Button>
         </div>
         <DataTable
           columns={Columns}

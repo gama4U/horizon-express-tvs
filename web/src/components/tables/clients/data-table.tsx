@@ -6,6 +6,7 @@ import {
 	VisibilityState,
 	flexRender,
 	getCoreRowModel,
+	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
@@ -13,6 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { DataTablePagination } from "../../common/table-pagination";
 import Loader from "@/components/animated/Loader";
 import { IClient } from "@/api/mutations/client.mutation";
+
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -42,6 +44,7 @@ export function DataTable<TData, TValue>({
 		manualPagination: true,
 		onPaginationChange: onPaginationChange,
 		onSortingChange: setSorting,
+		getSortedRowModel: getSortedRowModel(),
 		getCoreRowModel: getCoreRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		onRowSelectionChange: setRowSelection,

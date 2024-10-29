@@ -25,15 +25,17 @@ export async function deleteSupplier(id: string) {
   })
 }
 
+
 export interface IFindSupplier {
   skip?: number;
   take?: number;
   search?: string;
   category?: string;
   branch?: string;
+  isApproved?: boolean;
 }
 
-export async function fetchSuppliers({ skip, take, search, category, branch }: IFindSupplier) {
+export async function fetchSuppliers({ skip, take, search, category, branch, isApproved }: IFindSupplier) {
   let whereInput: Prisma.SupplierWhereInput = {};
 
   if (search) {
@@ -47,14 +49,15 @@ export async function fetchSuppliers({ skip, take, search, category, branch }: I
           { category: { contains: part, mode: "insensitive" } },
         ],
       })),
-    }
+    };
   }
 
   if (category) {
-    whereInput = {
-      ...whereInput,
-      category
-    }
+    whereInput.category = category;
+  }
+
+  if (isApproved === true) {
+    whereInput.approverId = { not: null };
   }
 
   const suppliers = prisma.supplier.findMany({
@@ -66,15 +69,17 @@ export async function fetchSuppliers({ skip, take, search, category, branch }: I
       purchaseOrders: true,
       _count: {
         select: {
-          purchaseOrders: true
-        }
-      }
+          purchaseOrders: true,
+        },
+      },
+      approver: true,
+      creator: true,
     },
     skip: skip ?? 0,
     take: take ?? 10,
     orderBy: {
-      createdAt: 'desc'
-    }
+      createdAt: 'desc',
+    },
   });
 
   const countSuppliers = prisma.supplier.count({
@@ -84,16 +89,25 @@ export async function fetchSuppliers({ skip, take, search, category, branch }: I
     },
   });
 
-  const [suppliersData, total] = await prisma.$transaction([
-    suppliers,
-    countSuppliers
-  ]);
+  const [suppliersData, total] = await prisma.$transaction([suppliers, countSuppliers]);
 
   return { suppliersData, total };
 }
 
-export const findSupplierById = async(id: string) => {
+
+export const findSupplierById = async (id: string) => {
   return await prisma.supplier.findFirst({
-    where: {id}
+    where: { id }
   })
+}
+interface IUpdateSupplierApprover {
+  id: string,
+  approverId: string
+}
+
+export async function updateSupplierApprover({ id, approverId }: IUpdateSupplierApprover) {
+  return await prisma.supplier.update({
+    where: { id },
+    data: { approverId }
+  });
 }

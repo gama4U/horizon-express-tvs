@@ -15,6 +15,8 @@ import { createMemorandum, ICreateMemorandum } from "@/api/mutations/memorandum.
 import React, { Suspense, useState } from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { EditorState, convertToRaw } from 'draft-js'
+import { useAuth } from "@/providers/auth-provider";
+import { OfficeBranch } from "@/interfaces/user.interface";
 
 const Editor = React.lazy(() =>
 	import('react-draft-wysiwyg').then((mod) => ({ default: mod.Editor }))
@@ -40,6 +42,7 @@ const formSchema = z.object({
 export default function CreateMemorandumDialog({ openDialog, setOpenDialog, creatorId, successNavigate }: ICreateMemorandumProps) {
 	const queryClient = useQueryClient();
 	const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
+	const { branch } = useAuth()
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -75,6 +78,7 @@ export default function CreateMemorandumDialog({ openDialog, setOpenDialog, crea
 		createMemoMutate({
 			creatorId,
 			contents,
+			branch: branch as OfficeBranch,
 			...values
 		});
 	}

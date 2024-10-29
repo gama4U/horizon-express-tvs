@@ -13,15 +13,15 @@ purchaseRequestRouter.post('/', validate(createPurchaseRequestSchema), async (re
   try {
     const userId = req.user?.id;
 
-    const foundSupplier = await findSupplierById(req.body.clientId);
+    const foundSupplier = await findSupplierById(req.body.supplierId);
     if (!foundSupplier) {
       throw new Error('Failed to find supplier');
     }
 
-    const created = await createPurchaseRequest({ 
-      creatorId: userId, 
-      ...req.body, 
-      officeBranch: foundSupplier.officeBranch 
+    const created = await createPurchaseRequest({
+      creatorId: userId,
+      ...req.body,
+      officeBranch: foundSupplier.officeBranch
     });
     if (!created) {
       throw new Error('Failed to create purchase request')
@@ -62,15 +62,18 @@ purchaseRequestRouter.put('/:id', validate(updatePurchaseRequestSchema), async (
 
 purchaseRequestRouter.get('/', validate(findPurchaseRequestsSchema), async (req: Request, res: Response) => {
   try {
-    const { skip, take, search, category, branch } = req.query;
+    const { skip, take, search, category, branch, type, classification } = req.query;
 
     const filters = {
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
       category: category ? String(category) : undefined,
-      branch: branch ? String(branch) : undefined
+      branch: branch ? String(branch) : undefined,
+      type: type ? String(type) : undefined,
+      classification: classification ? String(classification) : undefined
     };
+
 
     const purchaseRequests = await findPurchaseRequests(filters);
 

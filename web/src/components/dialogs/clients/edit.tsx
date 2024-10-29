@@ -1,5 +1,6 @@
-import { Loader2, UserCircle, X, Pencil } from "lucide-react";
+import { Loader2, UserCircle, X, Pencil, ThumbsUp } from "lucide-react";
 import { z } from "zod"
+import { format } from "date-fns";
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import AnimatedDiv from "@/components/animated/Div";
@@ -12,7 +13,7 @@ import { toast } from "sonner";
 import CommonToast from "@/components/common/toast";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { IClient, IUpdateClient, updateClient } from "@/api/mutations/client.mutation";
+import { approveClient, IClient, IUpdateClient, updateClient } from "@/api/mutations/client.mutation";
 import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import Constants from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -83,6 +84,24 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 		}
 	}, [clientData, form]);
 
+	const { mutate: approveMutate, isPending: approving } = useMutation({
+		mutationFn: async (id: string) => await approveClient(id),
+		onSuccess: (data) => {
+			queryClient.refetchQueries({ queryKey: ['clients'] })
+			queryClient.refetchQueries({ queryKey: ['transaction'] })
+			toast.success(data.message, {
+				position: 'top-center',
+				className: 'text-primary'
+			});
+		},
+		onError: (error) => {
+			toast.error(error.message, {
+				position: 'top-center',
+				className: 'text-destructive'
+			})
+		},
+	});
+
 	const { mutate: updateClientMutate, isPending: updatingClient } = useMutation({
 		mutationFn: async (data: IUpdateClient) => await updateClient(data),
 		onError: (error) => {
@@ -126,7 +145,36 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 					</DialogHeader>
 				</DialogTitle>
 				<Separator />
-				<div className="space-y-8 p-4">
+				<div className="flex flex-col gap-2  text-xs border rounded-lg p-2">
+					<div className="flex flex-row gap-x-2 justify-between">
+						<p className="italic">Created by : {clientData.creator?.firstName} {clientData.creator?.lastName}</p>
+						<p className="italic">
+							Created at: {format(new Date(clientData.createdAt), 'MMMM d, h:mm a')}
+						</p>
+					</div>
+					{clientData.approverId ?
+
+						<p className="italic text-primary">Approved by: {clientData.approver?.firstName} {clientData.approver?.lastName}</p>
+						:
+						<div className="flex flex-row gap-x-2 items-center">
+							<p className="text-xs italic text-muted-foreground">Not yet approved</p>
+							<Button
+								size={'sm'}
+								onClick={() => approveMutate(clientData?.id)}
+								className='gap-1'
+								disabled={approving}
+							>
+								{approving ? (
+									<Loader2 size={16} className='animate-spin' />
+								) : (
+									<ThumbsUp size={16} />
+								)}
+								<span>Approve</span>
+							</Button>
+						</div>
+					}
+				</div>
+				<div className="space-y-8">
 					<AnimatedDiv animationType="SlideInFromLeft" slideEntrancePoint={-20}>
 						<Form {...form}>
 							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

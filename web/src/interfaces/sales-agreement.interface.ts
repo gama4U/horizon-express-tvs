@@ -1,6 +1,7 @@
 import { IClient } from "@/api/mutations/client.mutation";
 import { Currency, ISalesAgreementItem } from "./sales-agreement-item.interface";
 import { IUser } from "./user.interface";
+import { IPurchaseRequestOrder } from "./purchase-request.interface";
 
 export interface ISalesAgreement {
   id: string;
@@ -10,7 +11,7 @@ export interface ISalesAgreement {
   serialNumber: string;
   currency: Currency;
   salesAgreementItems: ISalesAgreementItem[];
-  purchaseOrder: any;
+  purchaseRequestOrders: IPurchaseRequestOrder[];
   transaction: any;
   client: IClient;
   creator?: IUser;
@@ -42,6 +43,7 @@ export interface IFetchSalesAgreements {
   take?: number;
   search?: string;
   branch?: string;
+  typeOfClient?: TypeOfClient | string
 }
 
 export interface IFetchSalesAgreementsData {
@@ -49,4 +51,4 @@ export interface IFetchSalesAgreementsData {
   total: number;
 }
 
-export type ClientTypeFilter = TypeOfClient | 'ALL';
+export type ClientTypeFilter = TypeOfClient;

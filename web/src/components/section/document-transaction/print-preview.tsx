@@ -39,13 +39,13 @@ export default function DocumentTransactionPreview({ data }: Props) {
 			</div>
 			<Separator />
 			<div ref={contentRef} className="flex flex-col min-h-[100vh] space-y-4 justify-between p-4">
-				<div className='flex flex-col px-28'>
+				<div className='flex flex-col px-20'>
 					<div className='text-center text-black flex flex-col items-center'>
 						<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
 						{RenderHeaderText(data.client.officeBranch as OfficeBranch)}
 					</div>
 					<div className='text-black space-y-4 my-5 w-full'>
-						<div className='w-full  flex flex-col justify-end items-end gap-1 text-[12px]'>
+						<div className='w-full  flex flex-col justify-start items-start gap-1 text-[12px]'>
 							<span className='text-[14px] font-semibold'>
 								Document Transaction #{data.dtsNumber}
 							</span>

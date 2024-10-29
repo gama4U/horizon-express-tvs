@@ -7,7 +7,9 @@ import { useAuth } from "@/providers/auth-provider";
 import Constants from "@/constants";
 import ClientTypeBadge from "@/components/badges/client-type";
 import { IClient } from "@/api/mutations/client.mutation";
-import { CircleUserRound, ListTodo, Mail, MapPinHouse, ReceiptText } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, CircleCheck, ListTodo, Mail, MapPinHouse, ReceiptText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export const Columns: ColumnDef<IClient>[] = [
 	{
@@ -30,22 +32,25 @@ export const Columns: ColumnDef<IClient>[] = [
 				aria-label="Select row"
 			/>
 		),
-		enableSorting: false,
 		enableHiding: false,
 	},
 	{
-		id: "name",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Name</p>
-			<CircleUserRound color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
+		accessorKey: "name",
+		header: ({ column }) => {
+			const isSorted = column.getIsSorted();
 			return (
-				<div className="flex items-center gap-2">
-					<span>{row.original.name}</span>
-				</div>
+				<Button
+					variant="ghost"
+					className="text-xs"
+					onClick={() => { column.toggleSorting(column.getIsSorted() === "asc") }}
+				>
+					Name
+					{isSorted === "asc" && <ArrowUpAZ className="ml-2 h-4 w-4" />}
+					{isSorted === "desc" && <ArrowDownAZ className="ml-2 h-4 w-4" />}
+					{!isSorted && <ArrowUpDown className="ml-2 h-4 w-4" />}				</Button>
 			)
-		}
+		},
+		enableSorting: true,
 	},
 	{
 		id: "email",
@@ -95,22 +100,6 @@ export const Columns: ColumnDef<IClient>[] = [
 		}
 	},
 	{
-		id: "officeBranch",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Branch</p>
-			<MapPinHouse color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
-			return (
-				<div className="flex items-center gap-2">
-					<span className="text-xs">
-						{row.original.officeBranch}
-					</span>
-				</div>
-			)
-		}
-	},
-	{
 		id: "transactions",
 		header: () => <div className="flex items-center gap-x-2">
 			<p>Transactions</p>
@@ -119,7 +108,7 @@ export const Columns: ColumnDef<IClient>[] = [
 		cell: ({ row }) => {
 			const transactions = row.original.transactions;
 			return (
-				<div className="flex items-center gap-x-1">
+				<div className="flex justify-center items-center ">
 					{transactions && transactions.length > 0 ? (
 						<span className="text-xs text-center">{transactions.length}</span>
 					) : (
@@ -127,6 +116,23 @@ export const Columns: ColumnDef<IClient>[] = [
 					)}
 				</div>
 			);
+		}
+	},
+	{
+		id: "approverId",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Status</p>
+		</div>,
+		cell: ({ row }) => {
+			return (
+				<div className="flex justify-center items-center gap-2">
+					<span className="text-xs">
+						{row.original.approverId ?
+							<Badge variant="outline" className="gap-2 font-normal border-white p-2 text-white bg-primary">Approved <CircleCheck size={'14px'} /></Badge> :
+							<Badge variant="outline" className="font-normal text-muted-foreground bg-muted p-2">Pending</Badge>}
+					</span>
+				</div>
+			)
 		}
 	},
 	{

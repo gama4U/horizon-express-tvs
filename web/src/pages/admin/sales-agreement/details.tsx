@@ -13,8 +13,8 @@ import Constants from "@/constants";
 
 export default function SalesAgreementDetails() {
   const { id } = useParams();
-  const {session: {user}} = useAuth();
-  const {PermissionsCanEdit} = Constants;
+  const { session: { user } } = useAuth();
+  const { PermissionsCanEdit } = Constants;
 
   const { data, isLoading } = useQuery({
     queryKey: ['sales-agreement-details', id],
@@ -23,6 +23,7 @@ export default function SalesAgreementDetails() {
       return await fetchSalesAgreement(id)
     },
   });
+
 
   return (
     <div className="space-y-2">
