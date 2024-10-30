@@ -36,22 +36,23 @@ const generate_number_1 = require("../utils/generate-number");
 function createSalesAgreement(_a) {
     return __awaiter(this, void 0, void 0, function* () {
         var { officeBranch } = _a, data = __rest(_a, ["officeBranch"]);
-        const latestSalesAgreement = yield db_utils_1.default.salesAgreement.findFirst({
+        const lastSalesAgreement = yield db_utils_1.default.salesAgreement.findFirst({
             where: {
                 client: {
-                    officeBranch
+                    officeBranch,
+                },
+                serialNumber: {
+                    contains: officeBranch === 'CEBU' ? 'CEB' : 'CAL',
                 },
             },
             orderBy: {
-                sequenceNumber: 'desc'
-            }
+                serialNumber: 'desc',
+            },
         });
-        const serialNumber = (0, generate_number_1.generateSerialNumber)({
-            prefix: 'SA',
-            uniqueNumber: latestSalesAgreement ? latestSalesAgreement.sequenceNumber + 1 : 1,
-            postfix: officeBranch.slice(0, 3)
+        const serialNumber = (0, generate_number_1.getNextSerialNumber)((lastSalesAgreement === null || lastSalesAgreement === void 0 ? void 0 : lastSalesAgreement.serialNumber) || null, officeBranch);
+        return db_utils_1.default.salesAgreement.create({
+            data: Object.assign(Object.assign({}, data), { serialNumber, sequenceNumber: parseInt(serialNumber.slice(2, 7)) }),
         });
-        return db_utils_1.default.salesAgreement.create({ data: Object.assign(Object.assign({}, data), { serialNumber }) });
     });
 }
 function updateSalesAgreement(_a) {
@@ -66,27 +67,23 @@ function updateSalesAgreement(_a) {
     });
 }
 function findSalesAgreements(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch }) {
-        let whereInput = {};
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch, typeOfClient }) {
         let searchFilter = {};
         if (search) {
-            const searchParts = search.split(/\s+/);
             searchFilter = {
-                AND: searchParts.map((part) => ({
-                    OR: [
-                        { firstName: { contains: part, mode: "insensitive" } },
-                        { lastName: { contains: part, mode: "insensitive" } },
-                        { email: { contains: part, mode: "insensitive" } },
-                        { serialNumber: { contains: search, mode: "insensitive" } },
-                    ],
-                })),
+                OR: [
+                    { client: { name: { contains: search, mode: "insensitive" } } },
+                    { client: { email: { contains: search, mode: "insensitive" } } },
+                    { serialNumber: { contains: search, mode: "insensitive" } },
+                ],
             };
         }
-        const where = Object.assign({}, searchFilter);
+        const where = Object.assign(Object.assign({}, searchFilter), { client: {
+                officeBranch: branch,
+                clientType: typeOfClient,
+            } });
         const findSalesAgreements = db_utils_1.default.salesAgreement.findMany({
-            where: Object.assign(Object.assign({}, where), { client: {
-                    officeBranch: branch
-                } }),
+            where,
             include: {
                 creator: {
                     select: {
@@ -96,8 +93,8 @@ function findSalesAgreements(_a) {
                         email: true,
                         avatar: true,
                         userType: true,
-                        signature: true
-                    }
+                        signature: true,
+                    },
                 },
                 approver: {
                     select: {
@@ -107,30 +104,28 @@ function findSalesAgreements(_a) {
                         email: true,
                         avatar: true,
                         userType: true,
-                        signature: true
-                    }
+                        signature: true,
+                    },
                 },
                 client: true,
                 _count: {
                     select: {
-                        salesAgreementItems: true
-                    }
-                }
+                        salesAgreementItems: true,
+                    },
+                },
             },
             skip: skip !== null && skip !== void 0 ? skip : 0,
             take: take !== null && take !== void 0 ? take : 10,
             orderBy: {
-                createdAt: 'desc'
-            }
+                createdAt: 'desc',
+            },
         });
         const countSalesAgreements = db_utils_1.default.salesAgreement.count({
-            where: Object.assign(Object.assign({}, whereInput), { client: {
-                    officeBranch: branch
-                } }),
+            where,
         });
         const [salesAgreements, total] = yield db_utils_1.default.$transaction([
             findSalesAgreements,
-            countSalesAgreements
+            countSalesAgreements,
         ]);
         return { salesAgreements, total };
     });

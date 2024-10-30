@@ -16,9 +16,7 @@ const express_1 = __importDefault(require("express"));
 const sales_agreement_schema_1 = require("../schemas/sales-agreement.schema");
 const validate_middleware_1 = require("../middlewares/validate.middleware");
 const sales_agreement_service_1 = require("../services/sales-agreement.service");
-const client_1 = require("@prisma/client");
 const sales_agreement_item_service_1 = require("../services/sales-agreement-item.service");
-const authorize_middleware_1 = require("../middlewares/authorize.middleware");
 const client_service_1 = require("../services/client.service");
 const salesAgreementRouter = express_1.default.Router();
 salesAgreementRouter.post('/', (0, validate_middleware_1.validate)(sales_agreement_schema_1.createSalesAgreementSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -126,7 +124,7 @@ salesAgreementRouter.post('/summary', (req, res) => __awaiter(void 0, void 0, vo
         return res.status(500).json({ message: 'Internal server error' });
     }
 }));
-salesAgreementRouter.patch('/:id/approver', (0, authorize_middleware_1.authorize)([client_1.UserType.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+salesAgreementRouter.patch('/:id/approver', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const approverId = String((_a = req.user) === null || _a === void 0 ? void 0 : _a.id);

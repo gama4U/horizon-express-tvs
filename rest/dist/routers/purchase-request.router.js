@@ -25,7 +25,7 @@ purchaseRequestRouter.post('/', (0, validate_middleware_1.validate)(purchase_req
     var _a;
     try {
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
-        const foundSupplier = yield (0, supplier_service_1.findSupplierById)(req.body.clientId);
+        const foundSupplier = yield (0, supplier_service_1.findSupplierById)(req.body.supplierId);
         if (!foundSupplier) {
             throw new Error('Failed to find supplier');
         }
@@ -58,13 +58,15 @@ purchaseRequestRouter.put('/:id', (0, validate_middleware_1.validate)(purchase_r
 }));
 purchaseRequestRouter.get('/', (0, validate_middleware_1.validate)(purchase_request_schema_1.findPurchaseRequestsSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { skip, take, search, category, branch } = req.query;
+        const { skip, take, search, category, branch, type, classification } = req.query;
         const filters = {
             skip: skip ? Number(skip) : undefined,
             take: take ? Number(take) : undefined,
             search: search ? String(search) : undefined,
             category: category ? String(category) : undefined,
-            branch: branch ? String(branch) : undefined
+            branch: branch ? String(branch) : undefined,
+            type: type ? String(type) : undefined,
+            classification: classification ? String(classification) : undefined
         };
         const purchaseRequests = yield (0, purchase_request_service_1.findPurchaseRequests)(filters);
         if (!purchaseRequests) {

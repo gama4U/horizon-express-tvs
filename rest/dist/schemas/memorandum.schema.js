@@ -11,5 +11,6 @@ exports.getMemorandumsSchema = zod_1.z.object({
             message: 'Invalid take value'
         }).optional(),
         search: zod_1.z.string().optional(),
+        branch: zod_1.z.string().optional(),
     })
 });

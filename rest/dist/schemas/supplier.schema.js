@@ -13,5 +13,9 @@ exports.getSuppliersSchema = zod_1.z.object({
         search: zod_1.z.string().optional(),
         branch: zod_1.z.string().optional(),
         category: zod_1.z.string().optional(),
+        isApproved: zod_1.z
+            .string()
+            .transform(val => val === 'true')
+            .optional(),
     })
 });

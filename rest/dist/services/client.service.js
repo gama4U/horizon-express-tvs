@@ -17,6 +17,7 @@ exports.createClient = createClient;
 exports.updateClient = updateClient;
 exports.deleteClient = deleteClient;
 exports.fetchClients = fetchClients;
+exports.updateClientApprover = updateClientApprover;
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
 function createClient(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -45,7 +46,7 @@ function deleteClient(id) {
     });
 }
 function fetchClients(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch }) {
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch, typeOfClient, isApproved }) {
         let whereInput = {};
         if (search) {
             const searchParts = search.split(/\s+/);
@@ -57,29 +58,31 @@ function fetchClients(_a) {
                 })),
             };
         }
+        if (isApproved === true) {
+            whereInput.approverId = { not: null };
+        }
         const client = db_utils_1.default.client.findMany({
-            where: Object.assign(Object.assign({}, whereInput), { officeBranch: branch }),
+            where: Object.assign(Object.assign({}, whereInput), { clientType: typeOfClient, officeBranch: branch }),
             include: {
                 transactions: true,
+                creator: true,
+                approver: true,
                 _count: {
                     select: {
-                        transactions: true
-                    }
-                }
+                        transactions: true,
+                    },
+                },
             },
             skip: skip !== null && skip !== void 0 ? skip : 0,
             take: take !== null && take !== void 0 ? take : 10,
             orderBy: {
-                createdAt: 'desc'
-            }
+                createdAt: 'desc',
+            },
         });
         const countClients = db_utils_1.default.client.count({
-            where: Object.assign(Object.assign({}, whereInput), { officeBranch: branch }),
+            where: Object.assign(Object.assign({}, whereInput), { clientType: typeOfClient, officeBranch: branch }),
         });
-        const [clientsData, total] = yield db_utils_1.default.$transaction([
-            client,
-            countClients
-        ]);
+        const [clientsData, total] = yield db_utils_1.default.$transaction([client, countClients]);
         return { clientsData, total };
     });
 }
@@ -89,3 +92,11 @@ const findClientById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.findClientById = findClientById;
+function updateClientApprover(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ id, approverId }) {
+        return yield db_utils_1.default.client.update({
+            where: { id },
+            data: { approverId }
+        });
+    });
+}

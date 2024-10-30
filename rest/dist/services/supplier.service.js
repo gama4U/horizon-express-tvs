@@ -17,6 +17,7 @@ exports.createSupplier = createSupplier;
 exports.updateSupplier = updateSupplier;
 exports.deleteSupplier = deleteSupplier;
 exports.fetchSuppliers = fetchSuppliers;
+exports.updateSupplierApprover = updateSupplierApprover;
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
 function createSupplier(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -45,7 +46,7 @@ function deleteSupplier(id) {
     });
 }
 function fetchSuppliers(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, category, branch }) {
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, category, branch, isApproved }) {
         let whereInput = {};
         if (search) {
             const searchParts = search.split(/\s+/);
@@ -61,7 +62,10 @@ function fetchSuppliers(_a) {
             };
         }
         if (category) {
-            whereInput = Object.assign(Object.assign({}, whereInput), { category });
+            whereInput.category = category;
+        }
+        if (isApproved === true) {
+            whereInput.approverId = { not: null };
         }
         const suppliers = db_utils_1.default.supplier.findMany({
             where: Object.assign(Object.assign({}, whereInput), { officeBranch: branch }),
@@ -69,23 +73,22 @@ function fetchSuppliers(_a) {
                 purchaseOrders: true,
                 _count: {
                     select: {
-                        purchaseOrders: true
-                    }
-                }
+                        purchaseOrders: true,
+                    },
+                },
+                approver: true,
+                creator: true,
             },
             skip: skip !== null && skip !== void 0 ? skip : 0,
             take: take !== null && take !== void 0 ? take : 10,
             orderBy: {
-                createdAt: 'desc'
-            }
+                createdAt: 'desc',
+            },
         });
         const countSuppliers = db_utils_1.default.supplier.count({
             where: Object.assign(Object.assign({}, whereInput), { officeBranch: branch }),
         });
-        const [suppliersData, total] = yield db_utils_1.default.$transaction([
-            suppliers,
-            countSuppliers
-        ]);
+        const [suppliersData, total] = yield db_utils_1.default.$transaction([suppliers, countSuppliers]);
         return { suppliersData, total };
     });
 }
@@ -95,3 +98,11 @@ const findSupplierById = (id) => __awaiter(void 0, void 0, void 0, function* () 
     });
 });
 exports.findSupplierById = findSupplierById;
+function updateSupplierApprover(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ id, approverId }) {
+        return yield db_utils_1.default.supplier.update({
+            where: { id },
+            data: { approverId }
+        });
+    });
+}

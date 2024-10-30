@@ -52,5 +52,7 @@ exports.findPurchaseRequestsSchema = zod_1.z.object({
         }).optional(),
         search: zod_1.z.string().optional(),
         branch: zod_1.z.string().optional(),
+        type: zod_1.z.string().optional(),
+        classification: zod_1.z.string().optional(),
     })
 });

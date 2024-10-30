@@ -16,6 +16,8 @@ const express_1 = __importDefault(require("express"));
 const validate_middleware_1 = require("../middlewares/validate.middleware");
 const supplier_schema_1 = require("../schemas/supplier.schema");
 const supplier_service_1 = require("../services/supplier.service");
+const authorize_middleware_1 = require("../middlewares/authorize.middleware");
+const client_1 = require("@prisma/client");
 const supplierRouter = express_1.default.Router();
 supplierRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -30,13 +32,14 @@ supplierRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 supplierRouter.get('/', (0, validate_middleware_1.validate)(supplier_schema_1.getSuppliersSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { skip, take, search, category, branch } = req.query;
+        const { skip, take, search, category, branch, isApproved } = req.query;
         const filters = {
             skip: skip ? Number(skip) : undefined,
             take: take ? Number(take) : undefined,
             search: search ? String(search) : undefined,
             category: category ? String(category) : undefined,
             branch: branch ? String(branch) : undefined,
+            isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
         };
         const clients = yield (0, supplier_service_1.fetchSuppliers)(filters);
         if (!clients) {
@@ -71,6 +74,25 @@ supplierRouter.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
         }
         return res.status(200).json({
             message: 'Supplier deleted successfully'
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: 'Internal server error'
+        });
+    }
+}));
+supplierRouter.patch('/:id/approver', (0, authorize_middleware_1.authorize)([client_1.UserType.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const approverId = String((_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
+        const id = req.params.id;
+        const update = yield (0, supplier_service_1.updateSupplierApprover)({ id, approverId });
+        if (!update) {
+            throw new Error('Failed to approve supplier');
+        }
+        return res.status(200).json({
+            message: 'Supplier approved successfully'
         });
     }
     catch (error) {
