@@ -44,6 +44,7 @@ const SupplierCategories = [
   'Personal Protective Equipment (PPE)',
   'Laboratory Equipment',
   'Sterilization Products',
+  'Credit Card',
 ]
 
 const ContainerVariants = {
