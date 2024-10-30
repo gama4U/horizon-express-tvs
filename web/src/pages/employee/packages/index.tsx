@@ -26,11 +26,11 @@ export default function Packages() {
       <TopBar
         LeftSideHeader={
           <p className="text-sm">
-            Packages
+            Proposals
           </p>
         }
         LeftSideSubHeader={
-          <p className="text-primary text-xs">Manage packages here.</p>
+          <p className="text-primary text-xs">Manage proposals here.</p>
         }
       />
       <div className="space-y-4 bg-white p-4 rounded-lg">

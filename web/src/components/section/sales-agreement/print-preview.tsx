@@ -47,9 +47,10 @@ export default function PrintPreview({ data }: Props) {
   const grandTotalUnitPrice = data.salesAgreementItems.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
   const grandTotalServiceFee = data.salesAgreementItems.reduce((acc, item) => acc + ((item.serviceFee ?? 0) * item.quantity), 0);
   const grandTotal = grandTotalUnitPrice + grandTotalServiceFee;
+  const costOfSale = grandTotalUnitPrice;
   const netOfVat = grandTotalServiceFee / 1.12;
   const lessVAT = netOfVat * 0.12; // 12% of VAT Sales
-  const totalDue = grandTotalServiceFee + grandTotal;
+  const totalDue = costOfSale + grandTotalServiceFee;
   const lessEWT = netOfVat * 0.02; // 2% of VAT Sales
   const totalAmountDue = totalDue - lessEWT;
 
@@ -178,7 +179,15 @@ export default function PrintPreview({ data }: Props) {
                         <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
                         <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
                         <td className="px-4 py-2 border-r border-gray-300 text-center">
-                          {formatCurrency(data.currency, item.unitPrice)}
+                          {selectedTemplate === 'template1' ? (
+                            <>
+                              {formatCurrency(data.currency, (item.unitPrice + (item.serviceFee ?? 0)))}
+                            </>
+                          ) : (
+                            <>
+                              {formatCurrency(data.currency, item.unitPrice)}
+                            </>
+                          )}
                         </td>
                         {selectedTemplate !== 'template1' && (
                           <td className="px-4 py-2 border-r border-gray-300 text-center">
@@ -206,17 +215,20 @@ export default function PrintPreview({ data }: Props) {
             </tbody>
           </table>
           <div className='mt-2 text-[12px] text-muted-foreground border border-dashed p-2 space-y-1'>
-            <div className='flex items-center justify-between'>
-              <h1>
-                {(selectedTemplate === 'template1' || selectedTemplate === 'template2')
-                  ? 'Grand total: '
-                  : 'Cost of sales'
-                }
-              </h1>
-              <span>{formatCurrency(data.currency, grandTotal)}</span>
-            </div>
+            {selectedTemplate === 'template1' && (
+              <>
+                <div className='flex items-center justify-between'>
+                  <h1>Grand total:</h1>
+                  <span>{formatCurrency(data.currency, grandTotal)}</span>
+                </div>
+              </>
+            )}
             {selectedTemplate === 'template2' && (
               <>
+                <div className='flex items-center justify-between'>
+                  <h1>Grand total:</h1>
+                  <span>{formatCurrency(data.currency, grandTotal)}</span>
+                </div>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Service fee: </h1>
@@ -226,6 +238,10 @@ export default function PrintPreview({ data }: Props) {
             )}
             {(selectedTemplate === 'template3') && (
               <>
+                <div className='flex items-center justify-between'>
+                  <h1>Coast of sale:</h1>
+                  <span>{formatCurrency(data.currency, costOfSale)}</span>
+                </div>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Service fee: </h1>
@@ -250,6 +266,10 @@ export default function PrintPreview({ data }: Props) {
             )}
             {(selectedTemplate === 'template4') && (
               <>
+                <div className='flex items-center justify-between'>
+                  <h1>Coast of sale:</h1>
+                  <span>{formatCurrency(data.currency, costOfSale)}</span>
+                </div>
                 <Separator className='bg-gray-100' />
                 <div className='flex items-center justify-between'>
                   <h1>Service fee: </h1>
