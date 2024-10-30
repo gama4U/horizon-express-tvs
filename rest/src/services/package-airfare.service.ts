@@ -28,3 +28,9 @@ export const deletePackageAirfareByPackageId = async(id: string) => {
     }
   })
 }
+
+export const deletePackageAirfare = async(id: string) => {
+  return await prisma.packageAirfare.delete({
+    where: {id}
+  });
+}

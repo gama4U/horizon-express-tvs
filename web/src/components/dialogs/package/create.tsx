@@ -25,29 +25,16 @@ import { OfficeBranch, UserType } from "@/interfaces/user.interface";
 import { Button } from "@/components/ui/button";
 import CommonInput from "@/components/common/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MultiInput } from "@/components/common/multi-input";
 import { createPackage } from "@/api/mutations/package.mutation";
 import { ICreatePackage } from "@/interfaces/package.interface";
 import { useAuth } from "@/providers/auth-provider";
 import { useNavigate } from "react-router-dom";
+import { MultiSelect } from "@/components/common/multi-select";
+import Constants from "@/constants";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, {
     message: "Name is required"
-  }),
-  inclusions: z.array(
-    z.string().trim().min(1, {
-      message: "Inclusion item must not be empty"
-    })
-  ).refine(items => items.length > 0, {
-    message: 'Please add at least one inclusion'
-  }),
-  exclusions: z.array(
-    z.string().trim().min(1, {
-      message: "Exclusion item must not be empty"
-    })
-  ).refine(items => items.length > 0, {
-    message: 'Please add at least one exclusion'
   }),
   remarks: z.string().trim().min(1, {
     message: "Remarks is required"
@@ -63,13 +50,15 @@ export default function CreatePackageDialog() {
   const queryClient = useQueryClient();
   const { session:{user}, branch } = useAuth()
   const navigate = useNavigate();
+  const [inclusionOptions, setInclusionOptions] = useState(Constants.PackageInclusions);
+	const [selectedInclusions, setSelectedInclusions] = useState<string[]>([]);
+  const [exclusionOptions, setExclusionOptions] = useState(Constants.PackageExclusions);
+	const [selectedExclusions, setSelectedExclusions] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      inclusions: [],
-      exclusions: [],
       remarks: '',
       officeBranch: OfficeBranch.CEBU,
     }
@@ -96,7 +85,12 @@ export default function CreatePackageDialog() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createPackageMutate({...values, officeBranch: branch as OfficeBranch});
+    createPackageMutate({
+      ...values,
+      inclusions: selectedInclusions,
+      exclusions: selectedExclusions,
+      officeBranch: branch as OfficeBranch
+    });
   }
 
   return (
@@ -132,32 +126,29 @@ export default function CreatePackageDialog() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="inclusions"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Inclusions</FormLabel>
-                    <FormControl>
-                      <MultiInput {...field} placeholder="Add inclusions (Enter to add) "/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="exclusions"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Exclusions</FormLabel>
-                    <FormControl>
-                      <MultiInput {...field} placeholder="Add exclusions (Enter to add)"/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              
+              <div className="space-y-1">
+                <FormLabel>Inclusions</FormLabel>
+                <MultiSelect
+                  options={inclusionOptions}
+                  setOptions={setInclusionOptions}
+                  selectedOptions={selectedInclusions}
+                  onSelect={setSelectedInclusions}
+                  placeholder="Select or enter inclusions"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <FormLabel>Exclusions</FormLabel>
+                <MultiSelect
+                  options={exclusionOptions}
+                  setOptions={setExclusionOptions}
+                  selectedOptions={selectedExclusions}
+                  onSelect={setSelectedExclusions}
+                  placeholder="Select or enter exclusions"
+                />
+              </div>
+
               <FormField
                 control={form.control}
                 name="remarks"

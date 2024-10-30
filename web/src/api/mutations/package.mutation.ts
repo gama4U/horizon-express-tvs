@@ -107,3 +107,29 @@ export async function approvePackage(id: string) {
   }
 }
 
+export async function deletePackageAccommodation(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/package-accommodations/${id}`);
+    return response.data;
+  } catch(error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong')
+  }
+}
+
+export async function deletePackageAirfare(id: string) {
+  try {
+    const response = await api.delete(`/api/v1/package-airfares/${id}`);
+    return response.data;
+  } catch(error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong')
+  }
+}
+
