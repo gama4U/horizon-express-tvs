@@ -33,14 +33,18 @@ exports.updateMemorandumApprover = updateMemorandumApprover;
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
 const generate_number_1 = require("../utils/generate-number");
 const moment_1 = __importDefault(require("moment"));
-function createMemorandum(data) {
+function createMemorandum(_a) {
     return __awaiter(this, void 0, void 0, function* () {
+        var { branch } = _a, data = __rest(_a, ["branch"]);
         const lastMemo = yield db_utils_1.default.memorandum.findFirst({
+            where: {
+                branch: branch,
+            },
             orderBy: { memorandumNumber: 'desc' },
         });
-        const nextMemoNumber = (0, generate_number_1.getNextMemorandumNumber)((lastMemo === null || lastMemo === void 0 ? void 0 : lastMemo.memorandumNumber) || null);
+        const nextMemoNumber = (0, generate_number_1.getNextMemorandumNumber)((lastMemo === null || lastMemo === void 0 ? void 0 : lastMemo.memorandumNumber) || null, String(branch));
         return yield db_utils_1.default.memorandum.create({
-            data: Object.assign(Object.assign({}, data), { memorandumNumber: nextMemoNumber }),
+            data: Object.assign(Object.assign({}, data), { branch: branch, memorandumNumber: nextMemoNumber }),
         });
     });
 }
@@ -65,7 +69,7 @@ function updateMemorandum(_a) {
     });
 }
 function fetchMemorandums(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search }) {
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch }) {
         let whereInput = {};
         if (search) {
             whereInput = {
@@ -77,7 +81,7 @@ function fetchMemorandums(_a) {
             };
         }
         const memorandums = db_utils_1.default.memorandum.findMany({
-            where: Object.assign({}, whereInput),
+            where: Object.assign(Object.assign({}, whereInput), { branch: branch }),
             skip: skip !== null && skip !== void 0 ? skip : 0,
             take: take !== null && take !== void 0 ? take : 10,
             orderBy: {
@@ -85,7 +89,7 @@ function fetchMemorandums(_a) {
             }
         });
         const countMemorandums = db_utils_1.default.memorandum.count({
-            where: Object.assign({}, whereInput),
+            where: Object.assign(Object.assign({}, whereInput), { branch: branch }),
         });
         const [memorandumData, total] = yield db_utils_1.default.$transaction([
             memorandums,

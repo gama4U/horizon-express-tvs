@@ -36,23 +36,19 @@ const generate_number_1 = require("../utils/generate-number");
 function createPurchaseRequest(_a) {
     return __awaiter(this, void 0, void 0, function* () {
         var { officeBranch } = _a, data = __rest(_a, ["officeBranch"]);
-        const latestSalesAgreement = yield db_utils_1.default.salesAgreement.findFirst({
+        const latestPurchaseRequest = yield db_utils_1.default.purchaseRequestOrder.findFirst({
             where: {
-                client: {
-                    officeBranch
+                supplier: {
+                    officeBranch,
                 },
             },
             orderBy: {
-                sequenceNumber: 'desc'
-            }
+                sequenceNumber: 'desc',
+            },
         });
-        const serialNumber = (0, generate_number_1.generateSerialNumber)({
-            prefix: 'PO',
-            uniqueNumber: latestSalesAgreement ? latestSalesAgreement.sequenceNumber + 1 : 1,
-            postfix: officeBranch.slice(0, 3)
-        });
+        const serialNumber = (0, generate_number_1.getNextPurchaseRequestNumber)((latestPurchaseRequest === null || latestPurchaseRequest === void 0 ? void 0 : latestPurchaseRequest.serialNumber) || null, officeBranch);
         return db_utils_1.default.purchaseRequestOrder.create({
-            data: Object.assign(Object.assign({}, data), { serialNumber })
+            data: Object.assign(Object.assign({}, data), { serialNumber }),
         });
     });
 }
@@ -68,23 +64,35 @@ function updatePurchaseRequest(_a) {
     });
 }
 function findPurchaseRequests(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch }) {
-        let whereInput = {};
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch, type, classification }) {
+        let whereInput = {
+            disbursementType: type,
+            classification,
+            supplier: {
+                officeBranch: branch,
+            },
+        };
         if (search) {
-            whereInput = {
-                OR: [
+            whereInput = Object.assign(Object.assign({}, whereInput), { OR: [
                     {
                         supplier: {
-                            name: { contains: search, mode: "insensitive" },
-                            address: { contains: search, mode: "insensitive" },
-                            contact: { contains: search, mode: "insensitive" },
-                        }
+                            name: { contains: search, mode: "insensitive" }
+                        },
                     },
-                ],
-            };
+                    {
+                        supplier: {
+                            address: { contains: search, mode: "insensitive" }
+                        },
+                    },
+                    {
+                        supplier: {
+                            contact: { contains: search, mode: "insensitive" }
+                        },
+                    },
+                ] });
         }
         const findPurchaseRequests = db_utils_1.default.purchaseRequestOrder.findMany({
-            where: Object.assign(Object.assign({}, whereInput), { supplier: { officeBranch: branch } }),
+            where: whereInput,
             include: {
                 creator: {
                     select: {
@@ -110,9 +118,7 @@ function findPurchaseRequests(_a) {
             }
         });
         const countPurchaseRequests = db_utils_1.default.purchaseRequestOrder.count({
-            where: Object.assign(Object.assign({}, whereInput), { supplier: {
-                    officeBranch: branch
-                } }),
+            where: whereInput,
         });
         const [purchaseRequests, total] = yield db_utils_1.default.$transaction([
             findPurchaseRequests,

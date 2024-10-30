@@ -16,6 +16,8 @@ const express_1 = __importDefault(require("express"));
 const client_service_1 = require("../services/client.service");
 const validate_middleware_1 = require("../middlewares/validate.middleware");
 const client_schema_1 = require("../schemas/client.schema");
+const client_1 = require("@prisma/client");
+const authorize_middleware_1 = require("../middlewares/authorize.middleware");
 const clientRouter = express_1.default.Router();
 clientRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -30,12 +32,14 @@ clientRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 clientRouter.get('/', (0, validate_middleware_1.validate)(client_schema_1.getClientsSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { skip, take, search, branch } = req.query;
+        const { skip, take, search, branch, typeOfClient, isApproved } = req.query;
         const filters = {
             skip: skip ? Number(skip) : undefined,
             take: take ? Number(take) : undefined,
             search: search ? String(search) : undefined,
             branch: branch ? String(branch) : undefined,
+            isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
+            typeOfClient: typeOfClient ? typeOfClient : undefined,
         };
         const clients = yield (0, client_service_1.fetchClients)(filters);
         if (!clients) {
@@ -70,6 +74,25 @@ clientRouter.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, func
         }
         return res.status(200).json({
             message: 'Client deleted successfully'
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: 'Internal server error'
+        });
+    }
+}));
+clientRouter.patch('/:id/approver', (0, authorize_middleware_1.authorize)([client_1.UserType.ADMIN]), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const approverId = String((_a = req.user) === null || _a === void 0 ? void 0 : _a.id);
+        const id = req.params.id;
+        const update = yield (0, client_service_1.updateClientApprover)({ id, approverId });
+        if (!update) {
+            throw new Error('Failed to approve client');
+        }
+        return res.status(200).json({
+            message: 'Client approved successfully'
         });
     }
     catch (error) {

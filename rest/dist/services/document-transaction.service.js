@@ -32,12 +32,17 @@ exports.findDocumentTransactionById = findDocumentTransactionById;
 const client_1 = require("@prisma/client");
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
 const generate_number_1 = require("../utils/generate-number");
-function createDocumentTransaction(data) {
+function createDocumentTransaction(data, officeBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         const lastDts = yield db_utils_1.default.documentTransaction.findFirst({
+            where: {
+                client: {
+                    officeBranch: officeBranch,
+                }
+            },
             orderBy: { dtsNumber: 'desc' },
         });
-        const nextDtsNumber = (0, generate_number_1.getNextDtsNumber)((lastDts === null || lastDts === void 0 ? void 0 : lastDts.dtsNumber) || null);
+        const nextDtsNumber = (0, generate_number_1.getNextDtsNumber)((lastDts === null || lastDts === void 0 ? void 0 : lastDts.dtsNumber) || null, officeBranch);
         return yield db_utils_1.default.documentTransaction.create({
             data: Object.assign(Object.assign({}, data), { dtsNumber: nextDtsNumber }),
         });

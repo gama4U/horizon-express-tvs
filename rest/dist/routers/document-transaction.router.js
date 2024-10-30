@@ -16,10 +16,12 @@ const express_1 = __importDefault(require("express"));
 const validate_middleware_1 = require("../middlewares/validate.middleware");
 const document_transaction_schema_1 = require("../schemas/document-transaction.schema");
 const document_transaction_service_1 = require("../services/document-transaction.service");
+const client_service_1 = require("../services/client.service");
 const documentTransactionRouter = express_1.default.Router();
 documentTransactionRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const created = yield (0, document_transaction_service_1.createDocumentTransaction)(req.body);
+        const foundClient = yield (0, client_service_1.findClientById)(req.body.clientId);
+        const created = yield (0, document_transaction_service_1.createDocumentTransaction)(req.body, String(foundClient === null || foundClient === void 0 ? void 0 : foundClient.officeBranch));
         if (!created) {
             throw new Error('Failed to create  document transaction');
         }

@@ -33,11 +33,12 @@ memorandumRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, funct
 }));
 memorandumRouter.get('/', (0, validate_middleware_1.validate)(memorandum_schema_1.getMemorandumsSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { skip, take, search } = req.query;
+        const { skip, take, search, branch } = req.query;
         const filters = {
             skip: skip ? Number(skip) : undefined,
             take: take ? Number(take) : undefined,
             search: search ? String(search) : undefined,
+            branch: branch ? String(branch) : undefined,
         };
         const memorandums = yield (0, memorandum_service_1.fetchMemorandums)(filters);
         if (!memorandums) {
