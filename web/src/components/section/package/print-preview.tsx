@@ -91,7 +91,7 @@ export default function PrintPreview({ data }: Props) {
                   <span className='text-nowrap'>{data.packageNumber}</span>
                 </div>
               </div>
-              
+
               <div className='flex min-w-[300px] w-fit  items-end gap-1 text-[12px]'>
                 <span className='leading-[16px] font-semibold text-nowrap'>
                   Date created:
@@ -116,7 +116,7 @@ export default function PrintPreview({ data }: Props) {
             <div className='space-y-1 ml-4 text-muted-foreground'>
               {data.inclusions.map(item => (
                 <div className='flex items-center text-[12px] gap-2'>
-                  <CheckCircle size={16}/>
+                  <CheckCircle size={16} color='#045C2B' />
                   <span>{item}</span>
                 </div>
               ))}
@@ -170,7 +170,7 @@ export default function PrintPreview({ data }: Props) {
               </table>
             </div>
           </div>
-          
+
           <div className='space-y-1'>
             <h1 className='text-[12px] font-semibold'>Airfare</h1>
             <div className='space-y-1'>
@@ -213,7 +213,7 @@ export default function PrintPreview({ data }: Props) {
             <div className='space-y-1 ml-4 text-muted-foreground'>
               {data.exclusions.map(item => (
                 <div className='flex items-center text-[12px] gap-2'>
-                  <XCircle size={16}/>
+                  <XCircle size={16} />
                   <span>{item}</span>
                 </div>
               ))}
@@ -227,7 +227,7 @@ export default function PrintPreview({ data }: Props) {
             </div>
           </div>
         </div>
-       
+
         <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-8 flex-3 pb-4'>
           <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
             <div className='flex-1 border-b leading-[16px]'>

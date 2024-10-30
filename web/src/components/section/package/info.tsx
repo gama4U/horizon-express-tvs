@@ -12,7 +12,7 @@ interface Props {
   data: IPackage
 }
 
-export default function PackageInfo({data}: Props) {
+export default function PackageInfo({ data }: Props) {
   return (
     <>
       <div className="grid grid-cols-3 gap-4 p-4">
@@ -66,7 +66,7 @@ export default function PackageInfo({data}: Props) {
           <div className="space-y-1 text-muted-foreground">
             {data.inclusions.map((item, index) => (
               <div key={index} className="text-[12px] flex gap-2">
-                <CheckCircle size={16}/>
+                <CheckCircle size={16} color='#045C2B' />
                 <span className='flex-1'>{item}</span>
               </div>
             ))}
@@ -80,7 +80,7 @@ export default function PackageInfo({data}: Props) {
           <div className="space-y-1 text-muted-foreground">
             {data.exclusions.map((item, index) => (
               <div key={index} className="text-[12px] flex gap-2">
-                <XCircle size={16}/>
+                <XCircle size={16} />
                 <span className='flex-1'>{item}</span>
               </div>
             ))}
@@ -93,9 +93,9 @@ export default function PackageInfo({data}: Props) {
           <h1 className="text-[12px] font-semibold">
             Accommodation
           </h1>
-          <CreatePackageAccommodationDialog packageId={data.id ?? ''}/>
+          <CreatePackageAccommodationDialog packageId={data.id ?? ''} />
         </div>
-        <AccommodationDataTable 
+        <AccommodationDataTable
           columns={AccommodationColumns}
           data={data.accommodations ?? []}
         />
@@ -106,9 +106,9 @@ export default function PackageInfo({data}: Props) {
           <h1 className="text-[12px] font-semibold">
             Airfare
           </h1>
-          <CreatePackageAirfareDialog packageId={data.id ?? ''}/>
+          <CreatePackageAirfareDialog packageId={data.id ?? ''} />
         </div>
-        <AirfareDataTable 
+        <AirfareDataTable
           columns={AirfareColumns}
           data={data.airfares ?? []}
         />
