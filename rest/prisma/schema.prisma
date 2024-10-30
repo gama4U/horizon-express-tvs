@@ -323,8 +323,8 @@ model Package {
   exclusions     String[]
   remarks        String
   officeBranch   OfficeBranch
-  accommodation   PackageAccommodation?
-  airfare        PackageAirfare?
+  accommodations PackageAccommodation[]
+  airfares       PackageAirfare[]
   creator        User                  @relation("CreatedPackages", fields: [creatorId], references: [id])
   approver       User?                 @relation("ApprovedPackages", fields: [approverId], references: [id])
   createdAt      DateTime?             @default(now())
@@ -333,7 +333,7 @@ model Package {
 
 model PackageAccommodation {
   id            String    @id @default(cuid())
-  packageId     String    @unique
+  packageId     String
   category      String
   options       String[]
   ratePerPerson Float
@@ -345,7 +345,7 @@ model PackageAccommodation {
 
 model PackageAirfare {
   id            String    @id @default(cuid())
-  packageId     String    @unique
+  packageId     String
   airline       String
   flightDetails String
   package       Package   @relation(fields: [packageId], references: [id])

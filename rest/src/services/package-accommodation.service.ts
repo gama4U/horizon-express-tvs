@@ -34,3 +34,9 @@ export const deletePackageAccommodationByPackageId = async(id: string) => {
     }
   })
 }
+
+export const deletePackageAccommodationById = async(id: string) => {
+  return await prisma.packageAccommodation.delete({
+    where: {id}
+  })
+}

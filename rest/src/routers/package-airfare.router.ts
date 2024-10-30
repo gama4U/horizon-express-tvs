@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createPackageAirfare, updatePackageAirfare } from '../services/package-airfare.service';
+import { createPackageAirfare, deletePackageAirfare, updatePackageAirfare } from '../services/package-airfare.service';
 
 const packageAirfareRouter = express.Router();
 
@@ -26,6 +26,23 @@ packageAirfareRouter.put('/:id', async (req: Request, res: Response) => {
 
     res.status(200).json({
       message: 'Updated successfully'
+    });
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+packageAirfareRouter.delete('/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+
+    const deleted = await deletePackageAirfare(id);
+    if (!deleted) throw new Error('Failed to delete package airfare');
+
+    res.status(200).json({
+      message: 'Deleted successfully'
     });
 
   } catch (error) {

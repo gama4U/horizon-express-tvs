@@ -40,6 +40,4 @@ accommodationVoucherRouter.delete('/:id', async (req: Request, res: Response) =>
   }
 });
 
-
-
 export default accommodationVoucherRouter;

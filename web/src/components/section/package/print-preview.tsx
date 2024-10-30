@@ -1,4 +1,4 @@
-import { Loader2, MinusCircle, PlusCircle, Printer, ThumbsUp } from 'lucide-react'
+import { CheckCircle, Loader2, Printer, ThumbsUp, XCircle } from 'lucide-react'
 import Constants from '../../../constants'
 import { Button } from '../../ui/button'
 import { Separator } from '../../ui/separator'
@@ -83,12 +83,12 @@ export default function PrintPreview({ data }: Props) {
 
           <div className='p-2 text-muted-foreground space-y-4 mt-4'>
             <div className='flex items-center gap-4'>
-              <div className='w-full flex items-end gap-1 text-[12px]'>
-                <span className='leading-[16px] font-semibold'>
-                  Package name:
+              <div className='flex w-full items-end gap-1 text-[12px]'>
+                <span className='leading-[16px] font-semibold text-nowrap'>
+                  Package No.:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
-                  <span>{data.name}</span>
+                  <span className='text-nowrap'>{data.packageNumber}</span>
                 </div>
               </div>
               
@@ -103,115 +103,134 @@ export default function PrintPreview({ data }: Props) {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className='flex items-center gap-4'>
-              <div className='flex w-full items-end gap-1 text-[12px]'>
-                <span className='leading-[16px] font-semibold text-nowrap'>
-                  Package No.:
-                </span>
-                <div className='flex-1 border-b leading-[16px]'>
-                  <span className='text-nowrap'>{data.packageNumber}</span>
-                </div>
-              </div>
+        <div className='space-y-4'>
+          <h1 className='text-sm text-center font-medium uppercase bg-slate-100 py-1'>
+            {data.name}
+          </h1>
 
-              <div className='flex  min-w-[300px] w-fit items-end gap-1 text-[12px]'>
-                <span className='leading-[16px] font-semibold text-nowrap'>
-                  Remarks:
-                </span>
-                <div className='flex-1 border-b leading-[16px]'>
-                  <span className='text-nowrap'>
-                    {data.remarks}
-                  </span>
+          <div className='space-y-1'>
+            <h1 className='text-[12px] font-semibold'>Inclusions</h1>
+            <div className='space-y-1 ml-4 text-muted-foreground'>
+              {data.inclusions.map(item => (
+                <div className='flex items-center text-[12px] gap-2'>
+                  <CheckCircle size={16}/>
+                  <span>{item}</span>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-        <Separator className="bg-slate-200" />
-        <div className='flex-1 space-y-4'>
-          <h3 className="uppercase text-sm tracking-[14px] text-center font-medium bg-slate-200 py-1">
-            Inclusions
-          </h3>
-          <div className="space-y-1 px-4">
-            {data.inclusions.map((item, index) => (
-              <div key={index} className="text-[12px] flex items-center gap-2">
-                <PlusCircle size={16}/>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <Separator className="bg-slate-200" />
-        <div className='flex-1 space-y-4'>
-          <h3 className="uppercase text-sm tracking-[14px] text-center font-medium bg-slate-200 py-1">
-            Exclusions
-          </h3>
-          <div className="space-y-1 px-4">
-            {data.exclusions.map((item, index) => (
-              <div key={index} className="text-[12px] flex items-center gap-2">
-                <MinusCircle size={16}/>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <Separator className="bg-slate-200" />
-        <div className='flex-1 space-y-4'>
-          <h3 className="uppercase text-sm tracking-[14px] text-center font-medium bg-slate-200 py-1">
-            Accommodation
-          </h3>
-          <div className="space-y-1 px-4 text-[12px] flex">
-            <div className='w-full'>
-              <div className='flex items-center gap-2'>
-                <h3>Hotel category: </h3>
-                <span>{data.accommodation?.category}</span>
-              </div>
-              <div className='flex items-center gap-2'>
-                <h3>Rate per person: </h3>
-                <span>
-                  {data.accommodation && (
+
+          <div className='space-y-1'>
+            <h1 className='text-[12px] font-semibold'>Accommodation</h1>
+            <div className='space-y-1'>
+              <table className="w-full table-auto border border-gray-300 text-[12px] text-muted-foreground">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 border-r border-gray-300 border-b">Hotel category</th>
+                    <th className="px-4 py-2 border-r border-gray-300 border-b">Hotel options</th>
+                    <th className="px-4 py-2 border-r border-gray-300 border-b">Rate per person</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data.accommodations && data.accommodations?.length > 0) ? (
                     <>
-                      {formatCurrency(data.accommodation.currency, data.accommodation.ratePerPerson)}
+                      {data.accommodations.map((item, index) => {
+                        return (
+                          <tr key={index} className='border'>
+                            <td className="px-4 py-2 border-r border-gray-300 text-center">
+                              {item.category}
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300">
+                              <ul className="list-disc list-inside marker:text-gray-500">
+                                {item.options.map((option, index) => (
+                                  <li key={index} className="list-item gap-1">
+                                    {option}
+                                  </li>
+                                ))}
+                              </ul>
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300 text-center">
+                              {formatCurrency(item.currency, item.ratePerPerson)}
+                            </td>
+                          </tr>
+                        )
+                      })}
                     </>
+                  ) : (
+                    <tr className='h-[200px]'>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                      <td className="px-4 py-2 text-center"></td>
+                    </tr>
                   )}
-                </span>
-              </div>
-            </div>
-            <div className='w-full'>
-              <div className='space-y-2'>
-                <h3>Hotel options: </h3>
-                <div className='ml-2'>
-                  {data.accommodation?.options.map((item, index) => (
-                    <div className='flex items-center gap-2'>
-                      <span>{`${index + 1}`}</span>
-                      <span key={index}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-        <Separator className="bg-slate-200" />
-        <div className='flex-1 space-y-4'>
-          <h3 className="uppercase text-sm tracking-[14px] text-center font-medium bg-slate-200 py-1">
-            Airfare
-          </h3>
-          <div className="space-y-1 px-4 text-[12px]">
-            <div className='w-full'>
-              <div className='flex items-center gap-2'>
-                <h3>Airline: </h3>
-                <span>{data.airfare?.airline}</span>
-              </div>
-              <div className='flex items-center gap-2'>
-                <h3>Flight details: </h3>
-                <span>{data.airfare?.airline}</span>
-              </div>
+          
+          <div className='space-y-1'>
+            <h1 className='text-[12px] font-semibold'>Airfare</h1>
+            <div className='space-y-1'>
+              <table className="w-full table-auto border border-gray-300 text-[12px] text-muted-foreground">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2 border-r border-gray-300 border-b">Airline</th>
+                    <th className="px-4 py-2 border-r border-gray-300 border-b">Flight details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data.airfares && data.airfares?.length > 0) ? (
+                    <>
+                      {data.airfares.map((item, index) => {
+                        return (
+                          <tr key={index} className='border'>
+                            <td className="px-4 py-2 border-r border-gray-300 text-center">
+                              {item.airline}
+                            </td>
+                            <td className="px-4 py-2 border-r border-gray-300 text-center">
+                              {item.flightDetails}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </>
+                  ) : (
+                    <tr className='h-[200px]'>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                      <td className="px-4 py-2 text-center"></td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-        <Separator className="bg-slate-200" />
 
+          <div className='space-y-1'>
+            <h1 className='text-[12px] font-semibold'>Exclusions</h1>
+            <div className='space-y-1 ml-4 text-muted-foreground'>
+              {data.exclusions.map(item => (
+                <div className='flex items-center text-[12px] gap-2'>
+                  <XCircle size={16}/>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className='space-y-1'>
+            <h1 className='text-[12px] font-semibold'>Remarks</h1>
+            <div className='space-y-1 ml-4 text-[12px] text-muted-foreground'>
+              <p>{data.remarks}</p>
+            </div>
+          </div>
+        </div>
+       
         <div className='flex items-end justify-evenly gap-4 text-muted-foreground mt-8 flex-3 pb-4'>
           <div className='w-full text-center max-w-[250px] text-[12px] text-muted-foreground'>
             <div className='flex-1 border-b leading-[16px]'>

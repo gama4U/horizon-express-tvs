@@ -25,26 +25,13 @@ import { Button } from "@/components/ui/button";
 import CommonInput from "@/components/common/input";
 import { IPackage, IUpdatePackage } from "@/interfaces/package.interface";
 import { updatePackage } from "@/api/mutations/package.mutation";
-import { MultiInput } from "@/components/common/multi-input";
 import { Textarea } from "@/components/ui/textarea";
+import { MultiSelect } from "@/components/common/multi-select";
+import Constants from "@/constants";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, {
     message: "Name is required"
-  }),
-  inclusions: z.array(
-    z.string().trim().min(1, {
-      message: "Inclusion item must not be empty"
-    })
-  ).refine(items => items.length > 0, {
-    message: 'Please add at least one inclusion'
-  }),
-  exclusions: z.array(
-    z.string().trim().min(1, {
-      message: "Exclusion item must not be empty"
-    })
-  ).refine(items => items.length > 0, {
-    message: 'Please add at least one exclusion'
   }),
   remarks: z.string().trim().min(1, {
     message: "Remarks is required"
@@ -58,13 +45,15 @@ interface Props {
 export default function EditPackageDialog({ data }: Props) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
+  const [inclusionOptions, setInclusionOptions] = useState(Constants.PackageInclusions);
+	const [selectedInclusions, setSelectedInclusions] = useState<string[]>([]);
+  const [exclusionOptions, setExclusionOptions] = useState(Constants.PackageExclusions);
+	const [selectedExclusions, setSelectedExclusions] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      inclusions: [],
-      exclusions: [],
       remarks: '',
     }
   });
@@ -73,10 +62,25 @@ export default function EditPackageDialog({ data }: Props) {
     if (data) {
       form.reset({
         name: data.name,
-        inclusions: data.inclusions,
-        exclusions: data.exclusions,
         remarks: data.remarks,
       })
+
+      const inclusions = data.inclusions.map(item => {
+        const foundOption = inclusionOptions.find(option => (option.value === item));
+        if (foundOption) return;
+        return {value: item, label: item}
+      }).filter(item => item !== undefined);
+
+      const exclusions = data.exclusions.map(item => {
+        const foundOption = exclusionOptions.find(option => (option.value === item));
+        if (foundOption) return;
+        return {value: item, label: item}
+      }).filter(item => item !== undefined);
+      
+      setInclusionOptions([...inclusionOptions, ...inclusions]);
+      setExclusionOptions([...exclusionOptions, ...exclusions]);
+      setSelectedInclusions(data.inclusions)
+      setSelectedExclusions(data.exclusions)
     }
   }, [data]);
 
@@ -103,7 +107,9 @@ export default function EditPackageDialog({ data }: Props) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     updatePackageMutate({
       id: data.id,
-      ...values
+      ...values,
+      inclusions: selectedInclusions,
+      exclusions: selectedExclusions,
     });
   }
 
@@ -139,32 +145,29 @@ export default function EditPackageDialog({ data }: Props) {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="inclusions"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Inclusions</FormLabel>
-                    <FormControl>
-                      <MultiInput {...field} placeholder="Add inclusions (Enter to add) "/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="exclusions"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Exclusions</FormLabel>
-                    <FormControl>
-                      <MultiInput {...field} placeholder="Add exclusions (Enter to add)"/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
+              <div className="space-y-1">
+                <FormLabel>Inclusions</FormLabel>
+                <MultiSelect
+                  options={inclusionOptions}
+                  setOptions={setInclusionOptions}
+                  selectedOptions={selectedInclusions}
+                  onSelect={setSelectedInclusions}
+                  placeholder="Select or enter inclusions"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <FormLabel>Exclusions</FormLabel>
+                <MultiSelect
+                  options={exclusionOptions}
+                  setOptions={setExclusionOptions}
+                  selectedOptions={selectedExclusions}
+                  onSelect={setSelectedExclusions}
+                  placeholder="Select or enter exclusions"
+                />
+              </div>
+              
               <FormField
                 control={form.control}
                 name="remarks"

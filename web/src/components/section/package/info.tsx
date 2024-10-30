@@ -1,19 +1,15 @@
 import CreatePackageAccommodationDialog from '@/components/dialogs/package/create-accommodation'
 import CreatePackageAirfareDialog from '@/components/dialogs/package/create-airfare'
-import UpdatePackageAccommodationDialog from '@/components/dialogs/package/edit-accommodation'
-import UpdatePackageAirfareDialog from '@/components/dialogs/package/edit-airfare'
+import { Columns as AccommodationColumns } from '@/components/tables/package-accommodation/columns'
+import { DataTable as AccommodationDataTable } from '@/components/tables/package-accommodation/data-table'
+import { Columns as AirfareColumns } from '@/components/tables/package-airfare/columns'
+import { DataTable as AirfareDataTable } from '@/components/tables/package-airfare/data-table'
 import { Separator } from '@/components/ui/separator'
 import { IPackage } from '@/interfaces/package.interface'
-import { Currency } from '@/interfaces/sales-agreement-item.interface'
-import { MinusCircle, PlusCircle } from 'lucide-react'
+import { CheckCircle, XCircle } from 'lucide-react'
 
 interface Props {
   data: IPackage
-}
-
-const currencyMap: Record<Currency, string> = {
-  PHP: 'Philippine Peso (PHP)',
-  USD: 'US Dollar (USD)'
 }
 
 export default function PackageInfo({data}: Props) {
@@ -69,9 +65,9 @@ export default function PackageInfo({data}: Props) {
           </h1>
           <div className="space-y-1 text-muted-foreground">
             {data.inclusions.map((item, index) => (
-              <div key={index} className="text-[12px] flex items-center gap-2">
-                <PlusCircle size={16}/>
-                <span>{item}</span>
+              <div key={index} className="text-[12px] flex gap-2">
+                <CheckCircle size={16}/>
+                <span className='flex-1'>{item}</span>
               </div>
             ))}
           </div>
@@ -83,9 +79,9 @@ export default function PackageInfo({data}: Props) {
           </h1>
           <div className="space-y-1 text-muted-foreground">
             {data.exclusions.map((item, index) => (
-              <div key={index} className="text-[12px] flex items-center gap-2">
-                <MinusCircle size={16}/>
-                <span>{item}</span>
+              <div key={index} className="text-[12px] flex gap-2">
+                <XCircle size={16}/>
+                <span className='flex-1'>{item}</span>
               </div>
             ))}
           </div>
@@ -97,51 +93,12 @@ export default function PackageInfo({data}: Props) {
           <h1 className="text-[12px] font-semibold">
             Accommodation
           </h1>
-          {!data?.accommodation ? (
-            <CreatePackageAccommodationDialog packageId={data.id ?? ''}/>
-          ) : (
-            <UpdatePackageAccommodationDialog packageAccommodation={data.accommodation}/>
-          )}
+          <CreatePackageAccommodationDialog packageId={data.id ?? ''}/>
         </div>
-        
-        {data?.accommodation && (
-          <div className="grid grid-cols-3 gap-4 mt-2">
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-[10px]">
-                Category
-              </span>
-              <h3 className="text-[12px]">
-                {`${data.accommodation.category}`}
-              </h3>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-[10px]">
-                Rate per person
-              </span>
-              <h3 className="text-[12px]">
-                {`${data.accommodation.ratePerPerson}`}
-              </h3>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-[10px]">
-                Currency
-              </span>
-              <h3 className="text-[12px]">
-                {`${currencyMap[data.accommodation.currency]}`}
-              </h3>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-[10px]">
-                Options
-              </span>
-              {data.accommodation.options.map((item, index) => (
-                <h3 key={index} className="text-[12px]">
-                  {`${index + 1}.) ${item}`}
-                </h3>
-              ))}
-            </div>
-          </div>
-        )}
+        <AccommodationDataTable 
+          columns={AccommodationColumns}
+          data={data.accommodations ?? []}
+        />
       </div>
       <Separator className="bg-slate-200" />
       <div className="p-4">
@@ -149,32 +106,12 @@ export default function PackageInfo({data}: Props) {
           <h1 className="text-[12px] font-semibold">
             Airfare
           </h1>
-          {!data?.airfare ? (
-            <CreatePackageAirfareDialog packageId={data.id ?? ''}/>
-          ) : (
-            <UpdatePackageAirfareDialog data={data.airfare}/>
-          )}
+          <CreatePackageAirfareDialog packageId={data.id ?? ''}/>
         </div>
-        {data.airfare && (
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-[10px]">
-                Airline
-              </span>
-              <h3 className="text-[12px]">
-                {`${data.airfare.airline}`}
-              </h3>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-[10px]">
-                Flight details
-              </span>
-              <h3 className="text-[12px]">
-                {`${data.airfare.flightDetails}`}
-              </h3>
-            </div>
-          </div>
-        )}
+        <AirfareDataTable 
+          columns={AirfareColumns}
+          data={data.airfares ?? []}
+        />
       </div>
     </>
   )

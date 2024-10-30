@@ -77,8 +77,8 @@ export const findPackageById = async(id: string) => {
   return await prisma.package.findUnique({
     where: {id},
     include: {
-      accommodation: true,
-      airfare: true,
+      accommodations: true,
+      airfares: true,
       creator: {
         select: {
           id: true,

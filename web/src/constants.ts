@@ -232,6 +232,84 @@ const CommonDocuments = [
   { value: "Senior Citizen ID", label: "Senior Citizen ID" },
 ];
 
+const PackageInclusions = [
+  {
+    value: "1night accommodation in Sapa based on twin sharing",
+    label: "1night accommodation in Sapa based on twin sharing"
+  },
+  {
+    value: "2night accommodation in Hanoi based on twin sharing",
+    label: "2night accommodation in Hanoi based on twin sharing"
+  },
+  {
+    value: "Daily Breakfast",
+    label: "Daily Breakfast"
+  },
+  {
+    value: "Private Roundtrip Airport Transfer (Airport to Hotel; vv)",
+    label: "Private Roundtrip Airport Transfer (Airport to Hotel; vv)"
+  },
+  {
+    value: "Private tour",
+    label: "Private tour"
+  },
+  {
+    value: "Local English Tour Guide",
+    label: "Local English Tour Guide"
+  },
+  {
+    value: "Sightseeing and all entrance as per itinerary",
+    label: "Sightseeing and all entrance as per itinerary"
+  },
+  {
+    value: "Meals: Lunch and Dinner as per itinerary",
+    label: "Meals: Lunch and Dinner as per itinerary"
+  },
+  {
+    value: "Tipping",
+    label: "Tipping"
+  },
+  {
+    value: "Drinking water everyday",
+    label: "Drinking water everyday"
+  },
+  {
+    value: "Roundtrip Airfare via Cebu Pacific",
+    label: "Roundtrip Airfare via Cebu Pacific"
+  },
+  {
+    value: "1 pc (20kg) Baggage Allowance",
+    label: "1 pc (20kg) Baggage Allowance"
+  },
+  {
+    value: "PH Travel Tax",
+    label: "PH Travel Tax"
+  },
+  {
+    value: "Travel Insurance 1.5M Coverage with covid protection",
+    label: "Travel Insurance 1.5M Coverage with covid protection"
+  }
+];
+
+const PackageExclusions = [
+  {
+    value: "Domestic Flight (Cebu-Manila)",
+    label: "Domestic Flight (Cebu-Manila)"
+  },
+  {
+    value: "Personal Expenses (laundry, phone calls, kayak)",
+    label: "Personal Expenses (laundry, phone calls, kayak)"
+  },
+  {
+    value: "Drinks and Beverages",
+    label: "Drinks and Beverages"
+  },
+  {
+    value: "Others not mentioned above nor specified above",
+    label: "Others not mentioned above nor specified above"
+  },
+];
+
 const HotelCategories = ['5 Star', '4 Star', '3 Star', '2 Star'];
 
 const Constants = {
@@ -250,7 +328,9 @@ const Constants = {
   Disbursements,
   CommonDocuments,
   SupplierCategories,
-  HotelCategories
+  HotelCategories,
+  PackageInclusions,
+  PackageExclusions
 }
 
 export default Constants

@@ -82,7 +82,7 @@ export default function CreatePackageAirfareDialog({packageId}: Props) {
       <DialogTrigger>
         <Button size={'sm'} className="gap-1">
           <Plus size={16} />
-          <span>Create</span>
+          <span>Add</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[600px] max-h-[560px] overflow-auto">
@@ -143,7 +143,7 @@ export default function CreatePackageAirfareDialog({packageId}: Props) {
                 {isPending &&
                   <Loader2 size={20} className="animate-spin" />
                 }
-                <span>Create</span>
+                <span>Add</span>
               </Button>
             </div>
           </form>

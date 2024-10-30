@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createPackageAccommodation, updatePackageAccommodation } from '../services/package-accommodation.service';
+import { createPackageAccommodation, deletePackageAccommodationById, updatePackageAccommodation } from '../services/package-accommodation.service';
 
 const packageAccommodationRouter = express.Router();
 
@@ -33,5 +33,20 @@ packageAccommodationRouter.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
+packageAccommodationRouter.delete('/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+
+    const deleted = await deletePackageAccommodationById(id);
+    if (!deleted) throw new Error('Failed to delete package accommodation');
+
+    res.status(200).json({
+      message: 'Updated successfully'
+    });
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 export default packageAccommodationRouter;
