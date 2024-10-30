@@ -160,8 +160,7 @@ export default function PrintPreview({ data }: Props) {
                       })}
                     </>
                   ) : (
-                    <tr className='h-[200px]'>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                    <tr className='h-[100px]'>
                       <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
                       <td className="px-4 py-2 text-center"></td>
@@ -199,9 +198,7 @@ export default function PrintPreview({ data }: Props) {
                       })}
                     </>
                   ) : (
-                    <tr className='h-[200px]'>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
+                    <tr className='h-[100px]'>
                       <td className="px-4 py-2 border-r border-gray-300 text-center"></td>
                       <td className="px-4 py-2 text-center"></td>
                     </tr>
