@@ -84,7 +84,7 @@ const UserRedirectRoute: Record<UserType, string> = {
 }
 
 const PermissionsCanDelete = [PermissionType.SUPER_ADMIN];
-const PermissionsCanEdit = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING];
+const PermissionsCanEdit = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING, PermissionType.SUPERVISOR];
 const PermissionsCanApprove = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING, PermissionType.SUPERVISOR];
 
 const GovernmentDepartments = ['Security', 'Education'];
