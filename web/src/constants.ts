@@ -9,8 +9,8 @@ export type SidebarItemsType = {
 
 const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Dashboard", icon: "Dashboard", link: "/admin" },
-  { label: "Transactions", icon: "Transactions", link: "/admin/transactions" },
-  { label: "Packages", icon: "Packages", link: "/admin/packages" },
+  { label: "Transaction Vouchers", icon: "Transactions", link: "/admin/transactions" },
+  { label: "Proposals", icon: "Packages", link: "/admin/packages" },
   { label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
   { label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
   { label: "Clients", icon: "Leads", link: "/admin/clients" },
@@ -22,13 +22,14 @@ const AdminSidebarItems: Array<SidebarItemsType> = [
 ]
 
 const EmployeeSidebarItems: Array<SidebarItemsType> = [
-  { label: "Transactions", icon: "Transactions", link: "/employee" },
+  { label: "Transactions Vouchers", icon: "Transactions", link: "/employee" },
+  { label: "Proposals", icon: "Packages", link: "/employee/packages" },
   { label: "Sales Agreements", icon: "Purchase", link: "/employee/sales-agreements" },
   { label: "Purchase Requests", icon: "Sales", link: "/employee/purchase-requests" },
   { label: "Clients", icon: "Leads", link: "/employee/clients" },
   { label: "Suppliers", icon: "Suppliers", link: "/employee/suppliers" },
+  { label: "Memorandums", icon: "Memorandum", link: "/employee/memorandum" },
   { label: "Document Transactions", icon: "Documents", link: "/employee/document-transactions" },
-  { label: "Packages", icon: "Packages", link: "/employee/packages" },
   { label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
 

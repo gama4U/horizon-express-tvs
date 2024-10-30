@@ -109,15 +109,17 @@ export default function MemorandumPreview({ data }: Props) {
 						</Button>
 					)}
 
-					<Button
-						onClick={() => reactToPrintFn()}
-						size={'sm'}
-						className='gap-1'
-						disabled={!isApproved && !isCreatorAdmin}
-					>
-						<Printer size={16} />
-						<span>Print</span>
-					</Button>
+					{user?.userType === UserType.ADMIN && (
+						<Button
+							onClick={() => reactToPrintFn()}
+							size={'sm'}
+							className='gap-1'
+							disabled={!isApproved && !isCreatorAdmin}
+						>
+							<Printer size={16} />
+							<span>Print</span>
+						</Button>
+					)}
 				</div>
 			</div>
 			<Separator />

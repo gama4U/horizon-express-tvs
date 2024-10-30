@@ -4,23 +4,16 @@ import usePagination from "../../../hooks/usePagination";
 import { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import CommonInput from "../../../components/common/input";
-import CreateMemorandumDialog from "@/components/dialogs/memorandum/add";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react"
 import { fetchMemorandums } from "@/api/queries/memorandums.query";
 import { DataTable } from "@/components/tables/memorandums/data-table";
 import { Columns } from "@/components/tables/memorandums/columns";
 import { useAuth } from "@/providers/auth-provider";
-import { useNavigate } from "react-router-dom";
-import { UserType } from "@/interfaces/user.interface";
 
 export default function Memorandum() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
-  const { session, branch } = useAuth()
+  const { branch } = useAuth()
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
-  const [openCreateMemo, setOpenCreateMemo] = useState(false)
-  const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
     queryKey: ['memorandums', pagination, debouncedSearch, branch],
@@ -56,22 +49,6 @@ export default function Memorandum() {
               onChange={(event) => setSearch(event.target.value)}
             />
           </div>
-          <Button
-            size={"sm"}
-            onClick={() => setOpenCreateMemo(true)}
-            className="flex gap-x-2 "
-          >
-            <span>Create</span>
-            <Plus size={14} />
-          </Button>
-          <CreateMemorandumDialog
-            openDialog={openCreateMemo}
-            setOpenDialog={setOpenCreateMemo}
-            creatorId={String(session?.user?.id)}
-            successNavigate={(data) => {
-              navigate(`/${session?.user?.userType === UserType.ADMIN ? 'admin' : 'employee'}/memorandum/${data.id}/`);
-            }}
-          />
         </div>
         <DataTable
           columns={Columns}
