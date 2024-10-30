@@ -52,7 +52,7 @@ export function getNextTransactionNumber(lastTransactionNumber: string | null, b
 
 export function getNextSerialNumber(lastSerialNumber: string | null, branch: string) {
   const today = dayjs().format('MMDDYYYY');
-  let newNumber = branch === 'CEBU' ? 251 : 1;
+  let newNumber = branch === 'CEBU' ? 251 : 1451;
 
   if (lastSerialNumber) {
     const numericPart = parseInt(lastSerialNumber.slice(2, 7));
@@ -67,7 +67,7 @@ export function getNextSerialNumber(lastSerialNumber: string | null, branch: str
 
 export function getNextPurchaseRequestNumber(lastSerialNumber: string | null, officeBranch: string) {
   const today = dayjs().format('MMDDYYYY');
-  let newNumber = officeBranch === 'CEBU' ? 501 : 1;
+  let newNumber = officeBranch === 'CEBU' ? 501 : 2451;
   if (lastSerialNumber) {
     const numericPart = parseInt(lastSerialNumber.slice(2, 7));
     newNumber = numericPart + 1;

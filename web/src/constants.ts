@@ -10,13 +10,13 @@ export type SidebarItemsType = {
 const AdminSidebarItems: Array<SidebarItemsType> = [
   { label: "Dashboard", icon: "Dashboard", link: "/admin" },
   { label: "Transactions", icon: "Transactions", link: "/admin/transactions" },
+  { label: "Packages", icon: "Packages", link: "/admin/packages" },
   { label: "Sales Agreements", icon: "Purchase", link: "/admin/sales-agreements" },
   { label: "Purchase Requests", icon: "Sales", link: "/admin/purchase-requests" },
   { label: "Clients", icon: "Leads", link: "/admin/clients" },
   { label: "Suppliers", icon: "Suppliers", link: "/admin/suppliers" },
   { label: "Memorandums", icon: "Memorandum", link: "/admin/memorandum" },
   { label: "Document Transactions", icon: "Documents", link: "/admin/document-transactions" },
-  { label: "Packages", icon: "Packages", link: "/admin/packages"},
   { label: "Users", icon: "Users", link: "/admin/users" },
   { label: "Profile", icon: "Profile", link: "/admin/profile" },
 ]
@@ -28,7 +28,7 @@ const EmployeeSidebarItems: Array<SidebarItemsType> = [
   { label: "Clients", icon: "Leads", link: "/employee/clients" },
   { label: "Suppliers", icon: "Suppliers", link: "/employee/suppliers" },
   { label: "Document Transactions", icon: "Documents", link: "/employee/document-transactions" },
-  { label: "Packages", icon: "Packages", link: "/employee/packages"},
+  { label: "Packages", icon: "Packages", link: "/employee/packages" },
   { label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
 

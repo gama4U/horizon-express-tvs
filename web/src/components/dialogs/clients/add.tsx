@@ -1,4 +1,4 @@
-import { Loader2, UserCircle, X } from "lucide-react";
+import { Loader2, UserCircle } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { createClient, ICreateClient } from "@/api/mutations/client.mutation";
 import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import { useEffect } from "react";
-import Constants from "@/constants";
+// import Constants from "@/constants";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { OfficeBranch } from "@/interfaces/user.interface";
 import { useAuth } from "@/providers/auth-provider";
@@ -33,11 +33,11 @@ const clientTypesMap: Record<TypeOfClient, string> = {
 	INDIVIDUAL: 'Individual',
 }
 
-type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
-const departmentMap: Record<ClientWithDepartment, string[]> = {
-	CORPORATE: Constants.CorporateDepartments,
-	GOVERNMENT: Constants.GovernmentDepartments,
-}
+// type ClientWithDepartment = TypeOfClient.CORPORATE | TypeOfClient.GOVERNMENT;
+// // const departmentMap: Record<ClientWithDepartment, string[]> = {
+// // 	CORPORATE: Constants.CorporateDepartments,
+// // 	GOVERNMENT: Constants.GovernmentDepartments,
+// // }
 
 const formSchema = z.object({
 	name: z.string().trim().min(1, {
@@ -67,7 +67,7 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 		resolver: zodResolver(formSchema),
 	})
 	const selectedClientType = form.watch('clientType');
-	const selectedDepartment = form.watch('department')
+	// const selectedDepartment = form.watch('department')
 	const { session, branch } = useAuth()
 
 	const { mutate: createClientMutate, isPending: creatingClient } = useMutation({
@@ -91,11 +91,11 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 		}
 	});
 
-	function clearDepartment() {
-		form.reset({
-			department: ''
-		})
-	}
+	// function clearDepartment() {
+	// 	form.reset({
+	// 		department: ''
+	// 	})
+	// }
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		createClientMutate({
@@ -159,39 +159,16 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 										name="department"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>Department:</FormLabel>
-												<div className="flex justify-between items-center gap-x-2">
-													<Select onValueChange={field.onChange} value={field.value || ''}>
-
-														<FormControl>
-															<SelectTrigger className="bg-slate-100 border-none text-[12px]">
-																<SelectValue placeholder="Select a department" />
-															</SelectTrigger>
-														</FormControl>
-														<SelectContent>
-															{Object.entries(departmentMap[selectedClientType as ClientWithDepartment]).map(([index, value]) => (
-																<SelectItem
-																	key={index}
-																	value={value}
-																	className="text-[12px]"
-																>
-																	{value}
-																</SelectItem>
-															))}
-														</SelectContent>
-													</Select>
-													{selectedDepartment &&
-														<Button variant="outline" className="w-auto flex items-center gap-x-2" onClick={clearDepartment}>
-															<p className="text-xs">Do not set department</p>
-															<X className="h-4 w-4" />
-														</Button>
-													}
+												<div className="flex flex-row items-center justify-between gap-x-2">
+													<p className="text-xs w-1/3">Department:</p>
+													<FormControl className="w-2/3">
+														<CommonInput inputProps={{ ...field }} placeholder="e.g. HR, Finance" containerProps={{ className: 'text-xs' }} />
+													</FormControl>
 												</div>
-												<FormMessage className="text-[10px]" />
+												<FormMessage />
 											</FormItem>
 										)}
-									/>
-								)}
+									/>)}
 								<FormField
 									control={form.control}
 									name="name"

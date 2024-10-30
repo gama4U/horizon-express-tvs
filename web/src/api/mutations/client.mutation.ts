@@ -23,7 +23,7 @@ export interface IUpdateClient {
   documents?: string[]
   department?: string
   officeBranch?: OfficeBranch
-  notes?: string;
+  notes?: string | null;
 }
 
 export enum TypeOfClient {
