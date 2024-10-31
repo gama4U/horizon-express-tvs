@@ -98,6 +98,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
       const { PermissionsCanEdit, PermissionsCanDelete } = Constants;

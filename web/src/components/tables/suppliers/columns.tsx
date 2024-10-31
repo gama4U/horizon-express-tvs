@@ -141,16 +141,12 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const { session: { user } } = useAuth();
-			const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
+			const { PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
-					{(user?.permission && PermissionsCanEdit.includes(user.permission)) ? (
-						<EditSupplierDialog
-							supplierData={row.original}
-						/>
-					) :
-						<p className="text-xs text-muted-foreground text-center italic">None</p>
-					}
+					<EditSupplierDialog
+						supplierData={row.original}
+					/>
 					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
 						<DeleteSupplierDialog
 							supplierId={row.original.id}

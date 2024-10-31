@@ -55,15 +55,15 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const {session: {user}} = useAuth();
-      const {PermissionsCanEdit, PermissionsCanDelete} = Constants;
+      const { session: { user } } = useAuth();
+      const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
       return (
         <div className="flex items-center gap-4">
           {(user?.permission && PermissionsCanEdit.includes(user?.permission)) && (
             <EditSalesAgreementItemDialog data={row.original} />
           )}
           {(user?.permission && PermissionsCanDelete.includes(user?.permission)) && (
-            <DeleteSalesAgreementItem salesAgreementItemId={row.original.id}/>
+            <DeleteSalesAgreementItem salesAgreementItemId={row.original.id} />
           )}
         </div>
       )

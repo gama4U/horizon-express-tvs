@@ -3,13 +3,17 @@ import { DataTable } from '../../tables/sales-agreement-items/data-table'
 import { Separator } from '../../ui/separator'
 import AddSalesAgreementItemDialog from '../../dialogs/sales-agreement/add-item'
 import { ISalesAgreementItem } from '../../../interfaces/sales-agreement-item.interface'
+import Constants from '@/constants'
+import { useAuth } from '@/providers/auth-provider'
 
 interface Props {
   data: ISalesAgreementItem[],
   salesAgreementId: string;
 }
 
-export default function SalesAgreementItems({data, salesAgreementId}: Props) {
+export default function SalesAgreementItems({ data, salesAgreementId }: Props) {
+  const { PermissionsCanEdit } = Constants;
+  const { session: { user } } = useAuth();
 
   return (
     <div className='p-4'>
@@ -18,12 +22,13 @@ export default function SalesAgreementItems({data, salesAgreementId}: Props) {
           <h1 className='text-[12px] font-semibold'>
             Items
           </h1>
-          <AddSalesAgreementItemDialog 
-            salesAgreementId={salesAgreementId}
-          />
+          {(user?.permission && PermissionsCanEdit.includes(user.permission)) &&
+            <AddSalesAgreementItemDialog
+              salesAgreementId={salesAgreementId}
+            />}
         </div>
         <Separator />
-        <DataTable 
+        <DataTable
           columns={Columns}
           data={data}
         />

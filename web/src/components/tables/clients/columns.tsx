@@ -144,16 +144,12 @@ export const Columns: ColumnDef<IClient>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const { session: { user } } = useAuth();
-			const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
+			const { PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
-					{(user?.permission && PermissionsCanEdit.includes(user.permission)) ? (
-						<EditClientDialog
-							clientData={row.original}
-						/>
-					) :
-						<p className="text-xs text-muted-foreground text-center italic">None</p>
-					}
+					<EditClientDialog
+						clientData={row.original}
+					/>
 					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
 						<DeleteLeadDialog
 							clientId={row.original.id}
