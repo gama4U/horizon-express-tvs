@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import TopBar from "@/components/section/topbar";
@@ -12,10 +12,6 @@ import { fetchSuppliers } from "@/api/queries/suppliers.query";
 import CreateSupplierDialog from "@/components/dialogs/suppliers/add";
 import { useAuth } from "@/providers/auth-provider";
 import { OfficeBranch } from "@/interfaces/user.interface";
-import Constants from "@/constants";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
 
 export default function Suppliers() {
   const { skip, take, pagination, onPaginationChange } = usePagination();
@@ -23,19 +19,15 @@ export default function Suppliers() {
   const debouncedSearch = useDebounce(search, 500);
   const [openCreateSupplier, setOpenCreateSupplier] = useState(false)
   const { branch } = useAuth()
-  const [openCategoryFilter, setOpenCategoryFilter] = useState(false)
-  const [categoryFilter, setCategoryFilter] = useState('');
 
-  const { SupplierCategories } = Constants;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['suppliers', pagination, debouncedSearch, categoryFilter, branch],
+    queryKey: ['suppliers', pagination, debouncedSearch, branch],
     queryFn: async () => await fetchSuppliers({
       skip,
       take,
       search: debouncedSearch,
       branch: branch as OfficeBranch,
-      ...(categoryFilter !== 'All' ? { category: categoryFilter } : null)
     })
   });
 
@@ -62,50 +54,6 @@ export default function Suppliers() {
               defaultValue={search}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <Popover open={openCategoryFilter} onOpenChange={setOpenCategoryFilter}>
-              <PopoverTrigger asChild className="text-[12px]">
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={openCategoryFilter}
-                  className="w-[200px] justify-between"
-                >
-                  {categoryFilter
-                    ? SupplierCategories.find((item) => item === categoryFilter)
-                    : "Select category..."}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[300px] p-0 text-[12px]">
-                <Command>
-                  <CommandInput className="text-[12px]" placeholder="Search category..." />
-                  <CommandList>
-                    <CommandEmpty className="text-[12px]">No category found.</CommandEmpty>
-                    <CommandGroup>
-                      {SupplierCategories.map((item, index) => (
-                        <CommandItem
-                          key={index}
-                          value={item}
-                          className="text-[12px]"
-                          onSelect={(currentValue) => {
-                            setCategoryFilter(currentValue === categoryFilter ? "" : currentValue)
-                            setOpenCategoryFilter(false)
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              categoryFilter === item ? "opacity-100" : "opacity-0"
-                            )}
-                          />
-                          {item}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
           </div>
           <Button
             size={"sm"}

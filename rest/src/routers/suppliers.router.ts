@@ -27,7 +27,7 @@ supplierRouter.get('/', validate(getSuppliersSchema), async (req: Request, res: 
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
       search: search ? String(search) : undefined,
-      category: category ? String(category) : undefined,
+      // category: category ? String(category) : undefined,
       branch: branch ? String(branch) : undefined,
       isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
     };

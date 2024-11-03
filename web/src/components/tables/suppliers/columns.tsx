@@ -107,7 +107,7 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		</div>,
 		cell: ({ row }) => {
 			return (
-				<div className="flex justify-center items-center ">
+				<div className="flex ">
 					<span className="text-xs">
 						{row.original.officeBranch}
 					</span>
@@ -122,7 +122,7 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		</div>,
 		cell: ({ row }) => {
 			return (
-				<div className="flex justify-center items-center gap-2">
+				<div className="flex items-center gap-2">
 					<span className="text-xs">
 						{row.original.approverId ?
 							<Badge variant="outline" className="gap-2 font-normal border-white p-2 text-white bg-primary">Approved <CircleCheck size={'14px'} /></Badge> :

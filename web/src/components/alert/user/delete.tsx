@@ -3,15 +3,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { 
-  AlertDialog, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
-  AlertDialogTrigger 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from "../../ui/alert-dialog";
 import { Button } from "../../ui/button";
 import { deleteUser } from "@/api/mutations/user.mutation";
@@ -26,23 +26,23 @@ export default function DeleteUserDialog(props: Props) {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async(id: string) => await deleteUser(id),
+    mutationFn: async (id: string) => await deleteUser(id),
     onSuccess() {
-      toast.success("User deleted successfully", { 
+      toast.success("User deleted successfully", {
         position: 'top-center',
         className: 'text-primary'
       });
-      queryClient.refetchQueries({ queryKey: ['sales-agreements']});
+      queryClient.refetchQueries({ queryKey: ['users'] });
       setOpen(false);
     },
     onError(error) {
-      toast.error(error.message, { 
-        position: 'top-center', 
+      toast.error(error.message, {
+        position: 'top-center',
         className: 'text-destructive'
       })
     }
   });
-  
+
   const handleDelete = () => {
     mutate(userId);
   }
@@ -50,7 +50,7 @@ export default function DeleteUserDialog(props: Props) {
   return (
     <AlertDialog open={open} onOpenChange={(value) => setOpen(value)}>
       <AlertDialogTrigger>
-        <Trash2 size={16} className="cursor-pointer hover:text-destructive"/>
+        <Trash2 size={16} className="cursor-pointer hover:text-destructive" />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -60,7 +60,7 @@ export default function DeleteUserDialog(props: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel 
+          <AlertDialogCancel
             disabled={isPending}
           >
             Cancel
@@ -70,8 +70,8 @@ export default function DeleteUserDialog(props: Props) {
             onClick={handleDelete}
             disabled={isPending}
           >
-            {isPending && 
-              <Loader2 size={18} className="animate-spin"/>
+            {isPending &&
+              <Loader2 size={18} className="animate-spin" />
             }
             Delete
           </Button>
