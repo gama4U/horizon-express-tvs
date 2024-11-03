@@ -8,7 +8,7 @@ interface IFetchSuppliers {
   search?: string;
   branch?: string;
   isApproved?: boolean;
-  category?: string;
+  // category?: string;
 }
 
 interface ISuppliers {

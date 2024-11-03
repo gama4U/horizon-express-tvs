@@ -1,9 +1,9 @@
-import { Check, ChevronsUpDown, ContactRound, Loader2 } from "lucide-react";
+import { ContactRound, Loader2 } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import AnimatedDiv from "@/components/animated/Div";
-import { Form, FormItem, FormControl, FormField, FormMessage, FormLabel } from "@/components/ui/form";
+import { Form, FormItem, FormControl, FormField, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CommonInput from "@/components/common/input";
@@ -14,11 +14,7 @@ import { Button } from "@/components/ui/button";
 import { OfficeBranch } from "@/interfaces/user.interface";
 import { createSupplier, ICreateSupplier } from "@/api/mutations/supplier.mutation";
 import { Textarea } from "@/components/ui/textarea";
-import Constants from "@/constants";
 import { useAuth } from "@/providers/auth-provider";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 interface ICreateSupplierProps {
 	openDialog: boolean;
@@ -44,7 +40,6 @@ const formSchema = z.object({
 
 export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICreateSupplierProps) {
 	const queryClient = useQueryClient()
-	const { SupplierCategories } = Constants
 	const { session, branch } = useAuth()
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -99,74 +94,27 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 									control={form.control}
 									name="category"
 									render={({ field }) => (
-										<FormItem className="flex flex-col">
-											<FormLabel className="text-[12px]">Select category</FormLabel>
-											<Popover>
-												<PopoverTrigger asChild>
-													<FormControl>
-														<Button
-															variant="outline"
-															role="combobox"
-															className={cn(
-																"w-full justify-between text-[12px]",
-																!field.value && "text-muted-foreground"
-															)}
-														>
-															{field.value
-																? SupplierCategories.find((item) => item === field.value)
-																: "Select category"
-															}
-															<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-														</Button>
-													</FormControl>
-												</PopoverTrigger>
-												<PopoverContent className="w-[550px] p-0">
-													<Command>
-														<CommandInput
-															className="text-[12px]"
-															placeholder="Search supplier..."
-														/>
-														<CommandList className="w-full">
-															<CommandEmpty>No category found.</CommandEmpty>
-															<CommandGroup>
-																{SupplierCategories.map((item, index) => (
-																	<CommandItem
-																		value={item}
-																		key={index}
-																		onSelect={() => {
-																			form.setValue("category", item)
-																		}}
-																		className="text-[12px]"
-																	>
-																		<Check
-																			className={cn(
-																				"mr-2 h-4 w-4",
-																				item === field.value
-																					? "opacity-100"
-																					: "opacity-0"
-																			)}
-																		/>
-																		<span>{item}</span>
-																	</CommandItem>
-																))}
-															</CommandGroup>
-														</CommandList>
-													</Command>
-												</PopoverContent>
-											</Popover>
+										<FormItem>
+											<div className="flex flex-row items-center justify-between gap-x-2">
+												<p className="text-xs w-1/3">Enter supplier category:</p>
+												<FormControl className="w-2/3">
+													<CommonInput inputProps={{ ...field }} placeholder="Category" containerProps={{ className: 'text-xs' }} />
+												</FormControl>
+											</div>
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
+
 								<FormField
 									control={form.control}
 									name="name"
 									render={({ field }) => (
 										<FormItem>
 											<div className="flex flex-row items-center justify-between gap-x-2">
-												<p className="text-xs w-1/3">Client Name:</p>
+												<p className="text-xs w-1/3">Supplier Name:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Supplier name" containerProps={{ className: 'text-xs' }} />
 												</FormControl>
 											</div>
 											<FormMessage />

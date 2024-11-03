@@ -30,12 +30,12 @@ export interface IFindSupplier {
   skip?: number;
   take?: number;
   search?: string;
-  category?: string;
+  // category?: string;
   branch?: string;
   isApproved?: boolean;
 }
 
-export async function fetchSuppliers({ skip, take, search, category, branch, isApproved }: IFindSupplier) {
+export async function fetchSuppliers({ skip, take, search, branch, isApproved }: IFindSupplier) {
   let whereInput: Prisma.SupplierWhereInput = {};
 
   if (search) {
@@ -52,9 +52,9 @@ export async function fetchSuppliers({ skip, take, search, category, branch, isA
     };
   }
 
-  if (category) {
-    whereInput.category = category;
-  }
+  // if (category) {
+  //   whereInput.category = category;
+  // }
 
   if (isApproved === true) {
     whereInput.approverId = { not: null };

@@ -72,7 +72,7 @@ const SideBar = React.memo(() => {
 			variants={Constants.ContainerVariants}
 			animate={containerControls}
 			initial="open"
-			className={`bg-white overflow-y-auto z-50  p-2 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col shadow-lg`}
+			className={`bg-white  z-50  p-3 rounded-xl  justify-between flex flex-col shadow-lg left-0`}
 			style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
 		>
 			<div>
@@ -144,10 +144,10 @@ const SideBar = React.memo(() => {
 					{user && sidebarItemsMap[user.userType].map((item: SidebarItemsType, index: number) => {
 						const isSelected = checkRoute(item.link);
 						return (
-							<AnimatedDiv className="" animationType="Bubble" delay={0} key={index}>
+							<AnimatedDiv className="" animationType="Bubble" delay={0} key={index} scale={1.02}>
 								<div
 									onClick={() => handleRedirect(item.link)}
-									className={`my-[2px] cursor-pointer items-center py-2 hover:bg-[#F79151]  rounded-xl ${isSelected ? "bg-primary" : ""} ${isOpen ? "px-2 flex flex-row" : "px-2"}`}
+									className={`my-[2px] cursor-pointer items-center py-2 hover:bg-orange-300  rounded-xl ${isSelected ? "bg-primary" : ""} ${isOpen ? "px-2 flex flex-row" : "px-2"}`}
 								>
 									<SidebarIcons icon={item.icon} isSelected={isSelected} />
 									{isOpen && (
