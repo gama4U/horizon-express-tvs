@@ -351,17 +351,17 @@ export default function PrintPreview({ data }: Props) {
             </div>
           </div>
 
-          <div className='flex border p-4 flex-col  gap-4  text-[8px] text-muted-foreground'>
-            <div className='flex flex-row justify-between'>
+          <div className='flex border p-2 flex-col  gap-4  text-[8px] text-muted-foreground'>
+            <div className='flex flex-row justify-between gap-4'>
               <div className='w-1/2'>
-                <p className='font-semibold mb-2'>Payment Terms:</p>
+                <p className='font-semibold mb-0'>Payment Terms:</p>
                 <p className='text-left'>
                   Payments must be settled by the agreed-upon date. A 1% monthly charge will be applied to overdue balances, calculated for any fraction of a month past the due date.
                 </p>
               </div>
 
               <div className='w-1/2'>
-                <p className='font-semibold mb-2'>Cancellation Policy:</p>
+                <p className='font-semibold mb-0'>Cancellation Policy:</p>
                 <p className='text-left'>
                   46 days or more before arrival: 100% refundable<br />
                   31-45 days before arrival: 50% refundable<br />
@@ -382,15 +382,15 @@ export default function PrintPreview({ data }: Props) {
               </p>
             </div>
 
-            <div className='w-full text-[8px] space-y-2'>
+            <div className='w-full text-[8px] space-y-0'>
               {data.client.officeBranch === OfficeBranch.CEBU && (
                 <>
-                  <h1 className='font-semibold'>
+                  <h1 className='font-semibold mb-1'>
                     Cebu Branch Bank Information:
                   </h1>
 
-                  <div className='flex border'>
-                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                  <div className='flex border '>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-1'>
                       <div className='flex gap-2 items-center'>
                         <span>Bank name: </span>
                         <p className='font-semibold text-[10px]'>BDO - Banco De Oro</p>
@@ -401,20 +401,20 @@ export default function PrintPreview({ data }: Props) {
                       </div>
                     </div>
                     <div className='w-fit min-w-[180px]'>
-                      <div className='p-2 flex items-center gap-2'>
+                      <div className='p-1 flex items-center gap-2'>
                         <h3 className='font-bold'>PHP account no.:</h3>
                         <span>0007-6802-1747</span>
                       </div>
                       <Separator orientation='horizontal' />
-                      <div className='p-2 flex items-center gap-2'>
+                      <div className='p-1 flex items-center gap-2'>
                         <h3 className='font-bold'>USD account no.:</h3>
                         <span>1007-6026-4937</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className='flex border'>
-                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                  <div className='flex border border-t-0'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-1'>
                       <div className='flex gap-2 items-center'>
                         <span>Bank name: </span>
                         <p className='font-semibold text-[10px]'>PNB - Philippine National Bank</p>
@@ -425,15 +425,15 @@ export default function PrintPreview({ data }: Props) {
                       </div>
                     </div>
                     <div className='w-fit min-w-[180px] flex items-center'>
-                      <div className='p-2 flex items-center gap-2'>
+                      <div className='p-1 flex items-center gap-2'>
                         <h3 className='font-bold'>PHP account no.:</h3>
                         <span>6361-1003-6035</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className='flex border'>
-                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                  <div className='flex border border-t-0'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-1'>
                       <div className='flex gap-2 items-center'>
                         <span>Bank name: </span>
                         <p className='font-semibold text-[10px]'>GCASH</p>
@@ -444,7 +444,7 @@ export default function PrintPreview({ data }: Props) {
                       </div>
                     </div>
                     <div className='w-fit min-w-[180px] flex items-center'>
-                      <div className='p-2 flex items-center gap-2'>
+                      <div className='p-1 flex items-center gap-2'>
                         <h3 className='font-bold'>Account no.:</h3>
                         <span>0995-013-2370</span>
                       </div>
@@ -455,12 +455,12 @@ export default function PrintPreview({ data }: Props) {
 
               {data.client.officeBranch === OfficeBranch.CALBAYOG && (
                 <>
-                  <h1 className='font-semibold'>
+                  <h1 className='font-semibold mb-1'>
                     Calbayog Branch Bank Information:
                   </h1>
 
-                  <div className='flex border'>
-                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                  <div className='flex border border-b-0'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-1'>
                       <div className='flex gap-2 items-center'>
                         <span>Bank name: </span>
                         <p className='font-semibold text-[10px]'>PNB - Philippine National Bank</p>
@@ -471,12 +471,12 @@ export default function PrintPreview({ data }: Props) {
                       </div>
                     </div>
                     <div className='w-fit min-w-[180px]'>
-                      <div className='p-2 flex items-center gap-2'>
+                      <div className='p-1 flex items-center gap-2'>
                         <h3 className='font-bold'>PHP account no.:</h3>
                         <span>3129-7000-4640</span>
                       </div>
                       <Separator orientation='horizontal' />
-                      <div className='p-2 flex items-center gap-2'>
+                      <div className='p-1 flex items-center gap-2'>
                         <h3 className='font-bold'>USD Account No:</h3>
                         <span>3129-6007-7243</span>
                       </div>
@@ -484,7 +484,7 @@ export default function PrintPreview({ data }: Props) {
                   </div>
 
                   <div className='flex border'>
-                    <div className='flex-1 border-r flex flex-col gap-1 p-2'>
+                    <div className='flex-1 border-r flex flex-col gap-1 p-1'>
                       <div className='flex gap-2 items-center'>
                         <span>Bank name: </span>
                         <p className='font-semibold text-[10px]'>GCASH</p>
@@ -495,7 +495,7 @@ export default function PrintPreview({ data }: Props) {
                       </div>
                     </div>
                     <div className='w-fit min-w-[180px] flex items-center'>
-                      <div className='p-2 flex items-center gap-2'>
+                      <div className='p-1 flex items-center gap-2'>
                         <h3 className='font-bold'>Account no.:</h3>
                         <span>0995-013-2375</span>
                       </div>
