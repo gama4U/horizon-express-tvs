@@ -8,7 +8,6 @@ import AnimatedDiv from "@/components/animated/Div";
 import Loader from "@/components/animated/Loader";
 import { DashboardCard } from "@/components/cards/admin";
 import { TransactionChart } from "@/components/charts/bar-chart";
-import { ClientPieChart } from "@/components/charts/pie-chart";
 import { DatePickerWithRange } from "@/components/common/date-range-picker";
 import TopBar from "@/components/section/topbar";
 import { useAuth } from "@/providers/auth-provider";
@@ -16,6 +15,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { startOfMonth, endOfMonth } from 'date-fns';
+import { fetchSuppliersSummary, ISupplierSummary } from "@/api/queries/suppliers.query";
+import { ClientPieChart } from "@/components/charts/pie/client";
+import { SupplierPieChart } from "@/components/charts/pie/supplier";
+import { ArrowRightLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   const { session } = useAuth();
@@ -24,6 +28,16 @@ export default function Dashboard() {
     from: startOfMonth(new Date()),
     to: endOfMonth(new Date()),
   });
+  const [pieToggle, setPieToggle] = useState<'clients' | 'suppliers'>('clients')
+
+  const togglePieChart = () => {
+    if (pieToggle === 'suppliers') {
+      setPieToggle('clients')
+    }
+    else {
+      setPieToggle('suppliers')
+    }
+  }
 
   const { data: transactions, isLoading: transactionsLoading } = useQuery({
     queryKey: ['transactions-summary', selectedDateRange],
@@ -69,18 +83,34 @@ export default function Dashboard() {
     calbayogCount: client.calbayogCount,
     cebuCount: client.cebuCount,
   })) || [];
+  const { data: suppliers, isLoading: suppliersLoading } = useQuery({
+    queryKey: ['suppliers-summary', pieChartDateRange],
+    queryFn: async () => {
+      const startMonth = pieChartDateRange?.from ? pieChartDateRange.from.getMonth() + 1 : 1;
+      const endMonth = pieChartDateRange?.to ? pieChartDateRange.to.getMonth() + 1 : 12;
+      return await fetchSuppliersSummary(startMonth, endMonth);
+    },
+    enabled: !!pieChartDateRange,
+  });
+
+  const suppliersData = suppliers?.map((supplier: ISupplierSummary) => ({
+    month: supplier.month,
+    count: supplier.desktop,
+    calbayogCount: supplier.calbayogCount,
+    cebuCount: supplier.cebuCount,
+  })) || [];
+
 
   const handleDateChange = (range: DateRange | undefined) => {
     setSelectedDateRange(range);
   };
 
-  console.log('here', clients)
 
   const handlePieChartDateChange = (range: DateRange | undefined) => {
     setPieChartDateRange(range);
   };
 
-  const isLoading = transactionsLoading || salesLoading || purchaseLoading || memorandumsLoading || dtsLoading || clientsLoading;
+  const isLoading = transactionsLoading || salesLoading || purchaseLoading || memorandumsLoading || dtsLoading || clientsLoading || suppliersLoading
 
   return (
     <div className="flex flex-col space-y-2 ">
@@ -115,9 +145,17 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="gap-2 flex flex-col">
+          <div className="gap-2 flex flex-col relative">
+            <Button variant="outline" size="icon" className="absolute top-14 right-4" onClick={togglePieChart}>
+              <ArrowRightLeft size={16} />
+            </Button>
             <DatePickerWithRange onDateChange={handlePieChartDateChange} />
-            <ClientPieChart clientsData={clientsData ?? []} />
+            {pieToggle === 'clients' &&
+              <ClientPieChart clientsData={clientsData ?? []} />
+            }
+            {pieToggle === 'suppliers' &&
+              <SupplierPieChart suppliersData={suppliersData ?? []} />
+            }
           </div>
         </div>
       </div>

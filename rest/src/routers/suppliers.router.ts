@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
 import { getSuppliersSchema } from '../schemas/supplier.schema';
-import { createSupplier, deleteSupplier, fetchSuppliers, updateSupplier, updateSupplierApprover } from '../services/supplier.service';
+import { createSupplier, deleteSupplier, fetchSuppliers, fetchSupplierSummary, updateSupplier, updateSupplierApprover } from '../services/supplier.service';
 import { authorize } from '../middlewares/authorize.middleware';
 import { UserType } from '@prisma/client';
 
@@ -99,6 +99,32 @@ supplierRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: R
     });
   }
 });
+
+supplierRouter.post('/summary', async (req: Request, res: Response) => {
+  const { startMonth, endMonth } = req.body;
+
+  if (
+    startMonth < 1 || startMonth > 12 ||
+    endMonth < 1 || endMonth > 12 ||
+    (startMonth > endMonth && !(startMonth === 12 && endMonth === 1))
+  ) {
+    return res.status(400).json({ message: 'Invalid month range' });
+  }
+
+  try {
+    const data = await fetchSupplierSummary(startMonth, endMonth);
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ message: 'No suppliers data found for the selected range' });
+    }
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching suppliers summary:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 export default supplierRouter;

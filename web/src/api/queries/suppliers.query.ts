@@ -31,5 +31,28 @@ export async function fetchSuppliers({ ...params }: IFetchSuppliers): Promise<IS
     throw new Error(message || 'Something went wrong');
   }
 }
+export interface ISupplierSummary {
+  month: string;
+  desktop: number;
+  calbayogCount: number;
+  cebuCount: number;
+}
+
+export async function fetchSuppliersSummary(startMonth: number, endMonth: number): Promise<ISupplierSummary[]> {
+  try {
+    const response = await api.post('/api/v1/suppliers/summary', {
+      startMonth,
+      endMonth
+    });
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
+
 
 
