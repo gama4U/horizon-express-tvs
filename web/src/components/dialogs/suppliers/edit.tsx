@@ -23,19 +23,11 @@ interface IUpdateSupplierProps {
 }
 
 const formSchema = z.object({
-	name: z.string().trim().min(1, {
-		message: "Name is required."
-	}),
-	contact: z.string().trim().min(1, {
-		message: "Contact number is required"
-	}).optional(),
-	address: z.string().trim().min(1, {
-		message: "Email is required."
-	}).optional(),
-	emailAddress: z.string().email(),
-	category: z.string().min(1, {
-		message: 'Category is required'
-	}),
+	name: z.string().trim().optional(),
+	contact: z.string().trim().optional(),
+	address: z.string().trim().optional(),
+	emailAddress: z.string().email().optional(),
+	category: z.string().optional(),
 	notes: z.string().optional(),
 });
 

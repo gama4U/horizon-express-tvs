@@ -31,9 +31,7 @@ const formSchema = z.object({
 	address: z.string().trim().min(1, {
 		message: "Email is required."
 	}).optional(),
-	category: z.string().min(1, {
-		message: 'Category is required'
-	}),
+	category: z.string().optional(),
 	emailAddress: z.string().email(),
 	notes: z.string().optional(),
 });
@@ -98,7 +96,7 @@ export default function CreateSupplierDialog({ openDialog, setOpenDialog }: ICre
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Enter supplier category:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Category" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Category (Optional)" containerProps={{ className: 'text-xs' }} />
 												</FormControl>
 											</div>
 											<FormMessage />

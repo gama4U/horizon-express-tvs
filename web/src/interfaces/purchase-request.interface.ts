@@ -77,7 +77,7 @@ export interface IFetchPurchaseRequestData {
 
 export interface ICreatePurchaseRequest {
   supplierId: string;
-  salesAgreementId: string;
+  salesAgreementId?: string;
   disbursementType: string;
   classification: string;
   classificationType: string;
@@ -87,7 +87,7 @@ export interface ICreatePurchaseRequest {
 export interface IUpdatePurchaseRequest {
   purchaseRequestId: string;
   supplierId: string;
-  salesAgreementId: string;
+  salesAgreementId?: string | null;
   disbursementType: string;
   classification: string;
   classificationType: string;

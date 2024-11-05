@@ -13,7 +13,7 @@ export interface ICreateSupplier {
   address: string
   contact: string
   emailAddress: string;
-  category: string;
+  category?: string;
   notes: string;
   officeBranch: OfficeBranch
 }
@@ -23,7 +23,7 @@ export interface IUpdateSupplier {
   address: string
   contact: string
   emailAddress: string;
-  category: string;
+  category?: string;
   notes: string;
   officeBranch: OfficeBranch
 }
