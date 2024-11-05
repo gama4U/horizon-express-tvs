@@ -72,7 +72,7 @@ const SideBar = React.memo(() => {
 			variants={Constants.ContainerVariants}
 			animate={containerControls}
 			initial="open"
-			className={`bg-white  z-50  p-3 rounded-xl  justify-between flex flex-col shadow-lg left-0`}
+			className={`bg-white overflow-y-auto z-50  p-2 h-full sticky top-0 left-0 rounded-xl  justify-between flex flex-col shadow-lg`}
 			style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
 		>
 			<div>
