@@ -1,6 +1,7 @@
 import { DocumentTransactionType, OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { getNextDtsNumber } from "../utils/generate-number";
+import moment from "moment";
 
 export interface ICreateDocumentTransaction {
   type: DocumentTransactionType
@@ -191,5 +192,40 @@ export async function findDocumentTransactionById(id: string) {
       }
     }
   });
+}
+export async function fetchDocumentTransactionsSummary() {
+
+  const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
+
+  const [total, since7days, cebuCount, calbayogCount] = await Promise.all([
+    prisma.documentTransaction.count(),
+    prisma.documentTransaction.count({
+      where: {
+        createdAt: {
+          gte: oneWeekAgo,
+        },
+      },
+    }),
+    prisma.documentTransaction.count({
+      where: {
+        client: {
+          officeBranch: OfficeBranch.CEBU
+        }
+      }
+    }),
+    prisma.documentTransaction.count({
+      where: {
+        client: {
+          officeBranch: OfficeBranch.CALBAYOG
+        }
+      }
+    }),
+  ]);
+
+  const rate = total > 0 ? (since7days / total) * 100 : 0;
+
+  return {
+    total, since7days, rate, cebuCount, calbayogCount
+  }
 }
 

@@ -46,7 +46,7 @@ function deleteSupplier(id) {
     });
 }
 function fetchSuppliers(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, category, branch, isApproved }) {
+    return __awaiter(this, arguments, void 0, function* ({ skip, take, search, branch, isApproved }) {
         let whereInput = {};
         if (search) {
             const searchParts = search.split(/\s+/);
@@ -61,9 +61,9 @@ function fetchSuppliers(_a) {
                 })),
             };
         }
-        if (category) {
-            whereInput.category = category;
-        }
+        // if (category) {
+        //   whereInput.category = category;
+        // }
         if (isApproved === true) {
             whereInput.approverId = { not: null };
         }

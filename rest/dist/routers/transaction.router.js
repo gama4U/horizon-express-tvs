@@ -113,6 +113,8 @@ transactionRouter.post('/summary', (req, res) => __awaiter(void 0, void 0, void 
             rate: parseFloat(rate.toFixed(2)),
             total: data.total,
             enrichedTransactions: data.enrichedTransactions,
+            calbayogCount: data.calbayogCount,
+            cebuCount: data.cebuCount,
         });
     }
     catch (error) {

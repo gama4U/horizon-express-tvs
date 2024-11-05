@@ -115,4 +115,16 @@ documentTransactionRouter.patch('/:id/transmit', (req, res) => __awaiter(void 0,
         });
     }
 }));
+documentTransactionRouter.post('/summary', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield (0, document_transaction_service_1.fetchDocumentTransactionsSummary)();
+        if (!data) {
+            return res.status(404).json({ message: 'Failed to fetch document transactions data' });
+        }
+        return res.status(200).json(data);
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}));
 exports.default = documentTransactionRouter;

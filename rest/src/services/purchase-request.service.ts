@@ -163,7 +163,7 @@ export async function deletePurchaseRequestById(id: string) {
 export async function fetchPurchaseRequestSummary() {
   const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
 
-  const [total, since7days] = await Promise.all([
+  const [total, since7days, cebuCount, calbayogCount] = await Promise.all([
     prisma.purchaseRequestOrder.count(),
     prisma.purchaseRequestOrder.count({
       where: {
@@ -172,12 +172,26 @@ export async function fetchPurchaseRequestSummary() {
         },
       },
     }),
+    prisma.purchaseRequestOrder.count({
+      where: {
+        supplier: {
+          officeBranch: OfficeBranch.CEBU
+        }
+      }
+    }),
+    prisma.purchaseRequestOrder.count({
+      where: {
+        supplier: {
+          officeBranch: OfficeBranch.CALBAYOG
+        }
+      }
+    }),
   ]);
 
   const rate = total > 0 ? (since7days / total) * 100 : 0;
 
   return {
-    total, since7days, rate
+    total, since7days, rate, cebuCount, calbayogCount
   }
 }
 

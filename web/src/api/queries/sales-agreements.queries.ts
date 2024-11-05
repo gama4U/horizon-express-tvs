@@ -36,6 +36,8 @@ interface ISalesAgreementSummary {
   total: number
   since7days: number
   rate: number
+  calbayogCount: number
+  cebuCount: number
 }
 export async function fetchSalesAgreementSummary(): Promise<ISalesAgreementSummary> {
   try {

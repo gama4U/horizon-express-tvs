@@ -112,7 +112,7 @@ export async function findMemorandumById(id: string) {
 export async function fetchMemorandumSummary() {
   const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
 
-  const [total, since7days] = await Promise.all([
+  const [total, since7days, cebuCount, calbayogCount] = await Promise.all([
     prisma.memorandum.count(),
     prisma.memorandum.count({
       where: {
@@ -120,6 +120,16 @@ export async function fetchMemorandumSummary() {
           gte: oneWeekAgo,
         },
       },
+    }),
+    prisma.memorandum.count({
+      where: {
+        branch: OfficeBranch.CEBU
+      }
+    }),
+    prisma.memorandum.count({
+      where: {
+        branch: OfficeBranch.CALBAYOG
+      }
     }),
   ]);
 

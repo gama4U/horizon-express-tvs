@@ -1,3 +1,5 @@
+import { fetchClientsSummary, IClientSummary } from "@/api/queries/clients.query";
+import { fetchDtsSummary } from "@/api/queries/document-transaction.query";
 import { fetchMemorandumSummary } from "@/api/queries/memorandums.query";
 import { fetchPurchaseRequestSummary } from "@/api/queries/purchase-request.queries";
 import { fetchSalesAgreementSummary } from "@/api/queries/sales-agreements.queries";
@@ -6,16 +8,22 @@ import AnimatedDiv from "@/components/animated/Div";
 import Loader from "@/components/animated/Loader";
 import { DashboardCard } from "@/components/cards/admin";
 import { TransactionChart } from "@/components/charts/bar-chart";
+import { ClientPieChart } from "@/components/charts/pie-chart";
 import { DatePickerWithRange } from "@/components/common/date-range-picker";
 import TopBar from "@/components/section/topbar";
 import { useAuth } from "@/providers/auth-provider";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
+import { startOfMonth, endOfMonth } from 'date-fns';
 
 export default function Dashboard() {
   const { session } = useAuth();
   const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>();
+  const [pieChartDateRange, setPieChartDateRange] = useState<DateRange | undefined>({
+    from: startOfMonth(new Date()),
+    to: endOfMonth(new Date()),
+  });
 
   const { data: transactions, isLoading: transactionsLoading } = useQuery({
     queryKey: ['transactions-summary', selectedDateRange],
@@ -40,20 +48,39 @@ export default function Dashboard() {
     queryFn: async () => await fetchMemorandumSummary(),
   });
 
-  // const { data: recent, isLoading: recentLoading } = useQuery({
-  //   queryKey: ['recent'],
-  //   queryFn: async () => await fetchRecentAcitvities(),
-  // });
+  const { data: dts, isLoading: dtsLoading } = useQuery({
+    queryKey: ['dts-summary'],
+    queryFn: async () => await fetchDtsSummary(),
+  });
+
+  const { data: clients, isLoading: clientsLoading } = useQuery({
+    queryKey: ['clients-summary', pieChartDateRange],
+    queryFn: async () => {
+      const startMonth = pieChartDateRange?.from ? pieChartDateRange.from.getMonth() + 1 : 1;
+      const endMonth = pieChartDateRange?.to ? pieChartDateRange.to.getMonth() + 1 : 12;
+      return await fetchClientsSummary(startMonth, endMonth);
+    },
+    enabled: !!pieChartDateRange,
+  });
+
+  const clientsData = clients?.map((client: IClientSummary) => ({
+    month: client.month,
+    count: client.desktop,
+    calbayogCount: client.calbayogCount,
+    cebuCount: client.cebuCount,
+  })) || [];
 
   const handleDateChange = (range: DateRange | undefined) => {
     setSelectedDateRange(range);
   };
 
-  // const handleRefetchRecentActivities = () => {
-  //   refetch();
-  // };
+  console.log('here', clients)
 
-  const isLoading = transactionsLoading || salesLoading || purchaseLoading || memorandumsLoading;
+  const handlePieChartDateChange = (range: DateRange | undefined) => {
+    setPieChartDateRange(range);
+  };
+
+  const isLoading = transactionsLoading || salesLoading || purchaseLoading || memorandumsLoading || dtsLoading || clientsLoading;
 
   return (
     <div className="flex flex-col space-y-2 ">
@@ -63,15 +90,16 @@ export default function Dashboard() {
       />
       {isLoading && <Loader isLoading={true} />}
       <div className="bg-white flex-1 rounded-lg overflow-hidden p-4 md:p-6">
-        <AnimatedDiv animationType="FadeInFromUp" className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <DashboardCard title="Transactions" value={transactions?.total ?? 0} showRate={true} rate={transactions?.rate} shortLabel="Last 7 days" />
-          <DashboardCard title="Sales Agreements" value={salesAgreements?.total ?? 0} showRate={true} rate={salesAgreements?.rate} shortLabel="Last 7 days" />
-          <DashboardCard title="Purchase Requests" value={purchaseRequests?.total ?? 0} showRate={true} rate={purchaseRequests?.rate} shortLabel="Last 7 days" />
-          <DashboardCard title="Memorandum" value={memorandums?.total ?? 0} showRate={true} rate={memorandums?.rate} shortLabel="Last 7 days" />
+        <AnimatedDiv animationType="FadeInFromUp" className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <DashboardCard title="Transaction Vouchers" value={transactions?.total ?? 0} showRate={true} rate={transactions?.rate} shortLabel="Last 7 days" calbayogCount={transactions?.calbayogCount} cebuCount={transactions?.cebuCount} />
+          <DashboardCard title="Sales Agreements" value={salesAgreements?.total ?? 0} showRate={true} rate={salesAgreements?.rate} shortLabel="Last 7 days" cebuCount={salesAgreements?.cebuCount} calbayogCount={salesAgreements?.calbayogCount} />
+          <DashboardCard title="Purchase Requests" value={purchaseRequests?.total ?? 0} showRate={true} rate={purchaseRequests?.rate} shortLabel="Last 7 days" cebuCount={purchaseRequests?.cebuCount} calbayogCount={purchaseRequests?.calbayogCount} />
+          <DashboardCard title="Memorandum" value={memorandums?.total ?? 0} showRate={true} rate={memorandums?.rate} shortLabel="Last 7 days" cebuCount={memorandums?.cebuCount} calbayogCount={memorandums?.calbayogCount} />
+          <DashboardCard title="Document Transactions" value={dts?.total ?? 0} showRate={true} rate={dts?.rate} shortLabel="Last 7 days" cebuCount={dts?.cebuCount} calbayogCount={dts?.calbayogCount} />
         </AnimatedDiv>
 
-        <div className="flex flex-col md:flex-row gap-2 p-2  mt-2">
-          <div className="flex-1 w-full">
+        <div className="flex flex-col md:flex-row lg:flex-row gap-2 p-2 mt-2">
+          <div className="w-full">
             <DatePickerWithRange onDateChange={handleDateChange} />
             <div className="w-full flex flex-col lg:flex-row space-x-4 lg:justify-between items-start space-y-4 lg:space-y-0">
               <div className="w-full ">
@@ -87,6 +115,10 @@ export default function Dashboard() {
             </div>
           </div>
 
+          <div className="gap-2 flex flex-col">
+            <DatePickerWithRange onDateChange={handlePieChartDateChange} />
+            <ClientPieChart clientsData={clientsData ?? []} />
+          </div>
         </div>
       </div>
     </div>

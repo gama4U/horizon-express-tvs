@@ -66,4 +66,23 @@ export async function fetchDocumentTransaction(id: string): Promise<IDocumentTra
   }
 }
 
+interface IDocumentTransactionsSummary {
+  total: number
+  since7days: number
+  rate: number
+  calbayogCount: number
+  cebuCount: number
+}
+export async function fetchDtsSummary(): Promise<IDocumentTransactionsSummary> {
+  try {
+    const response = await api.post('/api/v1/document-transactions/summary');
+    return response.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data.message;
+    }
+    throw new Error(message || 'Something went wrong');
+  }
+}
 

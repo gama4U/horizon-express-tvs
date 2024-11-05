@@ -34,6 +34,8 @@ interface IPurchaseRequestSummary {
   total: number
   since7days: number
   rate: number
+  cebuCount: number,
+  calbayogCount: number
 }
 export async function fetchPurchaseRequestSummary(): Promise<IPurchaseRequestSummary> {
   try {

@@ -18,7 +18,10 @@ exports.updateClient = updateClient;
 exports.deleteClient = deleteClient;
 exports.fetchClients = fetchClients;
 exports.updateClientApprover = updateClientApprover;
+exports.fetchClientSummary = fetchClientSummary;
+const client_1 = require("@prisma/client");
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
+const moment_1 = __importDefault(require("moment"));
 function createClient(data) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield db_utils_1.default.client.create({
@@ -98,5 +101,43 @@ function updateClientApprover(_a) {
             where: { id },
             data: { approverId }
         });
+    });
+}
+function fetchClientSummary(startMonth, endMonth) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const summary = [];
+        const currentYear = (0, moment_1.default)().year();
+        const isSameYear = endMonth >= startMonth;
+        const startYear = isSameYear ? currentYear : currentYear - 1;
+        const endYear = isSameYear ? currentYear : currentYear;
+        const calbayogCount = yield db_utils_1.default.client.count({
+            where: {
+                officeBranch: client_1.OfficeBranch.CALBAYOG
+            }
+        });
+        const cebuCount = yield db_utils_1.default.client.count({
+            where: {
+                officeBranch: client_1.OfficeBranch.CEBU
+            }
+        });
+        for (let month = startMonth; month <= endMonth; month++) {
+            const monthStart = (0, moment_1.default)().year(month === 1 && startYear > currentYear ? startYear : currentYear).month(month - 1).startOf('month').toDate();
+            const monthEnd = (0, moment_1.default)().year(month === 12 && endYear > currentYear ? endYear : currentYear).month(month - 1).endOf('month').toDate();
+            const count = yield db_utils_1.default.client.count({
+                where: {
+                    createdAt: {
+                        gte: monthStart,
+                        lte: monthEnd,
+                    },
+                },
+            });
+            summary.push({
+                month: (0, moment_1.default)(monthStart).format("MMMM"),
+                desktop: count,
+                cebuCount,
+                calbayogCount
+            });
+        }
+        return summary;
     });
 }

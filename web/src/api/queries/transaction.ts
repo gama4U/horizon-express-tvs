@@ -66,6 +66,8 @@ export interface ITransactionsSummary {
 	since7days: any,
 	rate: number,
 	total: number,
+	calbayogCount: number,
+	cebuCount: number,
 }
 
 export async function fetchTransactionsSummary(data: IFetchTransactionsSummary): Promise<ITransactionsSummary> {
