@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { validate } from '../middlewares/validate.middleware';
 import { getDocumentTransactionSchema } from '../schemas/document-transaction.schema';
-import { createDocumentTransaction, deleteDocumentTransaction, fetchDocumentTransactions, findDocumentTransactionById, transmitDocument, updateDocumentTransaction } from '../services/document-transaction.service';
+import { createDocumentTransaction, deleteDocumentTransaction, fetchDocumentTransactions, fetchDocumentTransactionsSummary, findDocumentTransactionById, transmitDocument, updateDocumentTransaction } from '../services/document-transaction.service';
 import { findClientById } from '../services/client.service';
 
 const documentTransactionRouter = express.Router();
@@ -108,6 +108,20 @@ documentTransactionRouter.patch('/:id/transmit', async (req: Request, res: Respo
     })
   }
 })
+documentTransactionRouter.post('/summary', async (req: Request, res: Response) => {
+
+  try {
+    const data = await fetchDocumentTransactionsSummary();
+    if (!data) {
+      return res.status(404).json({ message: 'Failed to fetch document transactions data' });
+    }
+    return res.status(200).json(data);
+  }
+  catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 

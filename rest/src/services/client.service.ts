@@ -1,6 +1,7 @@
 import { ClientType, OfficeBranch, Prisma } from "@prisma/client";
 import prisma from "../utils/db.utils";
 import { ICreateClient, IUpdateClient } from "../interfaces/client.interface";
+import moment from "moment";
 
 export async function createClient(data: ICreateClient) {
   return await prisma.client.create({
@@ -104,4 +105,55 @@ export async function updateClientApprover({ id, approverId }: IUpdateClientAppr
     where: { id },
     data: { approverId }
   });
+}
+interface IClientSummary {
+  month: string;
+  desktop: number;
+  cebuCount: number;
+  calbayogCount: number;
+}
+
+export async function fetchClientSummary(startMonth: number, endMonth: number): Promise<IClientSummary[]> {
+  const summary: IClientSummary[] = [];
+
+  const currentYear = moment().year();
+
+  const isSameYear = endMonth >= startMonth;
+  const startYear = isSameYear ? currentYear : currentYear - 1;
+  const endYear = isSameYear ? currentYear : currentYear;
+
+  const calbayogCount = await prisma.client.count({
+    where: {
+      officeBranch: OfficeBranch.CALBAYOG
+    }
+  });
+
+  const cebuCount = await prisma.client.count({
+    where: {
+      officeBranch: OfficeBranch.CEBU
+    }
+  });
+
+  for (let month = startMonth; month <= endMonth; month++) {
+    const monthStart = moment().year(month === 1 && startYear > currentYear ? startYear : currentYear).month(month - 1).startOf('month').toDate();
+    const monthEnd = moment().year(month === 12 && endYear > currentYear ? endYear : currentYear).month(month - 1).endOf('month').toDate();
+
+    const count = await prisma.client.count({
+      where: {
+        createdAt: {
+          gte: monthStart,
+          lte: monthEnd,
+        },
+      },
+    });
+
+    summary.push({
+      month: moment(monthStart).format("MMMM"),
+      desktop: count,
+      cebuCount,
+      calbayogCount
+    });
+  }
+
+  return summary;
 }

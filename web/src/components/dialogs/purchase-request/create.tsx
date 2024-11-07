@@ -11,7 +11,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { useNavigate } from "react-router-dom";
-import { ICreatePurchaseRequest } from "@/interfaces/purchase-request.interface";
+import { DisbursementType, ICreatePurchaseRequest } from "@/interfaces/purchase-request.interface";
 import { createPurchaseRequest } from "@/api/mutations/purchase-request..mutation";
 import { useAuth } from "@/providers/auth-provider";
 import { OfficeBranch, UserType } from "@/interfaces/user.interface";
@@ -28,9 +28,7 @@ const formSchema = z.object({
   supplierId: z.string().min(1, {
     message: 'Supplier is required'
   }),
-  salesAgreementId: z.string().min(1, {
-    message: 'Sales agreement is required'
-  }),
+  salesAgreementId: z.string().optional(),
   disbursementType: z.string().min(1, {
     message: 'Disbursement type is required'
   }),
@@ -141,6 +139,106 @@ export default function CreatePurchaseRequestDialog() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
               <FormField
                 control={form.control}
+                name="disbursementType"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-[12px]">Disbursement Type:</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select disbursement type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Constants.Disbursements.map((item, index) => (
+                          <SelectItem
+                            key={index}
+                            value={item.type}
+                            className="text-[12px]"
+                          >
+                            {item.type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[10px]" />
+                  </FormItem>
+                )}
+              />
+              {form.watch('disbursementType') === DisbursementType["Cost of Sales"] &&
+                <FormField
+                  control={form.control}
+                  name="salesAgreementId"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="text-[12px]">Sales agreement</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "w-full justify-between text-[12px]",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {renderSelectedSalesAgreement(field.value)}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[550px] p-0">
+                          <Command shouldFilter={false}>
+                            <CommandInput
+                              className="text-[12px]"
+                              onValueChange={(value) => setSalesAgreementSearch(value)}
+                              placeholder="Search sales agreement..."
+                            />
+                            <CommandList className="w-full">
+                              <CommandEmpty>No sales agreement found.</CommandEmpty>
+                              <CommandGroup>
+                                {salesAgreementsData?.salesAgreements.map((salesAgreement, index) => (
+                                  <CommandItem
+                                    value={salesAgreement.id}
+                                    key={index}
+                                    onSelect={() => {
+                                      form.setValue("salesAgreementId", salesAgreement.id)
+                                    }}
+                                    className="text-[12px]"
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        salesAgreement.id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-semibold">{salesAgreement.serialNumber}</span>
+                                      <span> - </span>
+                                      <span>{salesAgreement.client.name}</span>
+                                      <span>{`(${clientTypesMap[salesAgreement.client.clientType]})`}</span>
+                                    </div>
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+
+
+              }
+
+              <FormField
+                control={form.control}
                 name="supplierId"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
@@ -197,100 +295,6 @@ export default function CreatePurchaseRequestDialog() {
                       </PopoverContent>
                     </Popover>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="salesAgreementId"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-[12px]">Sales agreement</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={cn(
-                              "w-full justify-between text-[12px]",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {renderSelectedSalesAgreement(field.value)}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[550px] p-0">
-                        <Command shouldFilter={false}>
-                          <CommandInput
-                            className="text-[12px]"
-                            onValueChange={(value) => setSalesAgreementSearch(value)}
-                            placeholder="Search sales agreement..."
-                          />
-                          <CommandList className="w-full">
-                            <CommandEmpty>No sales agreement found.</CommandEmpty>
-                            <CommandGroup>
-                              {salesAgreementsData?.salesAgreements.map((salesAgreement, index) => (
-                                <CommandItem
-                                  value={salesAgreement.id}
-                                  key={index}
-                                  onSelect={() => {
-                                    form.setValue("salesAgreementId", salesAgreement.id)
-                                  }}
-                                  className="text-[12px]"
-                                >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      salesAgreement.id === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0"
-                                    )}
-                                  />
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-semibold">{salesAgreement.serialNumber}</span>
-                                    <span> - </span>
-                                    <span>{salesAgreement.client.name}</span>
-                                    <span>{`(${clientTypesMap[salesAgreement.client.clientType]})`}</span>
-                                  </div>
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="disbursementType"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel className="text-[12px]">Disbursement Type:</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
-                          <SelectValue placeholder="Select disbursement type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Constants.Disbursements.map((item, index) => (
-                          <SelectItem
-                            key={index}
-                            value={item.type}
-                            className="text-[12px]"
-                          >
-                            {item.type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-[10px]" />
                   </FormItem>
                 )}
               />

@@ -78,7 +78,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
       const creator = row.original.creator;
       return (
         <span className="capitalize">
-          {`${creator?.firstName} ${creator?.firstName}`}
+          {`${creator?.firstName} ${creator?.lastName}`}
         </span>
       )
     }
@@ -98,6 +98,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
       const { PermissionsCanEdit, PermissionsCanDelete } = Constants;

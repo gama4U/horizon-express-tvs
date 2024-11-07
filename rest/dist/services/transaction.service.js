@@ -220,8 +220,22 @@ function fetchTransactions(_a) {
 function fetchTransactionSummary(startDate, endDate) {
     return __awaiter(this, void 0, void 0, function* () {
         const oneWeekAgo = (0, moment_1.default)().subtract(7, 'days').startOf('day').toDate();
-        const [total, since7days, transactions] = yield Promise.all([
+        const [total, cebuCount, calbayogCount, since7days, transactions] = yield Promise.all([
             db_utils_1.default.transaction.count(),
+            db_utils_1.default.transaction.count({
+                where: {
+                    client: {
+                        officeBranch: client_1.OfficeBranch.CEBU,
+                    },
+                },
+            }),
+            db_utils_1.default.transaction.count({
+                where: {
+                    client: {
+                        officeBranch: client_1.OfficeBranch.CALBAYOG,
+                    },
+                },
+            }),
             db_utils_1.default.transaction.count({
                 where: {
                     createdAt: {
@@ -268,7 +282,7 @@ function fetchTransactionSummary(startDate, endDate) {
             totalVoucherCounts.tour += transaction.tourVoucher.length;
             totalVoucherCounts.transport += transaction.transportVoucher.length;
         });
-        return { since7days, total, enrichedTransactions, totalVoucherCounts };
+        return { since7days, total, enrichedTransactions, totalVoucherCounts, cebuCount, calbayogCount };
     });
 }
 function fetchRecentEntries() {

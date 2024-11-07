@@ -37,7 +37,7 @@ supplierRouter.get('/', (0, validate_middleware_1.validate)(supplier_schema_1.ge
             skip: skip ? Number(skip) : undefined,
             take: take ? Number(take) : undefined,
             search: search ? String(search) : undefined,
-            category: category ? String(category) : undefined,
+            // category: category ? String(category) : undefined,
             branch: branch ? String(branch) : undefined,
             isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
         };

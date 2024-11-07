@@ -5,9 +5,7 @@ export const createPurchaseRequestSchema = z.object({
     supplierId: z.string().min(1, {
       message: 'Supplier id is required'
     }),
-    salesAgreementId: z.string().min(1, {
-      message: 'Sales agreement id is required'
-    }),
+    salesAgreementId: z.string().optional(),
     disbursementType: z.string().min(1, {
       message: 'Disbursement type is required'
     }),
@@ -26,9 +24,7 @@ export const updatePurchaseRequestSchema = z.object({
     supplierId: z.string().min(1, {
       message: 'Supplier id is required'
     }),
-    salesAgreementId: z.string().min(1, {
-      message: 'Sales agreement id is required'
-    }),
+    salesAgreementId: z.string().nullable(),
     disbursementType: z.string().min(1, {
       message: 'Disbursement type is required'
     }),

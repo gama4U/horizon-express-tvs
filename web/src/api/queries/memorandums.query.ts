@@ -61,6 +61,8 @@ interface IMemorandumSummary {
   total: number
   since7days: number
   rate: number
+  calbayogCount: number
+  cebuCount: number
 }
 export async function fetchMemorandumSummary(): Promise<IMemorandumSummary> {
   try {

@@ -169,7 +169,7 @@ export async function deleteSalesAgreementById(id: string) {
 export async function fetchSalesAgreementSummary() {
   const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
 
-  const [total, since7days] = await Promise.all([
+  const [total, since7days, cebuCount, calbayogCount] = await Promise.all([
     prisma.salesAgreement.count(),
     prisma.salesAgreement.count({
       where: {
@@ -178,12 +178,26 @@ export async function fetchSalesAgreementSummary() {
         },
       },
     }),
+    prisma.salesAgreement.count({
+      where: {
+        client: {
+          officeBranch: OfficeBranch.CEBU
+        }
+      }
+    }),
+    prisma.salesAgreement.count({
+      where: {
+        client: {
+          officeBranch: OfficeBranch.CALBAYOG
+        }
+      }
+    })
   ]);
 
   const rate = total > 0 ? (since7days / total) * 100 : 0;
 
   return {
-    total, since7days, rate
+    total, since7days, rate, cebuCount, calbayogCount
   }
 }
 

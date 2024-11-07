@@ -1,10 +1,10 @@
-import { Check, ChevronsUpDown, ContactRound, Loader2, Pencil, ThumbsUp } from "lucide-react";
+import { ContactRound, Loader2, NotepadText, Pencil, ThumbsUp } from "lucide-react";
 import { z } from "zod"
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import AnimatedDiv from "@/components/animated/Div";
-import { Form, FormItem, FormControl, FormField, FormMessage, FormLabel } from "@/components/ui/form";
+import { Form, FormItem, FormControl, FormField, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CommonInput from "@/components/common/input";
@@ -16,34 +16,27 @@ import { approveSupplier, ISupplier, IUpdateSupplier, updateSupplier } from "@/a
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import Constants from "@/constants";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { useAuth } from "@/providers/auth-provider";
 
 interface IUpdateSupplierProps {
 	supplierData: ISupplier
 }
 
 const formSchema = z.object({
-	name: z.string().trim().min(1, {
-		message: "Name is required."
-	}),
-	contact: z.string().trim().min(1, {
-		message: "Contact number is required"
-	}).optional(),
-	address: z.string().trim().min(1, {
-		message: "Email is required."
-	}).optional(),
-	emailAddress: z.string().email(),
-	category: z.string().min(1, {
-		message: 'Category is required'
-	}),
+	name: z.string().trim().optional(),
+	contact: z.string().trim().optional(),
+	address: z.string().trim().optional(),
+	emailAddress: z.string().email().optional(),
+	category: z.string().optional(),
 	notes: z.string().optional(),
 });
 
 export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProps) {
 	const queryClient = useQueryClient()
-	const { SupplierCategories } = Constants
+	const { PermissionsCanEdit } = Constants
+	const { session: { user } } = useAuth();
+	const canEdit = user?.permission && PermissionsCanEdit.includes(user.permission);
+
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -109,7 +102,15 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 		<Dialog open={openDialog} onOpenChange={setOpenDialog}>
 			<DialogTrigger>
 				<Button size={'icon'} variant={'ghost'} className="hover:text-primary">
-					<Pencil size={16} />
+					{canEdit ? (
+						<Pencil size={16} />
+					) : (
+						<NotepadText
+							size={16}
+							className="cursor-pointer hover:text-primary"
+						/>
+					)
+					}
 				</Button>
 			</DialogTrigger>
 
@@ -132,19 +133,20 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 						:
 						<div className="flex flex-row gap-x-2 items-center">
 							<p className="text-xs italic text-muted-foreground">Not yet approved</p>
-							<Button
-								size={'sm'}
-								onClick={() => approveMutate(supplierData?.id)}
-								className='gap-1'
-								disabled={approving}
-							>
-								{approving ? (
-									<Loader2 size={16} className='animate-spin' />
-								) : (
-									<ThumbsUp size={16} />
-								)}
-								<span>Approve</span>
-							</Button>
+							{canEdit &&
+								<Button
+									size={'sm'}
+									onClick={() => approveMutate(supplierData?.id)}
+									className='gap-1'
+									disabled={approving}
+								>
+									{approving ? (
+										<Loader2 size={16} className='animate-spin' />
+									) : (
+										<ThumbsUp size={16} />
+									)}
+									<span>Approve</span>
+								</Button>}
 						</div>
 					}
 				</div>
@@ -158,61 +160,15 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 									control={form.control}
 									name="category"
 									render={({ field }) => (
-										<FormItem className="flex flex-col">
-											<FormLabel className="text-[12px]">Select category</FormLabel>
-											<Popover>
-												<PopoverTrigger asChild>
-													<FormControl>
-														<Button
-															variant="outline"
-															role="combobox"
-															className={cn(
-																"w-full justify-between text-[12px]",
-																!field.value && "text-muted-foreground"
-															)}
-														>
-															{field.value
-																? SupplierCategories.find((item) => item === field.value)
-																: "Select category"
-															}
-															<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-														</Button>
-													</FormControl>
-												</PopoverTrigger>
-												<PopoverContent className="w-[550px] p-0">
-													<Command>
-														<CommandInput
-															className="text-[12px]"
-															placeholder="Search supplier..."
-														/>
-														<CommandList className="w-full">
-															<CommandEmpty>No category found.</CommandEmpty>
-															<CommandGroup>
-																{SupplierCategories.map((item, index) => (
-																	<CommandItem
-																		value={item}
-																		key={index}
-																		onSelect={() => {
-																			form.setValue("category", item)
-																		}}
-																		className="text-[12px]"
-																	>
-																		<Check
-																			className={cn(
-																				"mr-2 h-4 w-4",
-																				item === field.value
-																					? "opacity-100"
-																					: "opacity-0"
-																			)}
-																		/>
-																		<span>{item}</span>
-																	</CommandItem>
-																))}
-															</CommandGroup>
-														</CommandList>
-													</Command>
-												</PopoverContent>
-											</Popover>
+										<FormItem>
+											<div className="flex flex-row items-center justify-between gap-x-2">
+												<p className="text-xs w-1/3">Supplier Category:</p>
+												<FormControl className="w-2/3">
+													<CommonInput inputProps={{ ...field }} placeholder="Category" containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
+												</FormControl>
+											</div>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -225,7 +181,9 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Client Name:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -240,7 +198,9 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Contact Number:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="e.g. 0938242.." containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="e.g. 0938242.." containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -255,7 +215,9 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Email:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Email address" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Email address" containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -270,7 +232,9 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Address:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Supplier's Address" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Supplier's Address" containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -289,6 +253,7 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 														{...field}
 														placeholder="Start writing notes..."
 														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
+														disabled={!canEdit}
 													/>
 												</FormControl>
 											</div>
@@ -297,16 +262,17 @@ export default function EditSupplierDialog({ supplierData }: IUpdateSupplierProp
 									)}
 								/>
 								<div className="flex flex-row items-center gap-x-2 justify-end">
-									<Button type="submit" className="text-xs" disabled={updatingSupplier}>
-										{
-											updatingSupplier ?
-												<div className="flex flex-row items-center gap-x-">
-													<p className="text-xs">Updating..</p>
-													<Loader2 className="animate-spin" />
-												</div> :
-												<p className="text-xs">Update</p>
-										}
-									</Button>
+									{canEdit &&
+										<Button type="submit" className="text-xs" disabled={updatingSupplier}>
+											{
+												updatingSupplier ?
+													<div className="flex flex-row items-center gap-x-">
+														<p className="text-xs">Updating..</p>
+														<Loader2 className="animate-spin" />
+													</div> :
+													<p className="text-xs">Update</p>
+											}
+										</Button>}
 								</div>
 							</form>
 						</Form>

@@ -7,7 +7,7 @@ import { useAuth } from "@/providers/auth-provider";
 import Constants from "@/constants";
 import ClientTypeBadge from "@/components/badges/client-type";
 import { IClient } from "@/api/mutations/client.mutation";
-import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, CircleCheck, ListTodo, Mail, MapPinHouse, ReceiptText } from "lucide-react";
+import { ArrowDownAZ, ArrowUpAZ, ArrowUpDown, CircleCheck, ListTodo, Mail, MapPinHouse, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -68,6 +68,22 @@ export const Columns: ColumnDef<IClient>[] = [
 		}
 	},
 	{
+		id: "contactNumber",
+		header: () => <div className="flex items-center gap-x-2">
+			<p>Contact</p>
+			<Phone color="white" size={16} />
+		</div>,
+		cell: ({ row }) => {
+			return (
+				<div className="flex items-center gap-2">
+					<span className="text-xs">
+						{row.original.contactNumber}
+					</span>
+				</div>
+			)
+		}
+	},
+	{
 		id: "typeOfClient",
 		header: "Client type",
 		cell: ({ row }) => (
@@ -100,25 +116,6 @@ export const Columns: ColumnDef<IClient>[] = [
 		}
 	},
 	{
-		id: "transactions",
-		header: () => <div className="flex items-center gap-x-2">
-			<p>Transactions</p>
-			<ReceiptText color="white" size={16} />
-		</div>,
-		cell: ({ row }) => {
-			const transactions = row.original.transactions;
-			return (
-				<div className="flex justify-center items-center ">
-					{transactions && transactions.length > 0 ? (
-						<span className="text-xs text-center">{transactions.length}</span>
-					) : (
-						<span className="italic text-gray-300">No transactions</span>
-					)}
-				</div>
-			);
-		}
-	},
-	{
 		id: "approverId",
 		header: () => <div className="flex items-center gap-x-2">
 			<p>Status</p>
@@ -144,16 +141,12 @@ export const Columns: ColumnDef<IClient>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const { session: { user } } = useAuth();
-			const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
+			const { PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
-					{(user?.permission && PermissionsCanEdit.includes(user.permission)) ? (
-						<EditClientDialog
-							clientData={row.original}
-						/>
-					) :
-						<p className="text-xs text-muted-foreground text-center italic">None</p>
-					}
+					<EditClientDialog
+						clientData={row.original}
+					/>
 					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
 						<DeleteLeadDialog
 							clientId={row.original.id}

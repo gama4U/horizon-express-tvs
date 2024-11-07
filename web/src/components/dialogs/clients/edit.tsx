@@ -1,4 +1,4 @@
-import { Loader2, UserCircle, Pencil, ThumbsUp } from "lucide-react";
+import { Loader2, UserCircle, Pencil, ThumbsUp, NotepadText } from "lucide-react";
 import { z } from "zod"
 import { format } from "date-fns";
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogTrigger } from "@/components/ui/dialog";
@@ -17,6 +17,8 @@ import { approveClient, IClient, IUpdateClient, updateClient } from "@/api/mutat
 import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/providers/auth-provider";
+import Constants from "@/constants";
 
 interface IUpdateClientProps {
 	clientData: IClient
@@ -65,6 +67,10 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 	})
+	const { session: { user } } = useAuth();
+	const { PermissionsCanEdit } = Constants;
+	const canEdit = user?.permission && PermissionsCanEdit.includes(user.permission);
+
 
 	const selectedClientType = form.watch('clientType');
 	// const selectedDepartment = form.watch('department')
@@ -133,7 +139,15 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 		<Dialog open={openDialog} onOpenChange={setOpenDialog}>
 			<DialogTrigger>
 				<Button size={'icon'} variant={'ghost'} className="hover:text-primary">
-					<Pencil size={16} />
+					{canEdit ? (
+						<Pencil size={16} />
+					) : (
+						<NotepadText
+							size={16}
+							className="cursor-pointer hover:text-primary"
+						/>
+					)
+					}
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-[700px] max-h-[520px] overflow-auto" >
@@ -152,24 +166,24 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 						</p>
 					</div>
 					{clientData.approverId ?
-
 						<p className="italic text-primary">Approved by: {clientData.approver?.firstName} {clientData.approver?.lastName}</p>
 						:
 						<div className="flex flex-row gap-x-2 items-center">
 							<p className="text-xs italic text-muted-foreground">Not yet approved</p>
-							<Button
-								size={'sm'}
-								onClick={() => approveMutate(clientData?.id)}
-								className='gap-1'
-								disabled={approving}
-							>
-								{approving ? (
-									<Loader2 size={16} className='animate-spin' />
-								) : (
-									<ThumbsUp size={16} />
-								)}
-								<span>Approve</span>
-							</Button>
+							{canEdit &&
+								<Button
+									size={'sm'}
+									onClick={() => approveMutate(clientData?.id)}
+									className='gap-1'
+									disabled={approving}
+								>
+									{approving ? (
+										<Loader2 size={16} className='animate-spin' />
+									) : (
+										<ThumbsUp size={16} />
+									)}
+									<span>Approve</span>
+								</Button>}
 						</div>
 					}
 				</div>
@@ -183,7 +197,9 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Type:</FormLabel>
-											<Select onValueChange={field.onChange} value={field.value}>
+											<Select onValueChange={field.onChange} value={field.value}
+												disabled={!canEdit}
+											>
 												<FormControl>
 													<SelectTrigger className="bg-slate-100 border-none text-[12px]">
 														<SelectValue placeholder="Select a client type" />
@@ -214,7 +230,9 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 												<div className="flex flex-row items-center justify-between gap-x-2">
 													<p className="text-xs w-1/3">Department:</p>
 													<FormControl className="w-2/3">
-														<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }} />
+														<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }}
+															disabled={!canEdit}
+														/>
 													</FormControl>
 												</div>
 												<FormMessage />
@@ -230,7 +248,9 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Client Name:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="Client name" containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -245,7 +265,9 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Contact Number:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="e.g. 0938242.." containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="e.g. 0938242.." containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -260,7 +282,9 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 											<div className="flex flex-row items-center justify-between gap-x-2">
 												<p className="text-xs w-1/3">Email address:</p>
 												<FormControl className="w-2/3">
-													<CommonInput inputProps={{ ...field }} placeholder="john@sampleemail.com" containerProps={{ className: 'text-xs' }} />
+													<CommonInput inputProps={{ ...field }} placeholder="john@sampleemail.com" containerProps={{ className: 'text-xs' }}
+														disabled={!canEdit}
+													/>
 												</FormControl>
 											</div>
 											<FormMessage />
@@ -279,6 +303,7 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 														{...field}
 														placeholder="Start writing notes..."
 														className="w-full bg-slate-100 border-none text-[12px] resize-none focus-visible:ring-0"
+														disabled={!canEdit}
 													/>
 												</FormControl>
 											</div>
@@ -287,16 +312,17 @@ export default function EditClientDialog({ clientData }: IUpdateClientProps) {
 									)}
 								/>
 								<div className="flex flex-row items-center gap-x-2 justify-end">
-									<Button type="submit" className="text-xs" disabled={updatingClient}>
-										{
-											updatingClient ?
-												<div className="flex flex-row items-center gap-x-">
-													<p className="text-xs">Updating..</p>
-													<Loader2 className="animate-spin" />
-												</div> :
-												<p className="text-xs">Update</p>
-										}
-									</Button>
+									{canEdit &&
+										<Button type="submit" className="text-xs" disabled={updatingClient}>
+											{
+												updatingClient ?
+													<div className="flex flex-row items-center gap-x-">
+														<p className="text-xs">Updating..</p>
+														<Loader2 className="animate-spin" />
+													</div> :
+													<p className="text-xs">Update</p>
+											}
+										</Button>}
 								</div>
 							</form>
 						</Form>

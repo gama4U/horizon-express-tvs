@@ -3,7 +3,7 @@ import { OfficeBranch } from "@prisma/client";
 export interface ICreatePurchaseRequest {
   creatorId: string;
   supplierId: string;
-  salesAgreementId: string;
+  salesAgreementId?: string;
   disbursementType: string;
   classification: string;
   classificationType: string;

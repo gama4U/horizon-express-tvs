@@ -13,24 +13,47 @@ interface DashboardCardProps {
 	shortLabel?: string;
 	showRate?: boolean;
 	rate?: number;
+	calbayogCount?: number
+	cebuCount?: number
 }
 
-export const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, icon: Icon, showRate, rate, shortLabel }) => {
+
+export const DashboardCard: React.FC<DashboardCardProps> = ({
+	title,
+	value,
+	icon: Icon,
+	showRate,
+	rate,
+	shortLabel,
+	cebuCount,
+	calbayogCount
+}) => {
 	return (
-		<Card className="bg-[#FFFFFF99] rounded-xl shadow-md p-4 flex flex-col justify-start items-start h-40 w-56">
+		<Card className="bg-[#FFFFFF99] rounded-xl shadow-md px-4 py-4 flex flex-col justify-start items-start w-full sm:w-auto max-w-xs md:max-w-[220px] lg:max-w-[240px] xl:max-w-[260px]">
 			<CardTitle>
-				<div className="flex items-center my-2">
-					{Icon && <Icon className="text-2xl mr-2" />}
-					<h2 className="text-normal font-normal">{title}</h2>
+				<div className="flex items-center mb-2">
+					{Icon && <Icon className="text-xl mr-2" />}
+					<h2 className="text-sm sm:text-base font-medium">{title}</h2>
 				</div>
 			</CardTitle>
-			<CardContent className="flex justify-between items-center flex-grow w-full flex-col">
-				<CountUp end={value} className="text-4xl font-semibold" />
+			<CardContent className="flex flex-col items-center justify-center w-full space-y-2 flex-grow">
+				<CountUp end={value} className="text-2xl sm:text-3xl font-semibold" />
+
+				<div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full flex-wrap">
+					<div className="flex items-center gap-x-2">
+						<p className="text-xs font-medium text-primary">Cebu</p>
+						<p className="text-sm font-medium text-primary">{cebuCount ?? 0}</p>
+					</div>
+					<div className="flex items-center gap-x-2">
+						<p className="text-xs font-medium text-secondary">Calbayog</p>
+						<p className="text-sm font-medium text-secondary">{calbayogCount ?? 0}</p>
+					</div>
+				</div>
 
 				{showRate && (
-					<div className="mt-2 flex items-center gap-x-3 w-full">
-						<TrendingUp size={16} color={"#59A86F"} />
-						<div className="text-[#59A86F] text-md font-semibold">{rate}%</div>
+					<div className="flex items-center justify-end gap-x-2 w-full mt-2">
+						<TrendingUp size={16} className="text-primary" />
+						<div className="text-primary text-xs font-semibold">{rate}%</div>
 						<p className="text-[10px] font-light">{shortLabel}</p>
 					</div>
 				)}
@@ -38,7 +61,6 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({ title, value, icon
 		</Card>
 	);
 };
-
 export const RecentActivityCard: React.FC<{ item: RecentActivity }> = ({ item }) => {
 	const navigate = useNavigate();
 

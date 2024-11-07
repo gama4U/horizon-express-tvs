@@ -30,6 +30,7 @@ exports.findPurchaseRequestById = findPurchaseRequestById;
 exports.deletePurchaseRequestById = deletePurchaseRequestById;
 exports.fetchPurchaseRequestSummary = fetchPurchaseRequestSummary;
 exports.updatePurchaseRequestOrderApprover = updatePurchaseRequestOrderApprover;
+const client_1 = require("@prisma/client");
 const moment_1 = __importDefault(require("moment"));
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
 const generate_number_1 = require("../utils/generate-number");
@@ -183,7 +184,7 @@ function deletePurchaseRequestById(id) {
 function fetchPurchaseRequestSummary() {
     return __awaiter(this, void 0, void 0, function* () {
         const oneWeekAgo = (0, moment_1.default)().subtract(7, 'days').startOf('day').toDate();
-        const [total, since7days] = yield Promise.all([
+        const [total, since7days, cebuCount, calbayogCount] = yield Promise.all([
             db_utils_1.default.purchaseRequestOrder.count(),
             db_utils_1.default.purchaseRequestOrder.count({
                 where: {
@@ -192,10 +193,24 @@ function fetchPurchaseRequestSummary() {
                     },
                 },
             }),
+            db_utils_1.default.purchaseRequestOrder.count({
+                where: {
+                    supplier: {
+                        officeBranch: client_1.OfficeBranch.CEBU
+                    }
+                }
+            }),
+            db_utils_1.default.purchaseRequestOrder.count({
+                where: {
+                    supplier: {
+                        officeBranch: client_1.OfficeBranch.CALBAYOG
+                    }
+                }
+            }),
         ]);
         const rate = total > 0 ? (since7days / total) * 100 : 0;
         return {
-            total, since7days, rate
+            total, since7days, rate, cebuCount, calbayogCount
         };
     });
 }

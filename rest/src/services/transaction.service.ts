@@ -244,8 +244,23 @@ export async function fetchTransactions({ skip, take, search, travel, accommodat
 export async function fetchTransactionSummary(startDate: Date, endDate: Date) {
   const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
 
-  const [total, since7days, transactions] = await Promise.all([
+  const [total, cebuCount, calbayogCount, since7days, transactions] = await Promise.all([
     prisma.transaction.count(),
+    prisma.transaction.count({
+      where: {
+        client: {
+          officeBranch: OfficeBranch.CEBU,
+        },
+      },
+    }),
+
+    prisma.transaction.count({
+      where: {
+        client: {
+          officeBranch: OfficeBranch.CALBAYOG,
+        },
+      },
+    }),
     prisma.transaction.count({
       where: {
         createdAt: {
@@ -302,7 +317,7 @@ export async function fetchTransactionSummary(startDate: Date, endDate: Date) {
 
 
 
-  return { since7days, total, enrichedTransactions, totalVoucherCounts };
+  return { since7days, total, enrichedTransactions, totalVoucherCounts, cebuCount, calbayogCount };
 }
 
 

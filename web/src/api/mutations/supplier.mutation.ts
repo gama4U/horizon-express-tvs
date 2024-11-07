@@ -25,7 +25,7 @@ export interface ICreateSupplier {
   address?: string;
   contact?: string;
   emailAddress?: string;
-  category: string;
+  category?: string;
   notes?: string;
   officeBranch: OfficeBranch;
   creatorId: string;
@@ -36,6 +36,7 @@ export interface IUpdateSupplier {
   name?: string
   address?: string
   contact?: string
+  category?: string | null;
   emailAddress?: string;
   notes?: string | null;
   officeBranch?: OfficeBranch

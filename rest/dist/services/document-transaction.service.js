@@ -29,9 +29,11 @@ exports.transmitDocument = transmitDocument;
 exports.updateDocumentTransaction = updateDocumentTransaction;
 exports.fetchDocumentTransactions = fetchDocumentTransactions;
 exports.findDocumentTransactionById = findDocumentTransactionById;
+exports.fetchDocumentTransactionsSummary = fetchDocumentTransactionsSummary;
 const client_1 = require("@prisma/client");
 const db_utils_1 = __importDefault(require("../utils/db.utils"));
 const generate_number_1 = require("../utils/generate-number");
+const moment_1 = __importDefault(require("moment"));
 function createDocumentTransaction(data, officeBranch) {
     return __awaiter(this, void 0, void 0, function* () {
         const lastDts = yield db_utils_1.default.documentTransaction.findFirst({
@@ -174,5 +176,38 @@ function findDocumentTransactionById(id) {
                 }
             }
         });
+    });
+}
+function fetchDocumentTransactionsSummary() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const oneWeekAgo = (0, moment_1.default)().subtract(7, 'days').startOf('day').toDate();
+        const [total, since7days, cebuCount, calbayogCount] = yield Promise.all([
+            db_utils_1.default.documentTransaction.count(),
+            db_utils_1.default.documentTransaction.count({
+                where: {
+                    createdAt: {
+                        gte: oneWeekAgo,
+                    },
+                },
+            }),
+            db_utils_1.default.documentTransaction.count({
+                where: {
+                    client: {
+                        officeBranch: client_1.OfficeBranch.CEBU
+                    }
+                }
+            }),
+            db_utils_1.default.documentTransaction.count({
+                where: {
+                    client: {
+                        officeBranch: client_1.OfficeBranch.CALBAYOG
+                    }
+                }
+            }),
+        ]);
+        const rate = total > 0 ? (since7days / total) * 100 : 0;
+        return {
+            total, since7days, rate, cebuCount, calbayogCount
+        };
     });
 }

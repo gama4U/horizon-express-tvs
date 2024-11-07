@@ -107,7 +107,7 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		</div>,
 		cell: ({ row }) => {
 			return (
-				<div className="flex justify-center items-center ">
+				<div className="flex ">
 					<span className="text-xs">
 						{row.original.officeBranch}
 					</span>
@@ -122,7 +122,7 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		</div>,
 		cell: ({ row }) => {
 			return (
-				<div className="flex justify-center items-center gap-2">
+				<div className="flex items-center gap-2">
 					<span className="text-xs">
 						{row.original.approverId ?
 							<Badge variant="outline" className="gap-2 font-normal border-white p-2 text-white bg-primary">Approved <CircleCheck size={'14px'} /></Badge> :
@@ -141,16 +141,12 @@ export const Columns: ColumnDef<ISupplier>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const { session: { user } } = useAuth();
-			const { PermissionsCanEdit, PermissionsCanDelete } = Constants;
+			const { PermissionsCanDelete } = Constants;
 			return (
 				<div className="flex items-center justify-start gap-4">
-					{(user?.permission && PermissionsCanEdit.includes(user.permission)) ? (
-						<EditSupplierDialog
-							supplierData={row.original}
-						/>
-					) :
-						<p className="text-xs text-muted-foreground text-center italic">None</p>
-					}
+					<EditSupplierDialog
+						supplierData={row.original}
+					/>
 					{(user?.permission && PermissionsCanDelete.includes(user.permission)) && (
 						<DeleteSupplierDialog
 							supplierId={row.original.id}

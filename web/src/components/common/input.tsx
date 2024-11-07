@@ -15,10 +15,11 @@ interface Props {
 	type?: HTMLInputTypeAttribute
 	max?: number
 	searchBar?: boolean
+	disabled?: boolean
 }
 
 const CommonInput = forwardRef<HTMLInputElement, Props>((props, ref) => {
-	const { prefix, postfix, searchBar, inputProps, containerProps, onChange, defaultValue, placeholder, type, max } = props;
+	const { prefix, postfix, searchBar, inputProps, containerProps, onChange, defaultValue, placeholder, type, max, disabled } = props;
 	const [showPassword, setShowPassword] = useState(false)
 	return (
 		<div
@@ -29,6 +30,7 @@ const CommonInput = forwardRef<HTMLInputElement, Props>((props, ref) => {
 			<Input
 				max={max}
 				ref={ref}
+				disabled={disabled}
 				onChange={onChange}
 				defaultValue={defaultValue}
 				placeholder={placeholder}

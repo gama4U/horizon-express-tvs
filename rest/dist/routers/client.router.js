@@ -101,4 +101,23 @@ clientRouter.patch('/:id/approver', (0, authorize_middleware_1.authorize)([clien
         });
     }
 }));
+clientRouter.post('/summary', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { startMonth, endMonth } = req.body;
+    if (startMonth < 1 || startMonth > 12 ||
+        endMonth < 1 || endMonth > 12 ||
+        (startMonth > endMonth && !(startMonth === 12 && endMonth === 1))) {
+        return res.status(400).json({ message: 'Invalid month range' });
+    }
+    try {
+        const data = yield (0, client_service_1.fetchClientSummary)(startMonth, endMonth);
+        if (!data || data.length === 0) {
+            return res.status(404).json({ message: 'No clients data found for the selected range' });
+        }
+        return res.status(200).json(data);
+    }
+    catch (error) {
+        console.error('Error fetching client summary:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}));
 exports.default = clientRouter;

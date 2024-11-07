@@ -10,7 +10,7 @@ export const getSuppliersSchema = z.object({
     }).optional(),
     search: z.string().optional(),
     branch: z.string().optional(),
-    category: z.string().optional(),
+    // category: z.string().optional(),
     isApproved: z
       .string()
       .transform(val => val === 'true')

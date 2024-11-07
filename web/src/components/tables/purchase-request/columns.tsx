@@ -103,6 +103,7 @@ export const Columns: ColumnDef<IPurchaseRequestOrder>[] = [
 
   {
     id: "actions",
+    header: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
       const { session: { user } } = useAuth();

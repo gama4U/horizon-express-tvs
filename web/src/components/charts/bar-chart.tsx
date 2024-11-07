@@ -102,7 +102,7 @@ export function TransactionChart({
 		<Card className="border-none shadow-none bg-[#FFFFFF99]">
 			<CardHeader className="flex flex-col items-stretch space-y-0  p-0 sm:flex-row">
 				<div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-					<CardTitle>Transaction Voucher Chart</CardTitle>
+					<CardTitle>Transaction Voucher Summary</CardTitle>
 				</div>
 				<div className="flex space-x-2 p-2">
 					{["travel", "accommodation", "tour", "transport"].map((key) => {

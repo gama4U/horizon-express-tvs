@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createClient, deleteClient, fetchClients, updateClient, updateClientApprover } from '../services/client.service';
+import { createClient, deleteClient, fetchClients, fetchClientSummary, updateClient, updateClientApprover } from '../services/client.service';
 import { validate } from '../middlewares/validate.middleware';
 import { getClientsSchema } from '../schemas/client.schema';
 import { ClientType, UserType } from '@prisma/client';
@@ -105,7 +105,29 @@ clientRouter.patch('/:id/approver', authorize([UserType.ADMIN]), async (req: Req
   }
 });
 
+clientRouter.post('/summary', async (req: Request, res: Response) => {
+  const { startMonth, endMonth } = req.body;
 
+  if (
+    startMonth < 1 || startMonth > 12 ||
+    endMonth < 1 || endMonth > 12 ||
+    (startMonth > endMonth && !(startMonth === 12 && endMonth === 1))
+  ) {
+    return res.status(400).json({ message: 'Invalid month range' });
+  }
 
+  try {
+    const data = await fetchClientSummary(startMonth, endMonth);
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ message: 'No clients data found for the selected range' });
+    }
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching client summary:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 export default clientRouter;

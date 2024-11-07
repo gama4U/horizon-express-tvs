@@ -67,6 +67,16 @@ const SideBar = React.memo(() => {
 
 	const handleRedirect = (link: SidebarItemsType["link"]) => navigate(link);
 
+	const filteredSidebarItems = user?.userType
+		? sidebarItemsMap[user.userType].filter((item: SidebarItemsType) => {
+			if (item.label === "Memorandums") {
+				return profile?.permission !== PermissionType.SUPERVISOR &&
+					profile?.permission !== PermissionType.RESERVATION;
+			}
+			return true;
+		})
+		: [];
+
 	return (
 		<motion.nav
 			variants={Constants.ContainerVariants}
@@ -141,13 +151,13 @@ const SideBar = React.memo(() => {
 				</div>
 
 				<div className="flex flex-col mt-2">
-					{user && sidebarItemsMap[user.userType].map((item: SidebarItemsType, index: number) => {
+					{user && filteredSidebarItems.map((item: SidebarItemsType, index: number) => {
 						const isSelected = checkRoute(item.link);
 						return (
-							<AnimatedDiv className="" animationType="Bubble" delay={0} key={index}>
+							<AnimatedDiv className="" animationType="Bubble" delay={0} key={index} scale={1.02}>
 								<div
 									onClick={() => handleRedirect(item.link)}
-									className={`my-[2px] cursor-pointer items-center py-2 hover:bg-[#F79151]  rounded-xl ${isSelected ? "bg-primary" : ""} ${isOpen ? "px-2 flex flex-row" : "px-2"}`}
+									className={`my-[2px] cursor-pointer items-center py-2 hover:bg-orange-300 rounded-xl ${isSelected ? "bg-primary" : ""} ${isOpen ? "px-2 flex flex-row" : "px-2"}`}
 								>
 									<SidebarIcons icon={item.icon} isSelected={isSelected} />
 									{isOpen && (

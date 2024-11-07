@@ -28,7 +28,7 @@ const EmployeeSidebarItems: Array<SidebarItemsType> = [
   { label: "Purchase Requests", icon: "Sales", link: "/employee/purchase-requests" },
   { label: "Clients", icon: "Leads", link: "/employee/clients" },
   { label: "Suppliers", icon: "Suppliers", link: "/employee/suppliers" },
-  { label: "Memorandums", icon: "Memorandum", link: "/employee/memorandum" },
+  // { label: "Memorandums", icon: "Memorandum", link: "/employee/memorandum" },
   { label: "Document Transactions", icon: "Documents", link: "/employee/document-transactions" },
   { label: "Profile", icon: "Profile", link: "/employee/profile" },
 ]
@@ -44,6 +44,7 @@ const SupplierCategories = [
   'Personal Protective Equipment (PPE)',
   'Laboratory Equipment',
   'Sterilization Products',
+  'Credit Card',
 ]
 
 const ContainerVariants = {
@@ -84,7 +85,7 @@ const UserRedirectRoute: Record<UserType, string> = {
 }
 
 const PermissionsCanDelete = [PermissionType.SUPER_ADMIN];
-const PermissionsCanEdit = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING];
+const PermissionsCanEdit = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING, PermissionType.SUPERVISOR];
 const PermissionsCanApprove = [PermissionType.SUPER_ADMIN, PermissionType.ACCOUNTING, PermissionType.SUPERVISOR];
 
 const GovernmentDepartments = ['Security', 'Education'];

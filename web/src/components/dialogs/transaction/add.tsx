@@ -92,6 +92,10 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 	const debouncedSearch = useDebounce(search, 500);
 	const [selectedClient, setSelectedClient] = useState<IClient | null>(null);
 	const { session, branch } = useAuth()
+	const { PermissionsCanEdit } = Constants;
+	const canEdit = session?.user?.permission && PermissionsCanEdit.includes(session?.user?.permission);
+
+
 	const isApproved = true
 
 	const { data, isLoading } = useQuery({
@@ -192,15 +196,22 @@ export default function CreateTransactionDialog({ openDialog, setOpenDialog, suc
 				<div className="space-y-8 p-4">
 					{selection.step === 0 &&
 						<div className="flex gap-x-2 justify-between w-full">
-							{cardOptions.map((card) => (
+
+							{cardOptions.map((card, index) => (
 								<AnimatedDiv
 									slideEntrancePoint={-20}
 									animationType="CardSpin"
 									duration={0.5}
 									key={card.key}
-									className={`relative rounded-lg p-4 border-[1px] my-2 shadow-lg cursor-pointer hover:bg-green-100 flex flex-col justify-between w-[50%] h-[200px] ${selectedCard === card.key ? 'border-green-500 bg-green-100' : 'border-dotted'
-										}`}
-									onClick={() => handleSelectCard(card.key)}
+									className={`relative rounded-lg p-4 border-[1px] my-2 shadow-lg flex flex-col justify-between w-[50%] h-[200px]
+									${selectedCard === card.key ? 'border-green-500 bg-green-100' : 'border-dotted'}
+									${index === 0 && !canEdit ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-green-100'}
+									`}
+									onClick={() => {
+										if (index !== 0 || canEdit) {
+											handleSelectCard(card.key);
+										}
+									}}
 								>
 									{selectedCard === card.key && (
 										<div className="absolute top-2 right-2 text-green-500">

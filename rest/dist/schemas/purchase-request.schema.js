@@ -7,9 +7,7 @@ exports.createPurchaseRequestSchema = zod_1.z.object({
         supplierId: zod_1.z.string().min(1, {
             message: 'Supplier id is required'
         }),
-        salesAgreementId: zod_1.z.string().min(1, {
-            message: 'Sales agreement id is required'
-        }),
+        salesAgreementId: zod_1.z.string().optional(),
         disbursementType: zod_1.z.string().min(1, {
             message: 'Disbursement type is required'
         }),
@@ -27,9 +25,7 @@ exports.updatePurchaseRequestSchema = zod_1.z.object({
         supplierId: zod_1.z.string().min(1, {
             message: 'Supplier id is required'
         }),
-        salesAgreementId: zod_1.z.string().min(1, {
-            message: 'Sales agreement id is required'
-        }),
+        salesAgreementId: zod_1.z.string().nullable(),
         disbursementType: zod_1.z.string().min(1, {
             message: 'Disbursement type is required'
         }),
