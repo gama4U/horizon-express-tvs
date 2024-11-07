@@ -78,7 +78,7 @@ export const Columns: ColumnDef<ISalesAgreement>[] = [
       const creator = row.original.creator;
       return (
         <span className="capitalize">
-          {`${creator?.firstName} ${creator?.firstName}`}
+          {`${creator?.firstName} ${creator?.lastName}`}
         </span>
       )
     }
