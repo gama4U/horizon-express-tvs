@@ -170,6 +170,7 @@ export default function AddSignatureDialog({ action }: Props) {
                 className="relative w-full h-[200px] border border-slate-300 bg-slate-100 flex justify-center items-center rounded-sm"
               >
                 <img 
+                  className="h-full w-full object-cover"
                   src={URL.createObjectURL(signatureFile)}
                 />
                 <Button
@@ -219,7 +220,7 @@ export default function AddSignatureDialog({ action }: Props) {
           <Button
             size={"sm"}
             type="submit"
-            className="flex gap-2 mt-4 w-[80px]"
+            className="flex gap-2 mt-4 w-[80px] cursor-pointer"
             onClick={handleSave}
             disabled={uploading || updating}
           >
