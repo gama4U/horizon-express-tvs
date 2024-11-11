@@ -1,6 +1,6 @@
 export interface ICreatePurchaseRequestItem {
   purchaseRequestOrderId: string;
-  particulars: string;
+  particulars: string[];
   quantity: number;
   unitPrice: number;
   total: number;
@@ -16,7 +16,7 @@ export interface IUpdatePurchaseRequest {
 
 export interface IUpdatePurchaseRequestItem {
   id: string;
-  particulars: string;
+  particulars: string[];
   quantity: number;
   unitPrice: number;
   total: number;

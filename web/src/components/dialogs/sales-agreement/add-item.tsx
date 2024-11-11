@@ -11,11 +11,12 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { addSalesAgreementItem } from "../../../api/mutations/sales-agreement-item.mutation";
 import { IAddSalesAgreementItem } from "../../../interfaces/sales-agreement-item.interface";
+import { MultiInput } from "@/components/common/multi-input";
 
 const formSchema = z.object({
-  particulars: z.string().min(1, {
-    message: 'Particulars is required'
-  }),
+  particulars: z.array(z.string().min(1, {
+    message: 'Particular item should not be empty'
+  })),
   quantity: z.string().refine(value => {
     const numberValue = Number(value);
     return !isNaN(numberValue) && numberValue > 0;
@@ -45,7 +46,7 @@ export default function AddSalesAgreementItemDialog({ salesAgreementId }: Props)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      particulars: '',
+      particulars: [],
     }
   });
 
@@ -111,7 +112,7 @@ export default function AddSalesAgreementItemDialog({ salesAgreementId }: Props)
                   <FormItem>
                     <FormLabel>Particulars:</FormLabel>
                     <FormControl>
-                      <CommonInput inputProps={{ ...field }} placeholder="Particulars" />
+                      <MultiInput { ...field } placeholder="Enter particulars" />
                     </FormControl>
                     <FormMessage className="text-[10px]" />
                   </FormItem>

@@ -4,9 +4,9 @@ exports.updateSalesAgreementItemSchema = exports.createSalesAgreementItemSchema 
 const zod_1 = require("zod");
 exports.createSalesAgreementItemSchema = zod_1.z.object({
     body: zod_1.z.object({
-        particulars: zod_1.z.string().min(1, {
-            message: 'Particulars is required'
-        }),
+        particulars: zod_1.z.array(zod_1.z.string().min(1, {
+            message: 'Particular item should not be empty'
+        })),
         quantity: zod_1.z.number().refine(value => value > 0, {
             message: 'Invalid quantity'
         }),
@@ -21,9 +21,9 @@ exports.createSalesAgreementItemSchema = zod_1.z.object({
 });
 exports.updateSalesAgreementItemSchema = zod_1.z.object({
     body: zod_1.z.object({
-        particulars: zod_1.z.string().min(1, {
-            message: 'Particulars is required'
-        }),
+        particulars: zod_1.z.array(zod_1.z.string().min(1, {
+            message: 'Particular item should not be empty'
+        })),
         quantity: zod_1.z.number().refine(value => value > 0, {
             message: 'Invalid quantity'
         }),

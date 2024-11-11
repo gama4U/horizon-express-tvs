@@ -82,7 +82,7 @@ model SalesAgreement {
 model SalesAgreementItem {
   id               String         @id @default(cuid())
   salesAgreementId String
-  particulars      String?
+  particulars      String[]
   quantity         Int?
   unitPrice        Float?
   total            Float?
@@ -175,7 +175,7 @@ model Supplier {
 model PurchaseRequestOrderItem {
   id                     String               @id @default(cuid())
   purchaseRequestOrderId String
-  particulars            String?
+  particulars            String[]
   quantity               Int?
   unitPrice              Float?
   total                  Float?

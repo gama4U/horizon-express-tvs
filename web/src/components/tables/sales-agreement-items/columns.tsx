@@ -10,9 +10,13 @@ export const Columns: ColumnDef<ISalesAgreementItem>[] = [
     id: "particulars",
     header: "Particulars",
     cell: ({ row }) => (
-      <span className="capitalize">
-        {row.original.particulars}
-      </span>
+      <ul className="list-disc ml-4">
+        {row.original.particulars.map(item => (
+          <li>
+            {item}
+          </li>
+        ))}
+      </ul> 
     ),
   },
   {

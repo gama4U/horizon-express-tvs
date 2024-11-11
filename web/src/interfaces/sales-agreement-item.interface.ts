@@ -3,7 +3,7 @@ import { ISalesAgreement } from "./sales-agreement.interface";
 export interface ISalesAgreementItem {
   id: string;
   salesAgreementId: string;
-  particulars: string;
+  particulars: string[];
   quantity: number;
   unitPrice: number;
   total: number;
@@ -15,7 +15,7 @@ export interface ISalesAgreementItem {
 
 export interface IAddSalesAgreementItem {
   salesAgreementId: string;
-  particulars: string;
+  particulars: string[];
   quantity: number;
   unitPrice: number;
   total: number;
@@ -24,7 +24,7 @@ export interface IAddSalesAgreementItem {
 
 export interface IUpdateSalesAgreementItem {
   salesAgreementItemId: string;
-  particulars: string;
+  particulars: string[];
   quantity: number;
   unitPrice: number;
   total: number;

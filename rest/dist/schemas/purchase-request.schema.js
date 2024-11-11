@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findPurchaseRequestsSchema = exports.updatePurchaseRequestSchema = exports.createPurchaseRequestSchema = void 0;
+const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
 exports.createPurchaseRequestSchema = zod_1.z.object({
     body: zod_1.z.object({
@@ -17,6 +18,7 @@ exports.createPurchaseRequestSchema = zod_1.z.object({
         classificationType: zod_1.z.string().min(1, {
             message: 'Classification type is required'
         }),
+        currency: zod_1.z.enum([client_1.Currency.PHP, client_1.Currency.USD]),
         other: zod_1.z.string().optional(),
     })
 });
