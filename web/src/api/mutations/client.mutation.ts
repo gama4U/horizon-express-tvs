@@ -41,6 +41,7 @@ export interface IClient {
   creatorId: string;
   approverId: string;
   contactNumber?: string
+  contactPerson?: string
   documents?: string[]
   department?: string
   officeBranch?: OfficeBranch

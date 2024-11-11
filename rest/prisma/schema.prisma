@@ -103,6 +103,7 @@ model PurchaseRequestOrder {
   classificationType String?
   other              String?
   approverId         String?
+  currency           Currency?
   purchaseOrderItems PurchaseRequestOrderItem[]
   transaction        Transaction?
   supplierId         String
@@ -137,6 +138,7 @@ model Client {
   contactNumber        String
   documents            String[]
   clientType           ClientType
+  contactPerson        String?
   department           String?
   notes                String?
   approverId           String?
@@ -313,11 +315,11 @@ model TransportItinerary {
 }
 
 model Package {
-  id             String                @id @default(cuid())
+  id             String                 @id @default(cuid())
   creatorId      String
   approverId     String?
   packageNumber  String
-  sequenceNumber Int                   @unique @default(autoincrement())
+  sequenceNumber Int                    @unique @default(autoincrement())
   name           String
   inclusions     String[]
   exclusions     String[]
@@ -325,10 +327,10 @@ model Package {
   officeBranch   OfficeBranch
   accommodations PackageAccommodation[]
   airfares       PackageAirfare[]
-  creator        User                  @relation("CreatedPackages", fields: [creatorId], references: [id])
-  approver       User?                 @relation("ApprovedPackages", fields: [approverId], references: [id])
-  createdAt      DateTime?             @default(now())
-  updatedAt      DateTime?             @updatedAt
+  creator        User                   @relation("CreatedPackages", fields: [creatorId], references: [id])
+  approver       User?                  @relation("ApprovedPackages", fields: [approverId], references: [id])
+  createdAt      DateTime?              @default(now())
+  updatedAt      DateTime?              @updatedAt
 }
 
 model PackageAccommodation {

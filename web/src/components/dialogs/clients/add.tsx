@@ -46,6 +46,7 @@ const formSchema = z.object({
 	contactNumber: z.string().trim().min(1, {
 		message: "Contact number is required"
 	}),
+	contactPerson: z.string().optional(),
 	email: z.string().trim().min(1, {
 		message: "Email is required."
 	}),
@@ -153,22 +154,6 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 										</FormItem>
 									)}
 								/>
-								{(selectedClientType === TypeOfClient.CORPORATE || selectedClientType === TypeOfClient.GOVERNMENT) && (
-									<FormField
-										control={form.control}
-										name="department"
-										render={({ field }) => (
-											<FormItem>
-												<div className="flex flex-row items-center justify-between gap-x-2">
-													<p className="text-xs w-1/3">Department:</p>
-													<FormControl className="w-2/3">
-														<CommonInput inputProps={{ ...field }} placeholder="e.g. HR, Finance" containerProps={{ className: 'text-xs' }} />
-													</FormControl>
-												</div>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>)}
 								<FormField
 									control={form.control}
 									name="name"
@@ -184,6 +169,40 @@ export default function CreateClientDialog({ openDialog, setOpenDialog }: ICreat
 										</FormItem>
 									)}
 								/>
+								{(selectedClientType === TypeOfClient.CORPORATE || selectedClientType === TypeOfClient.GOVERNMENT) && (
+									<>
+										<FormField
+											control={form.control}
+											name="department"
+											render={({ field }) => (
+												<FormItem>
+													<div className="flex flex-row items-center justify-between gap-x-2">
+														<p className="text-xs w-1/3">Department:</p>
+														<FormControl className="w-2/3">
+															<CommonInput inputProps={{ ...field }} placeholder="e.g. HR, Finance" containerProps={{ className: 'text-xs' }} />
+														</FormControl>
+													</div>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="contactPerson"
+											render={({ field }) => (
+												<FormItem>
+													<div className="flex flex-row items-center justify-between gap-x-2">
+														<p className="text-xs w-1/3">Contact Person:</p>
+														<FormControl className="w-2/3">
+															<CommonInput inputProps={{ ...field }} placeholder="Contact Person" containerProps={{ className: 'text-xs' }} />
+														</FormControl>
+													</div>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</>
+								)}
 								<FormField
 									control={form.control}
 									name="contactNumber"

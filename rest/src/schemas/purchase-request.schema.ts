@@ -1,3 +1,4 @@
+import { Currency } from "@prisma/client";
 import { z } from "zod";
 
 export const createPurchaseRequestSchema = z.object({
@@ -15,6 +16,7 @@ export const createPurchaseRequestSchema = z.object({
     classificationType: z.string().min(1, {
       message: 'Classification type is required'
     }),
+    currency: z.enum([Currency.PHP, Currency.USD]),
     other: z.string().optional(),
   })
 });

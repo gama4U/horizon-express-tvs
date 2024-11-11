@@ -22,6 +22,7 @@ import { TypeOfClient } from "@/interfaces/sales-agreement.interface";
 import { fetchSalesAgreements } from "@/api/queries/sales-agreements.queries";
 import { useAuth } from "@/providers/auth-provider";
 import { OfficeBranch } from "@/interfaces/user.interface";
+import { Currency } from "@/interfaces/sales-agreement-item.interface";
 
 const formSchema = z.object({
   supplierId: z.string().min(1, {
@@ -37,6 +38,7 @@ const formSchema = z.object({
   classificationType: z.string().min(1, {
     message: 'Classification type is required'
   }),
+  currency: z.enum([Currency.PHP, Currency.USD]),
   other: z.string().optional(),
 })
 
@@ -46,6 +48,11 @@ const clientTypesMap: Record<TypeOfClient, string> = {
   GOVERNMENT: 'Government',
   INDIVIDUAL: 'Individual',
   WALK_IN: 'Walk in',
+}
+
+const currencyMap: Record<Currency, string> = {
+  PHP: 'Philippine Peso (PHP)',
+  USD: 'US Dollar (USD)'
 }
 
 interface Props {
@@ -378,6 +385,35 @@ export default function EditPurchaseRequestDialog({ data }: Props) {
                   )}
                 />
               </div>
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Currency:</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-100 border-none text-[12px]">
+                          <SelectValue placeholder="Select a currency" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(currencyMap).map(([value, label], index) => (
+                          <SelectItem
+                            key={index}
+                            value={value}
+                            className="text-[12px]"
+                          >
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-[10px]" />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="other"

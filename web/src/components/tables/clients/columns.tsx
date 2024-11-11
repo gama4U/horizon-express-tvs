@@ -77,7 +77,7 @@ export const Columns: ColumnDef<IClient>[] = [
 			return (
 				<div className="flex items-center gap-2">
 					<span className="text-xs">
-						{row.original.contactNumber}
+						{row.original.contactNumber}  {row.original.contactPerson ? `- ${row.original.contactPerson}` : ""}
 					</span>
 				</div>
 			)
@@ -92,6 +92,7 @@ export const Columns: ColumnDef<IClient>[] = [
 			/>
 		)
 	},
+
 	{
 		id: "department",
 		header: () => <div className="flex items-center gap-x-2">

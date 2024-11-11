@@ -7,11 +7,13 @@ export interface IClient {
   contactNumber: string
   documents: string[]
   officeBranch: OfficeBranch
+  contactPerson: string
 }
 
 export interface ICreateClient {
   name: string
   email: string
+  contactPerson?: string
   contactNumber: string
   documents: string[]
   officeBranch: OfficeBranch
@@ -25,5 +27,6 @@ export interface IUpdateClient {
   contactNumber?: string
   officeBranch: OfficeBranch;
   notes?: string;
+  contactPerson?: string
 }
 

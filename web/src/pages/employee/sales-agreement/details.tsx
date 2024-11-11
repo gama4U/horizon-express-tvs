@@ -48,6 +48,7 @@ export default function SalesAgreementDetails() {
               <Separator className="bg-slate-200" />
               <SalesAgreementInfo data={data} />
               <SalesAgreementItems
+                approverId={data.approverId}
                 data={data.salesAgreementItems}
                 salesAgreementId={data.id}
               />

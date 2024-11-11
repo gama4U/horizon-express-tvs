@@ -2,6 +2,7 @@ import { ISupplier } from "@/api/mutations/supplier.mutation";
 import { IPurchaseRequestOrderItem } from "./purchase-request-item.interface";
 import { ISalesAgreement } from "./sales-agreement.interface";
 import { IUser } from "./user.interface";
+import { Currency } from "./sales-agreement-item.interface";
 
 export interface IPurchaseRequestOrder {
   id: string;
@@ -20,6 +21,7 @@ export interface IPurchaseRequestOrder {
   approver?: IUser;
   salesAgreement?: ISalesAgreement;
   supplier?: ISupplier;
+  currency: Currency;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -81,6 +83,7 @@ export interface ICreatePurchaseRequest {
   disbursementType: string;
   classification: string;
   classificationType: string;
+  currency?: Currency
   other?: string;
 }
 
@@ -91,5 +94,6 @@ export interface IUpdatePurchaseRequest {
   disbursementType: string;
   classification: string;
   classificationType: string;
+  currency?: Currency
   other?: string;
 }

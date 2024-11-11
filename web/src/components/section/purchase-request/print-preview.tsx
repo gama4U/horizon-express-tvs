@@ -79,9 +79,9 @@ export default function PrintPreview({ data }: Props) {
       <div ref={contentRef} className="flex flex-col min-h-[100vh] p-4 space-y-4 justify-between">
         <div>
           <div className='text-center text-black flex flex-col items-center'>
-						<img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
-						{RenderHeaderText(data.supplier?.officeBranch as OfficeBranch)}
-					</div>
+            <img src={logo} className='object-contain w-[220px] h-[150px] self-center' />
+            {RenderHeaderText(data.supplier?.officeBranch as OfficeBranch)}
+          </div>
 
           <div className='p-2 text-muted-foreground space-y-4'>
             <div className='flex items-center gap-4'>
@@ -107,7 +107,7 @@ export default function PrintPreview({ data }: Props) {
             <div className='flex items-center gap-4'>
               <div className='flex w-full items-end gap-1 text-[12px]'>
                 <span className='leading-[16px] font-semibold'>
-                  Disbursement:
+                  Disbursement Type:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
                   <span>
@@ -165,19 +165,19 @@ export default function PrintPreview({ data }: Props) {
                     <tr key={index}>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.particulars}</td>
                       <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
-                      <td className="px-4 py-2 border-r border-gray-300 text-center">{formatCurrency('PHP', item.unitPrice)}</td>
-                      <td className="px-4 py-2 text-center">{formatCurrency('PHP', item.total)}</td>
+                      <td className="px-4 py-2 border-r border-gray-300 text-center">{data?.currency && formatCurrency(data?.currency, item.unitPrice)}</td>
+                      <td className="px-4 py-2 text-center">{data?.currency && formatCurrency(data?.currency, item.total)}</td>
                     </tr>
                   ))}
                   <tr className='border'>
-                    <td 
+                    <td
                       className="px-4 py-2 border-r border-gray-300 text-center col-span-2"
                       colSpan={3}
                     >
                       Grand Total
                     </td>
                     <td className="px-4 py-2 text-center">
-                      {formatCurrency('PHP', grandTotal)}
+                      {data?.currency && formatCurrency(data.currency, grandTotal)}
                     </td>
                   </tr>
                 </>

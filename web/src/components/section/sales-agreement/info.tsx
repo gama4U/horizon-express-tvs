@@ -46,6 +46,24 @@ export default function SalesAgreementInfo({ data }: Props) {
           {data.client.name}
         </h3>
       </div>
+      <div>
+        <span className="text-muted-foreground text-[10px]">
+          Contact Number:
+        </span>
+        <h3 className="text-[12px]">
+          {data.client.contactNumber}
+        </h3>
+      </div>
+      {data.client.contactPerson &&
+        <div>
+          <span className="text-muted-foreground text-[10px]">
+            Contact Person:
+          </span>
+          <h3 className="text-[12px]">
+            {data.client.contactPerson}
+          </h3>
+        </div>
+      }
       <div className="flex flex-col gap-1">
         <span className="text-muted-foreground text-[10px]">
           Prepared by

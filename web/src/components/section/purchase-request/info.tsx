@@ -1,7 +1,13 @@
 import { IPurchaseRequestOrder } from "@/interfaces/purchase-request.interface"
+import { Currency } from "@/interfaces/sales-agreement-item.interface"
 
 interface Props {
   data: IPurchaseRequestOrder
+}
+
+const currencyMap: Record<Currency, string> = {
+  PHP: 'Philippine Peso (PHP)',
+  USD: 'US Dollar (USD)'
 }
 
 export default function PurchaseRequestInfo({ data }: Props) {
@@ -58,12 +64,19 @@ export default function PurchaseRequestInfo({ data }: Props) {
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-muted-foreground text-[10px]">
-          Classification type
+            Classification type
           </span>
           <h3 className="text-[12px]">
             {data.classificationType}
           </h3>
         </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-muted-foreground text-[10px]">Currency</span>
+          <h3 className="text-[12px]">
+            {data.currency && currencyMap[data.currency]}
+          </h3>
+        </div>
+
         <div className="flex flex-col gap-1">
           <span className="text-muted-foreground text-[10px]">
             Prepared by
