@@ -1,6 +1,6 @@
 import { Loader2, Printer, ThumbsUp } from 'lucide-react'
 import Constants from '../../../constants'
-import { ISalesAgreement } from '../../../interfaces/sales-agreement.interface'
+import { ISalesAgreement, TypeOfClient } from '../../../interfaces/sales-agreement.interface'
 import { Button } from '../../ui/button'
 import { Separator } from '../../ui/separator'
 import { useRef, useState } from 'react'
@@ -103,7 +103,7 @@ export default function PrintPreview({ data }: Props) {
                   Client name:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
-                  <span>{data.client.name}</span>
+                  <span>{data.client.name} - {(data.client.clientType === TypeOfClient.CORPORATE || data.client.clientType === TypeOfClient.GOVERNMENT) && data.client.department}</span>
                 </div>
               </div>
 
