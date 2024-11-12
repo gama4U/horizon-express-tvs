@@ -103,7 +103,7 @@ export default function PrintPreview({ data }: Props) {
                   Client name:
                 </span>
                 <div className='flex-1 border-b leading-[16px]'>
-                  <span>{data.client.name} - {(data.client.clientType === TypeOfClient.CORPORATE || data.client.clientType === TypeOfClient.GOVERNMENT) && data.client.department}</span>
+                  <span>{data.client.name}  {(data.client.clientType === TypeOfClient.CORPORATE || data.client.clientType === TypeOfClient.GOVERNMENT) && `- ${data.client.department}`}</span>
                 </div>
               </div>
 
@@ -183,7 +183,7 @@ export default function PrintPreview({ data }: Props) {
                                 {item}
                               </li>
                             ))}
-                          </ul> 
+                          </ul>
                         </td>
                         <td className="px-4 py-2 border-r border-gray-300 text-center">{item.quantity.toLocaleString()}</td>
                         <td className="px-4 py-2 border-r border-gray-300 text-center">
